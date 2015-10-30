@@ -52,5 +52,13 @@ angular.module('ent.controllers', [])
   ];
 })
 
+.controller('LoginCtrl', function($scope, $state) {
+
+  $scope.doLogin = function(user) {
+    $state.go('app.playlists');
+  };
+
+})
+
 .controller('PlaylistCtrl', function($scope, $stateParams) {
 });

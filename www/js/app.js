@@ -68,19 +68,13 @@ angular.module('ent', ['ionic', 'ent.controllers'])
       }
     }
   })
-  
+
   .state('login', {
-    url: '/login',
-    abstract: true,
-    templateUrl: 'templates/login.html'
-  })
-  
-  .state('login.credentials', {
-      url: '/login/credentials',
-      templateUrl: 'template/login-credentials.html'
-      //controller: 'entAuthCredentialsCtrl'
+      url: '/login',
+      templateUrl: 'templates/login-credentials.html',
+      controller: 'LoginCtrl'
   });
-        
+
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/playlists');
+  $urlRouterProvider.otherwise('/login');
 });
