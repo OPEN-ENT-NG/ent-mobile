@@ -51,9 +51,6 @@ angular.module('ent.actualites', [])
 })
 
 .controller('ActualitesCtrl', function($scope, $state, actualites) {
-  $scope.getURL = function(index) {
-    return $state.href('app.actualite', {index: index});
-  };
   $scope.actualites = actualites;
 })
 

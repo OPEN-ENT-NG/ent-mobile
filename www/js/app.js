@@ -4,7 +4,7 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('ent', ['ionic', 'ent.controllers', 'ent.auth','ent.actualites'])
+angular.module('ent', ['ionic', 'ent.controllers', 'ent.auth','ent.actualites', 'ent.blog'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -41,20 +41,43 @@ angular.module('ent', ['ionic', 'ent.controllers', 'ent.auth','ent.actualites'])
     }
   })
 
-  .state('app.blog', {
-    url: '/blog',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/blog-list.html'
-      }
-    }
-  })
+
 
   .state('app.espace_doc', {
     url: '/espace_doc',
     views: {
       'menuContent': {
         templateUrl: 'templates/espace_doc.html'
+      }
+    }
+  })
+
+  .state('app.blog-list', {
+    url: '/blog-list',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/blog-list.html',
+        controller: "BlogLitsCtrl",
+        resolve: {
+          blogs: function (serviceBlog){
+            return serviceBlog.getAllBlogs();
+          }
+        }
+      }
+    }
+  })
+
+  .state('app.blog', {
+    url: '/blog/:index',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/blog.html',
+        controller: "BlogCtrl",
+        resolve: {
+          blog: function(serviceBlog, $stateParams){
+            return serviceBlog.getBlog($stateParams.index);
+          }
+        }
       }
     }
   })
