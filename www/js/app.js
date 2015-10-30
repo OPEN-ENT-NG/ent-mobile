@@ -45,7 +45,7 @@ angular.module('ent', ['ionic', 'ent.controllers', 'ent.auth','ent.actualites'])
     url: '/blog',
     views: {
       'menuContent': {
-        templateUrl: 'templates/blog.html'
+        templateUrl: 'templates/blog-list.html'
       }
     }
   })
