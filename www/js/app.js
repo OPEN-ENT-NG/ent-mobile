@@ -25,54 +25,74 @@ angular.module('ent', ['ionic', 'ent.controllers', 'ent.auth','ent.actualites'])
 .config(function($stateProvider, $urlRouterProvider) {
   $stateProvider
 
-    .state('app', {
+  .state('app', {
     url: '/app',
     abstract: true,
     templateUrl: 'templates/menu.html',
     controller: 'AppCtrl'
   })
 
-  .state('app.search', {
-    url: '/search',
+  .state('app.messagerie', {
+    url: '/messagerie',
     views: {
       'menuContent': {
-        templateUrl: 'templates/search.html'
+        templateUrl: 'templates/messagerie.html'
       }
     }
   })
 
-  .state('app.browse', {
-      url: '/browse',
-      views: {
-        'menuContent': {
-          templateUrl: 'templates/browse.html'
-        }
+  .state('app.blog', {
+    url: '/blog',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/blog.html'
       }
-    })
-    .state('app.actualites', {
-      url: '/actualites',
-      views: {
-        'menuContent': {
-          templateUrl: 'templates/actualites.html',
-          controller: 'ActualitesCtrl'
-        }
-      }
-    })
+    }
+  })
 
-  .state('app.single', {
-    url: '/actualites/:actualiteId',
+  .state('app.espace_doc', {
+    url: '/espace_doc',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/espace_doc.html'
+      }
+    }
+  })
+
+  .state('app.actualites', {
+    url: '/actualites',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/actualites.html',
+        controller: 'ActualitesCtrl',
+        resolve: {
+          actualites: function(serviceActualites) {
+            return serviceActualites.getAllActualites();
+          }
+        }
+      }
+    }
+  })
+
+  .state('app.actualite', {
+    url: '/actualite/:index',
     views: {
       'menuContent': {
         templateUrl: 'templates/actualite.html',
-        controller: 'ActualiteCtrl'
+        controller: 'ActualiteCtrl',
+        resolve: {
+          'actualite': function(serviceActualites, $stateParams){
+            return serviceActualites.getActualite($stateParams.index);
+          }
+        }
       }
     }
   })
 
   .state('login', {
-      url: '/login',
-      templateUrl: 'templates/login-credentials.html',
-      controller: 'LoginCtrl'
+    url: '/login',
+    templateUrl: 'templates/login-credentials.html',
+    controller: 'LoginCtrl'
   });
 
   // if none of the above states are matched, use this as the fallback

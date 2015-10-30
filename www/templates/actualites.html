@@ -1,9 +1,13 @@
 <ion-view view-title="Actualités">
   <ion-content>
-    <ion-list>
-      <ion-item ng-repeat="actualite in actualites" href="#/app/actualites/{{actualite.id}}">
-        {{actualite.title}}
+    <div class="list card">
+      <ion-item ng-repeat="actualite in actualites track by $index" class="item item-text-wrap" ng-href="{{getURL($index)}}">
+        <!-- ng-href="#/app/actualite/1"> -->
+        {{actualite.titre}}
+        <div class="item item-text-wrap">
+          <p>{{actualite.id}}</p>
+        </div>
       </ion-item>
-    </ion-list>
+    </div>
   </ion-content>
 </ion-view>
