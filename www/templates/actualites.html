@@ -1,7 +1,7 @@
 <ion-view view-title="Actualités">
   <ion-content>
-    <div class="list card">
-      <ion-item ng-repeat="actualite in actualites track by $index" class="item item-text-wrap" ng-href="#/app/actualite/{{$index}}">
+    <div class="list">
+      <ion-item ng-repeat="actualite in actualites track by $index" class="card item-text-wrap" ng-href="#/app/actualite/{{$index}}">
         <!-- ng-href="#/app/actualite/1"> -->
         {{actualite.titre}}
         <div class="item item-text-wrap">
