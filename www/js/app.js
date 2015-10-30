@@ -4,7 +4,7 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('ent', ['ionic', 'ent.controllers', 'ent.auth'])
+angular.module('ent', ['ionic', 'ent.controllers', 'ent.auth','ent.actualites'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -49,22 +49,22 @@ angular.module('ent', ['ionic', 'ent.controllers', 'ent.auth'])
         }
       }
     })
-    .state('app.playlists', {
-      url: '/playlists',
+    .state('app.actualites', {
+      url: '/actualites',
       views: {
         'menuContent': {
-          templateUrl: 'templates/playlists.html',
-          controller: 'PlaylistsCtrl'
+          templateUrl: 'templates/actualites.html',
+          controller: 'ActualitesCtrl'
         }
       }
     })
 
   .state('app.single', {
-    url: '/playlists/:playlistId',
+    url: '/actualites/:actualiteId',
     views: {
       'menuContent': {
-        templateUrl: 'templates/playlist.html',
-        controller: 'PlaylistCtrl'
+        templateUrl: 'templates/actualite.html',
+        controller: 'ActualiteCtrl'
       }
     }
   })
