@@ -1,9 +1,6 @@
 angular.module('ent.blog', [])
 
-
-
-factory('serviceBlog', function(){
-
+.factory('serviceBlog', function(){
 
   var store = {},
   self = {};
@@ -21,7 +18,7 @@ factory('serviceBlog', function(){
           id: 2,
           icon: "ion-calendar",
           titre: "Women and sports",
-            auteur: "myself"
+          auteur: "myself"
         },
         {
           id: 3,
@@ -37,9 +34,7 @@ factory('serviceBlog', function(){
   self.getBlog = function(index){
     return self.getAllBlogs()[index] || undefined;
   };
-
   return self;
-
 })
 
 .controller('BlogLitsCtrl', function($scope, $state, blogs) {

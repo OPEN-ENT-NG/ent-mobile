@@ -41,8 +41,6 @@ angular.module('ent', ['ionic', 'ent.controllers', 'ent.auth','ent.actualites', 
     }
   })
 
-
-
   .state('app.espace_doc', {
     url: '/espace_doc',
     views: {

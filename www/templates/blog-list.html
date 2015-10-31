@@ -1,5 +1,15 @@
 <ion-view view-title="Blog">
   <ion-content>
-    <h1>Blog</h1>
+    <div class="list">
+
+      <a ng-repeat="blog in blogs track by $index" href="#/app/blog/{{$index}}" class="item item-thumbnail-left">
+
+        <!-- <img ng-src="{{ item.image }}"> -->
+        <h2>{{ blog.titre}}</h2>
+        <h4>par {{ blog.auteur }}</h4>
+      </a>
+
+    </div>
+
   </ion-content>
 </ion-view>
