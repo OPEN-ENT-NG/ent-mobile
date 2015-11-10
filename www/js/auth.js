@@ -5,47 +5,44 @@ var clientId = "mobile-ong";
 //var clientSecret = "client_secret_here";
 
 angular.module('ent.auth', [])
-.controller('LoginCtrl', function($scope, $http, $location) {
+.controller('LoginCtrl', function($scope, $http, $state) {
 
-    $http.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
-    $http.defaults.headers.post['Accept'] = 'application/json; charset=UTF-8';
+  $http.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+  $http.defaults.headers.post['Accept'] = 'application/json; charset=UTF-8';
 
 
-    $scope.doLogin = function(user) {
+    $scope.doLogin = function() {
       console.log("coucou avant http");
-        var ref = window.open('https://recette-leo.entcore.org/auth/oauth2/auth?client_id=' + clientId + '&redirect_uri=https://recette-leo.entcore.org&scope=userinfo&response_type=code&state=coucou&access_type=offline', '_blank');
-        ref.addEventListener('loadstart', function(event) {
-            if((event.url).startsWith("https://recette-leo.entcore.org")) {
-              console.log("coucou");
-                requestToken = (event.url).split("code=")[1];
+  /*    var ref = window.open('https://recette-leo.entcore.org/auth/oauth2/auth?client_id=' + clientId +
+        '&redirect_uri=https://localhost&scope=userinfo&response_type=code&state=coucou','_blank','location=no','toolbar=no');*/
 
-                $http.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
-                $http.defaults.headers.post['Accept'] = 'application/json; charset=UTF-8';
-                $http.defaults.headers.post['Authorisation'] = 'Basic sdvkoopkfopzekfpoezkfopezkfpok';
+        var ref = window.open('https://recette-leo.entcore.org/auth/oauth2/auth?response_type=code&state=blip&scope=userinfo&client_id=mobile-ong&redirect_uri=http://localhost','_blank','location=no','toolbar=no');
 
-                $http({
-                  method: "POST",
-                  url: "https://recette-leo.entcore.org/auth/oauth2/token",
-                  data: "grant_type=authorization_code&code=" + requestToken + "&redirect_uri=https://recette-leo.entcore.org"
-                })
+
+        ref.addEventListener('loadstop', function(event) {
+            var url =event.url;
+            var code =url.substring(url.indexOf("code=")+5, url.lastIndexOf("&"));
+            alert("code: " + code);
+
+//installer le plugin base 64
+            $http({
+              method: "post",
+              url: "https://recette-leo.entcore.org/auth/oauth2/token",
+              data: "redirect_uri=http://localhost" +
+                "&grant_type=authorization_code" + "&code=" + code,
+               headers: {'Authorization': 'Basic bW9iaWxlLW9uZzptb2JpbGUtb25nLXNlcmNyZXQ='} })
                 .success(function(data) {
-                  accessToken = data.access_token;
-                  $location.path("/secure");
+                    accessToken = data.access_token;
+                      alert("accessToken: " + accessToken);
                 })
                 .error(function(data, status) {
                     alert("ERROR: " + data);
                 });
-                ref.close();
-            } else {
-                console.log("pas coucou");
-            }
+
+            ref.close();
         });
     }
 
-    if (typeof String.prototype.startsWith != 'function') {
-        String.prototype.startsWith = function (str){
-            return this.indexOf(str) == 0;
-        };
-    }
+
   })
   ;
