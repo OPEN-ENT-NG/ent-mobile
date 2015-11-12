@@ -102,5 +102,5 @@ angular.module('ent', ['ionic', 'ent.controllers', 'ent.auth','ent.actualites', 
   });
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/actualites');
+  $urlRouterProvider.otherwise('/login');
 });

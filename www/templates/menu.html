@@ -13,7 +13,7 @@
 
   <ion-side-menu side="left">
     <ion-header-bar class="bar-stable">
-      <h1 class="title">Hello my name is</h1>
+      <h1 class="title">{{user.firstName}} {{user.lastName}}</h1>
     </ion-header-bar>
     <ion-content>
       <div class="list dark">
@@ -34,7 +34,7 @@
         Espace documentaire
       </ion-item>
       <div class="item item-divider"></div>
-      <ion-item menu-close href="#/login">
+      <ion-item menu-close href="#/login" ng-click="logout()">
         <i class="officon-"></i>
         Déconnexion
       </ion-item>
