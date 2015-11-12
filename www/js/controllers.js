@@ -1,6 +1,6 @@
 angular.module('ent.controllers', [])
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout) {
+.controller('AppCtrl', function($scope, $ionicModal, $timeout, $ionicPopover) {
 
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
@@ -39,6 +39,4 @@ angular.module('ent.controllers', [])
       $scope.closeLogin();
     }, 1000);
   };*/
-})
-
-;
+});

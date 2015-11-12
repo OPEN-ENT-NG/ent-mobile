@@ -95,21 +95,6 @@ angular.module('ent', ['ionic', 'ent.controllers', 'ent.auth','ent.actualites', 
     }
   })
 
-  .state('app.actualite', {
-    url: '/actualite/:index',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/actualite.html',
-        controller: 'ActualiteCtrl',
-        resolve: {
-          'actualite': function(serviceActualites, $stateParams){
-            return serviceActualites.getActualite($stateParams.index);
-          }
-        }
-      }
-    }
-  })
-
   .state('login', {
     url: '/login',
     templateUrl: 'templates/login-credentials.html',
@@ -117,5 +102,5 @@ angular.module('ent', ['ionic', 'ent.controllers', 'ent.auth','ent.actualites', 
   });
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/login');
+  $urlRouterProvider.otherwise('/app/actualites');
 });

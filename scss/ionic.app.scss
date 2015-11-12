@@ -21,5 +21,7 @@ $font-family-case: "fontello", sans-serif !default;
 // The path for our ionicons font files, relative to the built CSS in www/css
 $ionicons-font-path: "../lib/ionic/fonts" !default;
 
+@import "www/lib/font-awesome/scss/font-awesome";
+
 // Include all of Ionic
 @import "www/lib/ionic/scss/ionic";
