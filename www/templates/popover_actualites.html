@@ -1,18 +1,28 @@
 <ion-popover-view class="fit">
   <ion-header-bar>
-       <h1 class = "title">Ordre de lecture</h1>
-   </ion-header-bar>
+    <h1 class = "title">Ordre de lecture</h1>
+  </ion-header-bar>
   <ion-content>
-    <div class="list">
-      <a class="item"target="_blank">
+    <label class="item item-radio">
+      <input type="radio" name="group">
+      <div class="item-content">
         Lues
-      </a>
-      <a class="item"target="_blank">
+      </div>
+      <i class="radio-icon ion-checkmark"></i>
+    </label>
+    <label class="item item-radio">
+      <input type="radio" name="group">
+      <div class="item-content">
         En cours de validation
-      </a>
-      <a class="item"target="_blank">
+      </div>
+      <i class="radio-icon ion-checkmark"></i>
+    </label>
+    <label class="item item-radio">
+      <input type="radio" name="group">
+      <div class="item-content">
         Toutes
-      </a>
-    </div>
+      </div>
+      <i class="radio-icon ion-checkmark"></i>
+    </label>
   </ion-content>
 </ion-popover-view>
