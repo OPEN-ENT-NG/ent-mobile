@@ -1,4 +1,4 @@
-angular.module('ent', ['ionic', 'ngCordova', 'ent.controllers','ent.actualites', 'ent.blog'])
+angular.module('ent', ['ionic', 'ngCordova', 'ent.controllers','ent.actualites', 'ent.blog','ent.auth'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -88,13 +88,13 @@ angular.module('ent', ['ionic', 'ngCordova', 'ent.controllers','ent.actualites',
       }
     }
   })
-  //
-  // .state('login', {
-  //   url: '/login',
-  //   templateUrl: 'templates/login-credentials.html',
-  //   controller: 'LoginCtrl'
-  // });
+
+  .state('login', {
+    url: '/login',
+    templateUrl: 'templates/login-credentials.html',
+    controller: 'LoginCtrl'
+  });
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/actualites');
+  $urlRouterProvider.otherwise('/login');
 });
