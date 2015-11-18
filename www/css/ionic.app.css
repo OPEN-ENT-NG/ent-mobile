@@ -30,7 +30,7 @@ $dark:                            #444 !default;
 
 .fa {
   display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
+  font: normal normal normal 14px / 1 FontAwesome;
   font-size: inherit;
   text-rendering: auto;
   -webkit-font-smoothing: antialiased;
@@ -9834,7 +9834,7 @@ input:checked + .checkbox-icon:after {
     background: #f8f8f8;
     color: #444; }
   .item-select.item-stable:after, .item-select.item-stable .input-label {
-    color: #656565; }
+    color: #666666; }
   .item-select.item-positive select {
     background: #387ef5;
     color: #fff; }

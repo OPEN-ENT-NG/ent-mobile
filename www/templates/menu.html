@@ -12,8 +12,8 @@
   </ion-side-menu-content>
 
   <ion-side-menu side="left">
-    <ion-header-bar class="bar-stable">
-      <h1 class="title">{{user.firstName}} {{user.lastName}}</h1>
+    <ion-header-bar class="bar-stable" ng-controller="UserInfoCtrl">
+      <h1 class="title">{{userinfo.username}}</h1>
     </ion-header-bar>
     <ion-content>
       <div class="list dark">

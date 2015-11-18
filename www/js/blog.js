@@ -37,7 +37,7 @@ angular.module('ent.blog', [])
   return self;
 })
 
-.controller('BlogLitsCtrl', function($scope, $state, blogs) {
+.controller('BlogListCtrl', function($scope, $state, blogs) {
   $scope.blogs = blogs;
 })
 

@@ -1,51 +1,53 @@
 angular.module('ent.controllers', [])
 
 
-.controller('AppCtrl', function($scope, $http) {
-
-  $http.defaults.headers.post['Authorization'] = localStorage.getItem("access_token");
+.controller('UserInfoCtrl', function($scope, $http) {
+  $http.defaults.headers.common.Authorization = 'Bearer '+localStorage.getItem("access_token");
   $http.get('https://recette-leo.entcore.org/auth/oauth2/userinfo').then(function(resp) {
-    $scope.user = resp.data;
+    $scope.userinfo = resp.data;
+    alert(resp.data.username);
   }, function(err) {
-    alert('ERR', err.data.error);
+    alert('ERR', err.data.status);
   })
 })
 
 
-// With the new view caching in Ionic, Controllers are only called
-// when they are recreated or on app start, instead of every page change.
-// To listen for when this page is active (for example, to refresh data),
-// listen for the $ionicView.enter event:
-//$scope.$on('$ionicView.enter', function(e) {
-//});
+.controller('AppCtrl', function($scope, $http, $cordovaInAppBrowser) {
 
-// Form data for the login modal
-/*  $scope.loginData = {};
+  document.addEventListener("deviceready", onDeviceReady, false);
 
-// Create the login modal that we will use later
-$ionicModal.fromTemplateUrl('templates/login.html', {
-scope: $scope
-}).then(function(modal) {
-$scope.modal = modal;
-});
+  var ref;
+  function onDeviceReady() {
+    if(!localStorage.getItem('access_token')){
+      ref = window.open('https://recette-leo.entcore.org/auth/oauth2/auth?response_type=code&state=blip&scope=userinfo&client_id=mobile-ong&redirect_uri=https://recette-leo.entcore.org','_blank','location=no','toolbar=no', 'clearcache=yes', 'clearsessioncache=yes');
+      ref.addEventListener('loadstart', function(event) {
+        var url = event.url;
+        if(url.startsWith("https://recette-leo.entcore.org/?code=")) {
+          localStorage.setItem('code', url.substring(url.indexOf("code=")+5, url.lastIndexOf("&")));
+          getToken();
+        }
+      });
+    }
+  }
 
-// Triggered in the login modal to close it
-$scope.closeLogin = function() {
-$scope.modal.hide();
-};
+  function getToken(){
 
-// Open the login modal
-$scope.login = function() {
-$scope.modal.show();
-};*/
+    $http.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+    $http.defaults.headers.post['Accept'] = 'application/json; charset=UTF-8';
+    $http.defaults.headers.common.Authorization = 'Basic bW9iaWxlLW9uZzptb2JpbGUtb25nLXNlcmNyZXQ=';
 
-/*  // Perform the login action when the user submits the login form
-$scope.doLogin = function() {
-console.log('Doing login', $scope.loginData);
+    $http({
+      method: "post",
+      url: "https://recette-leo.entcore.org/auth/oauth2/token",
+      data: "redirect_uri=https://recette-leo.entcore.org&grant_type=authorization_code&code=" + localStorage.getItem('code')
+    }).then(function successCallback(response) {
+      alert('token: '+response.data.access_token);
+      localStorage.setItem('access_token', response.data.access_token);
+      localStorage.setItem('refresh_token', response.data.refresh_token);
+      ref.close();
 
-// Simulate a login delay. Remove this and replace with your login
-// code if using a login system
-$timeout(function() {
-$scope.closeLogin();
-}, 1000);
-};*/
+    }, function errorCallback(response) {
+      alert('Erreur '+response.status+' '+response.data.error);
+    });
+  }
+})
