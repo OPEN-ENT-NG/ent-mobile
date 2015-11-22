@@ -3,26 +3,19 @@
     <h1 class = "title">Ordre de lecture</h1>
   </ion-header-bar>
   <ion-content>
-    <label class="item item-radio">
-      <input type="radio" name="group">
-      <div class="item-content">
-        Lues
-      </div>
-      <i class="radio-icon ion-checkmark"></i>
-    </label>
-    <label class="item item-radio">
-      <input type="radio" name="group">
-      <div class="item-content">
-        En cours de validation
-      </div>
-      <i class="radio-icon ion-checkmark"></i>
-    </label>
-    <label class="item item-radio">
-      <input type="radio" name="group">
-      <div class="item-content">
-        Toutes
-      </div>
-      <i class="radio-icon ion-checkmark"></i>
-    </label>
-  </ion-content>
+
+<ion-checkbox ng-model="status.publiees" ng-true-value="'Publiees'" ng-false-value="'NoPubliees'">
+  Publiées
+</ion-checkbox>
+
+<ion-checkbox ng-model="status.brouillons" ng-true-value="'Brouillons'" ng-false-value="'NoBrouillons'">
+Brouillons
+</ion-checkbox>
+
+<ion-checkbox ng-model="status.sousmises" ng-true-value="'Soumises'" ng-false-value="'NoSoumises'">
+Soumises
+</ion-checkbox>
+
+
+</ion-content>
 </ion-popover-view>
