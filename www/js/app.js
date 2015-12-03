@@ -1,4 +1,4 @@
-angular.module('ent', ['ionic', 'ngCordova', 'ent.controllers','ent.actualites', 'ent.blog','ent.auth'])
+angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize','ent.controllers','ent.infos', 'ent.blog','ent.auth'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -10,7 +10,6 @@ angular.module('ent', ['ionic', 'ngCordova', 'ent.controllers','ent.actualites',
 
     }
     if (window.StatusBar) {
-      // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
   });
@@ -79,12 +78,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ent.controllers','ent.actualites',
     views: {
       'menuContent': {
         templateUrl: 'templates/actualites.html',
-        controller: 'ActualitesCtrl',
-        resolve: {
-          actualites: function(serviceActualites) {
-            return serviceActualites.getAllActualites();
-          }
-        }
+        controller: 'InfosCtrl'
       }
     }
   })
@@ -97,4 +91,5 @@ angular.module('ent', ['ionic', 'ngCordova', 'ent.controllers','ent.actualites',
 
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/login');
+  //$urlRouterProvider.otherwise('/app/actualites');
 });

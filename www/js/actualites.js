@@ -4,9 +4,11 @@ angular.module('ent.actualites', [])
   var store = {},
   self = {};
 
-  self.getAllActualites = function() {
-    if (!store.actualites) {
-      store.actualites = [
+  self.getAllInfos = function() {
+
+    $http.get("https://recette-leo.entcore.org/actualites/infos")
+    if (!store.infos) {
+      store.infos = [
         {
           id: 1,
           //icon: "ion-calendar",
@@ -37,7 +39,7 @@ angular.module('ent.actualites', [])
         },
       ]
     }
-    return store.actualites;
+    return store.infos;
   };
 
   return self;
