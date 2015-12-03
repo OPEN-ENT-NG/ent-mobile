@@ -6,7 +6,7 @@ angular.module('ent.controllers', [])
     request: function(config) {
       if (localStorage.getItem('access_token')) {
         config.headers['Authorization'] = 'Bearer '+localStorage.getItem('access_token')
-        
+
       }
       return config;
     },
@@ -32,6 +32,10 @@ angular.module('ent.controllers', [])
   })
 })
 
-.controller('AppCtrl', function($scope){
+.controller('AppCtrl', function($scope, $sce){
 
+
+    $scope.renderHtml = function(text){
+      return $sce.trustAsHtml(text);
+    }
 })

@@ -1,17 +1,12 @@
 angular.module('ent.infos', [])
 
-.controller('InfosCtrl', function ($scope, $http,$ionicPopover, $sce) {
+.controller('InfosCtrl', function ($scope, $http,$ionicPopover) {
   $http.get("https://recette-leo.entcore.org/actualites/infos").then(function(resp){
-    console.log('success', resp);
     $scope.infos = resp.data;
     console.log('success: '+$scope.infos);
   }, function(err){
     alert('ERR:'+ err);
   });
-
-  $scope.renderHtml = function(text){
-    return $sce.trustAsHtml(text);
-  }
 
   $ionicPopover.fromTemplateUrl('templates/popover_actualites.html', {
       scope: $scope

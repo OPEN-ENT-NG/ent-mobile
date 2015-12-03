@@ -1,0 +1,10 @@
+<ion-view view-title="Fils">
+<ion-content>
+  <div class="list">
+      <a ng-repeat="thread in threads track by $index" href="#/app/blog/{{$index}}" class="item item-thumbnail-left">
+        <img ng-src="{{ thread.icon }}">
+        <h2>{{ thread.title}}</h2>
+      </a>
+  </div>
+</ion-content>
+</ion-view>
