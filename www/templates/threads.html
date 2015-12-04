@@ -1,10 +1,14 @@
 <ion-view view-title="Fils">
-<ion-content>
-  <div class="list">
-      <a ng-repeat="thread in threads track by $index" href="#/app/blog/{{$index}}" class="item item-thumbnail-left">
-        <img ng-src="{{ thread.icon }}">
-        <h2>{{ thread.title}}</h2>
-      </a>
-  </div>
-</ion-content>
+  <ion-content>
+    <div class="list">
+      <!-- href="#/app/blog/{{$index}}" -->
+
+      <ion-checkbox ng-repeat="thread in threads track by $index">
+        <div  class="item item-thumbnail-left item-text-wrap">
+          <img ng-src="https://recette-leo.entcore.org{{ thread.icon }}" alt="icone {{thread.title}}">
+          <h2>{{thread.title}}</h2>
+        </div>
+      </ion-checkbox>
+    </div>
+  </ion-content>
 </ion-view>

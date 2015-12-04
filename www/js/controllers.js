@@ -32,10 +32,14 @@ angular.module('ent.controllers', [])
   })
 })
 
-.controller('AppCtrl', function($scope, $sce){
-
+.controller('AppCtrl', function($scope, $sce, $state){
 
     $scope.renderHtml = function(text){
       return $sce.trustAsHtml(text);
+    }
+
+    $scope.logout = function(){
+      localStorage.clear();
+      $state.go("login");
     }
 })
