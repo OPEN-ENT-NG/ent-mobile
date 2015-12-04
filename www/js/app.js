@@ -1,4 +1,4 @@
-angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize','ent.controllers','ent.infos', 'ent.threads','ent.blog','ent.auth'])
+angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize','ent.controllers','ent.actualites','ent.blog','ent.auth'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -76,8 +76,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize','ent.contr
     url: '/actualites',
     views: {
       'menuContent': {
-        templateUrl: 'templates/actualites.html',
-        controller: 'InfosCtrl'
+        templateUrl: 'templates/actualites.html'
       }
     }
   })
@@ -86,8 +85,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize','ent.contr
     url: '/threads',
     views: {
       'menuContent': {
-        templateUrl: 'templates/threads.html',
-        controller: 'ThreadsCtrl'
+        templateUrl: 'templates/threads.html'
       }
     }
   })

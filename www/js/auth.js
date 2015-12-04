@@ -22,7 +22,7 @@ angular.module('ent.auth', [])
       var url = event.url;
       if(url.startsWith("https://recette-leo.entcore.org/?code=")) {
         localStorage.setItem('code', url.substring(url.indexOf("code=")+5, url.lastIndexOf("&")));
-        alert(url.substring(url.indexOf("code=")+5, url.lastIndexOf("&")));
+        //alert(url.substring(url.indexOf("code=")+5, url.lastIndexOf("&")));
       }
     });
 
@@ -30,6 +30,8 @@ angular.module('ent.auth', [])
       if(event.url == "https://recette-leo.entcore.org/timeline/timeline"){
         ref.close();
         getToken();
+        $state.go('app.actualites');
+
       }
     });
   }
@@ -45,14 +47,14 @@ angular.module('ent.auth', [])
       url: "https://recette-leo.entcore.org/auth/oauth2/token",
       data: "redirect_uri=https://recette-leo.entcore.org&grant_type=authorization_code&code=" + localStorage.getItem('code')
     }).then(function successCallback(response) {
-      alert('token: '+response.data.access_token);
+    //  alert('token: '+response.data.access_token);
       localStorage.setItem('access_token', response.data.access_token);
       localStorage.setItem('refresh_token', response.data.refresh_token);
 
 
 
 
-      $state.go('app.actualites');
+//      $state.go('app.actualites');
 
     }, function errorCallback(response) {
       alert('Erreur '+response.status+' '+response.data.error);

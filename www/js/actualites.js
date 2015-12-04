@@ -1,80 +1,68 @@
 angular.module('ent.actualites', [])
 
-.factory('serviceActualites', function(){
-  var store = {},
-  self = {};
+.controller('InfosCtrl', function ($scope, $http,$ionicPopover, $state) {
+  $http.get("https://recette-leo.entcore.org/actualites/infos").then(function(resp){
+    $scope.infos = resp.data;
+  }, function(err){
+    alert('ERR:'+ err);
+  });
 
-  self.getAllInfos = function() {
-
-    $http.get("https://recette-leo.entcore.org/actualites/infos")
-    if (!store.infos) {
-      store.infos = [
-        {
-          id: 1,
-          //icon: "ion-calendar",
-          titre: "Life Skills end course",
-          start: "8/1/2015 9:00am",
-          end: "10/1/2015 5:30pm"
-        },
-        {
-          id: 2,
-          //  icon: "ion-calendar",
-          titre: "Women and sports",
-          start: "11/1/2015 10:00am",
-          end: "11/1/2015 12:00am"
-        },
-        {
-          id: 3,
-          //icon: "ion-calendar",
-          titre: "Development and sports",
-          start: "19/1/2015 7:00am",
-          end: "20/1/2015 2:30pm"
-        },
-        {
-          id: 4,
-          //icon: "ion-calendar",
-          titre: "New course",
-          start: "1/2/2015 10:00am",
-          end: "3/2/2015 6:00pm"
-        },
-      ]
-    }
-    return store.infos;
+  $scope.goThreads = function(){
+    $state.go("app.threads");
   };
 
-  return self;
+  $scope.statusInfos = [
+    {nom: "Brouillon", statut: "1"},
+    {nom: "Soumises", statut: "2"},
+    {nom: "Publiées", statut: "3"}
+  ];
 
-})
-
-.controller('ActualitesCtrl', function($scope, $state, $ionicPopover, actualites) {
-  $scope.actualites = actualites;
+  $scope.filter = {};
 
   $ionicPopover.fromTemplateUrl('templates/popover_actualites.html', {
-      scope: $scope
-   }).then(function(popover) {
-      $scope.popover = popover;
-   });
+    scope: $scope
+  }).then(function(popover) {
+    $scope.popover = popover;
+  });
 
-   $scope.openPopover = function($event) {
-      $scope.popover.show($event);
-   };
+  $scope.openPopover = function($event) {
+    $scope.popover.show($event);
+  };
 
-   $scope.closePopover = function() {
-      $scope.popover.hide();
-   };
+  $scope.closePopover = function() {
+    $scope.popover.hide();
+  };
 
-   //Cleanup the popover when we're done with it!
-   $scope.$on('$destroy', function() {
-      $scope.popover.remove();
-   });
+  //Cleanup the popover when we're done with it!
+  $scope.$on('$destroy', function() {
+    $scope.popover.remove();
+  });
 
-   // Execute action on hide popover
-   $scope.$on('popover.hidden', function() {
-      // Execute action
-   });
+  // Execute action on hide popover
+  $scope.$on('popover.hidden', function() {
+    // Execute action
+  });
 
-   // Execute action on remove popover
-   $scope.$on('popover.removed', function() {
-      // Execute action
-   });
+  // Execute action on remove popover
+  $scope.$on('popover.removed', function() {
+    // Execute action
+  });
+
+  $scope.statusFilter = function(fruit) {
+       if ($scope.colourIncludes.length > 0) {
+           if ($.inArray(fruit.colour, $scope.colourIncludes) < 0)
+               return;
+       }
+
+       return fruit;
+   }
+})
+
+.controller('ThreadsCtrl', function ($scope, $http,$ionicPopover) {
+  $http.get("https://recette-leo.entcore.org/actualites/threads").then(function(resp){
+    $scope.threads = resp.data;
+    console.log('success: '+$scope.threads);
+  }, function(err){
+    alert('ERR:'+ err);
+  });
 });

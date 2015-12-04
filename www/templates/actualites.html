@@ -1,4 +1,4 @@
-<ion-view view-title="Actualités">
+<ion-view view-title="Actualités" ng-controller="InfosCtrl">
   <ion-nav-buttons side="right">
     <button class="button button-icon button-clear fa fa-list-ul"  ng-click="goThreads()" >
     </button>
@@ -16,7 +16,7 @@
         <img ng-src="https://recette-leo.entcore.org{{info.thread_icon}}" alt="icone {{info.thread_title}}"/>
         <h2>{{info.title}}</h2>
         <h3>{{info.username}}</h3>
-        <p>{{info.publication_date}}</p>
+        <p>{{info.publication_date | date:'d MMMM y'}}</p>
       </div>
 
       <div class="item item-text-wrap" ng-bind-html=renderHtml(info.content)>
