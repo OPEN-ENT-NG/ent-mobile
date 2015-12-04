@@ -9,7 +9,7 @@
 
 <ion-content>
   <div class="list">
-    <ion-item ng-repeat="info in infos track by $index" class="card">
+    <ion-item ng-repeat="info in infos | statusSelected" class="card">
 
       <div class="item item-avatar">
 

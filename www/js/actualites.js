@@ -12,12 +12,10 @@ angular.module('ent.actualites', [])
   };
 
   $scope.statusInfos = [
-    {nom: "Brouillon", statut: "1"},
-    {nom: "Soumises", statut: "2"},
-    {nom: "Publiées", statut: "3"}
+    {nom: "Brouillons", etat: 1},
+    {nom: "Soumises", etat: 2},
+    {nom: "Publiées", etat: 3}
   ];
-
-  $scope.filter = {};
 
   $ionicPopover.fromTemplateUrl('templates/popover_actualites.html', {
     scope: $scope
@@ -36,6 +34,7 @@ angular.module('ent.actualites', [])
   //Cleanup the popover when we're done with it!
   $scope.$on('$destroy', function() {
     $scope.popover.remove();
+    $window.location.reload(true)
   });
 
   // Execute action on hide popover
@@ -47,15 +46,43 @@ angular.module('ent.actualites', [])
   $scope.$on('popover.removed', function() {
     // Execute action
   });
+})
 
-  $scope.statusFilter = function(fruit) {
-       if ($scope.colourIncludes.length > 0) {
-           if ($.inArray(fruit.colour, $scope.colourIncludes) < 0)
-               return;
-       }
+.filter('statusSelected', function($filter){
+  return function(statusInfos){
 
-       return fruit;
-   }
+    var i, len;
+
+    // get customers that have been checked
+    var checkedStatus = $filter('filter')(statusInfos, {checked: true});
+
+    // Add in a check to see if any customers were selected. If none, return
+    // them all without filters
+    if(checkedStatus.length == 0) {
+      return statusInfos;
+    }
+
+    // get all the unique cities that come from these checked customers
+    var allStatus = {};
+    for(i = 0, len = checkedStatus.length; i < len; ++i) {
+      // if this checked customers cities isn't already in the cities object
+      // add it
+      if(!allStatus.hasOwnProperty(checkedStatus[i].etat)) {
+        allStatus[checkedStatus[i].etat] = true;
+      }
+    }
+
+    var ret = [];
+    for(i = 0, len = statusInfos.length; i < len; ++i) {
+      // If this customer's city exists in the cities object, add it to the
+      // return array
+      if(allStatus[checkedStatus[i].etat]) {
+        ret.push(statusInfos[i]);
+      }
+    }
+    // we have our result!
+    return ret;
+  };
 })
 
 .controller('ThreadsCtrl', function ($scope, $http,$ionicPopover) {
