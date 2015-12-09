@@ -9,7 +9,8 @@
 
 <ion-content>
   <div class="list">
-    <ion-item ng-repeat="info in infos | statusSelected" class="card">
+
+    <ion-item ng-repeat="info in filtered=(infos | filter:filterByStatus)" class="card">
 
       <div class="item item-avatar">
 
@@ -23,8 +24,7 @@
       </div>
 
       <div class="item">
-        <a href="#" class="subdued" ng-bind-html=renderHtml(info.comments)></a>
-
+        <a href="#" class="subdued" > {{(info.comments).length}} Commentaires</a>
       </div>
     </ion-item>
   </div>

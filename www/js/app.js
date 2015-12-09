@@ -1,4 +1,4 @@
-angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize','ent.controllers','ent.actualites','ent.blog','ent.auth'])
+angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize','ent.controllers','ent.actualites','ent.blog','ent.auth', 'ent.wines'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -28,7 +28,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize','ent.contr
     url: '/messagerie',
     views: {
       'menuContent': {
-        templateUrl: 'templates/messagerie.html'
+        templateUrl: 'templates/wines.html'
       }
     }
   })

@@ -12,7 +12,7 @@ angular.module('ent.controllers', [])
     },
 
     responseError: function(res) {
-  //    alert('besoin de refreshToken');
+      //    alert('besoin de refreshToken');
       return res;
     }
   };
@@ -32,14 +32,14 @@ angular.module('ent.controllers', [])
   })
 })
 
-.controller('AppCtrl', function($scope, $sce, $state){
+.controller('AppCtrl', function($scope, $sce, $state, $window){
 
-    $scope.renderHtml = function(text){
-      return $sce.trustAsHtml(text);
-    }
+  $scope.renderHtml = function(text){
+    return $sce.trustAsHtml(text);
+  }
 
-    $scope.logout = function(){
-      localStorage.clear();
-      $state.go("login");
-    }
+  $scope.logout = function(){
+    localStorage.clear();
+    $state.go("login");
+  }
 })
