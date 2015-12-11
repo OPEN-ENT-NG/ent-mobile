@@ -9,3 +9,8 @@ ion-popover-view.fit ion-content {
 .platform-android ion-popover-view.fit {
   margin-top: 10px !important;
 }
+
+.actucard img, iframe{
+    max-width:100%;
+    max-height:100%;
+}

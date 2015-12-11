@@ -1,4 +1,4 @@
-angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize','ent.controllers','ent.actualites','ent.blog','ent.auth', 'ent.wines'])
+angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize','ent.controllers','ent.actualites','ent.blog','ent.auth'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -28,7 +28,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize','ent.contr
     url: '/messagerie',
     views: {
       'menuContent': {
-        templateUrl: 'templates/wines.html'
+        templateUrl: 'templates/messagerie.html'
       }
     }
   })
@@ -97,6 +97,6 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize','ent.contr
   });
 
   // if none of the above states are matched, use this as the fallback
-  //$urlRouterProvider.otherwise('/login');
-  $urlRouterProvider.otherwise('/app/actualites');
+  $urlRouterProvider.otherwise('/login');
+  //$urlRouterProvider.otherwise('/app/actualites');
 });

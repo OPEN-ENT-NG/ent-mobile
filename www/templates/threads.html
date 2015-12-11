@@ -1,14 +1,11 @@
-<ion-view view-title="Fils" ng-controller="ThreadsCtrl">
+<ion-view view-title="Fils d'actualité" ng-controller="InfosCtrl">
   <ion-content>
-    <div class="list">
-      <!-- href="#/app/blog/{{$index}}" -->
 
-      <ion-checkbox ng-repeat="thread in threads track by $index">
-        <div  class="item item-thumbnail-right item-text-wrap">
-          <img ng-src="https://recette-leo.entcore.org{{ thread.icon }}" alt="icone {{thread.title}}">
-          <h2>{{thread.title}}</h2>
-        </div>
-      </ion-checkbox>
-    </div>
+    <ion-checkbox ng-repeat="thread in threads" ng-model="filterThreads[thread.thread_id]">
+      <div  class="item item-thumbnail-right item-text-wrap">
+        <img ng-src="https://recette-leo.entcore.org{{ thread.thread_icon }}" alt="icone {{thread.title}}">
+        <h2>{{thread.title}} {{thread.thread_id}}</h2>
+      </div>
+    </ion-checkbox>    
   </ion-content>
 </ion-view>

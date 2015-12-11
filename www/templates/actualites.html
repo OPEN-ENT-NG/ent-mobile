@@ -10,7 +10,7 @@
 <ion-content>
   <div class="list">
 
-    <ion-item ng-repeat="info in filtered=(infos | filter:filterByStatus)" class="card">
+    <ion-item ng-repeat="info in filtered=(infos | filter:filterByStatus) track by $index" class="card">
 
       <div class="item item-avatar">
 
@@ -20,13 +20,34 @@
         <p>{{info.publication_date | date:'d MMMM y'}}</p>
       </div>
 
-      <div class="item item-text-wrap" ng-bind-html=renderHtml(info.content)>
+      <div class="item actucard" ng-bind-html=renderHtml(info.content)>
       </div>
 
       <div class="item">
-        <a href="#" class="subdued" > {{(info.comments).length}} Commentaires</a>
+        <a href="#" class="subdued" > Commentaires</a>
       </div>
     </ion-item>
+    <!-- <ion-item class="card ">
+
+      <div class="item item-avatar">
+
+        <img ng-src="img/big_image_ent.jpg" alt="icone"/>
+        <h2>title</h2>
+        <h3>info.username</h3>
+        <p>info.publication_date | date:'d MMMM y'</p>
+      </div>
+
+      <div class="item actucard">
+        <p>Coucou</p>
+         <img src="img/big_image_ent.jpg">
+
+        <iframe src="https://www.youtube.com/embed/HmFbqS3xqyg?list=PLgXYKtwTwuVqjYWqaVOKyCCMFF1Bk52kJ" allowfullscreen="" frameborder="0" height="315" width="560"></iframe>
+      </div>
+
+      <div class="item">
+        <a href="#" class="subdued" > Commentaires</a>
+      </div>
+    </ion-item> -->
   </div>
 </ion-content>
 </ion-view>

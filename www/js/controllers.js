@@ -32,7 +32,7 @@ angular.module('ent.controllers', [])
   })
 })
 
-.controller('AppCtrl', function($scope, $sce, $state, $window){
+.controller('AppCtrl', function($scope, $sce, $state){
 
   $scope.renderHtml = function(text){
     return $sce.trustAsHtml(text);

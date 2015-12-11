@@ -1,9 +1,24 @@
 angular.module('ent.actualites', [])
 
 .controller('InfosCtrl', function ($scope, $http,$ionicPopover, $state) {
-  $http.get("https://recette-leo.entcore.org/actualites/infos").then(function(resp){
+  $scope.infos = [];
+
+  $http.get("https://recette-leo.entcore.org/actualites/infos")
+  .then(function(resp){
     $scope.infos = resp.data;
-    alert('appel');
+  }, function(err){
+    alert('ERR:'+ err);
+  });
+
+  $http.get("https://recette-leo.entcore.org/actualites/threads").then(function(resp){
+    $scope.threads = [];
+    for(var i = 0; i< resp.data.length; i++){
+      $scope.threads.push({
+        thread_id: resp.data[i]._id,
+        title: resp.data[i].title,
+        thread_icon: resp.data[i].icon
+      });
+    }
   }, function(err){
     alert('ERR:'+ err);
   });
@@ -18,11 +33,16 @@ angular.module('ent.actualites', [])
     {nom: "Publiées", status: 3}
   ];
 
-
-  $scope.filter = {};
+  $scope.filterInfos = [];
 
   $scope.filterByStatus = function (state) {
-    return $scope.filter[state.status] || noFilter($scope.filter);
+    return $scope.filterInfos[state.status] || noFilter($scope.filterInfos);
+  };
+
+  $scope.filterThreads = [];
+
+  $scope.filterByThread = function (thread) {
+    return $scope.filterThreads[thread.thread_id]  || noFilter($scope.filterThreads);
   };
 
   function noFilter(filterObj) {
@@ -32,6 +52,10 @@ angular.module('ent.actualites', [])
       }
     }
     return true;
+  }
+
+  $scope.countComments = function (info) {
+    return info.comments.length;
   }
 
   $ionicPopover.fromTemplateUrl('templates/popover_actualites.html', {
@@ -51,24 +75,18 @@ angular.module('ent.actualites', [])
   //Cleanup the popover when we're done with it!
   $scope.$on('$destroy', function() {
     $scope.popover.remove();
-  });
+  })
 
-  // Execute action on hide popover
-  $scope.$on('popover.hidden', function() {
-    // Execute action
-  });
 
-  // Execute action on remove popover
-  $scope.$on('popover.removed', function() {
-    // Execute action
-  });
-})
+  $scope.useThreads = [];
 
-.controller('ThreadsCtrl', function ($scope, $http,$ionicPopover) {
-  $http.get("https://recette-leo.entcore.org/actualites/threads").then(function(resp){
-    $scope.threads = resp.data;
-    console.log('success: '+$scope.threads);
-  }, function(err){
-    alert('ERR:'+ err);
-  });
+  $scope.filterMakes = function () {
+    return function (p) {
+      for (var i in $scope.useThreads) {
+        if (p._id == $scope.group[i] && $scope.useThreads[i]) {
+          return true;
+        }
+      }
+    };
+  };
 });

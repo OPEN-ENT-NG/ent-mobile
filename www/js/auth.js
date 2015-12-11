@@ -1,7 +1,16 @@
 angular.module('ent.auth', [])
 .controller('LoginCtrl', function($scope, $http, $cordovaInAppBrowser, $state) {
 
-  $scope.doLogin = function(){
+  document.addEventListener("deviceready", onDeviceReady, false);
+  function onDeviceReady() {
+    login();
+  }
+
+  $scope.doLogin= function(){
+    login();
+  }
+
+  function login(){
     if(!localStorage.getItem('access_token')){
       ref = window.open('https://recette-leo.entcore.org/auth/oauth2/auth?response_type=code&state=blip&scope=userinfo&client_id=mobile-ong&redirect_uri=https://recette-leo.entcore.org','_blank','location=no','toolbar=no', 'clearcache=yes', 'clearsessioncache=yes');
       ref.addEventListener('loadstart', function(event) {
@@ -13,7 +22,7 @@ angular.module('ent.auth', [])
         }
       });
     } else {
-      alert('token déjà enregistré: '+  localStorage.getItem('access_token'));
+    //  alert('token déjà enregistré: '+  localStorage.getItem('access_token'));
       $state.go('app.actualites');
     }
   }
@@ -48,12 +57,11 @@ angular.module('ent.auth', [])
       url: "https://recette-leo.entcore.org/auth/oauth2/token",
       data: "redirect_uri=https://recette-leo.entcore.org&grant_type=authorization_code&code=" + localStorage.getItem('code')
     }).then(function successCallback(response) {
-      alert('new token: '+response.data.access_token);
+    //  alert('new token: '+response.data.access_token);
       localStorage.setItem('access_token', response.data.access_token);
       localStorage.setItem('refresh_token', response.data.refresh_token);
 
       $state.go('app.actualites');
-
 
     }, function errorCallback(response) {
       alert('Erreur '+response.status+' '+response.data.error);

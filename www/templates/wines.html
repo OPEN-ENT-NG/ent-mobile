@@ -1,9 +1,0 @@
-<div ng-controller="myCtrl">
-    <b>Category:</b>
-    <div ng-repeat="wine in wines">
-        <b><input type="checkbox" ng-model="filter[wine.category]" /> {{wine.category}}</b>
-    </div>
-    <hr />
-    <div ng-repeat="w in filtered=(wines | filter:filterByCategory)">
-        {{w.name}} ({{w.category}})
-    </div>
