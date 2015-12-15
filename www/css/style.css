@@ -14,6 +14,19 @@ ion-popover-view.fit ion-content {
     max-width:100%;
 }
 
-.actustatus button{
-  margin-left: 1000px !important;
+.actucard h1 {
+  font-size: 18px;
 }
+
+.actucard h2 {
+  font-size: 14px;
+}
+
+.actustatus {
+  padding-left: 10px !important;
+  padding-right: 5px !important;
+}
+
+/*.break-word {
+		word-wrap: break-word !important;
+}*/
