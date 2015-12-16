@@ -1,4 +1,4 @@
-angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize','ent.controllers','ent.actualites','ent.blog','ent.auth', 'ent.accordeon'])
+angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize','ent.controllers','ent.actualites','ent.blog','ent.auth'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -98,5 +98,5 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize','ent.contr
 
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/login');
-//  $urlRouterProvider.otherwise('/app/actualites');
+  //$urlRouterProvider.otherwise('/app/actualites');
 });

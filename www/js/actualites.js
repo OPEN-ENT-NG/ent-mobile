@@ -36,6 +36,12 @@ angular.module('ent.actualites', [])
   //   }
   // ]
 
+  $scope.getCountComments = function(index){
+    var size = $scope.infos[index].comments.length;
+    var unite = size ==1 ? "Commentaire":"Commentaires";
+    return size+" "+unite;
+  }
+
     $http.get("https://recette-leo.entcore.org/actualites/threads").then(function(resp){
       $scope.threads = [];
       for(var i = 0; i< resp.data.length; i++){
