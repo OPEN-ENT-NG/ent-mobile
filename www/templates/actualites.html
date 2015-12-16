@@ -10,7 +10,19 @@
 <ion-content>
   <div class="list">
 
-    <ion-item ng-repeat="info in filtered=(infos | filter:filterByStatus) track by $index" class="card">
+    <ion-checkbox ng-repeat="thread in threads" ng-model="filterThreads[thread.thread_id]">
+      <div  class="item item-thumbnail-right item-text-wrap">
+        <img ng-src="https://recette-leo.entcore.org{{ thread.thread_icon }}" alt="icone {{thread.title}}">
+        <h2>{{thread.title}}</h2>
+        <h2>{{thread.thread_id}}</h2>
+      </div>
+    </ion-checkbox>
+
+    <div ng-repeat="thread in (threads | filter:filterByThread)">
+      <p>{{thread.thread_id}}</p>
+    </div>
+
+    <ion-item ng-repeat="info in filtered=(infos | filter:filterByThread| filter:filterByStatus) track by $index" class="card">
 
       <div class="item item-avatar">
 
@@ -26,7 +38,7 @@
 
         <div class="comment"  ng-show="info.comments.length != null">
           <p  ng-click="toggleComments(info)" ng-class="{active: areCommentsShown(info)}" class="subdued">
-            {{getCountComments($index)}}
+            {{getCountComments(info)}}
           </p>
           <ion-item class="item-accordion"  ng-repeat="item in info.comments"  ng-show="areCommentsShown(info)">
             <h3 style="font-weight: bold;">{{item.username}} à {{item.modified}}</h3>
@@ -35,23 +47,26 @@
 
         </div>
       </div>
+    </ion-item>
 
-      <!-- <ion-item class="card ">
 
-      <div class="item item-avatar">
-      <img ng-src="img/big_image_ent.jpg" alt="icone"/>
-      <h2>title</h2>
-      <h3>info.username</h3>
-      <p>info.publication_date | date:'d MMMM y'</p>
-    </div>
 
-    <div class="item actucard item-text-wrap">
-    <h1>Lorem ipsum dolor sit amet</h1>
+    <!-- <ion-item class="card ">
+
+    <div class="item item-avatar">
+    <img ng-src="img/big_image_ent.jpg" alt="icone"/>
+    <h2>title</h2>
+    <h3>info.username</h3>
+    <p>info.publication_date | date:'d MMMM y'</p>
   </div>
 
-  <div class="item">
-  <div class="item">
-  <a href="#" class="subdued" > Commentaires 7878</a>
+  <div class="item actucard item-text-wrap">
+  <h1>Lorem ipsum dolor sit amet</h1>
+</div>
+
+<div class="item">
+<div class="item">
+<a href="#" class="subdued" > Commentaires 7878</a>
 </div>
 <div class="item">
 <a href="#" class="subdued" > Commentaires111</a>
