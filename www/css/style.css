@@ -15,11 +15,11 @@ ion-popover-view.fit ion-content {
 }
 
 .actucard h1 {
-  font-size: 18px;
+  font-size: 14px;
 }
 
 .actucard h2 {
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .actustatus {
@@ -27,6 +27,19 @@ ion-popover-view.fit ion-content {
   padding-right: 5px !important;
 }
 
-/*.break-word {
-		word-wrap: break-word !important;
-}*/
+.comment{
+  padding-top: 10px !important;
+}
+
+.item.item-accordion {
+  padding-top: 1;
+  padding-bottom: 1;
+  transition: 0.09s all linear;
+}
+.item.item-accordion.ng-hide {
+  line-height: 0px;
+}
+.item.item-accordion.ng-hide-add,
+.item.item-accordion.ng-hide-remove {
+  display: block !important;
+}

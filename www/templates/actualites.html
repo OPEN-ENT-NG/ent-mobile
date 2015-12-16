@@ -12,47 +12,56 @@
 
     <ion-item ng-repeat="info in filtered=(infos | filter:filterByStatus) track by $index" class="card">
 
-    <div class="item item-avatar">
+      <div class="item item-avatar">
 
-    <img ng-src="https://recette-leo.entcore.org{{info.thread_icon}}" alt="icone {{info.thread_title}}"/>
-    <h2>{{info.title}}</h2>
-    <h3>{{info.username}}</h3>
-    <p>{{info.publication_date | date:'d MMMM y'}}</p>
-  </div>
+        <img ng-src="https://recette-leo.entcore.org{{info.thread_icon}}" alt="icone {{info.thread_title}}"/>
+        <h2>{{info.title}}</h2>
+        <h3>{{info.username}}</h3>
+        <p>{{info.publication_date | date:'d MMMM y'}}</p>
+      </div>
 
-  <div class="item actucard item-text-wrap" ng-bind-html=renderHtml(info.content)>
-</div>
+      <div class="item actucard item-text-wrap">
 
-<div class="item">
-<a class="subdued" ng-repeat="com in info.comments">{{com.comment}}<br/></a>
+        <div ng-bind-html=renderHtml(info.content)></div>
 
-</ion-item>
-<!-- <ion-item class="card ">
+        <div class="comment"  ng-show="info.comments.length != null">
+          <p  ng-click="toggleComments(info)" ng-class="{active: areCommentsShown(info)}" class="subdued">
+            {{info.comments.length}} Commentaires
+          </p>
+          <ion-item class="item-accordion"  ng-repeat="item in info.comments"  ng-show="areCommentsShown(info)">
+            <h3 style="font-weight: bold;">{{item.username}} à {{item.modified}}</h3>
+            <p style="color: black;">{{item.comment}}</p>
+          </ion-item>
 
-  <div class="item item-avatar">
-    <img ng-src="img/big_image_ent.jpg" alt="icone"/>
-    <h2>title</h2>
-    <h3>info.username</h3>
-    <p>info.publication_date | date:'d MMMM y'</p>
-  </div>
+        </div>
+      </div>
 
-  <div class="item actucard item-text-wrap">
+      <!-- <ion-item class="card ">
+
+      <div class="item item-avatar">
+      <img ng-src="img/big_image_ent.jpg" alt="icone"/>
+      <h2>title</h2>
+      <h3>info.username</h3>
+      <p>info.publication_date | date:'d MMMM y'</p>
+    </div>
+
+    <div class="item actucard item-text-wrap">
     <h1>Lorem ipsum dolor sit amet</h1>
   </div>
 
   <div class="item">
-    <div class="item">
-      <a href="#" class="subdued" > Commentaires 7878</a>
-    </div>
-    <div class="item">
-      <a href="#" class="subdued" > Commentaires111</a>
-    </div>
-    <div class="item">
-      <a href="#" class="subdued" > Commentaires 544</a>
-    </div>
-  </div>
+  <div class="item">
+  <a href="#" class="subdued" > Commentaires 7878</a>
+</div>
+<div class="item">
+<a href="#" class="subdued" > Commentaires111</a>
+</div>
+<div class="item">
+<a href="#" class="subdued" > Commentaires 544</a>
+</div>
+</div>
 
-  </ion-item> -->
+</ion-item> -->
 </div>
 </ion-content>
 </ion-view>
