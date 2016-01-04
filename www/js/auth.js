@@ -12,7 +12,7 @@ angular.module('ent.auth', [])
 
   function login(){
     if(!localStorage.getItem('access_token')){
-      ref = window.open('https://recette-leo.entcore.org/auth/oauth2/auth?response_type=code&state=blip&scope=userinfo&client_id=mobile-ong&redirect_uri=https://recette-leo.entcore.org','_system','location=no','toolbar=no', 'clearcache=yes', 'clearsessioncache=yes');
+      ref = window.open('https://recette-leo.entcore.org/auth/oauth2/auth?response_type=code&state=blip&scope=userinfo&client_id=mobile-ong&redirect_uri=https://recette-leo.entcore.org','_blank','location=no','toolbar=no', 'clearcache=yes', 'clearsessioncache=yes');
       ref.addEventListener('loadstart', function(event) {
         var url = event.url;
         if(url.startsWith("https://recette-leo.entcore.org/?code=")) {
