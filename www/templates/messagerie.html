@@ -1,5 +1,30 @@
 <ion-view view-title="Messagerie">
-  <ion-content>
-    <h1>Messagerie</h1>
+  <ion-content >
+    <div class="list">
+      <ion-item href="#/app/inbox">
+        <i class="foldericon-"></i>
+        Boîte de réception
+      </ion-item>
+      <ion-item href="">
+        <i class="foldericon-"></i>
+        Messages envoyés
+      </ion-item>
+      <ion-item href="">
+        <i class="foldericon-"></i>
+        Brouillons
+      </ion-item>
+      <ion-item href="">
+        <i class="foldericon-"></i>
+        Corbeille
+      </ion-item>
+      <ion-item href="">
+        <i class="foldericon-"></i>
+        Dossiers utilisateurs
+      </ion-item>
+      <ion-item href="" ng-repeat="folder in folders">
+        <i class="foldericon-"></i>
+        {{folder.name}}
+      </ion-item>
+    </div>
   </ion-content>
 </ion-view>
