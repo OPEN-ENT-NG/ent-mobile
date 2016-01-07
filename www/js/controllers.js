@@ -32,10 +32,15 @@ angular.module('ent.controllers', [])
   })
 })
 
-.controller('AppCtrl', function($scope, $sce, $state){
+.controller('AppCtrl', function($scope, $sce, $state, $sanitize){
 
   $scope.renderHtml = function(text){
-    return $sce.trustAsHtml(text);
+    text = text.replace(/="\/workspace/g, "=\"https://recette-leo.entcore.org/workspace");
+
+    var regex = /href="([\S]+)"/g;
+    var newString = $sanitize(text).replace(regex, "onClick=\"window.open('$1', '_blank', 'location=no')\"");
+    console.log(newString);
+    return $sce.trustAsHtml(newString);
   }
 
   $scope.logout = function(){
@@ -43,8 +48,3 @@ angular.module('ent.controllers', [])
     $state.go("login");
   }
 })
-
-function getDataFromResource(resource){
-    resource = resource.replace(/\"/workspace/, "=\"http://recette-leo.entcore.org/workspace");
-  }
-}
