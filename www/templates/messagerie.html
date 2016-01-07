@@ -1,5 +1,20 @@
-<ion-view view-title="Messagerie">
-  <ion-content >
+<ion-view view-title="Messagerie" >
+
+  <!-- <ion-nav-bar class="bar-positive">
+    <ion-nav-buttons side="left">
+      <button class="button button-icon button-clear fa fa-bars" menu-toggle="left">
+      </button>
+    </ion-nav-buttons>
+  </ion-nav-bar> -->
+
+  <!-- <ion-nav-buttons side="left">
+    <button class="button button-icon button-clear fa fa-bars" menu-toggle="left">
+    </button>
+  </ion-nav-buttons> -->
+
+  <ion-content>
+    <ion-refresher pulling-text="Actualiser" on-refresh="doRefreshFolders()">
+    </ion-refresher>
     <div class="list">
       <ion-item href="#/app/inbox">
         <i class="foldericon-"></i>
@@ -17,10 +32,9 @@
         <i class="foldericon-"></i>
         Corbeille
       </ion-item>
-      <ion-item href="">
-        <i class="foldericon-"></i>
-        Dossiers utilisateurs
-      </ion-item>
+
+      <div class="item item-divider"></div>
+
       <ion-item href="" ng-repeat="folder in folders">
         <i class="foldericon-"></i>
         {{folder.name}}

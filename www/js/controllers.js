@@ -24,15 +24,21 @@ angular.module('ent.controllers', [])
   $httpProvider.defaults.withCredentials = true;
 })
 
-.controller('UserInfoCtrl', function($scope, $http) {
+.controller('UserInfoCtrl', function($scope, $http, $state) {
   $http.get('https://recette-leo.entcore.org/auth/oauth2/userinfo').then(function(resp) {
     $scope.userinfo = resp.data;
   }, function(err) {
     alert('ERR', err.data.status);
   })
+
+  $scope.jumpToInbox = function(){
+    $state.go("app.messagerie");
+    // alert("messagerie");
+    // $state.go("app.inbox");
+  }
 })
 
-.controller('AppCtrl', function($scope, $sce, $state){
+.controller('AppCtrl', function($scope, $sce, $state, $ionicHistory){
 
   $scope.renderHtml = function(text){
     return $sce.trustAsHtml(text);
@@ -40,6 +46,7 @@ angular.module('ent.controllers', [])
 
   $scope.logout = function(){
     localStorage.clear();
+    $ionicHistory.clearHistory()
     $state.go("login");
   }
 })

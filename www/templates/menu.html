@@ -13,33 +13,33 @@
 
   <ion-side-menu side="left" ng-controller="UserInfoCtrl">
     <ion-header-bar class="bar-stable" >
-        <h1 class="title">{{userinfo.username}}</h1>
+      <h1 class="title">{{userinfo.username}}</h1>
     </ion-header-bar>
     <ion-content>
       <div class="list dark">
-      <ion-item menu-close href="#/app/actualites">
-        <i class="newspapericon-"></i>
-        Actualités
-      </ion-item>
-      <ion-item menu-close href="#/app/messagerie">
-        <i class="mailicon-"></i>
-        Messagerie
-      </ion-item>
-      <ion-item menu-close href="#/app/blog-list">
-        <i class="bullhornicon-"></i>
-        Blog
-      </ion-item>
-      <ion-item menu-close href="#/app/espace_doc">
-        <i class="foldericon-"></i>
-        Espace documentaire
-      </ion-item>
-      <div class="item item-divider"></div>
-      <ion-item menu-close ng-click="logout()">
-        <i class="officon-"></i>
-        Déconnexion
-      </ion-item>
-    </div>
+        <ion-item menu-close href="#/app/actualites">
+          <i class="newspapericon-"></i>
+          Actualités
+        </ion-item>
+        <ion-item menu-close ng-click="jumpToInbox()">
+          <i class="mailicon-"></i>
+          Messagerie
+        </ion-item>
+        <ion-item menu-close href="#/app/blog-list">
+          <i class="bullhornicon-"></i>
+          Blog
+        </ion-item>
+        <ion-item menu-close href="#/app/espace_doc">
+          <i class="foldericon-"></i>
+          Espace documentaire
+        </ion-item>
+        <div class="item item-divider"></div>
+        <ion-item menu-close ng-click="logout()">
+          <i class="officon-"></i>
+          Déconnexion
+        </ion-item>
+      </div>
 
-  </ion-content>
-</ion-side-menu>
+    </ion-content>
+  </ion-side-menu>
 </ion-side-menus>

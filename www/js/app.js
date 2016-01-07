@@ -1,4 +1,4 @@
-angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize','ent.controllers','ent.actualites','ent.blog','ent.auth', 'ent.messagerie'])
+angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize','ent.controllers','ent.actualites','ent.blog','ent.auth', 'ent.messagerie', 'ent.inbox'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -38,11 +38,12 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize','ent.contr
     url: '/inbox',
     views: {
       'menuContent': {
-        templateUrl: 'templates/inbox.html'
+        templateUrl: 'templates/inbox.html',
+        controller: 'InboxCtrl'
       }
     }
   })
-  
+
   .state('app.espace_doc', {
     url: '/espace_doc',
     views: {
@@ -108,5 +109,6 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize','ent.contr
 
   // if none of the above states are matched, use this as the fallback
   //$urlRouterProvider.otherwise('/login');
-  $urlRouterProvider.otherwise('/app/messagerie');
+  //$urlRouterProvider.otherwise('/app/messagerie');
+  $urlRouterProvider.otherwise('/app/actualites');
 });
