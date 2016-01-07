@@ -43,3 +43,8 @@ angular.module('ent.controllers', [])
     $state.go("login");
   }
 })
+
+function getDataFromResource(resource){
+    resource = resource.replace(/\"/workspace/, "=\"http://recette-leo.entcore.org/workspace");
+  }
+}

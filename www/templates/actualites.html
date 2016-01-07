@@ -1,71 +1,39 @@
 <ion-view view-title="Actualités" ng-controller="InfosCtrl">
   <ion-nav-buttons side="right">
-    <button class="button button-icon button-clear fa fa-list-ul"  ng-click="goThreads()" >
-    </button>
-    <button class="button button-icon button-clear fa fa-ellipsis-v actustatus" ng-click = "openPopover($event)">
-    </button>
+    <button class="button button-icon button-clear fa fa-list-ul"  ng-click="goThreads()" ></button>
+    <button class="button button-icon button-clear fa fa-ellipsis-v actustatus" ng-click = "openPopover($event)"></button>
   </ion-nav-buttons>
-</ion-nav-bar>
 
-<ion-content>
-  <ion-refresher pulling-text="Actualiser" on-refresh="doRefresh()">
-  </ion-refresher>
-  <div class="list">
-    <ion-item ng-repeat="info in filtered=(infos | filter:filterByStatus | filter:filterByThread) track by $index" class="card">
+  <ion-content>
+    <ion-refresher pulling-text="Actualiser" on-refresh="doRefresh()">
+    </ion-refresher>
+    <div class="list">
+      <ion-item ng-repeat="info in filtered=(infos | filter:filterByStatus | filter:filterByThread) track by $index" class="card">
 
-      <div class="item item-avatar">
+        <div class="item item-avatar">
 
-        <img ng-src="https://recette-leo.entcore.org{{info.thread_icon}}" alt="icone {{info.thread_title}}"/>
-        <h2>{{info.title}}</h2>
-        <h3>{{info.username}}</h3>
-        <p>{{info.publication_date | date:'d MMMM y'}}</p>
-      </div>
-
-      <div class="item actucard item-text-wrap">
-
-        <div ng-bind-html=renderHtml(info.content)></div>
-
-        <div class="comment"  ng-show="info.comments.length != null">
-          <p  ng-click="toggleComments(info)" ng-class="{active: areCommentsShown(info)}" class="subdued">
-            {{getCountComments(info)}}
-          </p>
-          <ion-item class="item-accordion"  ng-repeat="item in info.comments"  ng-show="areCommentsShown(info)">
-            <h3 style="font-weight: bold;">{{item.username}} à {{item.modified}}</h3>
-            <p style="color: black;">{{item.comment}}</p>
-          </ion-item>
-
+          <img ng-src="https://recette-leo.entcore.org{{info.thread_icon}}" alt="icone {{info.thread_title}}"/>
+          <h2>{{info.title}}</h2>
+          <h3>{{info.username}}</h3>
+          <p>{{info.publication_date | date:'d MMMM y'}}</p>
         </div>
-      </div>
-    </ion-item>
 
+        <div class="item actucard item-text-wrap">
 
+          <div ng-bind-html=renderHtml(info.content)></div>
 
-    <!-- <ion-item class="card ">
+          <div class="comment"  ng-show="info.comments.length != null">
+            <p  ng-click="toggleComments(info)" ng-class="{active: areCommentsShown(info)}" class="subdued">
+              {{getCountComments(info)}}
+            </p>
+            <ion-item class="item-accordion"  ng-repeat="item in info.comments"  ng-show="areCommentsShown(info)">
+              <h3 style="font-weight: bold;">{{item.username}} à {{item.modified}}</h3>
+              <p style="color: black;">{{item.comment}}</p>
+            </ion-item>
 
-    <div class="item item-avatar">
-    <img ng-src="img/big_image_ent.jpg" alt="icone"/>
-    <h2>title</h2>
-    <h3>info.username</h3>
-    <p>info.publication_date | date:'d MMMM y'</p>
-  </div>
-
-  <div class="item actucard item-text-wrap">
-  <h1>Lorem ipsum dolor sit amet</h1>
-</div>
-
-<div class="item">
-<div class="item">
-<a href="#" class="subdued" > Commentaires 7878</a>
-</div>
-<div class="item">
-<a href="#" class="subdued" > Commentaires111</a>
-</div>
-<div class="item">
-<a href="#" class="subdued" > Commentaires 544</a>
-</div>
-</div>
-
-</ion-item> -->
-</div>
-</ion-content>
+          </div>
+        </div>
+      </ion-item>
+    </div>
+  </ion-content>
 </ion-view>
