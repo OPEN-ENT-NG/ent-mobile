@@ -18,8 +18,10 @@ ion-popover-view.fit ion-content {
   font-size: 14px;
 }
 
-.actucard h2 {
-  font-size: 12px;
+.actucard a {
+  font-weight: bold;
+  color: blue;
+  text-decoration: underline;
 }
 
 .actustatus {
