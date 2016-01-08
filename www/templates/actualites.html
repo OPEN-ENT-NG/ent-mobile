@@ -26,7 +26,7 @@
             <p  ng-click="toggleComments(info)" ng-class="{active: areCommentsShown(info)}" class="subdued">
               {{getCountComments(info)}}
             </p>
-            <ion-item class="item-accordion"  ng-repeat="item in info.comments"  ng-show="areCommentsShown(info)">
+            <ion-item class="item-accordion"  ng-repeat="item in info.comments track by $index"  ng-show="areCommentsShown(info)">
               <h3 style="font-weight: bold;">{{item.username}} à {{item.modified}}</h3>
               <p style="color: black;">{{item.comment}}</p>
             </ion-item>

@@ -24,10 +24,6 @@ ion-popover-view.fit ion-content {
   text-decoration: underline;
 }
 
-.actucard href {
-  font-size: 12px;
-}
-
 .actustatus {
   padding-left: 10px !important;
   padding-right: 5px !important;

@@ -19,7 +19,7 @@ angular.module('ent.actualites', [])
   }, function(err){
     alert('ERR:'+ err);
   });
-  //
+
   // $scope.infos = [
   //   {
   //     title: "Règlement restauration scolaire",
@@ -68,7 +68,7 @@ angular.module('ent.actualites', [])
     alert('ERR:'+ err);
   });
 
-
+  //
   // $scope.threads = [
   //   {title: "Brouillons", thread_id: 10},
   //   {title: "Soumises", thread_id: 27},
