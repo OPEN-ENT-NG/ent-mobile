@@ -7,14 +7,7 @@ angular.module('ent.messagerie', [])
     alert('ERR:'+ err);
   });
 
-  $scope.$on('$ionicView.enter', function() {
-    console.log($ionicHistory.backView());
-    //$state.go("app.inbox");
-  });
 
-  $scope.goToMessageFolders = function(){
-    $state.go("app.messagerie");
-  }
 
   $scope.goToInbox = function(){
     $ionicHistory.clearCache();

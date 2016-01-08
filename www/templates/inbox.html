@@ -1,19 +1,14 @@
 <ion-view view-title="Inbox">
-
-  <!-- <ion-nav-buttons side="left" >
-    <button class="button button-icon button-clear ion-chevron-left" ng-click="goToMessageFolders()">
-    </button>
-
-    <i class="foldericon-"></i>MA foutue Boîte de réception
-  </ion-nav-buttons> -->
-<!--
-  <ion-nav-back-button ng-click="goToMessageFolders()">
-  </ion-nav-back-button> -->
-
-
-
   <ion-content>
-    <h1>Inbox</h1>
+    <ion-item ng-repeat="message in messages track by $index"  >
+
+      <div class="message">
+        <span class="right">{{message.date}}</span>
+        <h2>{{getRealName(message)}}</h2>
+      </div>
+
+      <h2>{{message.subject}}</h2>
+    </ion-item>
   </ion-content>
 
 </ion-view>

@@ -35,7 +35,7 @@
 
       <div class="item item-divider"></div>
 
-      <ion-item href="" ng-repeat="folder in folders">
+      <ion-item href="" ng-repeat="folder in folders track by $index">
         <i class="foldericon-"></i>
         {{folder.name}}
       </ion-item>

@@ -45,3 +45,7 @@ ion-popover-view.fit ion-content {
 .item.item-accordion.ng-hide-remove {
   display: block !important;
 }
+
+.message .right{
+  float: right;
+}
