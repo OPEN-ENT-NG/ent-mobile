@@ -1,6 +1,6 @@
 <ion-view view-title={{nameFolder}}>
   <ion-content>
-    <ion-item ng-repeat="message in messages track by $index"  >
+    <ion-item ng-repeat="message in messages track by $index" href="#/app/messagerie/id/{{message.id}}" >
 
       <div class="message">
         <i class="attachicon-" ng-show="message.attachments.length != 0"></i>

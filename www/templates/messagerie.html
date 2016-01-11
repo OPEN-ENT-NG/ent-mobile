@@ -4,26 +4,26 @@
     <ion-refresher pulling-text="Actualiser" on-refresh="doRefreshFolders()">
     </ion-refresher>
     <div class="list">
-      <ion-item href="#/app/messagerie/INBOX" >
+      <ion-item href="#/app/messagerie/folder/INBOX" >
         <i class="foldericon-"></i>
         Boîte de réception
       </ion-item>
-      <ion-item href="#/app/messagerie/OUTBOX">
+      <ion-item href="#/app/messagerie/folder/OUTBOX">
         <i class="foldericon-"></i>
         Messages envoyés
       </ion-item>
-      <ion-item href="#/app/messagerie/DRAFT">
+      <ion-item href="#/app/messagerie/folder/DRAFT">
         <i class="foldericon-"></i>
         Brouillons
       </ion-item>
-      <ion-item href="#/app/messagerie/TRASH">
+      <ion-item href="#/app/messagerie/folder/TRASH">
         <i class="foldericon-"></i>
         Corbeille
       </ion-item>
 
       <div class="item item-divider"></div>
 
-      <ion-item href="#/app/messagerie/OTHER" ng-click="setCurrentFolder($index)" ng-repeat="folder in folders track by $index">
+      <ion-item href="#/app/messagerie/folder/OTHER" ng-click="setCurrentFolder($index)" ng-repeat="folder in folders track by $index">
         <i class="foldericon-"></i>
         {{folder.name}}
       </ion-item>

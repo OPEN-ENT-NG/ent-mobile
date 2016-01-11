@@ -1,4 +1,4 @@
-angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute','ent.controllers','ent.actualites','ent.blog','ent.auth', 'ent.messagerie', 'ent.message_folder'])
+angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute','ent.controllers','ent.actualites','ent.blog','ent.auth', 'ent.messagerie', 'ent.message_folder','ent.message_detail'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -35,11 +35,21 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   })
 
   .state('app.message_folder', {
-    url: '/messagerie/:nameFolder',
+    url: '/messagerie/folder/:nameFolder',
     views: {
       'menuContent': {
         templateUrl: 'templates/message_folder.html',
         controller: 'InboxCtrl'
+      }
+    }
+  })
+
+  .state('app.message_detail', {
+    url: '/messagerie/id/:idMessage',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/message_detail.html',
+        controller: 'MessagesDetailCtrl'
       }
     }
   })

@@ -1,0 +1,12 @@
+<ion-view title="Détail">
+  <ion-content>
+    <!-- <i class="attachicon-" ng-show="mail.attachments.length != 0"></i>
+    <span class="right">{{mail.date | date:'dd/MM/yy'}}</span>
+    <h2>{{getRealName(mail)}}</h2>
+    <h2>{{mail.subject}}</h2> -->
+
+    <div class="item-text-wrap">
+      <div ng-bind-html= "renderHtml(mail.body)"></div>
+    </div>
+  </ion-content>
+</ion-view>

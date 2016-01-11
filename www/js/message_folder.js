@@ -20,14 +20,6 @@ angular.module('ent.message_folder', [])
   });
 
 
-
-  $http.get(url).then(function(resp){
-    $scope.messages = resp.data;
-  }, function(err){
-    alert('ERR:'+ err);
-  });
-
-
   // $scope.messages = [
   //   {
   //     id: "0e5c2b8d-d875-4867-a5bb-668e9790bcae",

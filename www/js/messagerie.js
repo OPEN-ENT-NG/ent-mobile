@@ -1,6 +1,6 @@
 angular.module('ent.messagerie', [])
 
-.controller('MessagerieFoldersCtrl', function($scope, $http, $rootScope, $state){
+.controller('MessagerieFoldersCtrl', function($scope, $http){
   $http.get("https://recette-leo.entcore.org/conversation/folders/list").then(function(resp){
     $scope.folders = resp.data;
   }, function(err){
