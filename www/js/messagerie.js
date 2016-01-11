@@ -1,18 +1,12 @@
 angular.module('ent.messagerie', [])
 
-.controller('MessagerieFoldersCtrl', function($scope, $http, $state, $ionicHistory){
+.controller('MessagerieFoldersCtrl', function($scope, $http){
+
   $http.get("https://recette-leo.entcore.org/conversation/folders/list").then(function(resp){
     $scope.folders = resp.data;
   }, function(err){
     alert('ERR:'+ err);
   });
-
-
-
-  $scope.goToInbox = function(){
-    $ionicHistory.clearCache();
-    $state.go('app.inbox');
-  }
 
   $scope.doRefreshFolders = function() {
 

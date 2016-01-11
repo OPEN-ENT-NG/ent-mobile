@@ -47,8 +47,18 @@ angular.module('ent.controllers', [])
     var regex = /href="([\S]+)"/g;
     var newString = $sanitize(text).replace(regex, "onClick=\"windowref = window.open('$1', '_blank', 'location=no')\"");
 
-
     return $sce.trustAsHtml(newString);
+  }
+
+  $scope.getRealName = function(message){
+    var returnName = "Inconnu";
+    var from = message.from;
+    for(var i = 0; i< message.displayNames.length; i++){
+      if(from === message.displayNames[i][0] && returnName === "Inconnu"){
+        returnName = message.displayNames[i][1];
+      }
+    }
+    return returnName;
   }
 
   $scope.logout = function(){

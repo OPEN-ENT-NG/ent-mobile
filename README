@@ -1,6 +1,6 @@
-PREREQUIS: Installer Node.je 4 puis cordova et ionic : npm install -g cordova ionic
+PREREQUIS: Installer Node.js 4 puis cordova et ionic : npm install -g cordova ionic
 
 On va ensuite récupérer les plugins nécéssaires au bon fonctionnement de l'application: ionic state reset
-Pour lancer l'application, ionic start android ou ios selon le mobile branché. 
+Pour lancer l'application, ionic start android ou ios selon le mobile branché.
 
 Pour plus d'informations, consulter https://github.com/driftyco/ionic-cli.

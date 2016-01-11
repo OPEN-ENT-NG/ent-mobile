@@ -1,34 +1,22 @@
-<ion-view view-title="Messagerie" >
-
-  <!-- <ion-nav-bar class="bar-positive">
-    <ion-nav-buttons side="left">
-      <button class="button button-icon button-clear fa fa-bars" menu-toggle="left">
-      </button>
-    </ion-nav-buttons>
-  </ion-nav-bar> -->
-
-  <!-- <ion-nav-buttons side="left">
-    <button class="button button-icon button-clear fa fa-bars" menu-toggle="left">
-    </button>
-  </ion-nav-buttons> -->
+<ion-view view-title="Messagerie">
 
   <ion-content>
     <ion-refresher pulling-text="Actualiser" on-refresh="doRefreshFolders()">
     </ion-refresher>
     <div class="list">
-      <ion-item href="#/app/inbox">
+      <ion-item href="#/app/messagerie/INBOX" >
         <i class="foldericon-"></i>
         Boîte de réception
       </ion-item>
-      <ion-item href="">
+      <ion-item href="#/app/messagerie/OUTBOX">
         <i class="foldericon-"></i>
         Messages envoyés
       </ion-item>
-      <ion-item href="">
+      <ion-item href="#/app/messagerie/DRAFT">
         <i class="foldericon-"></i>
         Brouillons
       </ion-item>
-      <ion-item href="">
+      <ion-item href="#/app/messagerie/TRASH">
         <i class="foldericon-"></i>
         Corbeille
       </ion-item>

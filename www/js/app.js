@@ -1,4 +1,4 @@
-angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize','ent.controllers','ent.actualites','ent.blog','ent.auth', 'ent.messagerie', 'ent.inbox'])
+angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute','ent.controllers','ent.actualites','ent.blog','ent.auth', 'ent.messagerie', 'ent.message_folder'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -14,7 +14,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize','ent.contr
   });
 })
 
-.config(function($stateProvider, $urlRouterProvider) {
+.config(function($stateProvider, $urlRouterProvider, $routeProvider) {
   $stateProvider
 
   .state('app', {
@@ -34,11 +34,11 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize','ent.contr
     }
   })
 
-  .state('app.inbox', {
-    url: '/inbox',
+  .state('app.message_folder', {
+    url: '/messagerie/:nameFolder',
     views: {
       'menuContent': {
-        templateUrl: 'templates/inbox.html',
+        templateUrl: 'templates/message_folder.html',
         controller: 'InboxCtrl'
       }
     }
@@ -107,8 +107,16 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize','ent.contr
     controller: 'LoginCtrl'
   });
 
+  // $routeProvider
+  // .when('/:folderName',{
+  //     views: {
+  //       'menuContent': {
+  //         templateUrl: 'templates/message_folder.html',
+  //         controller: 'InboxCtrl'
+  //       }
+  //     }
+  // })
   // if none of the above states are matched, use this as the fallback
   //$urlRouterProvider.otherwise('/login');
-  $urlRouterProvider.otherwise('/app/inbox');
-
+  $urlRouterProvider.otherwise('/app/messagerie');
 });
