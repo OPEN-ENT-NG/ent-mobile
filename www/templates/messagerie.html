@@ -23,7 +23,7 @@
 
       <div class="item item-divider"></div>
 
-      <ion-item href="" ng-repeat="folder in folders track by $index">
+      <ion-item href="#/app/messagerie/OTHER" ng-click="setCurrentFolder($index)" ng-repeat="folder in folders track by $index">
         <i class="foldericon-"></i>
         {{folder.name}}
       </ion-item>

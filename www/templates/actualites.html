@@ -11,7 +11,6 @@
       <ion-item ng-repeat="info in filtered=(infos | filter:filterByStatus | filter:filterByThread) track by $index" class="card">
 
         <div class="item item-avatar">
-
           <img ng-src="https://recette-leo.entcore.org{{info.thread_icon}}" alt="icone {{info.thread_title}}"/>
           <h2>{{info.title}}</h2>
           <h3>{{info.username}}</h3>

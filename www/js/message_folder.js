@@ -1,17 +1,32 @@
 
 angular.module('ent.message_folder', [])
 
-.controller('InboxCtrl', function($scope, $http, $state, $stateParams){
+.controller('InboxCtrl',  function($scope, $http, $state, $stateParams){
 
-  $scope.nameFolder = $stateParams.nameFolder;
-
-  var url = "https://recette-leo.entcore.org/conversation/list/"+$scope.nameFolder;
+  var url = "";
+  var regularFolders = ["INBOX", "OUTBOX", "TRASH", "DRAFT"];
+  if(regularFolders.indexOf($stateParams.nameFolder)>-1){
+    url="https://recette-leo.entcore.org/conversation/list/"+$stateParams.nameFolder;
+    $scope.nameFolder = $stateParams.nameFolder;
+  } else {
+    url="https://recette-leo.entcore.org/conversation/list/"+localStorage.getItem("messagerie_folder_id")+"?restrain=&page=0";
+    $scope.nameFolder = localStorage.getItem("messagerie_folder_name");
+  }
 
   $http.get(url).then(function(resp){
     $scope.messages = resp.data;
   }, function(err){
     alert('ERR:'+ err);
   });
+
+
+
+  $http.get(url).then(function(resp){
+    $scope.messages = resp.data;
+  }, function(err){
+    alert('ERR:'+ err);
+  });
+
 
   // $scope.messages = [
   //   {
@@ -35,7 +50,9 @@ angular.module('ent.message_folder', [])
   //         "VINCENT CAILLET"
   //       ]
   //     ],
-  //     attachments: [ ],
+  //     attachments: [
+  //       "b166bf6b-0f12-45df-b1ea-803273202e73",
+  //       "0376018f-8f72-4399-8c14-526f56d1cdb6" ],
   //     systemFolders:
   //     [
   //       "INBOX"
@@ -43,20 +60,4 @@ angular.module('ent.message_folder', [])
   //   }
   // ];
 
-  $scope.getFolderName = function(){
-    return $scope.folderName;
-  }
-
-  });
-
-  // function getRealName (message){
-  //   var returnName = "Inconnu";
-  //   var from = message.from;
-  //   for(var i = 0; i< message.displayNames.length; i++){
-  //     if(from === message.displayNames[i][0] && returnName === "Inconnu"){
-  //       returnName = message.displayNames[i][1];
-  //     }
-  //   }
-  //   alert(returnName);
-  //   return returnName;
-  // }
+});
