@@ -30,14 +30,7 @@ angular.module('ent.controllers', [])
   }, function(err) {
     alert('ERR', err.data.status);
   })
-
-  $scope.jumpToInbox = function(){
-    $state.go("app.messagerie");
-    // alert("messagerie");
-    // $state.go("app.inbox");
-  }
 })
-
 
 .controller('AppCtrl', function($scope, $sce, $state, $sanitize, $cordovaInAppBrowser){
 
@@ -50,12 +43,11 @@ angular.module('ent.controllers', [])
     return $sce.trustAsHtml(newString);
   }
 
-  $scope.getRealName = function(message){
+  $scope.getRealName = function(userId, object){
     var returnName = "Inconnu";
-    var from = message.from;
-    for(var i = 0; i< message.displayNames.length; i++){
-      if(from === message.displayNames[i][0] && returnName === "Inconnu"){
-        returnName = message.displayNames[i][1];
+    for(var i = 0; i< object.displayNames.length; i++){
+      if(userId === object.displayNames[i][0] && returnName === "Inconnu"){
+        returnName = object.displayNames[i][1];
       }
     }
     return returnName;

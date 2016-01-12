@@ -7,7 +7,7 @@
   <ion-content>
     <ion-refresher pulling-text="Actualiser" on-refresh="doRefresh()">
     </ion-refresher>
-    <div class="list">
+    <ion-list>
       <ion-item ng-repeat="info in filtered=(infos | filter:filterByStatus | filter:filterByThread) track by $index" class="card">
 
         <div class="item item-avatar">
@@ -17,10 +17,12 @@
           <p>{{info.publication_date | date:'d MMMM y'}}</p>
         </div>
 
-        <div class="item actucard item-text-wrap">
+<!-- item-text-wrap -->
+        <ion-card-content class="item actucard ">
 
           <div ng-bind-html=renderHtml(info.content)></div>
 
+        </ion-card-content>
           <div class="comment"  ng-show="info.comments.length != null">
             <p  ng-click="toggleComments(info)" ng-class="{active: areCommentsShown(info)}" class="subdued">
               {{getCountComments(info)}}
@@ -33,6 +35,6 @@
           </div>
         </div>
       </ion-item>
-    </div>
+    </ion-list>
   </ion-content>
 </ion-view>

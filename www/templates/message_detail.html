@@ -4,7 +4,9 @@
     <span class="right">{{mail.date | date:'dd/MM/yy'}}</span>
     <h2>{{getRealName(mail)}}</h2>
     <h2>{{mail.subject}}</h2> -->
-
+    <p>A: {{getRealName(mail.to, mail)}}
+    <h1>{{getRealName(mail.from, mail)}}</h1>
+    <h2>{{mail.subject}}</h2>
     <div class="item-text-wrap">
       <div ng-bind-html= "renderHtml(mail.body)"></div>
     </div>

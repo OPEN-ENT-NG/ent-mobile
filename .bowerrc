@@ -1,5 +1,3 @@
 {
-  "directory": "www/lib",
-   "proxy":"http://proxy9.si.fr.atosorigin.com:3128",
-   "https-proxy":"http://proxy9.si.fr.atosorigin.com:3128"
+  "directory": "www/lib"
 }
