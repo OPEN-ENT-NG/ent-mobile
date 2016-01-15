@@ -5,7 +5,7 @@
       <div class="message">
         <i class="attachicon-" ng-show="message.attachments.length != 0"></i>
         <span class="right">{{message.date | date:'dd/MM/yy'}}</span>
-        <h2>{{getRealName(message)}}</h2>
+        <h2>{{getRealName(message.from, message)}}</h2>
       </div>
       <h2>{{message.subject}}</h2>
     </ion-item>

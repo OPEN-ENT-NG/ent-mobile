@@ -2,51 +2,74 @@ angular.module('ent.message_detail', [])
 
 
 .controller('MessagesDetailCtrl', function($scope, $http, $stateParams){
-  $http.get("https://recette-leo.entcore.org/conversation/message/"+$stateParams.idMessage).then(function(resp){
-    $scope.mail = resp.data;
+  // $http.get("https://recette-leo.entcore.org/conversation/message/"+$stateParams.idMessage).then(function(resp){
+  //   $scope.mail = resp.data;
+  //
+  // }, function(err){
+  //   alert('ERR:'+ err);
+  // });
 
-  }, function(err){
-    alert('ERR:'+ err);
-  });
+  $scope.mail =
+  {
+    id: "427ec14f-35c9-49d6-81cb-5d04b2e0e538",
+    to:[
+      "ae5e8a4e-0784-4fa0-aa76-27d49a23e941"
+    ],
+    cc:
+    [
+      "8ba1eaac-28f0-41e4-b38f-d20ce4d9a2ba"
+    ],
+    from: "1f8b4a7a-eedc-49d9-a596-3fce35db0573",
+    state: "SENT",
+    subject: "RECETTE DE LEO 2",
+    date: 1430404331680,
+    body: "<p class=\"ng-scope\">Je souhaite bon courage &agrave; ceux qui doivent r&eacute;aliser la recette de LEO V 2.</p><p class=\"ng-scope\">et je teste par la m&ecirc;me occasion l&#39;&eacute;diteur de textes :</p><p class=\"ng-scope\">&nbsp;</p><ol class=\"ng-scope\"><li><strong>en gras</strong></li><li><em>en italique</em></li><li><u>soulign&eacute;</u></li><li><span style=\"color:#0000FF;\">en couleur</span></li><li>avec un&nbsp;<img title=\"Rêveur\" alt=\"Rêveur\" width=\"40\" height=\"40\" src=\"/assets/themes/leo/default/../img/icons/dreamy.png\" /></li><li>ou en ins&eacute;rant une image</li></ol><p class=\"ng-scope\"><a href=\"/workspace/document/274d1011-a1b3-4331-85bc-76ee4add6ef1?thumbnail=834x0\" target=\"_blank\"><img src=\"/workspace/document/274d1011-a1b3-4331-85bc-76ee4add6ef1?thumbnail=834x0\" /></a>​​​​​​</p><p class=\"ng-scope\">Et avec une pi&egrave;ce jointe !</p>",
+    toName: null,
+    ccName: null,
+    fromName: null,
+    displayNames:
+    [
+      [
+        "8ba1eaac-28f0-41e4-b38f-d20ce4d9a2ba",
+        "Aurélie DROUILLAC"
+      ],
+      [
+        "ae5e8a4e-0784-4fa0-aa76-27d49a23e941",
+        "Steven Vergne (Intendance)"
+      ],
+      [
+        "1f8b4a7a-eedc-49d9-a596-3fce35db0573",
+        "FREDERIC D'AMICO"
+      ]
+    ],
+    attachments:
+    [
+      {
+        id: "cfecac29-2afe-4dfb-9400-842760eb8bfc",
+        name: "file",
+        charset: "UTF-8",
+        filename: "TEST - Espace numérique de travail.docx    aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        contentType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        contentTransferEncoding: "7bit",
+        size: 21108
+      },
 
+      {
+        id: "cfecac29-2afe-4dfb-9400-842760eb8bfc",
+        name: "file",
+        charset: "UTF-8",
+        filename: "TEST - Espace numérique de travail.docx",
+        contentType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        contentTransferEncoding: "7bit",
+        size: 21108
+      }
 
-  // $scope.mail =
-  //   {
-  //     id: "057af9f4-00c4-4080-9f86-5ab7aaf8c98a",
-  //     to:
-  //     [
-  //       "8ba1eaac-28f0-41e4-b38f-d20ce4d9a2ba"
-  //     ],
-  //     cc: [ ],
-  //     from: "1f8b4a7a-eedc-49d9-a596-3fce35db0573",
-  //     state: "SENT",
-  //     subject: "Re : Resize image",
-  //     body: "<p class=\"ng-scope\">&nbsp;</p><p class=\"ng-scope\"><div><div><br></div><div><audio src=\"/workspace/document/1205d761-f2a4-4306-9bf8-7921d1f5fef2\" controls=\"\" draggable=\"\" native=\"\"></audio></div><div><br></div></div><br></p><p class=\"ng-scope\"><br></p><p class=\"row ng-scope\"></p><hr class=\"ng-scope\"><p class=\"ng-scope\"></p>\n<p class=\"medium-text ng-scope\">\n\t<span translate=\"\" key=\"transfer.from\"><span class=\"no-style ng-scope\">De : </span></span><em class=\"ng-binding\">Aurélie DROUILLAC</em>\n\t<br><span class=\"medium-importance\" translate=\"\" key=\"transfer.date\"><span class=\"no-style ng-scope\">Date: </span></span><em class=\"ng-binding\">lundi 11 janvier 2016</em>\n\t<br><span class=\"medium-importance\" translate=\"\" key=\"transfer.subject\"><span class=\"no-style ng-scope\">Objet : </span></span><em class=\"ng-binding\">Resize image</em>\n\t<br><span class=\"medium-importance\" translate=\"\" key=\"transfer.to\"><span class=\"no-style ng-scope\">A : </span></span>\n\t<!-- ngRepeat: receiver in mail.to --><em class=\"medium-importance ng-scope ng-binding\" ng-repeat=\"receiver in mail.to\">\n\t\tFREDERIC D'AMICO<!-- ngIf: $index !== mail.to.length - 1 && receiver.displayName -->\n\t</em>\n\t<br><span class=\"medium-importance\" translate=\"\" key=\"transfer.cc\"><span class=\"no-style ng-scope\">Copie à : </span></span>\n\t<!-- ngRepeat: receiver in mail.cc -->\n</p><blockquote class=\"ng-scope\"><p class=\"ng-scope\">&nbsp;</p><p class=\"row ng-scope\"></p><div><div><img src=\"/workspace/document/ccfc822f-a09c-45f9-9927-f8b2d94a6a59\" draggable=\"\" native=\"\" style=\"width: 124px; float: none; margin: auto; cursor: ew-resize;\"></div></div><br><hr class=\"ng-scope\"><p class=\"ng-scope\"></p>\n<p class=\"medium-text ng-scope\">\n\t<span translate=\"\" key=\"transfer.from\"><span class=\"no-style ng-scope\">De : </span></span><em class=\"ng-binding\">Aurélie DROUILLAC</em>\n\t<br><span class=\"medium-importance\" translate=\"\" key=\"transfer.date\"><span class=\"no-style ng-scope\">Date: </span></span><em class=\"ng-binding\">lundi 11 janvier 2016</em>\n\t<br><span class=\"medium-importance\" translate=\"\" key=\"transfer.subject\"><span class=\"no-style ng-scope\">Objet : </span></span><em class=\"ng-binding\">(no subject)</em>\n\t<br><span class=\"medium-importance\" translate=\"\" key=\"transfer.to\"><span class=\"no-style ng-scope\">A : </span></span>\n\t<!-- ngRepeat: receiver in mail.to --><!-- ngRepeat: receiver in mail.to --><em class=\"medium-importance ng-scope ng-binding\" ng-repeat=\"receiver in mail.to\">\n\t\tAurélie DROUILLAC<!-- ngIf: $index !== mail.to.length - 1 && receiver.displayName -->\n\t</em>\n\t<br><span class=\"medium-importance\" translate=\"\" key=\"transfer.cc\"><span class=\"no-style ng-scope\">Copie à : </span></span>\n\t<!-- ngRepeat: receiver in mail.cc -->\n</p><blockquote class=\"ng-scope\"><div>TTest</div><div></div></blockquote><div></div><div></div><div></div><div></div></blockquote><div></div>",
-  //     toName: null,
-  //     ccName: null,
-  //     fromName: null,
-  //     displayNames:
-  //     [
-  //
-  //       [
-  //
-  //         "8ba1eaac-28f0-41e4-b38f-d20ce4d9a2ba",
-  //         "Aurélie DROUILLAC"
-  //
-  //       ],
-  //
-  //       [
-  //         "1f8b4a7a-eedc-49d9-a596-3fce35db0573",
-  //         "FREDERIC D'AMICO"
-  //       ]
-  //
-  //     ],
-  //     attachments: [ ],
-  //     systemFolders:
-  //     [
-  //
-  //       "INBOX"
-  //
-  //     ]
-  //   };
+    ],
+    systemFolders:
+    [
+      "INBOX"
+    ]
+  }
+
+  // console.log($scope.mail);
 });
