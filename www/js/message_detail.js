@@ -1,7 +1,7 @@
-angular.module('ent.message_detail', ['ngCordova'])
+angular.module('ent.message_detail', [])
 
 
-.controller('MessagesDetailCtrl', function($scope, $http, $stateParams, $sce, $cordovaFileTransfer,$cordovaProgress){
+.controller('MessagesDetailCtrl', function($scope, $http, $stateParams, $sce){
   // $http.get("https://recette-leo.entcore.org/conversation/message/"+$stateParams.idMessage).then(function(resp){
   //   $scope.mail = resp.data;
   //
@@ -12,27 +12,8 @@ angular.module('ent.message_detail', ['ngCordova'])
   $scope.downloadAttachment = function (id){
     var attachmentUrl = "https://recette-leo.entcore.org/conversation/message/"+$scope.mail.id+"/attachment/"+id;
 
-    attachmentUrl = $sce.trustAsResourceUrl(attachmentUrl);
     var attachment = findElementById($scope.mail.attachments, id);
-
-
-    var filename = attachment.filename;
-    console.log(filename);
-    console.log(attachment.contentType);
-
-    // Save location
-    var targetPath = cordova.file.externalRootDirectory + filename; //revoir selon la platforme
-    alert(targetPath);
-
-    $cordovaProgress.showSimpleWithLabelDetail(true, "Téléchargement en cours", filename);
-    $cordovaFileTransfer.download(attachmentUrl, targetPath, {}, true).then(function (result) {
-      $cordovaProgress.hide();
-      // openAttachment(targetPath, attachment.contentType);
-      window.plugins.fileOpener.open(targetPath);
-    }, function (error) {
-      alert('Error');
-    }, function (progress) {
-    });
+    $scope.downloadFile(attachment.filename, attachmentUrl,attachment.contentType);
   }
 
   $scope.mail =
