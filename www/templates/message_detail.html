@@ -1,14 +1,49 @@
 <ion-view title="Détail">
   <ion-content>
-    <!-- <i class="attachicon-" ng-show="mail.attachments.length != 0"></i>
-    <span class="right">{{mail.date | date:'dd/MM/yy'}}</span>
-    <h2>{{getRealName(mail)}}</h2>
-    <h2>{{mail.subject}}</h2> -->
-    <p>A: {{getRealName(mail.to, mail)}}
-    <h1>{{getRealName(mail.from, mail)}}</h1>
-    <h2>{{mail.subject}}</h2>
-    <div class="item-text-wrap">
-      <div ng-bind-html= "renderHtml(mail.body)"></div>
+
+    <div class="item">
+      <h2>{{mail.subject}}</h2>
+      <h3>{{mail.systemFolders}}</h3>
+    </div>
+
+    <div class="item item-text-wrap">
+      <div class="header-mail">
+        <!-- <img src={{getAvatarUser(mail.from)}} alt={{getAvatarUser(mail.from)}}></img> -->
+        <h2>De: {{getRealName(mail.from, mail)}}<h2>
+          <span>A: {{getRealName(mail.to, mail)}}</span>  <span ng-show=mail.cc.length!=0>, {{getRealName(mail.cc, mail)}}</span>
+        </div>
+
+        <div ng-bind-html= "renderHtml(mail.body)"></div>
+
+        <div class="list" ng-show=mail.attachments.length!=0>
+          <h3>Pièces jointes disponibles<h3>
+          <div class="card" ng-repeat="attachment in mail.attachments track by $index">
+
+            <!-- <table class="attachment">
+              <tr >
+                <td class="left-attachment"><i class="downloadicon-"></i></td>
+                <td class="middle-attachment"><span >{{attachment.filename}}</span></td>
+                <td class="right-attachment"><i class="doc-texticon- "></i></td>
+              </tr>
+            </table> -->
+
+            <button class="button attachment item-text-wrap" >
+              {{attachment.filename}}
+            </button>
+
+            <!-- <div class="attachment item item-text-wrap" style="background-color: green;">
+
+
+            <span >{{attachment.filename}}</span>
+            <a class="doc-texticon-"></a>
+
+          </div> -->
+        </div>
+      </div>
+    </div>
+
+    <div class="item">
+      footer
     </div>
   </ion-content>
 </ion-view>

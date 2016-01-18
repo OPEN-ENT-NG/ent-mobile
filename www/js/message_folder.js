@@ -22,29 +22,38 @@ angular.module('ent.message_folder', [])
 
   $scope.messages = [
     {
-      id: "0e5c2b8d-d875-4867-a5bb-668e9790bcae",
-      to:[ "5f9c0a3f-3069-4b89-8ef5-31f4a23166eb"],
-      date: 1438161867061,
-      from: "91d042ed-b4d5-4dc8-bd97-fb0360c01f2b",
+      id: "427ec14f-35c9-49d6-81cb-5d04b2e0e538",
+      to:
+      [
+        "ae5e8a4e-0784-4fa0-aa76-27d49a23e941"
+      ],
+      from: "1f8b4a7a-eedc-49d9-a596-3fce35db0573",
       state: "SENT",
       toName: null,
       fromName: null,
-      subject: "coucou tlm",
+      subject: "RECETTE DE LEO 2",
+      date: 1430404331680,
       unread: false,
       displayNames:
       [
         [
-          "5f9c0a3f-3069-4b89-8ef5-31f4a23166eb",
-          "Test Loic"
+
+          "8ba1eaac-28f0-41e4-b38f-d20ce4d9a2ba",
+          "Aurélie DROUILLAC"
         ],
         [
-          "91d042ed-b4d5-4dc8-bd97-fb0360c01f2b",
-          "VINCENT CAILLET"
+          "ae5e8a4e-0784-4fa0-aa76-27d49a23e941",
+          "Steven Vergne (Intendance)"
+        ],
+        [
+          "1f8b4a7a-eedc-49d9-a596-3fce35db0573",
+          "FREDERIC D'AMICO"
         ]
       ],
-      attachments: [
-        "b166bf6b-0f12-45df-b1ea-803273202e73",
-        "0376018f-8f72-4399-8c14-526f56d1cdb6" ],
+      attachments:
+      [
+        "cfecac29-2afe-4dfb-9400-842760eb8bfc"
+      ],
       systemFolders:
       [
         "INBOX"

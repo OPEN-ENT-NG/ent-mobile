@@ -1,7 +1,7 @@
 angular.module('ent.message_detail', [])
 
 
-.controller('MessagesDetailCtrl', function($scope, $http, $stateParams){
+.controller('MessagesDetailCtrl', function($scope, $http, $stateParams, $sce){
   // $http.get("https://recette-leo.entcore.org/conversation/message/"+$stateParams.idMessage).then(function(resp){
   //   $scope.mail = resp.data;
   //
@@ -10,37 +10,72 @@ angular.module('ent.message_detail', [])
   // });
 
 
+  $scope.downloadAttachment = function (id){
+    var attachmentUrl = "https://recette-leo.entcore.org/conversation/message/"+$scope.mail.id+"/attachment/"+id;
+    $sce.trustAsResourceUrl(attachmentUrl);
+  }
+
   $scope.mail =
   {
-    id: "ef425730-4c36-4d11-90e3-495b7fcf4bb3",
-    to: [
-        "8ba1eaac-28f0-41e4-b38f-d20ce4d9a2ba"
+    id: "427ec14f-35c9-49d6-81cb-5d04b2e0e538",
+    to:[
+      "ae5e8a4e-0784-4fa0-aa76-27d49a23e941"
     ],
-    cc: [],
+    cc:
+    [
+      "8ba1eaac-28f0-41e4-b38f-d20ce4d9a2ba"
+    ],
     from: "1f8b4a7a-eedc-49d9-a596-3fce35db0573",
     state: "SENT",
-    subject: "Re : EDITEUR - TEST PALETTE COULEUR",
-    date: 1452521886683,
-    body: "<p class=\"ng-scope\" style=\"font-size: 24px; line-height: 24px;\">&nbsp;huieo jop</p><p class=\"ng-scope\" style=\"font-size: 42px; line-height: 42px;\">&nbsp;OIROP DK</p><p class=\"ng-scope\"><span style=\"color: rgb(255, 0, 0);\">&nbsp;AIO £ AIEJPAZ</span></p><p class=\"ng-scope\">£E AUIZEO ¨<span style=\"text-decoration: underline;\">DKPjioerjoep r</span></p><p class=\"ng-scope\"><br></p><p class=\"row ng-scope\"></p><hr class=\"ng-scope\"><p class=\"ng-scope\"></p>\n<p class=\"medium-text ng-scope\">\n\t<span translate=\"\" key=\"transfer.from\"><span class=\"no-style ng-scope\">De : </span></span><em class=\"ng-binding\">Aurélie DROUILLAC</em>\n\t<br><span class=\"medium-importance\" translate=\"\" key=\"transfer.date\"><span class=\"no-style ng-scope\">Date: </span></span><em class=\"ng-binding\">lundi 11 janvier 2016</em>\n\t<br><span class=\"medium-importance\" translate=\"\" key=\"transfer.subject\"><span class=\"no-style ng-scope\">Objet : </span></span><em class=\"ng-binding\">EDITEUR - TEST PALETTE COULEUR</em>\n\t<br><span class=\"medium-importance\" translate=\"\" key=\"transfer.to\"><span class=\"no-style ng-scope\">A : </span></span>\n\t<!-- ngRepeat: receiver in mail.to --><em class=\"medium-importance ng-scope ng-binding\" ng-repeat=\"receiver in mail.to\">\n\t\tFREDERIC D'AMICO<!-- ngIf: $index !== mail.to.length - 1 && receiver.displayName -->\n\t</em>\n\t<br><span class=\"medium-importance\" translate=\"\" key=\"transfer.cc\"><span class=\"no-style ng-scope\">Copie à : </span></span>\n\t<!-- ngRepeat: receiver in mail.cc -->\n</p><blockquote class=\"ng-scope\"><div><span style=\"background-color: rgb(255, 128, 64);\">jios ejoip ejo HIR ZIO DOPS</span></div><div><span style=\"background-color: rgb(255, 255, 255);\">pçuj iodjksop&nbsp;</span></div><div><span style=\"background-color: rgb(128, 128, 255);\">&nbsp;jiosp dklpm</span></div><div><span style=\"background-color: rgb(255, 255, 255);\">e odj pq</span></div><div></div><div></div></blockquote>",
+    subject: "RECETTE DE LEO 2",
+    date: 1430404331680,
+    body: "<p class=\"ng-scope\">Je souhaite bon courage &agrave; ceux qui doivent r&eacute;aliser la recette de LEO V 2.</p><p class=\"ng-scope\">et je teste par la m&ecirc;me occasion l&#39;&eacute;diteur de textes :</p><p class=\"ng-scope\">&nbsp;</p><ol class=\"ng-scope\"><li><strong>en gras</strong></li><li><em>en italique</em></li><li><u>soulign&eacute;</u></li><li><span style=\"color:#0000FF;\">en couleur</span></li><li>avec un&nbsp;<img title=\"Rêveur\" alt=\"Rêveur\" width=\"40\" height=\"40\" src=\"/assets/themes/leo/default/../img/icons/dreamy.png\" /></li><li>ou en ins&eacute;rant une image</li></ol><p class=\"ng-scope\"><a href=\"/workspace/document/274d1011-a1b3-4331-85bc-76ee4add6ef1?thumbnail=834x0\" target=\"_blank\"><img src=\"/workspace/document/274d1011-a1b3-4331-85bc-76ee4add6ef1?thumbnail=834x0\" /></a>​​​​​​</p><p class=\"ng-scope\">Et avec une pi&egrave;ce jointe !</p>",
     toName: null,
     ccName: null,
     fromName: null,
-    displayNames: [
-        [
-            "8ba1eaac-28f0-41e4-b38f-d20ce4d9a2ba",
-            "Aurélie DROUILLAC"
-        ],
-        [
-            "1f8b4a7a-eedc-49d9-a596-3fce35db0573",
-            "FREDERIC D'AMICO"
-        ]
+    displayNames:
+    [
+      [
+        "8ba1eaac-28f0-41e4-b38f-d20ce4d9a2ba",
+        "Aurélie DROUILLAC"
+      ],
+      [
+        "ae5e8a4e-0784-4fa0-aa76-27d49a23e941",
+        "Steven Vergne (Intendance)"
+      ],
+      [
+        "1f8b4a7a-eedc-49d9-a596-3fce35db0573",
+        "FREDERIC D'AMICO"
+      ]
     ],
-    attachments: [],
-    systemFolders: [
-        "INBOX"
+    attachments:
+    [
+      {
+        id: "cfecac29-2afe-4dfb-9400-842760eb8bfc",
+        name: "file",
+        charset: "UTF-8",
+        filename: "TEST - Espace numérique de travail.docx    aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        contentType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        contentTransferEncoding: "7bit",
+        size: 21108
+      },
+
+      {
+        id: "cfecac29-2afe-4dfb-9400-842760eb8bfc",
+        name: "file",
+        charset: "UTF-8",
+        filename: "TEST - Espace numérique de travail.docx",
+        contentType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        contentTransferEncoding: "7bit",
+        size: 21108
+      }
+
+    ],
+    systemFolders:
+    [
+      "INBOX"
     ]
-}
+  }
 
-console.log($scope.mail.body);
-
+  // console.log($scope.mail);
 });

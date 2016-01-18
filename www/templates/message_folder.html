@@ -1,23 +1,14 @@
 <ion-view view-title={{nameFolder}}>
   <ion-content>
 
-    <!-- <ion-item>
-   <icon attachicon- item-left></icon>
-     Herbology
-   <icon attachicon- item-right></icon>
- </ion-item> -->
+    <ion-item ng-repeat="message in messages track by $index" href="#/app/messagerie/id/{{message.id}}" >
 
-<ion-list>
-
-      <ion-item ng-repeat="message in messages track by $index" href="#/app/messagerie/id/{{message.id}}">
-
-        <div class="message">
-          <span class="right">{{message.date | date:'dd/MM/yy'}}</span>
-          <icon class="attachicon- left"  ng-show="message.attachments.length != 0" ></icon>
-
-          <h2>{{getRealName(message.from, message)}}</h2>
-        </div>
-        <h2>{{message.subject}}</h2>
+      <div class="message">
+        <i class="attachicon-" ng-show="message.attachments.length != 0"></i>
+        <span class="right">{{message.date | date:'dd/MM/yy'}}</span>
+        <h2>{{getRealName(message.from, message)}}</h2>
+      </div>
+      <h2>{{message.subject}}</h2>
     </ion-item>
   </ion-list>
   </ion-content>
