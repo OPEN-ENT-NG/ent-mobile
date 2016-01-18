@@ -1,7 +1,7 @@
-angular.module('ent.message_detail', [])
+angular.module('ent.message_detail', ['ngCordova'])
 
 
-.controller('MessagesDetailCtrl', function($scope, $http, $stateParams, $sce){
+.controller('MessagesDetailCtrl', function($scope, $http, $stateParams, $sce, $cordovaFileTransfer,$cordovaProgress){
   // $http.get("https://recette-leo.entcore.org/conversation/message/"+$stateParams.idMessage).then(function(resp){
   //   $scope.mail = resp.data;
   //
@@ -9,10 +9,30 @@ angular.module('ent.message_detail', [])
   //   alert('ERR:'+ err);
   // });
 
-
   $scope.downloadAttachment = function (id){
     var attachmentUrl = "https://recette-leo.entcore.org/conversation/message/"+$scope.mail.id+"/attachment/"+id;
-    $sce.trustAsResourceUrl(attachmentUrl);
+
+    attachmentUrl = $sce.trustAsResourceUrl(attachmentUrl);
+    var attachment = findElementById($scope.mail.attachments, id);
+
+
+    var filename = attachment.filename;
+    console.log(filename);
+    console.log(attachment.contentType);
+
+    // Save location
+    var targetPath = cordova.file.externalRootDirectory + filename; //revoir selon la platforme
+    alert(targetPath);
+
+    $cordovaProgress.showSimpleWithLabelDetail(true, "Téléchargement en cours", filename);
+    $cordovaFileTransfer.download(attachmentUrl, targetPath, {}, true).then(function (result) {
+      $cordovaProgress.hide();
+      // openAttachment(targetPath, attachment.contentType);
+      window.plugins.fileOpener.open(targetPath);
+    }, function (error) {
+      alert('Error');
+    }, function (progress) {
+    });
   }
 
   $scope.mail =
@@ -54,26 +74,17 @@ angular.module('ent.message_detail', [])
         id: "cfecac29-2afe-4dfb-9400-842760eb8bfc",
         name: "file",
         charset: "UTF-8",
-        filename: "TEST - Espace numérique de travail.docx    aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-        contentType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-        contentTransferEncoding: "7bit",
-        size: 21108
-      },
-
-      {
-        id: "cfecac29-2afe-4dfb-9400-842760eb8bfc",
-        name: "file",
-        charset: "UTF-8",
         filename: "TEST - Espace numérique de travail.docx",
         contentType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
         contentTransferEncoding: "7bit",
-        size: 21108
+        size: 211108
       }
 
     ],
     systemFolders:
     [
       "INBOX"
+
     ]
   }
 

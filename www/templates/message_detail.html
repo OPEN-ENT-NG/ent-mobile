@@ -17,7 +17,8 @@
 
         <div class="list" ng-show=mail.attachments.length!=0>
           <h3>Pièces jointes disponibles<h3>
-          <div class="card" ng-repeat="attachment in mail.attachments track by $index">
+
+          <div ng-repeat="attachment in mail.attachments track by $index">
 
             <!-- <table class="attachment">
               <tr >
@@ -27,10 +28,9 @@
               </tr>
             </table> -->
 
-            <button class="button attachment item-text-wrap" >
-              {{attachment.filename}}
+            <button class=" button icon-left downloadicon- attachment item-text-wrap" ng-click="downloadAttachment(attachment.id)" >
+              <p> {{attachment.filename}}</p>
             </button>
-
             <!-- <div class="attachment item item-text-wrap" style="background-color: green;">
 
 

@@ -77,3 +77,13 @@ angular.module('ent.controllers', [])
     $state.go("login");
   }
 })
+
+function findElementById(arraytosearch, valuetosearch) {
+
+  for (var i = 0; i < arraytosearch.length; i++) {
+    if (arraytosearch[i].id == valuetosearch) {
+      return arraytosearch[i];
+    }
+  }
+  return null;
+}
