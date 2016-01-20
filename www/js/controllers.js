@@ -40,7 +40,7 @@ angular.module('ent.controllers', [])
 })
 
 
-.controller('AppCtrl', function($scope, $sce, $state, $sanitize, $cordovaInAppBrowser, $http,  $cordovaFileTransfer,$cordovaProgress){
+.controller('AppCtrl', function($scope, $sce, $state, $sanitize, $cordovaInAppBrowser, $http,  $cordovaFileTransfer,$cordovaProgress, $cordovaFileOpener2){
 
   $scope.renderHtml = function(text){
     text = text.replace(/src="\//g, "src=\"https://recette-leo.entcore.org/");
@@ -51,19 +51,21 @@ angular.module('ent.controllers', [])
 
     // var newString = text.replace(/href="([\S]+)"/g, "onClick=window.plugins.fileOpener.open(\"$1\")")
 
-    console.log(newString);
+    // console.log(newString);
     return $sce.trustAsHtml(newString);
   }
 
   $scope.downloadFile = function (filename, urlFile, fileMIMEType){
     // Save location
+    console.log("downloadFile");
     var url = $sce.trustAsResourceUrl(urlFile);
     var targetPath = cordova.file.externalRootDirectory + filename; //revoir selon la platforme
 
     $cordovaProgress.showSimpleWithLabelDetail(true, "Téléchargement en cours", filename);
     $cordovaFileTransfer.download(url, targetPath, {}, true).then(function (result) {
       $cordovaProgress.hide();
-      openLocalFile(targetPath, fileMIMEType);
+      alert("coucou1");
+      $scope.openLocalFile(targetPath, fileMIMEType);
 
     }, function (error) {
       alert('Error');
@@ -71,18 +73,22 @@ angular.module('ent.controllers', [])
     });
   }
 
-  $scope.openLocalFile = function(targetPath, fileMIMEType){
-    window.plugins.fileOpener.open(targetPath);
+  $scope.openLocalFile = function (targetPath, fileMIMEType){
+   // window.plugins.fileOpener.open(targetPath);
+   alert(targetPath);
+   alert(fileMIMEType);
+   alert("coucou2");
+   $cordovaFileOpener2.open(
+     targetPath,
+     fileMIMEType,
+     {
+       error : function(){ alert("nope") },
+       success : function(){ }
+     }
+   );
+ }
 
-    targetPath.plugins.fileOpener2.open(
-      filePath,
-      fileMIMEType,
-      {
-        error : function(){ },
-        success : function(){ }
-      }
-    );
-  }
+
 
   $scope.getRealName = function(id, message){
     var returnName = "Inconnu";

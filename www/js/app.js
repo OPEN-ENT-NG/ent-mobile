@@ -127,6 +127,6 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   //     }
   // })
   // if none of the above states are matched, use this as the fallback
-  //$urlRouterProvider.otherwise('/login');
-  $urlRouterProvider.otherwise('/app/messagerie');
+  $urlRouterProvider.otherwise('/login');
+  //$urlRouterProvider.otherwise('/app/messagerie');
 });

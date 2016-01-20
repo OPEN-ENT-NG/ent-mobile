@@ -21,7 +21,11 @@
     "cordova-plugin-splashscreen",
     "cordova-plugin-statusbar",
     "ionic-plugin-keyboard",
-    "cordova-plugin-inappbrowser"
+    "cordova-plugin-inappbrowser",
+    "cordova-plugin-file-transfer",
+    "cordova-plugin-file",
+    "https://github.com/pwlin/cordova-plugin-file-opener2.git",
+    "https://github.com/pbernasconi/cordova-progressIndicator.git"
   ],
   "cordovaPlatforms": [
     "android",
