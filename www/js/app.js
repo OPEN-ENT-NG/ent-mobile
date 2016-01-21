@@ -1,4 +1,4 @@
-angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute','ent.controllers','ent.actualites','ent.blog','ent.auth', 'ent.messagerie', 'ent.message_folder','ent.message_detail'])
+angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute','ent.controllers','ent.actualites','ent.blog','ent.auth', 'ent.messagerie', 'ent.message_folder','ent.message_detail', 'ent.new_message'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -53,6 +53,17 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
       }
     }
   })
+  .state('app.new_message', {
+    url: '/new_message',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/new_message.html',
+        controller: 'NewMessageCtrl'
+      }
+    }
+  })
+
+
 
   .state('app.espace_doc', {
     url: '/espace_doc',
@@ -117,15 +128,6 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     controller: 'LoginCtrl'
   });
 
-  // $routeProvider
-  // .when('/:folderName',{
-  //     views: {
-  //       'menuContent': {
-  //         templateUrl: 'templates/message_folder.html',
-  //         controller: 'InboxCtrl'
-  //       }
-  //     }
-  // })
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/login');
   //$urlRouterProvider.otherwise('/app/messagerie');

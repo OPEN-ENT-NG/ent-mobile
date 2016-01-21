@@ -1,0 +1,36 @@
+<ion-view view-title="Nouveau message" >
+
+  <ion-nav-buttons side="right">
+    <button class="button button-icon button-clear ion-android-send"  ng-click="" ></button>
+  </ion-nav-buttons>
+  <ion-content>
+
+    <!-- <ion-list> -->
+
+    <!--  <h1>Users</h1>
+    <ion-item ng-repeat="contactUser in contacts.users">
+    <p>{{contactUser.displayName}}</p>
+  </ion-item>
+</ion-list> -->
+
+<!-- <label class="item item-input">
+<input type="email" ng-model="searchContact">
+</label>
+<ion-list>
+<ion-item  ng-repeat="contact in contacts | filter:searchContact">
+{{contact.displayName}}
+</ion-item>
+</ion-list>
+<label class="item item-input">
+<input type="text">
+</label> -->
+
+
+<filter-box placeholder="Enter contact" filtertext="search"></filter-box>
+<ion-list >
+  <ion-item ng-repeat="contact in contacts | filter: {displayName: search.value}">
+    <h3>{{contact.displayName}}</h3>
+  </ion-item>
+</ion-list>
+</ion-content>
+</ion-view>

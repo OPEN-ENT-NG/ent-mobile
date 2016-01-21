@@ -43,11 +43,11 @@ angular.module('ent.controllers', [])
 .controller('AppCtrl', function($scope, $sce, $state, $sanitize, $cordovaInAppBrowser, $http,  $cordovaFileTransfer,$cordovaProgress, $cordovaFileOpener2){
 
   $scope.renderHtml = function(text){
-    text = text.replace(/src="\//g, "src=\"https://recette-leo.entcore.org/");
-    text = text.replace(/href="\//g, "href=\"https://recette-leo.entcore.org/");
+    text = text.replace(/="\//g, "=\"https://recette-leo.entcore.org/");
+    // text = text.replace(/href="\//g, "href=\"https://recette-leo.entcore.org/");
 
     //pb dans le cas de téléchargement de fichiers
-    var newString = text.replace(/href="([\S]+)"/g, "onClick=\"window.open('$1', 'system', 'location=no')");
+    var newString = text.replace(/href="([\S]+)"/g, "onClick=\"window.open('$1', '_blank', 'location=no')\"");
 
     // var newString = text.replace(/href="([\S]+)"/g, "onClick=window.plugins.fileOpener.open(\"$1\")")
 
@@ -64,7 +64,6 @@ angular.module('ent.controllers', [])
     $cordovaProgress.showSimpleWithLabelDetail(true, "Téléchargement en cours", filename);
     $cordovaFileTransfer.download(url, targetPath, {}, true).then(function (result) {
       $cordovaProgress.hide();
-      alert("coucou1");
       $scope.openLocalFile(targetPath, fileMIMEType);
 
     }, function (error) {
@@ -74,21 +73,16 @@ angular.module('ent.controllers', [])
   }
 
   $scope.openLocalFile = function (targetPath, fileMIMEType){
-   // window.plugins.fileOpener.open(targetPath);
-   alert(targetPath);
-   alert(fileMIMEType);
-   alert("coucou2");
-   $cordovaFileOpener2.open(
-     targetPath,
-     fileMIMEType,
-     {
-       error : function(){ alert("nope") },
-       success : function(){ }
-     }
-   );
- }
 
-
+    $cordovaFileOpener2.open(
+      targetPath,
+      fileMIMEType,
+      {
+        error : function(){ alert("nope") },
+        success : function(){ }
+      }
+    );
+  }
 
   $scope.getRealName = function(id, message){
     var returnName = "Inconnu";

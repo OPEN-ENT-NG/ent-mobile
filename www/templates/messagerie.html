@@ -3,6 +3,7 @@
   <ion-content>
     <ion-refresher pulling-text="Actualiser" on-refresh="doRefreshFolders()">
     </ion-refresher>
+
     <div class="list">
       <ion-item href="#/app/messagerie/folder/INBOX" >
         <i class="foldericon-"></i>
@@ -28,5 +29,13 @@
         {{folder.name}}
       </ion-item>
     </div>
+
   </ion-content>
+  <div class="float-button" ng-click="newMail()">
+    <span class="height-fix">
+      <a class="content ">
+        <i class="new-01icon-"> </i>
+      </a>
+    </span>
+  </div>
 </ion-view>

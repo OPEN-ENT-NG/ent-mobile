@@ -17,13 +17,13 @@
           <h3>{{info.username}}</h3>
           <p>{{info.publication_date | date:'d MMMM y'}}</p>
         </div>
-        
+
         <ion-card-content class="item actucard ">
 
           <div ng-bind-html=renderHtml(info.content)></div>
 
         </ion-card-content>
-          <div class="comment"  ng-show="info.comments.length != null">
+          <!-- <div class="comment"  ng-show="info.comments.length != null">
             <p  ng-click="toggleComments(info)" ng-class="{active: areCommentsShown(info)}" class="subdued">
               {{getCountComments(info)}}
             </p>
@@ -32,7 +32,7 @@
               <p style="color: black;">{{item.comment}}</p>
             </ion-item>
 
-          </div>
+          </div> -->
         </div>
       </ion-item>
     </ion-list>

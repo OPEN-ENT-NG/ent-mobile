@@ -73,3 +73,35 @@ ion-popover-view.fit ion-content {
   vertical-align: middle;
   background-color: green;
 }
+
+.float-button {
+
+background-color:#303f9f;
+opacity: 0.9;
+color: white;
+border-radius: 50%;
+/*border-radius:15% 0 0 0;*/
+width: 30px;
+padding: 25px;
+font-size: 20px;
+position: fixed;
+bottom: 5%; /* Adjust height */
+right: 5%; /* Adjust position */
+z-index: 1000;
+}
+
+.float-button .height_fix {
+  margin-top: 100%;
+  border: 1px solid red;
+}
+
+.float-button .content {
+  position: absolute;
+  left: 0;
+  top: 75%;
+  height: 100%;
+  width: 100%;
+  text-align: center !important;
+  margin-top: -20px;
+  color: white;
+}
