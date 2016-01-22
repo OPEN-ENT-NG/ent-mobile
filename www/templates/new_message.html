@@ -18,7 +18,7 @@
           </div>
         </ion-list>
         <div>
-          <filter-box filtertext="searchTo" myLabel="Ascscsc"></filter-box>
+          <filter-box filtertext="searchTo"></filter-box>
           <ion-list >
             <ion-item ng-show=searchTo.value.length!=0 ng-repeat="contact in contacts | filter: {displayName: searchTo.value} | limitTo: 5 " ng-click="addContactTo(searchTo, contact)">
               <h3>{{contact.displayName}}</h3>
@@ -38,7 +38,7 @@
           </div>
         </ion-list>
         <div>
-          <filter-box filtertext="searchCc" placeholder="Ascscsc"></filter-box>
+          <filter-box filtertext="searchCc"></filter-box>
           <ion-list >
             <ion-item ng-show=searchCc.value.length!=0 ng-repeat="contact in contacts | filter: {displayName: searchCc.value} | limitTo: 5 " ng-click="addContactCc(searchCc, contact)">
               <h3>{{contact.displayName}}</h3>
@@ -47,7 +47,7 @@
         </div>
       </div>
     </div>
-    <label class="item item-input" placeholder="Sujet">
+    <label class="item-input">
       <input type="text">
     </label>
 

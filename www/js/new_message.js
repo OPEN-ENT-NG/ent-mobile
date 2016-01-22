@@ -162,7 +162,7 @@ angular.module('ent.new_message', [])
         scope.search.value = '';
       };
     },
-    template: ' <ion-input fixed-label id="filter-box" class=" item-input"><ion-label>{{myLabel}}</ion-label>' +
+    template: ' <ion-input fixed-label id="filter-box" class=" item-input">' +
     '<input type="search" ng-model="search.value">' +
     '</div>'
   };
