@@ -1,36 +1,55 @@
-<ion-view view-title="Nouveau message" >
+<ion-view view-title="Nouveau message" ng-init="transform()">
 
   <ion-nav-buttons side="right">
+    <button class="button button-icon attachicon-"  ng-click="" ></button>
     <button class="button button-icon button-clear ion-android-send"  ng-click="" ></button>
+    <button class="button button-icon button-clear fa fa-ellipsis-v actustatus" ng-click = "openPopover($event)"></button>
   </ion-nav-buttons>
   <ion-content>
 
-    <!-- <ion-list> -->
 
-    <!--  <h1>Users</h1>
-    <ion-item ng-repeat="contactUser in contacts.users">
-    <p>{{contactUser.displayName}}</p>
-  </ion-item>
-</ion-list> -->
+    <div class="item">
+      A
+      <div>
+        <ion-list>
+          <div ng-repeat="destinataire in destinatairesTo track by $index">
+            <h2 >{{destinataire.displayName}} </h2>
+            <i class="cancel-circledicon-" ng-click="deleteFromDestinataireTo(destinataire)"></i>
+          </div>
+        </ion-list>
+        <div>
+          <filter-box filtertext="searchTo" myLabel="Ascscsc"></filter-box>
+          <ion-list >
+            <ion-item ng-show=searchTo.value.length!=0 ng-repeat="contact in contacts | filter: {displayName: searchTo.value} | limitTo: 5 " ng-click="addContactTo(searchTo, contact)">
+              <h3>{{contact.displayName}}</h3>
+            </ion-item>
+          </ion-list>
+        </div>
+      </div>
+    </div>
 
-<!-- <label class="item item-input">
-<input type="email" ng-model="searchContact">
-</label>
-<ion-list>
-<ion-item  ng-repeat="contact in contacts | filter:searchContact">
-{{contact.displayName}}
-</ion-item>
-</ion-list>
-<label class="item item-input">
-<input type="text">
-</label> -->
+    <div class="item">
+      Cc
+      <div>
+        <ion-list>
+          <div ng-repeat="destinataire in destinatairesCc track by $index">
+            <h2 >{{destinataire.displayName}} </h2>
+            <i class="cancel-circledicon-" ng-click="deleteFromDestinataireCc(destinataire)"></i>
+          </div>
+        </ion-list>
+        <div>
+          <filter-box filtertext="searchCc" placeholder="Ascscsc"></filter-box>
+          <ion-list >
+            <ion-item ng-show=searchCc.value.length!=0 ng-repeat="contact in contacts | filter: {displayName: searchCc.value} | limitTo: 5 " ng-click="addContactCc(searchCc, contact)">
+              <h3>{{contact.displayName}}</h3>
+            </ion-item>
+          </ion-list>
+        </div>
+      </div>
+    </div>
+    <label class="item item-input" placeholder="Sujet">
+      <input type="text">
+    </label>
 
-
-<filter-box placeholder="Enter contact" filtertext="search"></filter-box>
-<ion-list >
-  <ion-item ng-repeat="contact in contacts | filter: {displayName: search.value}">
-    <h3>{{contact.displayName}}</h3>
-  </ion-item>
-</ion-list>
-</ion-content>
+  </ion-content>
 </ion-view>
