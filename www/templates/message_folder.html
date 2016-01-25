@@ -1,5 +1,7 @@
 <ion-view view-title={{nameFolder}}>
   <ion-content>
+    <ion-refresher pulling-text="Actualiser" on-refresh="doRefreshMessagges()">
+    </ion-refresher>
 
     <ion-item ng-repeat="message in messages track by $index" href="#/app/messagerie/id/{{message.id}}" >
 
@@ -12,4 +14,11 @@
     </ion-item>
   </ion-list>
   </ion-content>
+  <div class="float-button" ng-click="newMail()">
+    <span class="height-fix">
+      <a class="content ">
+        <i class="new-01icon-"> </i>
+      </a>
+    </span>
+  </div>
 </ion-view>

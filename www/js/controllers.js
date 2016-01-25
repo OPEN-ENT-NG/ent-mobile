@@ -113,6 +113,8 @@ angular.module('ent.controllers', [])
 })
 
 function findElementById(arraytosearch, valuetosearch) {
+  console.log("arraytosearch "+arraytosearch);
+  console.log("valuetosearch "+valuetosearch);
 
   for (var i = 0; i < arraytosearch.length; i++) {
     if (arraytosearch[i].id == valuetosearch) {

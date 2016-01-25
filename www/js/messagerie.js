@@ -36,7 +36,8 @@ angular.module('ent.messagerie', [])
     localStorage.setItem('messagerie_folder_id',$scope.folders[index].id);
   }
 
-  $scope.newMail = function(){
+  $rootScope.newMail = function(){
+    $rootScope.historyMail = null;
     $state.go("app.new_message");
   }
 
@@ -142,7 +143,7 @@ angular.module('ent.messagerie', [])
         profile:  $rootScope.otherContacts.users[i].profile
       });
     };
-  
+
   }
 
 

@@ -2,7 +2,7 @@
 
   <ion-nav-buttons side="right">
     <button class="button button-icon attachicon-"  ng-click="" ></button>
-    <button class="button button-icon button-clear ion-android-send"  ng-click="" ></button>
+    <button class="button button-icon button-clear ion-android-send"  ng-click="sendMail()" ></button>
     <button class="button button-icon button-clear fa fa-ellipsis-v actustatus" ng-click = "openPopover($event)"></button>
   </ion-nav-buttons>
   <ion-content>
@@ -10,21 +10,19 @@
 
     <div class="item">
       A
-      <div>
-        <ion-list>
-          <div ng-repeat="destinataire in destinatairesTo track by $index">
-            <h2 >{{destinataire.displayName}} </h2>
-            <i class="cancel-circledicon-" ng-click="deleteFromDestinataireTo(destinataire)"></i>
-          </div>
-        </ion-list>
-        <div>
-          <filter-box filtertext="searchTo"></filter-box>
-          <ion-list >
-            <ion-item ng-show=searchTo.value.length!=0 ng-repeat="contact in contacts | filter: {displayName: searchTo.value} | limitTo: 5 " ng-click="addContactTo(searchTo, contact)">
-              <h3>{{contact.displayName}}</h3>
-            </ion-item>
-          </ion-list>
+      <ion-list>
+        <div ng-repeat="destinataire in email.destinatairesTo track by $index">
+          <h2 >{{destinataire.displayName}} </h2>
+          <i class="cancel-circledicon-" ng-click="deleteFromDestinataireTo(destinataire)"></i>
         </div>
+      </ion-list>
+      <div>
+        <filter-box filtertext="searchTo" placeholder="To:"></filter-box>
+        <ion-list >
+          <ion-item ng-show=searchTo.value.length!=0 ng-repeat="contact in contacts | filter: {displayName: searchTo.value} | limitTo: 5 " ng-click="addContactTo(searchTo, contact)">
+            <h3>{{contact.displayName}}</h3>
+          </ion-item>
+        </ion-list>
       </div>
     </div>
 
@@ -32,13 +30,13 @@
       Cc
       <div>
         <ion-list>
-          <div ng-repeat="destinataire in destinatairesCc track by $index">
+          <div ng-repeat="destinataire in email.destinatairesCc track by $index">
             <h2 >{{destinataire.displayName}} </h2>
             <i class="cancel-circledicon-" ng-click="deleteFromDestinataireCc(destinataire)"></i>
           </div>
         </ion-list>
         <div>
-          <filter-box filtertext="searchCc"></filter-box>
+          <filter-box filtertext="searchCc" placeholder="Cc"></filter-box>
           <ion-list >
             <ion-item ng-show=searchCc.value.length!=0 ng-repeat="contact in contacts | filter: {displayName: searchCc.value} | limitTo: 5 " ng-click="addContactCc(searchCc, contact)">
               <h3>{{contact.displayName}}</h3>
@@ -47,8 +45,11 @@
         </div>
       </div>
     </div>
+    <label class="item item-input" >
+      <input type="text" ng-model="email.sujet">
+    </label>
     <label class="item-input">
-      <input type="text">
+      <input type="text"  ng-model="email.corps">
     </label>
 
   </ion-content>

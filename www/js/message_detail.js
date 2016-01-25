@@ -1,7 +1,8 @@
 angular.module('ent.message_detail', [])
 
 
-.controller('MessagesDetailCtrl', function($scope, $http, $stateParams, $sce){
+.controller('MessagesDetailCtrl', function($scope, $http, $stateParams, $sce, $rootScope, $state){
+
   $http.get("https://recette-leo.entcore.org/conversation/message/"+$stateParams.idMessage).then(function(resp){
     $scope.mail = resp.data;
 
@@ -9,11 +10,28 @@ angular.module('ent.message_detail', [])
     alert('ERR:'+ err);
   });
 
+
+  $scope.isDraft =  function(){
+      return "DRAFT" === $rootScope.nameFolder;
+  }
+
+  $scope.trash = function(id){
+    console.log("trash "+id);
+      $http.put("https://recette-leo.entcore.org/conversation/trash/?id="+id).then(function(resp){
+        alert("trashed");
+      }, function(err){
+        alert('ERR:'+ err);
+      });
+
+  }
+
+  $scope.editMail = function(){
+    $rootScope.historyMail = $scope.mail;
+    $state.go('app.new_message');
+  }
+
   $scope.downloadAttachment = function (id){
-
-    //var attachmentUrl ="https://recette-leo.entcore.org/workspace/document/ec41e759-3def-48ad-a787-43347eb49d72";
     var attachmentUrl = "https://recette-leo.entcore.org/conversation/message/"+$scope.mail.id+"/attachment/"+id;
-
     var attachment = findElementById($scope.mail.attachments, id);
     $scope.downloadFile(attachment.filename, attachmentUrl,attachment.contentType);
   }
@@ -62,7 +80,6 @@ angular.module('ent.message_detail', [])
   //       contentTransferEncoding: "7bit",
   //       size: 211108
   //     }
-  //
   //   ],
   //   systemFolders:
   //   [
@@ -70,6 +87,4 @@ angular.module('ent.message_detail', [])
   //
   //   ]
   // }
-
-  // console.log($scope.mail);
 });

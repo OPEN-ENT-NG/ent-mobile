@@ -1,23 +1,35 @@
 
 angular.module('ent.message_folder', [])
 
-.controller('InboxCtrl',  function($scope, $http, $state, $stateParams){
+.controller('InboxCtrl',  function($scope, $http, $state, $stateParams, $rootScope){
 
   var url = "";
   var regularFolders = ["INBOX", "OUTBOX", "TRASH", "DRAFT"];
   if(regularFolders.indexOf($stateParams.nameFolder)>-1){
     url="https://recette-leo.entcore.org/conversation/list/"+$stateParams.nameFolder;
-    $scope.nameFolder = $stateParams.nameFolder;
+    $rootScope.nameFolder = $stateParams.nameFolder;
   } else {
     url="https://recette-leo.entcore.org/conversation/list/"+localStorage.getItem("messagerie_folder_id")+"?restrain=&page=0";
-    $scope.nameFolder = localStorage.getItem("messagerie_folder_name");
+    $rootScope.nameFolder = localStorage.getItem("messagerie_folder_name");
   }
-
   $http.get(url).then(function(resp){
     $scope.messages = resp.data;
   }, function(err){
     alert('ERR:'+ err);
   });
+
+
+  $scope.doRefreshMessages = function() {
+    $http.get(url).then(function(resp){
+      $scope.messages = resp.data;
+    }, function(err){
+      alert('ERR:'+ err);
+    })
+    .finally(function() {
+      // Stop the ion-refresher from spinning
+      $scope.$broadcast('scroll.refreshComplete');
+    });
+  }
 
 
   // $scope.messages = [
