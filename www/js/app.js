@@ -1,5 +1,7 @@
 angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute','ent.controllers','ent.actualites','ent.blog','ent.auth', 'ent.messagerie', 'ent.message_folder','ent.message_detail', 'ent.new_message'])
 
+.value("domainENT", "https://recette-leo.entcore.org")
+
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -129,6 +131,6 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   });
 
   // if none of the above states are matched, use this as the fallback
-  //$urlRouterProvider.otherwise('/login');
-  $urlRouterProvider.otherwise('/app/messagerie');
+  $urlRouterProvider.otherwise('/login');
+  //$urlRouterProvider.otherwise('/app/messagerie');
 });

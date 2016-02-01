@@ -1,6 +1,6 @@
 angular.module('ent.controllers', [])
 
-.factory('sessionInjector', [function (SessionService) {
+.service('sessionInjector', [function (SessionService) {
 
   var sessionInjector = {
     request: function(config) {
@@ -24,28 +24,21 @@ angular.module('ent.controllers', [])
   $httpProvider.defaults.withCredentials = true;
 })
 
-.controller('UserInfoCtrl', function($scope, $http, $state) {
-  $http.get('https://recette-leo.entcore.org/auth/oauth2/userinfo').then(function(resp) {
+.controller('UserInfoCtrl', function($scope, $http, $state, domainENT) {
+  $http.get(domainENT+'/auth/oauth2/userinfo').then(function(resp) {
     $scope.userinfo = resp.data;
   }, function(err) {
     alert('ERR', err.data.status);
 
   });
-
-  $scope.jumpToInbox = function(){
-    $state.go("app.messagerie");
-    // alert("messagerie");
-    // $state.go("app.inbox");
-  }
 })
 
 
-.controller('AppCtrl', function($scope, $sce, $state, $sanitize, $cordovaInAppBrowser, $http,  $cordovaFileTransfer,$cordovaProgress, $cordovaFileOpener2){
+.controller('AppCtrl', function($scope, $sce, $state, $sanitize, $cordovaInAppBrowser, $http,  $cordovaFileTransfer,$cordovaProgress, $cordovaFileOpener2, domainENT){
 
   $scope.renderHtml = function(text){
-    text = text.replace(/="\//g, "=\"https://recette-leo.entcore.org/");
+    text = text.replace(/="\//g, "=\""+domainENT+"/");
     // text = text.replace(/href="\//g, "href=\"https://recette-leo.entcore.org/");
-
     //pb dans le cas de téléchargement de fichiers
     var newString = text.replace(/href="([\S]+)"/g, "onClick=\"window.open('$1', '_blank', 'location=no')\"");
 
@@ -84,15 +77,7 @@ angular.module('ent.controllers', [])
     );
   }
 
-  $scope.getRealName = function(id, message){
-    var returnName = "Inconnu";
-    for(var i = 0; i< message.displayNames.length; i++){
-      if(id == message.displayNames[i][0]){
-        returnName = message.displayNames[i][1];
-      }
-    }
-    return returnName;
-  }
+
 
   // $scope.getAvatarUser = function(id){
   //   $http.get("https://recette-leo.entcore.org/userbook/api/person?id="+$scope.mail.from).then(function(resp){

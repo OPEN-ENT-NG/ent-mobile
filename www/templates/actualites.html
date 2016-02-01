@@ -5,7 +5,7 @@
   </ion-nav-buttons>
 
   <ion-content>
-    <ion-refresher pulling-text="Actualiser" on-refresh="doRefresh()">
+    <ion-refresher pulling-text="Actualiser" on-refresh="doRefreshInfos()">
     </ion-refresher>
 
     <ion-list>
@@ -23,7 +23,7 @@
           <div ng-bind-html=renderHtml(info.content)></div>
 
         </ion-card-content>
-          <!-- <div class="comment"  ng-show="info.comments.length != null">
+          <div class="comment"  ng-show="info.comments !=  null">
             <p  ng-click="toggleComments(info)" ng-class="{active: areCommentsShown(info)}" class="subdued">
               {{getCountComments(info)}}
             </p>
@@ -32,7 +32,7 @@
               <p style="color: black;">{{item.comment}}</p>
             </ion-item>
 
-          </div> -->
+          </div>
         </div>
       </ion-item>
     </ion-list>

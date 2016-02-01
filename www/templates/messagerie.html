@@ -1,4 +1,4 @@
-<ion-view view-title="Messagerie"  ng-init="transform()">
+<ion-view view-title="Messagerie"  ng-controller="MessagerieFoldersCtrl">
 
   <ion-content>
     <ion-refresher pulling-text="Actualiser" on-refresh="doRefreshFolders()">
@@ -24,7 +24,7 @@
 
       <div class="item item-divider"></div>
 
-      <ion-item href="#/app/messagerie/folder/OTHER" ng-click="setCurrentFolder($index)" ng-repeat="folder in folders track by $index">
+      <ion-item href="#/app/messagerie/folder/OTHER" ng-click="setCurrentFolder($index)" ng-repeat="folder in folders">
         <i class="foldericon-"></i>
         {{folder.name}}
       </ion-item>
