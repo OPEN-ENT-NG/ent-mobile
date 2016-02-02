@@ -1,19 +1,21 @@
 <ion-view view-title="Blogs">
   <ion-nav-buttons side="right">
-    <button class="button button-icon button-clear fa fa-list">
-    </ion-nav-buttons>
-  </ion-nav-bar>
+    <button class="button button-icon button-clear fa fa-list"></button>
+  </ion-nav-buttons>
   <ion-content>
-    <div class="list">
+    <ion-refresher pulling-text="Actualiser" on-refresh="doRefreshBlogs()">
+    </ion-refresher>
 
-      <a ng-repeat="blog in blogs track by $index" href="#/app/blog/{{$index}}" class="item item-thumbnail-left">
+    <ion-list>
 
-        <!-- <img ng-src="{{ item.image }}"> -->
-        <h2>{{ blog.titre}}</h2>
-        <h4>par {{ blog.auteur }}</h4>
+      <a ng-repeat="blog in blogs track by $index" class="item item-thumbnail-left item-text-wrap" href="#/app/blog/id/{{blog._id}}">
+        <img ng-src="{{getImageUrl(blog.thumbnail)}}"/>
+        <h2>{{blog.title}}</h2>
+        <h3>{{ blog.description }}</h3>
+        <h4>{{ blog.author.username }}</h4>
       </a>
 
-    </div>
+    </ion-list>
 
   </ion-content>
 </ion-view>

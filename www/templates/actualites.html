@@ -12,7 +12,7 @@
       <ion-item ng-repeat="info in filtered=(infos | filter:filterByStatus | filter:filterByThread) track by $index" class="card">
 
         <div class="item item-avatar">
-          <img ng-src="https://recette-leo.entcore.org{{info.thread_icon}}" alt="icone {{info.thread_title}}"/>
+          <img ng-src="{{getImageUrl(info.thread_icon)}}" alt="icone {{info.thread_title}}"/>
           <h2>{{info.title}}</h2>
           <h3>{{info.username}}</h3>
           <p>{{info.publication_date | date:'d MMMM y'}}</p>
@@ -20,7 +20,7 @@
 
         <ion-card-content class="item actucard ">
 
-          <div ng-bind-html=renderHtml(info.content)></div>
+          <div class="item-text-wrap" ng-bind-html=renderHtml(info.content)></div>
 
         </ion-card-content>
           <div class="comment"  ng-show="info.comments !=  null">

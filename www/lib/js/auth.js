@@ -2,11 +2,11 @@ angular.module('ent.auth', [])
 
 
 
-.controller('LoginCtrl', function($scope, $state, $http) {
+.controller('LoginCtrl', function($scope, $state, $http, domainENT) {
 
-  $scope.doLogin = function(user, $scope, $htttp) {
+  $scope.doLogin = function(user, $scope, $http) {
     console.log("login");
-    $http.get('https://recette-leo.entcore.org/auth/oauth2/auth?response_type=code&state=blip&scope=userinfo&client_id=mobile-ong&redirect_uri=localhost').then(function(resp) {
+    $http.get(domainENT+'/auth/oauth2/auth?response_type=code&state=blip&scope=userinfo&client_id=mobile-ong&redirect_uri=localhost').then(function(resp) {
        console.log('Success', resp);
        // For JSON responses, resp.data contains the result
      }, function(err) {

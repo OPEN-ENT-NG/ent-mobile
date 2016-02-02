@@ -54,8 +54,8 @@ angular.module('ent.auth', [])
 
     $http({
       method: "post",
-      url: "https://recette-leo.entcore.org/auth/oauth2/token",
-      data: "redirect_uri=https://recette-leo.entcore.org&grant_type=authorization_code&code=" + localStorage.getItem('code')
+      url: domainENT+"/auth/oauth2/token",
+      data: "redirect_uri="+domainENT+"&grant_type=authorization_code&code=" + localStorage.getItem('code')
     }).then(function successCallback(response) {
     //  alert('new token: '+response.data.access_token);
       localStorage.setItem('access_token', response.data.access_token);

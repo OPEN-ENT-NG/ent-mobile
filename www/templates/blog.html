@@ -1,5 +1,40 @@
-<ion-view>
-<ion-content>
-  <p>{{blog.titre}}</p>
-</ion-content>
-</ion-nav-view>
+<ion-view view-title="Blog" ng-controller="BlogCtrl">
+  <!-- <ion-nav-buttons side="right">
+    <button class="button button-icon button-clear fa fa-list-ul"  ng-click="goThreads()" ></button>
+    <button class="button button-icon button-clear fa fa-ellipsis-v actustatus" ng-click = "openPopover($event)"></button>
+  </ion-nav-buttons> -->
+
+  <ion-content>
+    <ion-refresher pulling-text="Actualiser" on-refresh="doRefreshPosts()">
+    </ion-refresher>
+
+    <ion-list>
+      <ion-item ng-repeat="post in posts track by $index" class="card">
+
+        <div class="item item-avatar">
+          <!-- <img ng-src="{{post.author.photo}}"/> -->
+          <h2>{{post.title}}</h2>
+          <h3>{{post.author.username}}</h3>
+          <p>{{post.modified.$date | date:'d MMMM y'}}</p>
+          <p>{{post.author.photo}}</p>
+        </div>
+
+        <ion-card-content class="item actucard">
+
+          <div class="item-text-wrap" ng-bind-html=renderHtml(post.content)></div>
+
+        </ion-card-content>
+          <!-- <div class="comment"  ng-show="info.comments !=  null">
+            <p  ng-click="toggleComments(info)" ng-class="{active: areCommentsShown(info)}" class="subdued">
+              {{getCountComments(info)}}
+            </p>
+            <ion-item class="item-accordion"  ng-repeat="item in info.comments track by $index"  ng-show="areCommentsShown(info)">
+              <h3 style="font-weight: bold;">{{item.username}} à {{item.modified}}</h3>
+              <p style="color: black;">{{item.comment}}</p>
+            </ion-item>
+
+          </div> -->
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>

@@ -6,7 +6,6 @@ angular.module('ent.controllers', [])
     request: function(config) {
       if (localStorage.getItem('access_token')) {
         config.headers['Authorization'] = 'Bearer '+localStorage.getItem('access_token')
-
       }
       return config;
     },
@@ -24,8 +23,26 @@ angular.module('ent.controllers', [])
   $httpProvider.defaults.withCredentials = true;
 })
 
-.controller('UserInfoCtrl', function($scope, $http, $state, domainENT) {
-  $http.get(domainENT+'/auth/oauth2/userinfo').then(function(resp) {
+.service('UserInfoService', function($http, domainENT){
+    this.getUserData = function (userId) {
+      var user={};
+      $http.get(domainENT+"/userbook/api/person?id="+userId).then(function(resp){
+        user = resp.data.result[0];
+        console.log(user);
+        return user;
+
+      }), function(err){
+        alert('ERR:'+ err);
+      }
+    }
+
+    this.getOAuthInfo = function (){
+      return $http.get(domainENT+'/auth/oauth2/userinfo');
+    }
+})
+
+.controller('UserInfoCtrl', function($scope, domainENT,UserInfoService) {
+  UserInfoService.getOAuthInfo().then(function(resp) {
     $scope.userinfo = resp.data;
   }, function(err) {
     alert('ERR', err.data.status);
@@ -34,7 +51,7 @@ angular.module('ent.controllers', [])
 })
 
 
-.controller('AppCtrl', function($scope, $sce, $state, $sanitize, $cordovaInAppBrowser, $http,  $cordovaFileTransfer,$cordovaProgress, $cordovaFileOpener2, domainENT){
+.controller('AppCtrl', function($scope, $sce, $state, $cordovaInAppBrowser, $cordovaFileTransfer,$cordovaProgress, $cordovaFileOpener2, domainENT, UserInfoService){
 
   $scope.renderHtml = function(text){
     text = text.replace(/="\//g, "=\""+domainENT+"/");
@@ -77,18 +94,20 @@ angular.module('ent.controllers', [])
     );
   }
 
+  $scope.getImageUrl= function(path){
+    if(path!=null && path!= ""){
+      return domainENT+path;
+    }
+  }
 
-
-  // $scope.getAvatarUser = function(id){
-  //   $http.get("https://recette-leo.entcore.org/userbook/api/person?id="+$scope.mail.from).then(function(resp){
-  //     $scope.userFrom = resp.data;
-  //
-  //   }, function(err){
-  //     alert('ERR:'+ err);
-  //   });
-  //   alert("https://recette-leo.entcore.org"+$scope.userFrom.result[0].photo);
-  //   return "https://recette-leo.entcore.org"+$scope.userFrom.result[0].photo;
-  // }
+  function getAvatarImage (userId){
+      UserInfoService.getUserData(userId).then(function(resp){
+        console.log(domainENT+resp.data.result[0].photo);
+        return domainENT+resp.data.result[0].photo;
+      }), function(err){
+        alert('ERR:'+ err);
+      }
+    }
 
   $scope.logout = function(){
     localStorage.clear();
@@ -96,6 +115,8 @@ angular.module('ent.controllers', [])
     $state.go("login");
   }
 })
+
+
 
 function findElementById(arraytosearch, valuetosearch) {
   console.log("arraytosearch "+arraytosearch);

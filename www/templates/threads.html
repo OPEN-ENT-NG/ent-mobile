@@ -5,7 +5,7 @@
     <ion-list>
       <ion-checkbox ng-repeat="thread in threads" ng-model="filterThreads[thread.thread_id]">
         <div  class="item item-thumbnail-right item-text-wrap">
-          <img ng-src="https://recette-leo.entcore.org{{ thread.thread_icon }}" alt="icone {{thread.title}}">
+          <img ng-src="{{getImageUrl(thread.thread_icon)}}" alt="icone {{thread.title}}">
           <h2>{{thread.title}}</h2>
         </div>
       </ion-checkbox>

@@ -65,8 +65,6 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     }
   })
 
-
-
   .state('app.espace_doc', {
     url: '/espace_doc',
     views: {
@@ -81,27 +79,17 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     views: {
       'menuContent': {
         templateUrl: 'templates/blog-list.html',
-        controller: "BlogListCtrl",
-        resolve: {
-          blogs: function (serviceBlog){
-            return serviceBlog.getAllBlogs();
-          }
-        }
+        controller: "BlogListCtrl"
       }
     }
   })
 
   .state('app.blog', {
-    url: '/blog/:index',
+    url: '/blog/id/:idBlog',
     views: {
       'menuContent': {
         templateUrl: 'templates/blog.html',
-        controller: "BlogCtrl",
-        resolve: {
-          blog: function(serviceBlog, $stateParams){
-            return serviceBlog.getBlog($stateParams.index);
-          }
-        }
+        controller: "BlogCtrl"
       }
     }
   })

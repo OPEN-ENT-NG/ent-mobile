@@ -1,6 +1,6 @@
 angular.module('ent.new_message', [])
 
-.controller('NewMessageCtrl', function($scope, $http, $rootScope, $ionicPopover, $state, $ionicHistory){
+.controller('NewMessageCtrl', function($scope, $http, $rootScope, $ionicPopover, $state, $ionicHistory, domainENT){
 
   $scope.email=[];
   if($rootScope.historyMail){
@@ -45,7 +45,7 @@ angular.module('ent.new_message', [])
   $scope.sendMail = function(){
     $http({
       method: 'POST',
-      url: 'https://recette-leo.entcore.org/conversation/send',
+      url: domainENT+'/conversation/send',
       data: getMailData(),
       headers: { 'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8" }
     }).then(function(resp){
@@ -68,7 +68,7 @@ angular.module('ent.new_message', [])
   function saveWithId(id){
     return {
       method: 'PUT',
-      url: 'https://recette-leo.entcore.org/conversation/draft/'+$scope.email.id,
+      url: domainENT+'/conversation/draft/'+$scope.email.id,
       data: getMailData(),
       headers: { 'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8" }
     }
@@ -77,7 +77,7 @@ angular.module('ent.new_message', [])
   function saveNewDraft(){
     return {
       method:'POST',
-      url: 'https://recette-leo.entcore.org/conversation/draft',
+      url: domainENT+'/conversation/draft',
       data: getMailData(),
       headers: { 'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8" }
     }
