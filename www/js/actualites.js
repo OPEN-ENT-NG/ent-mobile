@@ -23,8 +23,6 @@ angular.module('ent.actualites', [])
   getActualites();
   getThreads();
 
-  console.log($scope.infos);
-
   $scope.getCountComments = function(info){
     if(info.comments != null){
       var size = info.comments.length;

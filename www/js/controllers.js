@@ -25,15 +25,7 @@ angular.module('ent.controllers', [])
 
 .service('UserInfoService', function($http, domainENT){
     this.getUserData = function (userId) {
-      var user={};
-      $http.get(domainENT+"/userbook/api/person?id="+userId).then(function(resp){
-        user = resp.data.result[0];
-        console.log(user);
-        return user;
-
-      }), function(err){
-        alert('ERR:'+ err);
-      }
+      return $http.get(domainENT+"/userbook/api/person?id="+userId);
     }
 
     this.getOAuthInfo = function (){
@@ -49,7 +41,6 @@ angular.module('ent.controllers', [])
 
   });
 })
-
 
 .controller('AppCtrl', function($scope, $sce, $state, $cordovaInAppBrowser, $cordovaFileTransfer,$cordovaProgress, $cordovaFileOpener2, domainENT, UserInfoService){
 
@@ -115,8 +106,6 @@ angular.module('ent.controllers', [])
     $state.go("login");
   }
 })
-
-
 
 function findElementById(arraytosearch, valuetosearch) {
   console.log("arraytosearch "+arraytosearch);
