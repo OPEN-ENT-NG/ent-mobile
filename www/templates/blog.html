@@ -1,39 +1,38 @@
-<ion-view view-title="Blog" ng-controller="BlogCtrl">
+<ion-view view-title="Blog">
   <!-- <ion-nav-buttons side="right">
-    <button class="button button-icon button-clear fa fa-list-ul"  ng-click="goThreads()" ></button>
-    <button class="button button-icon button-clear fa fa-ellipsis-v actustatus" ng-click = "openPopover($event)"></button>
-  </ion-nav-buttons> -->
+  <button class="button button-icon button-clear fa fa-list-ul"  ng-click="goThreads()" ></button>
+  <button class="button button-icon button-clear fa fa-ellipsis-v actustatus" ng-click = "openPopover($event)"></button>
+</ion-nav-buttons> -->
 
-  <ion-content>
-    <ion-refresher pulling-text="Actualiser" on-refresh="doRefreshPosts()">
-    </ion-refresher>
+<ion-content>
+  <ion-refresher pulling-text="Actualiser" on-refresh="doRefreshPosts()">
+  </ion-refresher>
 
-    <ion-list>
-      <ion-item ng-repeat="post in posts track by $index" class="card">
+  <ion-list>
+    <ion-item ng-repeat="post in posts track by $index" class="card">
 
-        <div class="item item-avatar">
-          <img ng-src="{{getImageUrl(authors[$index].photo)}}"/>
-          <h2>{{post.title}}</h2>
-          <h3>{{post.author.username}}</h3>
-          <p>{{post.modified.$date | date:'d MMMM y'}}</p>
-        </div>
+      <div class="item item-avatar item-text-wrap">
+        <img ng-src="{{getImageUrl(post.author.photo)}}"/>
+        <h2>{{post.title}}</h2>
+        <h3>{{post.author.username}}</h3>
+        <p>{{post.modified.$date | date:'d MMMM y'}}</p>
+      </div>
 
-        <ion-card-content class="item actucard">
+      <ion-card-content class="item actucard">
 
-          <div class="item-text-wrap" ng-bind-html=renderHtml(post.content)></div>
+        <div class="item-text-wrap" ng-bind-html=renderHtml(post.content)></div>
 
-        </ion-card-content>
-          <!-- <div class="comment"  ng-show="info.comments !=  null">
-            <p  ng-click="toggleComments(info)" ng-class="{active: areCommentsShown(info)}" class="subdued">
-              {{getCountComments(info)}}
-            </p>
-            <ion-item class="item-accordion"  ng-repeat="item in info.comments track by $index"  ng-show="areCommentsShown(info)">
-              <h3 style="font-weight: bold;">{{item.username}} à {{item.modified}}</h3>
-              <p style="color: black;">{{item.comment}}</p>
-            </ion-item>
-
-          </div> -->
-      </ion-item>
-    </ion-list>
-  </ion-content>
+      </ion-card-content>
+      <div class="comment"  ng-show="post.comments.lenght != 0">
+        <p  ng-click="toggleComments(post)" ng-class="{active: areCommentsShown(post)}" class="subdued">
+          {{getCountComments(post)}}
+        </p>
+        <ion-item class="item-accordion"  ng-repeat="comment in post.comments track by $index"  ng-show="areCommentsShown(post)">
+          <h3 style="font-weight: bold;">{{comment.author.username}} à {{comment.created.$date}}</h3>
+          <p style="color: black;">{{comment.comment}}</p>
+        </ion-item>
+      </div>
+    </ion-item>
+  </ion-list>
+</ion-content>
 </ion-view>

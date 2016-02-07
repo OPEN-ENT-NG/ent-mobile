@@ -11,6 +11,8 @@ angular.module('ent.auth', [])
   }
 
   function login(){
+
+    console.log(localStorage.getItem('access_token'));
     if(!localStorage.getItem('access_token')){
       ref = window.open(domainENT+'/auth/oauth2/auth?response_type=code&state=blip&scope=userinfo&client_id=mobile-ong&redirect_uri='+domainENT,'_blank','location=no','toolbar=no', 'clearcache=yes', 'clearsessioncache=yes');
       ref.addEventListener('loadstart', function(event) {
