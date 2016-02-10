@@ -45,9 +45,13 @@ angular.module('ent.controllers', [])
 .controller('AppCtrl', function($scope, $sce, $state, $cordovaInAppBrowser, $cordovaFileTransfer,$cordovaProgress, $cordovaFileOpener2, domainENT, UserInfoService){
 
   $scope.renderHtml = function(text){
+    text = text.replace(/="\/\//g, "=\"https://");
     text = text.replace(/="\//g, "=\""+domainENT+"/");
+    console.log(text);
+
     // text = text.replace(/href="\//g, "href=\"https://recette-leo.entcore.org/");
     //pb dans le cas de téléchargement de fichiers
+
     var newString = text.replace(/href="([\S]+)"/g, "onClick=\"window.open('$1', '_blank', 'location=no')\"");
 
     // var newString = text.replace(/href="([\S]+)"/g, "onClick=window.plugins.fileOpener.open(\"$1\")")

@@ -130,7 +130,7 @@ angular.module('ent.blog', ['ent.controllers'])
     return post;
   };
 
-  // selected fruits
+  // selected states
   $scope.filter = BlogsService.getStatusPosts();
 
   // toggle selection for a given fruit by name
