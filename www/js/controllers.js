@@ -24,13 +24,13 @@ angular.module('ent.controllers', [])
 })
 
 .service('UserInfoService', function($http, domainENT){
-    this.getUserData = function (userId) {
-      return $http.get(domainENT+"/userbook/api/person?id="+userId);
-    }
+  this.getUserData = function (userId) {
+    return $http.get(domainENT+"/userbook/api/person?id="+userId);
+  }
 
-    this.getOAuthInfo = function (){
-      return $http.get(domainENT+'/auth/oauth2/userinfo');
-    }
+  this.getOAuthInfo = function (){
+    return $http.get(domainENT+'/auth/oauth2/userinfo');
+  }
 })
 
 .controller('UserInfoCtrl', function($scope, domainENT,UserInfoService) {
@@ -42,13 +42,11 @@ angular.module('ent.controllers', [])
   });
 })
 
-.controller('AppCtrl', function($scope, $sce, $state, $cordovaInAppBrowser, $cordovaFileTransfer,$cordovaProgress, $cordovaFileOpener2, domainENT, UserInfoService){
+.controller('AppCtrl', function($scope, $sce, $state, $cordovaInAppBrowser, $cordovaFileTransfer,$cordovaProgress, $cordovaFileOpener2, domainENT, UserInfoService, $ionicHistory){
 
   $scope.renderHtml = function(text){
     text = text.replace(/="\/\//g, "=\"https://");
     text = text.replace(/="\//g, "=\""+domainENT+"/");
-    console.log(text);
-
     // text = text.replace(/href="\//g, "href=\"https://recette-leo.entcore.org/");
     //pb dans le cas de téléchargement de fichiers
 
@@ -96,19 +94,31 @@ angular.module('ent.controllers', [])
   }
 
   function getAvatarImage (userId){
-      UserInfoService.getUserData(userId).then(function(resp){
-        console.log(domainENT+resp.data.result[0].photo);
-        return domainENT+resp.data.result[0].photo;
-      }), function(err){
-        alert('ERR:'+ err);
-      }
+    UserInfoService.getUserData(userId).then(function(resp){
+      console.log(domainENT+resp.data.result[0].photo);
+      return domainENT+resp.data.result[0].photo;
+    }), function(err){
+      alert('ERR:'+ err);
     }
+  }
 
   $scope.logout = function(){
     localStorage.clear();
     $ionicHistory.clearHistory()
     $state.go("login");
+    window.cookies.clear(function() {
+      console.log('Cookies cleared!');
+    });
+    // ionic.Platform.exitApp(); // stops the app
   }
+})
+
+.directive('appVersion', function () {
+  return function(scope, elm, attrs) {
+    cordova.getAppVersion(function (version) {
+      elm.text(version);
+    });
+  };
 })
 
 function findElementById(arraytosearch, valuetosearch) {

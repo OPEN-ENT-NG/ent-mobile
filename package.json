@@ -28,6 +28,11 @@
     {
       "locator": "https://github.com/apache/cordova-plugin-inappbrowser",
       "id": "cordova-plugin-inappbrowser"
+    },
+    "cordova-plugin-app-version",
+    {
+      "locator": "https://github.com/bez4pieci/Phonegap-Cookies-Plugin.git",
+      "id": "com.bez4pieci.cookies"
     }
   ],
   "cordovaPlatforms": [
