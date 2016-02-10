@@ -121,48 +121,32 @@ angular.module('ent.blog', ['ent.controllers'])
   }
 
 
-  // $scope.filter = BlogsService.getStatusPosts();
-  //
-  // $scope.getStatus = function () {
-  //   return ($scope.posts || []).map(function (post) {
-  //     return post.state;
-  //   }).filter(function (post, idx, arr) {
-  //     return arr.indexOf(post) === idx;
-  //   });
-  // };
-  //
-  // $scope.filterByStatus = function (post) {
-  //   console.log($scope.filter[post.state]);
-  //   return $scope.filter[post.state];
-  // };
+  $scope.filterByStatus = function (post) {
+    if ($scope.filter.length > 0) {
+      if ($scope.filter.indexOf(post.state) < 0){
+        return;
+      }
+    }
+    return post;
+  };
 
-// selected fruits
-$scope.filter = BlogsService.getStatusPosts();
+  // selected fruits
+  $scope.filter = BlogsService.getStatusPosts();
 
-// toggle selection for a given fruit by name
-$scope.toggleSelection = function toggleSelection(state) {
-  var idx = $scope.filter.indexOf(state);
+  // toggle selection for a given fruit by name
+  $scope.toggleSelection = function toggleSelection(state) {
+    var idx = $scope.filter.indexOf(state);
 
-  // is currently selected
-  if (idx > -1) {
-    $scope.filter.splice(idx, 1);
-  }
+    // is currently selected
+    if (idx > -1) {
+      $scope.filter.splice(idx, 1);
+    }
 
-  // is newly selected
-  else {
-    $scope.ffilter.push(state);
-  }
-};
-
-  // function noFilter(filterObj) {
-  //   for (var key in filterObj) {
-  //     if (filterObj[key]) {
-  //       return false;
-  //     }
-  //   }
-  //   return true;
-  // }
-
+    // is newly selected
+    else {
+      $scope.filter.push(state);
+    }
+  };
 
   $ionicPopover.fromTemplateUrl('templates/popover_blogs.html', {
     scope: $scope
