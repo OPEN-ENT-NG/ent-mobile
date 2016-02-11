@@ -16,12 +16,18 @@ angular.module('ent.actualites', [])
       {nom: "Publiées", status: 3}
     ];
   }
+
+  this.getTranslation = function(){
+    return $http.get(domainENT+"/actualites/i18n");
+  }
 })
+
 
 .controller('InfosCtrl', function ($scope,$ionicPopover, $state, $rootScope, InfosService) {
   $scope.statusInfos = InfosService.getStatusInfos();
   getActualites();
   getThreads();
+  getTranslation();
 
   $scope.getCountComments = function(info){
     if(info.comments != null){
@@ -136,5 +142,14 @@ angular.module('ent.actualites', [])
     }, function(err){
       alert('ERR:'+ err);
     });
+  }
+
+  function getTranslation(){
+    InfosService.getTranslation().then(function(response){
+      $scope.translation = response.data;
+      console.log(response.data);
+    }, function(err){
+      alert('ERR:'+ err);
+    })
   }
 });
