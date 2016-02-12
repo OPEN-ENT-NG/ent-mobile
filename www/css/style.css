@@ -31,6 +31,7 @@ ion-popover-view.fit ion-content {
 
 .comment{
   padding-top: 10px !important;
+  font-style: italic;
 }
 
 .item.item-accordion {
@@ -104,4 +105,38 @@ z-index: 1000;
   text-align: center !important;
   margin-top: -20px;
   color: white;
+}
+
+.message i {
+  color: #CCC;
+  float: right;
+  font-size: 12px;
+}
+
+.right {
+  color: #387EF5;
+  float: right;
+  font-size: 12px;
+}
+
+.message h2.ng-binding {
+  font-size:18px;
+}
+
+.item h3.ng-binding {
+  font-size:12px;
+  color: #CCC;
+}
+
+.header-mail h2.ng-binding {
+  font-size:14px;
+}
+
+.header-mail span.ng-binding {
+  font-size:14px;
+  color:CCC;
+}
+
+.pj{
+  margin-bottom: 5px;
 }

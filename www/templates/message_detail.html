@@ -20,9 +20,8 @@
         <div ng-bind-html= "renderHtml(mail.body)"></div>
 
         <div class="list" ng-show=mail.attachments.length!=0>
-          <h3>Pièces jointes disponibles<h3>
 
-            <div ng-repeat="attachment in mail.attachments track by $index">
+            <div ng-repeat="attachment in mail.attachments track by $index" class="pj">
 
               <button class=" button icon-left downloadicon- attachment item-text-wrap" ng-click="downloadAttachment(attachment.id)" >
                 <p> {{attachment.filename}}</p>

@@ -4,21 +4,22 @@
     </ion-refresher>
 
     <ion-item ng-repeat="message in messages track by $index" href="#/app/messagerie/id/{{message.id}}" >
-
-      <div class="message">
+      <span class="message" >
+        <div >
+          <span class="right">{{message.date | date:'dd/MM/yy'}}</span>
+          <h2>{{getRealName(message.from, message)}}</h2>
+        </div>
         <i class="attachicon-" ng-show="message.attachments.length != 0"></i>
-        <span class="right">{{message.date | date:'dd/MM/yy'}}</span>
-        <h2>{{getRealName(message.from, message)}}</h2>
-      </div>
-      <h2>{{message.subject}}</h2>
+        <h2>{{message.subject}}</h2>
+      </span>
     </ion-item>
   </ion-list>
-  </ion-content>
-  <div class="float-button" ng-click="newMail()">
-    <span class="height-fix">
-      <a class="content ">
-        <i class="new-01icon-"> </i>
-      </a>
-    </span>
-  </div>
+</ion-content>
+<div class="float-button" ng-click="newMail()">
+  <span class="height-fix">
+    <a class="content ">
+      <i class="new-01icon-"> </i>
+    </a>
+  </span>
+</div>
 </ion-view>
