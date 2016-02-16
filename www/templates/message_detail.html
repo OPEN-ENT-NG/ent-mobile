@@ -6,6 +6,9 @@
   </ion-nav-buttons>
 
   <ion-content>
+    <ion-refresher pulling-text="Actualiser" on-refresh="doRefreshMail()">
+    </ion-refresher>
+
     <div class="item">
       <h2>{{mail.subject}}</h2>
       <h3>{{mail.systemFolders}}</h3>
@@ -14,7 +17,8 @@
     <div class="item item-text-wrap">
       <div class="header-mail">
         <h2>De: {{getRealName(mail.from, mail)}}<h2>
-          <span>A: {{getRealName(mail.to, mail)}}</span>  <span ng-show=mail.cc.length!=0>, {{getRealName(mail.cc, mail)}}</span>
+          <span>A: {{getRealName(mail.to, mail)}}</span>
+          <span ng-show=mail.cc.length!=0 ng-repeat="person in mail.cc track by $index">Cc: {{getRealName(mail.cc[$index-1], mail)}}</span>
         </div>
 
         <div ng-bind-html= "renderHtml(mail.body)"></div>

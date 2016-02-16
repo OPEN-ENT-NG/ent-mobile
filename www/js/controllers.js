@@ -45,17 +45,17 @@ angular.module('ent.controllers', [])
 .controller('AppCtrl', function($scope, $sce, $state, $cordovaInAppBrowser, $cordovaFileTransfer,$cordovaProgress, $cordovaFileOpener2, domainENT, UserInfoService, $ionicHistory){
 
   $scope.renderHtml = function(text){
-    text = text.replace(/="\/\//g, "=\"https://");
-    text = text.replace(/="\//g, "=\""+domainENT+"/");
-    // text = text.replace(/href="\//g, "href=\"https://recette-leo.entcore.org/");
-    //pb dans le cas de téléchargement de fichiers
+    if(text != null){
+      text = text.replace(/="\/\//g, "=\"https://");
+      text = text.replace(/="\//g, "=\""+domainENT+"/");
 
-    var newString = text.replace(/href="([\S]+)"/g, "onClick=\"window.open('$1', '_blank', 'location=no')\"");
+      //pb dans le cas de téléchargement de fichiers
+      // var newString = text.replace(/href="([\S]+)"/g, "onClick=window.plugins.fileOpener.open(\"$1\")")
+      var newString = text.replace(/href="([\S]+)"/g, "onClick=\"window.open('$1', '_blank', 'location=no')\"");
 
-    // var newString = text.replace(/href="([\S]+)"/g, "onClick=window.plugins.fileOpener.open(\"$1\")")
-
-    // console.log(newString);
-    return $sce.trustAsHtml(newString);
+      // console.log(newString);
+      return $sce.trustAsHtml(newString);
+    }
   }
 
   $scope.downloadFile = function (filename, urlFile, fileMIMEType){

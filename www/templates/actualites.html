@@ -22,7 +22,6 @@
 
           <div class="item-text-wrap" ng-bind-html=renderHtml(info.content)></div>
 
-
           <div ng-show="info.comments !=  null">
             <p  ng-click="toggleComments(info)" ng-class="{active: areCommentsShown(info)}" class="subdued comment">
               {{getCountComments(info)}}

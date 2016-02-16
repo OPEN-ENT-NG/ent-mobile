@@ -50,8 +50,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     url: '/messagerie/id/:idMessage',
     views: {
       'menuContent': {
-        templateUrl: 'templates/message_detail.html',
-        controller: 'MessagesDetailCtrl'
+        templateUrl: 'templates/message_detail.html'
       }
     }
   })

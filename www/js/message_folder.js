@@ -6,12 +6,12 @@ angular.module('ent.message_folder', [])
   }
 })
 
-.controller('InboxCtrl', function($scope, $state, $stateParams, $rootScope, domainENT, FolderContentService){
+.controller('InboxCtrl', function($scope, $state, $stateParams, $rootScope, domainENT, FolderContentService,  $ionicLoading){
   var url = "";
   var regularFolders = ["INBOX", "OUTBOX", "TRASH", "DRAFT"];
 
-  getUrlFolder();
-  getMessages(url);
+  updateMessages();
+
 
   $scope.doRefreshMessages = function() {
     $scope.folders.unshift(getFoldersContents(url));
@@ -28,14 +28,10 @@ angular.module('ent.message_folder', [])
     }
     return returnName;
   }
-
-  function getMessages (url){
-    FolderContentService.getMessagesFolder(url).then(function (response) {
-      $scope.messages = response.data;
-    }, function(err){
-      alert('ERR:'+ err);
-    });
-  };
+  function updateMessages(){
+    getUrlFolder();
+    getMessages(url);
+  }
 
   function getUrlFolder (){
     if(regularFolders.indexOf($stateParams.nameFolder)>-1){
@@ -46,4 +42,18 @@ angular.module('ent.message_folder', [])
       $rootScope.nameFolder = localStorage.getItem("messagerie_folder_name");
     }
   }
+
+  function getMessages (url){
+
+    $ionicLoading.show({
+      template: 'Chargement en cours...'
+    });
+    FolderContentService.getMessagesFolder(url).then(function (response) {
+      $scope.messages = response.data;
+      $ionicLoading.hide();
+
+    }, function(err){
+      alert('ERR:'+ err);
+    });
+  };
 });
