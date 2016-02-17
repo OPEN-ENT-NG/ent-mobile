@@ -1,28 +1,18 @@
-angular.module('ent.message_detail', [])
+angular.module('ent.message_detail', ['ent.message_services'])
 
-.service('MessageDetailService', function(domainENT, $http){
+.controller('MessagesDetailCtrl', function($scope, $rootScope, $state, domainENT, MessagerieServices,  $ionicLoading, $ionicHistory){
 
-  this.getMessage = function(id){
-    return $http.get(domainENT+"/conversation/message/"+id);
-  }
-
-  this.trashMessage = function (id){
-    return $http.put(domainENT+"/conversation/trash?id="+id);
-  }
-})
-
-.controller('MessagesDetailCtrl', function($scope, $stateParams, $rootScope, $state, domainENT, MessageDetailService,  $ionicLoading, $ionicHistory){
-
-  getMessage($stateParams.idMessage);
+  console.log($state.params.idMessage);
+  getMessage($state.params.idMessage);
 
   $scope.isDraft =  function(){
     return "DRAFT" === $rootScope.nameFolder;
   }
 
   $scope.trash = function(id){
-    MessageDetailService.trashMessage(id).then(function(){
+    MessagerieServices.trashMessage(id).then(function(){
       $ionicHistory.clearCache();
-      $ionicHistory.goBack(-1);
+      $ionicHistory.goBack();
     });
   }
 
@@ -57,9 +47,8 @@ angular.module('ent.message_detail', [])
     $ionicLoading.show({
       template: 'Chargement en cours...'
     });
-    MessageDetailService.getMessage($stateParams.idMessage).then(function(res) {
+    MessagerieServices.getMessage($state.params.idMessage).then(function(res) {
       $scope.mail = res.data;
-      console.log($scope.mail);
       $ionicLoading.hide();
     }, function(err){
       alert('ERR:'+ err);

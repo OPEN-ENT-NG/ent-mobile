@@ -122,7 +122,7 @@ angular.module('ent.new_message', [])
 
   $scope.goToMessagerie = function () {
     $scope.closePopover();
-    $ionicHistory.goBack(-1);
+    $ionicHistory.goBack();
   }
 
   $ionicPopover.fromTemplateUrl('templates/popover_messagerie.html', {

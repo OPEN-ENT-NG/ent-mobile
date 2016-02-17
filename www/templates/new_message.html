@@ -19,7 +19,7 @@
       <div>
         <filter-box filtertext="searchTo" placeholder="To:"></filter-box>
         <ion-list >
-          <ion-item ng-show=searchTo.value.length!=0 ng-repeat="contact in contacts | filter: {displayName: searchTo.value} | limitTo: 5 " ng-click="addContactTo(searchTo, contact)">
+          <ion-item ng-show=searchTo.value.length!=0 ng-repeat="contact in contacts | filter: {displayName: searchTo.value} | filterTo: 5" ng-click="addContactTo(searchTo, contact)">
             <h3>{{contact.displayName}}</h3>
           </ion-item>
         </ion-list>
@@ -38,7 +38,7 @@
         <div>
           <filter-box filtertext="searchCc" placeholder="Cc"></filter-box>
           <ion-list >
-            <ion-item ng-show=searchCc.value.length!=0 ng-repeat="contact in contacts | filter: {displayName: searchCc.value} | limitTo: 5 " ng-click="addContactCc(searchCc, contact)">
+            <ion-item ng-show=searchCc.value.length!=0 ng-repeat="contact in contacts | filter: {displayName: searchCc.value} | filterTo: 5" ng-click="addContactCc(searchCc, contact)">
               <h3>{{contact.displayName}}</h3>
             </ion-item>
           </ion-list>

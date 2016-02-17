@@ -1,18 +1,25 @@
-<ion-view view-title={{nameFolder}} ng-controller="InboxCtrl">
+<ion-view ng-controller="InboxCtrl">
+  <ion-nav-title>{{checkable ? getSelectedMessages().length:nameFolder}}</ion-nav-title>
+  <ion-nav-buttons side="right">
+    <button class="button button-icon button-clear fa fa fa-trash" ng-show=checkable ng-click=deleteSelectedMessages()></button>
+    <button class="button button-icon button-clear folder-open-2icon-" ng-show=checkable></button>
+  </ion-nav-buttons>
+
   <ion-content>
     <ion-refresher pulling-text="Actualiser" on-refresh="doRefreshMessages()">
     </ion-refresher>
     <ion-list>
 
-      <ion-item ng-repeat="message in messages track by $index" href="#/app/messagerie/{{nameFolder}}/{{message.id}}" >
-        <span class="message item-text-wrap" >
-          <div >
+      <ion-item ng-repeat="message in messages track by $index" ng-click="doAction($index)" on-long-press="enableCheckMessages($index)"  >
+        <div class="message">
+          <input type="checkbox" ng-model="message.checked" ng-checked = "message.checked" ng-show=checkable>
+          <div>
             <span class="right">{{message.date | date:'dd/MM/yy'}}</span>
             <h2>{{getRealName(message.from, message)}}</h2>
           </div>
           <i class="attachicon-" ng-show="message.attachments.length != 0"></i>
           <h2>{{message.subject}}</h2>
-        </span>
+        </div>
       </ion-item>
     </ion-list>
   </ion-content>

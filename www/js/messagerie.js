@@ -1,16 +1,6 @@
-angular.module('ent.messagerie', [])
+angular.module('ent.messagerie', ['ent.message_services'])
 
-.service('MessagerieFoldersService', function($http, domainENT){
-  this.getCustomFolders = function(){
-    return $http.get(domainENT+"/conversation/folders/list");
-  }
-
-  this.getContactsService = function(){
-    return $http.get(domainENT+"/conversation/visible");
-  }
-})
-
-.controller('MessagerieFoldersCtrl', function($scope,$state, $rootScope, MessagerieFoldersService){
+.controller('MessagerieFoldersCtrl', function($scope,$state, $rootScope, MessagerieServices){
 
   getContacts();
   getFolders();
@@ -34,7 +24,7 @@ angular.module('ent.messagerie', [])
 
   function getFolders(){
     $scope.folders = [];
-    MessagerieFoldersService.getCustomFolders().then(function(resp){
+    MessagerieServices.getCustomFolders().then(function(resp){
       $scope.folders  = resp.data;
     }, function(err){
       alert('ERR:'+ err);
@@ -43,7 +33,7 @@ angular.module('ent.messagerie', [])
 
   function getContacts () {
     $rootScope.contacts = [];
-    MessagerieFoldersService.getContactsService().then(function(resp){
+    MessagerieServices.getContactsService().then(function(resp){
       for(var i = 0; i< resp.data.groups.length; i++){
         $rootScope.contacts.push({
           _id:  resp.data.groups[i].id,

@@ -3,6 +3,7 @@
   <ion-nav-buttons side="right">
     <button class="button button-icon button-clear fa fa-trash" ng-click = "trash(mail.id)"></button>
     <button class="button button-icon button-clear pencilicon-" ng-show="isDraft()" ng-click = "editMail()"></button>
+    <button class="button button-icon button-clear folder-open-2icon-"></button>
   </ion-nav-buttons>
 
   <ion-content>
@@ -21,7 +22,7 @@
           <span ng-show=mail.cc.length!=0 ng-repeat="person in mail.cc track by $index">Cc: {{getRealName(mail.cc[$index-1], mail)}}</span>
         </div>
 
-        <div ng-bind-html= "renderHtml(mail.body)"></div>
+        <div  class="item-text-wrap" ng-bind-html= "renderHtml(mail.body)"></div>
 
         <div class="list" ng-show=mail.attachments.length!=0>
 

@@ -1,4 +1,4 @@
-angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute','ent.controllers','ent.actualites','ent.blog','ent.blog-list','ent.auth', 'ent.messagerie', 'ent.message_folder','ent.message_detail', 'ent.new_message'])
+angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute','ent.controllers','ent.actualites','ent.blog','ent.blog-list','ent.auth', 'ent.messagerie', 'ent.message_folder','ent.message_detail', 'ent.new_message','ent.message_services'])
 
 .value("domainENT", "https://recette-leo.entcore.org")
 
@@ -16,7 +16,11 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   });
 })
 
-.config(function($stateProvider, $urlRouterProvider, $routeProvider) {
+.config(function($stateProvider, $urlRouterProvider, $routeProvider, $ionicConfigProvider) {
+  if (!ionic.Platform.isIOS()) {
+    $ionicConfigProvider.scrolling.jsScrolling(false);
+  }
+
   $stateProvider
 
   .state('app', {
@@ -41,8 +45,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     cache: false,
     views: {
       'menuContent': {
-        templateUrl: 'templates/message_folder.html',
-        controller: 'InboxCtrl'
+        templateUrl: 'templates/message_folder.html'
       }
     }
   })

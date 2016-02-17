@@ -33,7 +33,8 @@
     {
       "locator": "https://github.com/bez4pieci/Phonegap-Cookies-Plugin.git",
       "id": "com.bez4pieci.cookies"
-    }
+    },
+    "cordova-plugin-vibration"
   ],
   "cordovaPlatforms": [
     "android",
