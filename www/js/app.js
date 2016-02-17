@@ -13,6 +13,12 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     if (window.StatusBar) {
       StatusBar.styleDefault();
     }
+
+    if (ionic.Platform.isIOS()){
+      setTimeout(function () {
+        navigator.splashscreen.hide();
+      }, 3000 - 1000);
+    }
   });
 })
 
