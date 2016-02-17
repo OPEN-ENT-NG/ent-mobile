@@ -10,7 +10,7 @@ angular.module('ent.message_detail', ['ent.message_services'])
   }
 
   $scope.trash = function(id){
-    MessagerieServices.trashMessage(id).then(function(){
+    MessagerieServices.trashMessage(id, $rootScope.nameFolder).then(function(){
       $ionicHistory.clearCache();
       $ionicHistory.goBack();
     });

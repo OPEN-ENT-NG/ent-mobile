@@ -20,7 +20,8 @@ angular.module('ent.message_folder', ['ent.message_services'])
       $ionicLoading.show({
         template: 'Chargement en cours...'
       });
-      MessagerieServices.deleteSelectedMessages(messagesList).then(function(){
+
+      MessagerieServices.deleteSelectedMessages(messagesList, $rootScope.nameFolder).then(function(){
         updateMessages();
         $ionicLoading.hide();
       }, function(err){

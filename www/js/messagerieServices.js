@@ -5,11 +5,12 @@ angular.module('ent.message_services', [])
     return $http.get(url);
   }
 
-  this.deleteSelectedMessages = function(arrayMessages){
+  this.deleteSelectedMessages = function(arrayMessages, nameFolder){
     console.log(arrayMessages);
     var promises = [];
     var deferredCombinedItems = $q.defer();
     var combinedItems = [];
+    var url = nameFolder=="TRASH" ? domainENT+"/conversation/delete?id=":domainENT+"/conversation/trash?id=";
 
     angular.forEach(arrayMessages, function(item) {
       var deferredItemList = $q.defer();
@@ -26,13 +27,17 @@ angular.module('ent.message_services', [])
     return deferredCombinedItems.promise;
   }
 
+  this.trashMessage = function (id, nameFolder){
+    var url = nameFolder=="TRASH" ? domainENT+"/conversation/delete?id=":domainENT+"/conversation/trash?id=";
+    return $http.put(url+id);
+  }
+
+
   this.getMessage = function(id){
     return $http.get(domainENT+"/conversation/message/"+id);
   }
 
-  this.trashMessage = function (id){
-    return $http.put(domainENT+"/conversation/trash?id="+id);
-  }
+
 
   this.getCustomFolders = function(){
     return $http.get(domainENT+"/conversation/folders/list");
