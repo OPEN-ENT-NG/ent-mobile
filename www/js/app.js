@@ -38,6 +38,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
 
   .state('app.message_folder', {
     url: '/messagerie/folder/:nameFolder',
+    cache: false,
     views: {
       'menuContent': {
         templateUrl: 'templates/message_folder.html',
@@ -47,7 +48,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   })
 
   .state('app.message_detail', {
-    url: '/messagerie/id/:idMessage',
+    url: '/messagerie/:nameFolder/:idMessage',
     views: {
       'menuContent': {
         templateUrl: 'templates/message_detail.html'

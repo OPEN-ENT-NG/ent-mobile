@@ -21,6 +21,7 @@ angular.module('ent.message_detail', [])
 
   $scope.trash = function(id){
     MessageDetailService.trashMessage(id).then(function(){
+      $ionicHistory.clearCache();
       $ionicHistory.goBack(-1);
     });
   }

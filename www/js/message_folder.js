@@ -12,9 +12,8 @@ angular.module('ent.message_folder', [])
 
   updateMessages();
 
-
   $scope.doRefreshMessages = function() {
-    $scope.folders.unshift(getFoldersContents(url));
+    $scope.messages.unshift(getMessages(url));
     $scope.$broadcast('scroll.refreshComplete');
     $scope.$apply()
   }
