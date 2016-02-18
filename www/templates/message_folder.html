@@ -1,8 +1,8 @@
 <ion-view ng-controller="InboxCtrl">
   <ion-nav-title>{{checkable ? getCountOfCheckedMessages():nameFolder}}</ion-nav-title>
-  <ion-nav-buttons side="right">
-    <button class="button button-icon button-clear fa fa fa-trash" ng-show=checkable ng-click=deleteSelectedMessages()></button>
-    <button class="button button-icon button-clear folder-open-2icon-" ng-show=checkable></button>
+  <ion-nav-buttons side="right" >
+    <button class="button button-icon button-clear ion-trash-a" ng-show=checkable ng-click=deleteSelectedMessages()></button>
+    <button class="button button-icon button-clear ion-filing" ng-show=checkable ng-controller="PopupCtrl" ng-click=showPopup()></button>
   </ion-nav-buttons>
 
   <ion-content>

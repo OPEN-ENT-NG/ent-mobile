@@ -1,4 +1,4 @@
-angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute','ent.controllers','ent.actualites','ent.blog','ent.blog-list','ent.auth', 'ent.messagerie', 'ent.message_folder','ent.message_detail', 'ent.new_message','ent.message_services'])
+angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute','ent.controllers','ent.actualites','ent.blog','ent.blog-list','ent.auth', 'ent.messagerie', 'ent.message_folder','ent.message_detail', 'ent.new_message','ent.message_services','ent.move_message'])
 
 .value("domainENT", "https://recette-leo.entcore.org")
 

@@ -32,12 +32,9 @@ angular.module('ent.message_services', [])
     return $http.put(url+id);
   }
 
-
   this.getMessage = function(id){
     return $http.get(domainENT+"/conversation/message/"+id);
   }
-
-
 
   this.getCustomFolders = function(){
     return $http.get(domainENT+"/conversation/folders/list");
