@@ -2,6 +2,7 @@ angular.module('ent.messagerie', ['ent.message_services'])
 
 .controller('MessagerieFoldersCtrl', function($scope,$state, $rootScope, MessagerieServices){
 
+console.log("MessagerieFoldersCtrl");
   getContacts();
   getFolders();
 
