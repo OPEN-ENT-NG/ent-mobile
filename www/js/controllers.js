@@ -1,28 +1,5 @@
 angular.module('ent.controllers', [])
 
-.service('sessionInjector', [function (SessionService) {
-
-  var sessionInjector = {
-    request: function(config) {
-      if (localStorage.getItem('access_token')) {
-        config.headers['Authorization'] = 'Bearer '+localStorage.getItem('access_token')
-      }
-      return config;
-    },
-
-    responseError: function(res) {
-      //    alert('besoin de refreshToken');
-      return res;
-    }
-  };
-  return sessionInjector;
-}])
-
-.config(function($httpProvider) {
-  $httpProvider.interceptors.push('sessionInjector');
-  $httpProvider.defaults.withCredentials = true;
-})
-
 .service('UserInfoService', function($http, domainENT){
   this.getUserData = function (userId) {
     return $http.get(domainENT+"/userbook/api/person?id="+userId);

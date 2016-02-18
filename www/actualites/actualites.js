@@ -18,7 +18,7 @@ angular.module('ent.actualites', [])
   }
 })
 
-.controller('InfosCtrl', function ($scope,$ionicPopover, $state, $rootScope, InfosService) {
+.controller('InfosCtrl', function ($scope,$ionicPopover, $state, $rootScope, InfosService,$ionicLoading) {
   $scope.statusInfos = InfosService.getStatusInfos();
   getActualites();
   getThreads();
@@ -83,7 +83,7 @@ angular.module('ent.actualites', [])
     $scope.$apply()
   }
 
-  $ionicPopover.fromTemplateUrl('templates/popover_actualites.html', {
+  $ionicPopover.fromTemplateUrl('actualites/popover_actualites.html', {
     scope: $scope
   }).then(function(popover) {
     $scope.popover = popover;

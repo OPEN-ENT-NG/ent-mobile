@@ -1,8 +1,7 @@
 angular.module('ent.message_detail', ['ent.message_services'])
 
-.controller('MessagesDetailCtrl', function($scope, $rootScope, $state, domainENT, MessagerieServices,  $ionicLoading, $ionicHistory){
+.controller('MessagesDetailCtrl', function($scope, $rootScope, $state, domainENT, MessagerieServices,  $ionicLoading, $ionicHistory, DeleteMessagesPopupFactory){
 
-  console.log($state.params.idMessage);
   getMessage($state.params.idMessage);
 
   $scope.isDraft =  function(){
@@ -10,10 +9,20 @@ angular.module('ent.message_detail', ['ent.message_services'])
   }
 
   $scope.trash = function(id){
-    MessagerieServices.trashMessage(id, $rootScope.nameFolder).then(function(){
-      $ionicHistory.clearCache();
-      $ionicHistory.goBack();
-    });
+    DeleteMessagesPopupFactory.getPopup().then(function(res){
+      if(res){
+        $ionicLoading.show({
+          template: 'Chargement en cours...'
+        });
+        MessagerieServices.trashMessage(id, $rootScope.nameFolder).then(function(){
+          $ionicLoading.hide();
+          $ionicHistory.clearCache();
+          $ionicHistory.goBack();
+        }, function(err){
+          alert('ERR:'+ err);
+        });
+      }
+    })
   }
 
   $scope.editMail = function(){
@@ -38,7 +47,7 @@ angular.module('ent.message_detail', ['ent.message_services'])
   }
 
   $scope.doRefreshMail = function() {
-    $scope.mail.unshift(getMessage(id));
+    $scope.mail.unshift(getMessage($state.params.idMessage));
     $scope.$broadcast('scroll.refreshComplete');
     $scope.$apply()
   }

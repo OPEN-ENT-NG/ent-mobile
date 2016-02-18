@@ -6,12 +6,12 @@ angular.module('ent.message_folder', ['ent.message_services'])
 
   updateMessages();
 
-  $scope.showPopup = function(){
-    var popupMove = PopupFactory.getPopup($scope);
+  $scope.showPopupMove = function(){
+    var popupMove = MoveMessagesPopupFactory.getPopup($scope);
     popupMove.then(function(res){
 
       $ionicLoading.show({
-        template: 'Déplacement en cours...'
+        template: '<ion-spinner></ion-spinner>'
       });
       console.log(res);
       $ionicLoading.hide();
@@ -42,7 +42,7 @@ angular.module('ent.message_folder', ['ent.message_services'])
         DeleteMessagesPopupFactory.getPopup().then(function(res){
           if(res){
             $ionicLoading.show({
-              template: 'Chargement en cours...'
+              template: '<ion-spinner></ion-spinner>'
             });
 
             MessagerieServices.deleteSelectedMessages(messagesList, $rootScope.nameFolder).then(function(){
@@ -140,7 +140,7 @@ angular.module('ent.message_folder', ['ent.message_services'])
 
     function getMessages (url){
       $ionicLoading.show({
-        template: 'Chargement en cours...'
+        template: '<ion-spinner></ion-spinner>'
       });
       MessagerieServices.getMessagesFolder(url).then(function (response) {
         $scope.messages = response.data;
@@ -161,38 +161,38 @@ angular.module('ent.message_folder', ['ent.message_services'])
     function goToMessage(index){
       $state.go('app.message_detail', {nameFolder: $rootScope.nameFolder, idMessage: $scope.messages[index].id});
     }
-  })
-
-  .directive('onLongPress', function($timeout) {
-    return {
-      restrict: 'A',
-      link: function($scope, $elm, $attrs) {
-        $elm.bind('touchstart', function(evt) {
-          // Locally scoped variable that will keep track of the long press
-          $scope.longPress = true;
-
-          // We'll set a timeout for 600 ms for a long press
-          $timeout(function() {
-            if ($scope.longPress) {
-              // If the touchend event hasn't fired,
-              // apply the function given in on the element's on-long-press attribute
-              $scope.$apply(function() {
-                $scope.$eval($attrs.onLongPress)
-              });
-            }
-          }, 600);
-        });
-
-        $elm.bind('touchend', function(evt) {
-          // Prevent the onLongPress event from firing
-          $scope.longPress = false;
-          // If there is an on-touch-end function attached to this element, apply it
-          if ($attrs.onTouchEnd) {
-            $scope.$apply(function() {
-              $scope.$eval($attrs.onTouchEnd)
-            });
-          }
-        });
-      }
-    };
   });
+
+  // .directive('onLongPress', function($timeout) {
+  //   return {
+  //     restrict: 'A',
+  //     link: function($scope, $elm, $attrs) {
+  //       $elm.bind('touchstart', function(evt) {
+  //         // Locally scoped variable that will keep track of the long press
+  //         $scope.longPress = true;
+  //
+  //         // We'll set a timeout for 600 ms for a long press
+  //         $timeout(function() {
+  //           if ($scope.longPress) {
+  //             // If the touchend event hasn't fired,
+  //             // apply the function given in on the element's on-long-press attribute
+  //             $scope.$apply(function() {
+  //               $scope.$eval($attrs.onLongPress)
+  //             });
+  //           }
+  //         }, 600);
+  //       });
+  //
+  //       $elm.bind('touchend', function(evt) {
+  //         // Prevent the onLongPress event from firing
+  //         $scope.longPress = false;
+  //         // If there is an on-touch-end function attached to this element, apply it
+  //         if ($attrs.onTouchEnd) {
+  //           $scope.$apply(function() {
+  //             $scope.$eval($attrs.onTouchEnd)
+  //           });
+  //         }
+  //       });
+  //     }
+  //   };
+  // });

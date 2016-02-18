@@ -89,7 +89,7 @@ angular.module('ent.message_services', [])
         { text: 'Cancel' },
         {
           text: '<b>Save</b>',
-          type: 'button-positive',
+          type: 'bar-positive',
           onTap: function(e) {
             if (!scope.choice) {
               e.preventDefault();

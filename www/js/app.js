@@ -1,8 +1,8 @@
-angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute','ent.controllers','ent.actualites','ent.blog','ent.blog-list','ent.auth', 'ent.messagerie', 'ent.message_folder','ent.message_detail', 'ent.new_message','ent.message_services'])
+angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute','ent.controllers','ent.actualites','ent.blog','ent.blog-list','ent.auth', 'ent.messagerie', 'ent.new_message'])
 
 .value("domainENT", "https://recette-leo.entcore.org")
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform, $ionicLoading, $rootScope) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -19,16 +19,44 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
         navigator.splashscreen.hide();
       }, 3000 - 1000);
     }
+    // $rootScope.$on('loading:show', function() {
+    //   $ionicLoading.show({template: 'foo'})
+    // })
+    //
+    // $rootScope.$on('loading:hide', function() {
+    //   $ionicLoading.hide()
+    // })
   });
 })
 
-.config(function($stateProvider, $urlRouterProvider, $routeProvider, $ionicConfigProvider) {
+.config(function($stateProvider, $urlRouterProvider, $routeProvider, $ionicConfigProvider,  $httpProvider) {
+  $httpProvider.defaults.withCredentials = true;
+  $httpProvider.interceptors.push(function($rootScope) {
+    return {
+      request: function(config) {
+        if (localStorage.getItem('access_token')) {
+          config.headers['Authorization'] = 'Bearer '+localStorage.getItem('access_token')
+        }
+        // console.log("loading:show");
+        // $rootScope.$broadcast('loading:show')
+        return config
+      },
+      response: function(response) {
+        // console.log("loading:hide");
+
+        //    alert('besoin de refreshToken');
+        // $rootScope.$broadcast('loading:hide')
+        return response
+      }
+    }
+  })
+
+
   if (!ionic.Platform.isIOS()) {
     $ionicConfigProvider.scrolling.jsScrolling(false);
   }
 
   $stateProvider
-
   .state('app', {
     url: '/app',
     abstract: true,
@@ -40,8 +68,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     url: '/messagerie',
     views: {
       'menuContent': {
-        templateUrl: 'templates/messagerie.html',
-        controller: 'MessagerieFoldersCtrl'
+        templateUrl: 'messagerie/folder_view.html',
       }
     }
   })
@@ -51,7 +78,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     cache: false,
     views: {
       'menuContent': {
-        templateUrl: 'templates/message_folder.html'
+        templateUrl: 'messagerie/folder_content.html'
       }
     }
   })
@@ -60,7 +87,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     url: '/messagerie/:nameFolder/:idMessage',
     views: {
       'menuContent': {
-        templateUrl: 'templates/message_detail.html'
+        templateUrl: 'messagerie/detail.html'
       }
     }
   })
@@ -68,8 +95,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     url: '/new_message',
     views: {
       'menuContent': {
-        templateUrl: 'templates/new_message.html',
-        controller: 'NewMessageCtrl'
+        templateUrl: 'messagerie/new_message.html'
       }
     }
   })
@@ -87,7 +113,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     url: '/blog-list',
     views: {
       'menuContent': {
-        templateUrl: 'templates/blog-list.html',
+        templateUrl: 'blogs/blog-list.html',
         controller: "BlogListCtrl"
       }
     }
@@ -97,7 +123,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     url: '/blog/id/:idBlog',
     views: {
       'menuContent': {
-        templateUrl: 'templates/blog.html',
+        templateUrl: 'blogs/blog.html',
         controller: "BlogCtrl"
       }
     }
@@ -107,7 +133,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     url: '/actualites',
     views: {
       'menuContent': {
-        templateUrl: 'templates/actualites.html'
+        templateUrl: 'actualites/actualites.html'
       }
     }
   })
@@ -116,7 +142,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     url: '/threads',
     views: {
       'menuContent': {
-        templateUrl: 'templates/threads.html'
+        templateUrl: 'actualites/threads.html'
       }
     }
   })
@@ -129,5 +155,4 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
 
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/login');
-  //$urlRouterProvider.otherwise('/app/messagerie');
 });
