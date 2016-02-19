@@ -9,12 +9,15 @@ angular.module('ent.messagerie', ['ent.message_services', 'ent.message_folder', 
     localStorage.setItem('messagerie_folder_name',$scope.folders[index].name);
     localStorage.setItem('messagerie_folder_id',$scope.folders[index].id);
   }
+  $scope.addSeparator = function(index){
+    console.log("index: "+index);
+    return index =3;
+  }
 
   $rootScope.newMail = function(){
     $rootScope.historyMail = null;
     $state.go("app.new_message");
   }
-
 
   $scope.doRefreshFolders = function() {
     $scope.folders.unshift(getFolders());
@@ -23,9 +26,38 @@ angular.module('ent.messagerie', ['ent.message_services', 'ent.message_folder', 
   }
 
   function getFolders(){
-    $scope.folders = [];
+    $scope.folders = [
+      {
+        id: "INBOX",
+        name: "INBOX",
+        isPersonnal: false
+      },
+      {
+        id: "OUTBOX",
+        name: "OUTBOX",
+        isPersonnal: false
+      },
+      {
+        id: "DRAFT",
+        name: "DRAFT",
+        isPersonnal: false
+      },
+      {
+        id: "TRASH",
+        name: "TRASH",
+        isPersonnal: false
+      }
+    ];
     MessagerieServices.getCustomFolders().then(function(resp){
-      $scope.folders  = resp.data;
+      for(var i = 0; i< resp.data.length; i++){
+        $scope.folders.push({
+          id: resp.data[i].id,
+          name: resp.data[i].name,
+          isPersonnal: true
+        });
+      }
+      console.log($scope.folders);
+      // $scope.checkable = false;
     }, function(err){
       alert('ERR:'+ err);
     });

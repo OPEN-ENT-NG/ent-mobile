@@ -5,6 +5,30 @@ angular.module('ent.message_services', [])
     return $http.get(url);
   }
 
+  this.restoreSelectedMessages = function(arrayMessages){
+    var promises = [];
+    var deferredCombinedItems = $q.defer();
+    var combinedItems = [];
+
+    angular.forEach(arrayMessages, function(item) {
+      var deferredItemList = $q.defer();
+      $http.put(domainENT+"/conversation/restore?id="+item.id).then(function(resp) {
+        combinedItems = combinedItems.concat(resp.data);
+        deferredItemList.resolve();
+      });
+      promises.push(deferredItemList.promise);
+    });
+
+    $q.all(promises).then(function() {
+      deferredCombinedItems.resolve(combinedItems);
+    });
+    return deferredCombinedItems.promise;
+  }
+
+  this.restoreMessage = function (id){
+    return $http.put(domainENT+"/conversation/restore?id="+id);
+  }
+
   this.deleteSelectedMessages = function(arrayMessages, nameFolder){
     var promises = [];
     var deferredCombinedItems = $q.defer();
@@ -13,7 +37,7 @@ angular.module('ent.message_services', [])
 
     angular.forEach(arrayMessages, function(item) {
       var deferredItemList = $q.defer();
-      $http.put(domainENT+"/conversation/trash?id="+item.id).then(function(resp) {
+      $http.put(url+item.id).then(function(resp) {
         combinedItems = combinedItems.concat(resp.data);
         deferredItemList.resolve();
       });

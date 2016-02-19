@@ -3,6 +3,8 @@
   <ion-nav-buttons side="right" >
     <button class="button button-icon button-clear ion-trash-a" ng-show=checkable ng-click=deleteSelectedMessages()></button>
     <button class="button button-icon button-clear ion-filing" ng-show=checkable ng-click=showPopupMove()></button>
+    <button class="button button-icon button-clear ion-refresh" ng-show=canShowRestore() ng-click="restoreMessages()"></button>
+
   </ion-nav-buttons>
 
   <ion-content>
