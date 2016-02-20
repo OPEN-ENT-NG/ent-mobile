@@ -125,7 +125,7 @@ angular.module('ent.new_message', [])
     $ionicHistory.goBack();
   }
 
-  $ionicPopover.fromTemplateUrl('templates/popover_messagerie.html', {
+  $ionicPopover.fromTemplateUrl('messagerie/popover_messagerie.html', {
     scope: $scope
   }).then(function(popover) {
     $scope.popover = popover;

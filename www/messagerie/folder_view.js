@@ -1,17 +1,12 @@
 angular.module('ent.messagerie', ['ent.message_services', 'ent.message_folder', 'ent.message_detail'])
 
-.controller('MessagerieFoldersCtrl', function($scope,$state, $rootScope, MessagerieServices){
+.controller('MessagerieFoldersCtrl', function($scope,$state, $rootScope, MessagerieServices,  $ionicLoading,  $cordovaVibration){
 
   getContacts();
   getFolders();
 
-  $scope.setCurrentFolder = function (index){
-    localStorage.setItem('messagerie_folder_name',$scope.folders[index].name);
-    localStorage.setItem('messagerie_folder_id',$scope.folders[index].id);
-  }
-  $scope.addSeparator = function(index){
-    console.log("index: "+index);
-    return index =3;
+  $rootScope.writeWithUnreadNumber = function(folder){
+    return folder.count!=0 ? folder.name+" ("+folder.count+")":folder.name;
   }
 
   $rootScope.newMail = function(){
@@ -22,10 +17,14 @@ angular.module('ent.messagerie', ['ent.message_services', 'ent.message_folder', 
   $scope.doRefreshFolders = function() {
     $scope.folders.unshift(getFolders());
     $scope.$broadcast('scroll.refreshComplete');
-    $scope.$apply()
+    $scope.$apply();
   }
 
   function getFolders(){
+    // $ionicLoading.show({
+    //   template: '<i class="spinnericon- taille"></i>'
+    // });
+
     $scope.folders = [
       {
         id: "INBOX",
@@ -46,6 +45,12 @@ angular.module('ent.messagerie', ['ent.message_services', 'ent.message_folder', 
         id: "TRASH",
         name: "TRASH",
         isPersonnal: false
+      },
+      {
+        id: "0",
+        name:"",
+        isPersonnal: false
+
       }
     ];
     MessagerieServices.getCustomFolders().then(function(resp){
@@ -55,12 +60,25 @@ angular.module('ent.messagerie', ['ent.message_services', 'ent.message_folder', 
           name: resp.data[i].name,
           isPersonnal: true
         });
+
       }
-      console.log($scope.folders);
-      // $scope.checkable = false;
-    }, function(err){
+    }).then(function(){
+      var folderIds = [];
+      angular.forEach($scope.folders, function(folder) {
+        folderIds.push(folder.id);
+      })
+      MessagerieServices.getCountUnread(folderIds).then(function (response){
+        for(var i=0; i< response.length; i++){
+          console.log(response[i].count);
+          $scope.folders[i].count = response[i].count;
+        }
+        console.log($scope.folders);
+        // $ionicLoading.hide();
+        // $scope.checkable = false;
+      })
+    }) , function(err){
       alert('ERR:'+ err);
-    });
+    };
   }
 
   function getContacts () {

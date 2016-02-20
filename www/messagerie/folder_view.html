@@ -1,4 +1,4 @@
-<ion-view view-title="Messagerie"  ng-controller="MessagerieFoldersCtrl">
+<ion-view view-title="Messagerie"  ng-controller="MessagerieFoldersCtrl" ng-cloak>
 
   <ion-content>
     <ion-refresher pulling-text="Actualiser" on-refresh="doRefreshFolders()">
@@ -6,11 +6,11 @@
 
     <ion-list>
       <div ng-repeat="folder in folders track by $index">
-        <ion-item href="#/app/messagerie/folder/{{folder.id}}">
+        <ion-item href="#/app/messagerie/{{folder.name}}/{{folder.id}}" ng-show=folder.name.length!=0>
           <i class="foldericon-"></i>
-          {{folder.name}}
+          {{writeWithUnreadNumber(folder)}}
         </ion-item>
-        <div class="item item-divider" ng-show=addSeparator($index)></div>
+        <div class="item item-divider" ng-hide=folder.name.length!=0></div>
       </div>
     </ion-list>
 

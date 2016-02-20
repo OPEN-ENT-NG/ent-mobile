@@ -5,6 +5,36 @@ angular.module('ent.message_services', [])
     return $http.get(url);
   }
 
+  this.getCustomFolders = function(){
+    return $http.get(domainENT+"/conversation/folders/list");
+  }
+
+  this.getExtraFolders = function(locationId){
+    var urlEnd = locationId == "TRASH" ? "trash":"parentId="+locationId;
+    console.log(domainENT+"/conversation/folders/list?"+urlEnd);
+    return $http.get(domainENT+"/conversation/folders/list?"+urlEnd);
+  }
+
+  this.getCountUnread = function(folders){
+    var promises = [];
+    var deferredCombinedItems = $q.defer();
+    var combinedItems = [];
+    angular.forEach(folders, function(folderId) {
+      var deferredItemList = $q.defer();
+      $http.get(domainENT+"/conversation/count/"+folderId+"?unread=true").then(function(resp) {
+        combinedItems = combinedItems.concat(resp.data);
+        deferredItemList.resolve();
+      });
+      promises.push(deferredItemList.promise);
+    });
+
+    $q.all(promises).then(function() {
+      deferredCombinedItems.resolve(combinedItems);
+    });
+    return deferredCombinedItems.promise;
+  }
+
+
   this.restoreSelectedMessages = function(arrayMessages){
     var promises = [];
     var deferredCombinedItems = $q.defer();
@@ -59,10 +89,6 @@ angular.module('ent.message_services', [])
     return $http.get(domainENT+"/conversation/message/"+id);
   }
 
-  this.getCustomFolders = function(){
-    return $http.get(domainENT+"/conversation/folders/list");
-  }
-
   this.moveMessages = function(messagesToMove, folderId){
     var promises = [];
     var deferredCombinedItems = $q.defer();
@@ -89,6 +115,7 @@ angular.module('ent.message_services', [])
   this.getContactsService = function(){
     return $http.get(domainENT+"/conversation/visible");
   }
+
 })
 
 .factory("MoveMessagesPopupFactory", function ($ionicPopup, MessagerieServices) {
@@ -132,7 +159,6 @@ angular.module('ent.message_services', [])
 .factory("DeleteMessagesPopupFactory", function ($ionicPopup, MessagerieServices) {
 
   function getPopup() {
-
     return $ionicPopup.confirm({
       title: 'Suppression de message(s)',
       template: 'Êtes-vous sûr(e) de vouloir supprimer ce(s) message(s) ?'

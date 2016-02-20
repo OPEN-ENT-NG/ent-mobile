@@ -140,3 +140,7 @@ z-index: 1000;
 .pj{
   margin-bottom: 5px;
 }
+
+[ng\: cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x- ng-cloak {
+  display: none !important;
+}

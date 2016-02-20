@@ -1,17 +1,26 @@
-<ion-view ng-controller="InboxCtrl">
+<ion-view ng-controller="InboxCtrl" ng-cloak>
   <ion-nav-title>{{checkable ? getCountOfCheckedMessages():nameFolder}}</ion-nav-title>
-  <ion-nav-buttons side="right" >
+  <ion-nav-buttons side="right">
     <button class="button button-icon button-clear ion-trash-a" ng-show=checkable ng-click=deleteSelectedMessages()></button>
     <button class="button button-icon button-clear ion-filing" ng-show=checkable ng-click=showPopupMove()></button>
     <button class="button button-icon button-clear ion-refresh" ng-show=canShowRestore() ng-click="restoreMessages()"></button>
-
   </ion-nav-buttons>
 
   <ion-content>
     <ion-refresher pulling-text="Actualiser" on-refresh="doRefreshMessages()">
     </ion-refresher>
     <ion-list>
-      <ion-item ng-repeat="message in messages track by $index" ng-click="doAction($index)" on-long-press="enableCheckMessages($index)"  >
+      <ion-item ng-repeat="extraFolder in extraFolders" href="#/app/messagerie/{{extraFolder.name}}/{{extraFolder.id}}">
+          <i class="foldericon-"></i>
+          {{writeWithUnreadNumber(extraFolder)}}
+      </ion-item>
+    </ion-list>
+
+    <div class="item item-divider"></div>
+
+
+    <ion-list>
+      <ion-item ng-repeat="message in messages track by $index" ng-click="doAction($index)" on-long-press="enableCheckMessages($index)">
         <div class="message">
           <input type="checkbox" ng-model="message.checked" ng-checked = "message.checked" ng-show=checkable>
           <div>

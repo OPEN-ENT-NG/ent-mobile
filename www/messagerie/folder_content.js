@@ -1,14 +1,12 @@
 angular.module('ent.message_folder', ['ent.message_services'])
 
 .controller('InboxCtrl', function($scope, $state, $stateParams, $rootScope, domainENT, MessagerieServices,  $ionicLoading,  $cordovaVibration, $ionicHistory, $ionicPlatform, MoveMessagesPopupFactory, DeleteMessagesPopupFactory){
-  var url = "";
-  var regularFolders = ["INBOX", "OUTBOX", "TRASH", "DRAFT"];
 
-  updateMessages();
+  getMessagesAndFolders();
 
   $scope.restoreMessages = function(){
     MessagerieServices.restoreSelectedMessages(getSelectedMessages()).then(function(){
-      updateMessages();
+      getMessagesAndFolders();
     }
     , function(err){
       alert('ERR:'+ err);
@@ -17,7 +15,7 @@ angular.module('ent.message_folder', ['ent.message_services'])
   }
 
   $scope.canShowRestore = function(){
-    return $rootScope.nameFolder == "TRASH" && $scope.checkable;
+    return $stateParams.nameFolder == "TRASH" && $scope.checkable;
   }
 
   $scope.showPopupMove = function(){
@@ -28,16 +26,14 @@ angular.module('ent.message_folder', ['ent.message_services'])
         template: '<i class="spinnericon- taille"></i>'
       });
       console.log(res);
-      $ionicLoading.hide();
       if(res!=null){
         MessagerieServices.moveMessages(getSelectedMessages(), res).then(function(){
-          updateMessages();
-        }
-        , function(err){
+          getMessagesAndFolders();
+        }, function(err){
           alert('ERR:'+ err);
-          $ionicLoading.hide();
         });
       }
+      $ionicLoading.hide();
     })
   }
 
@@ -55,13 +51,8 @@ angular.module('ent.message_folder', ['ent.message_services'])
 
       DeleteMessagesPopupFactory.getPopup().then(function(res){
         if(res){
-          $ionicLoading.show({
-            template: '<i class="spinnericon- taille"></i>'
-          });
-
-          MessagerieServices.deleteSelectedMessages(messagesList, $rootScope.nameFolder).then(function(){
-            updateMessages();
-            $ionicLoading.hide();
+          MessagerieServices.deleteSelectedMessages(messagesList, $stateParams.nameFolder).then(function(){
+            getMessagesAndFolders();
           }, function(err){
             alert('ERR:'+ err);
           });
@@ -93,7 +84,7 @@ angular.module('ent.message_folder', ['ent.message_services'])
   }
 
   $scope.showNumberOfCheckedMessages = function(){
-    return $scope.checkable ? $rootScope.nameFolder: getCountOfCheckedMessages();
+    return $scope.checkable ? $stateParams.nameFolder: getCountOfCheckedMessages();
   }
 
   $rootScope.$ionicGoBack = function() {
@@ -121,7 +112,7 @@ angular.module('ent.message_folder', ['ent.message_services'])
   });
 
   $scope.doRefreshMessages = function() {
-    $scope.messages.unshift(getMessages(url));
+    $scope.messages.unshift(getMessages(getUrlFolder()));
     $scope.$broadcast('scroll.refreshComplete');
     $scope.$apply()
   }
@@ -136,20 +127,25 @@ angular.module('ent.message_folder', ['ent.message_services'])
     return returnName;
   }
 
+  function getMessagesAndFolders(){
+    $scope.nameFolder = $stateParams.nameFolder;
+    getExtraFolders();
+    updateMessages();
+  }
+
   function updateMessages(){
     $scope.checkable = false;
-    getUrlFolder();
-    getMessages(url);
+    getMessages(getUrlFolder());
   }
 
   function getUrlFolder (){
-    if(regularFolders.indexOf($stateParams.nameFolder)>-1){
-      url=domainENT+"/conversation/list/"+$stateParams.nameFolder;
-      $rootScope.nameFolder = $stateParams.nameFolder;
-    } else {
-      url=domainENT+"/conversation/list/"+localStorage.getItem("messagerie_folder_id")+"?restrain=&page=0";
-      $rootScope.nameFolder = localStorage.getItem("messagerie_folder_name");
+    var regularFolders = ["INBOX", "OUTBOX", "TRASH", "DRAFT"];
+    var url= domainENT+"/conversation/list/"+$stateParams.idFolder;
+    if(regularFolders.indexOf($stateParams.idFolder) == -1) {
+      url += "?restrain=&page=0";
     }
+    console.log(url);
+    return url;
   }
 
   function getMessages (url){
@@ -159,12 +155,32 @@ angular.module('ent.message_folder', ['ent.message_services'])
     MessagerieServices.getMessagesFolder(url).then(function (response) {
       $scope.messages = response.data;
       initCheckedValue();
-      $ionicLoading.hide();
-    }, function(err){
+    }), function(err){
       $ionicLoading.hide();
       alert('ERR:'+ err);
-    });
+    };
   };
+
+  function getExtraFolders(){
+    MessagerieServices.getExtraFolders($stateParams.idFolder).then(function(resp){
+      console.log(resp.data);
+      $scope.extraFolders = resp.data;
+    }).then(function(){
+      var folderIds = [];
+      angular.forEach($scope.extraFolders, function(extraFolder) {
+        folderIds.push(extraFolder.id);
+      })
+      MessagerieServices.getCountUnread(folderIds).then(function (response){
+        for(var i=0; i< response.length; i++){
+          $scope.extraFolders[i].count = response[i].count;
+        }
+        $ionicLoading.hide();
+      })
+    }), function(err){
+      $ionicLoading.hide();
+      alert('ERR:'+ err);
+    };
+  }
 
   function initCheckedValue(){
     angular.forEach($scope.messages, function(message){
@@ -173,6 +189,6 @@ angular.module('ent.message_folder', ['ent.message_services'])
   }
 
   function goToMessage(index){
-    $state.go('app.message_detail', {nameFolder: $rootScope.nameFolder, idMessage: $scope.messages[index].id});
+    $state.go('app.message_detail', {nameFolder: $stateParams.nameFolder, idMessage: $scope.messages[index].id});
   }
 });
