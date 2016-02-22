@@ -6,7 +6,9 @@
 
     <ion-list>
       <div ng-repeat="folder in folders track by $index">
-        <ion-item href="#/app/messagerie/{{folder.name}}/{{folder.id}}" ng-show=folder.name.length!=0>
+        <ion-item ng-show=folder.name.length!=0 on-long-press="enableCheckFolders(folder)"
+        ng-click="doAction(folder)">
+          <input type="checkbox" ng-model="folder.checked" ng-checked = "folder.checked" ng-show=checkable>
           <i class="foldericon-"></i>
           {{writeWithUnreadNumber(folder)}}
         </ion-item>

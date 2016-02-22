@@ -9,6 +9,21 @@ angular.module('ent.messagerie', ['ent.message_services', 'ent.message_folder', 
     return folder.count!=0 ? folder.name+" ("+folder.count+")":folder.name;
   }
 
+  $scope.enableCheckMessages = function (folder) {
+    if(!$scope.checkable){
+      $cordovaVibration.vibrate(100);     // Vibrate 100ms
+      $scope.checkable = true;
+      $scope.checkFolder (folder);
+    }
+  }
+  $scope.checkFolder = function(folder){
+    folder.checked = !folder.checked;
+  }
+
+  $scope.doAction = function(folder){
+    $scope.checkable ?  $scope.checkFolder(folder):goToFolder(folder);
+  }
+
   $rootScope.newMail = function(){
     $rootScope.historyMail = null;
     $state.go("app.new_message");
@@ -20,10 +35,15 @@ angular.module('ent.messagerie', ['ent.message_services', 'ent.message_folder', 
     $scope.$apply();
   }
 
+  function goToFolder(folder){
+    $state.go('app.message_folder', {nameFolder: folder.nameFolder, idFolder: folder.id});
+  }
+
   function getFolders(){
     // $ionicLoading.show({
     //   template: '<i class="spinnericon- taille"></i>'
     // });
+    $scope.checkable = false;
 
     $scope.folders = [
       {
