@@ -1,33 +1,23 @@
-angular.module('ent.actualites', [])
-
-.service('InfosService', function($http, domainENT){
-  this.getAllInfos = function(){
-    return $http.get(domainENT+"/actualites/infos");
-  }
-
-  this.getAllThreads = function(){
-    return $http.get(domainENT+"/actualites/threads");
-  }
-
-  this.getStatusInfos = function(){
-    return [
-      {nom: "Brouillons", status: 1},
-      {nom: "Soumises", status: 2},
-      {nom: "Publiées", status: 3}
-    ];
-  }
-})
+angular.module('ent.actualites', ['ent.actualites_service'])
 
 .controller('InfosCtrl', function ($scope,$ionicPopover, $state, $rootScope, InfosService,$ionicLoading) {
+
   $scope.statusInfos = InfosService.getStatusInfos();
   getActualites();
   getThreads();
+  getTranslation();
 
-  $scope.getCountComments = function(info){
+  $scope.getCountComments = function(info, commentsAreShown){
     if(info.comments != null){
-      var size = info.comments.length;
-      var unite = size ==1 ? "Commentaire":"Commentaires";
-      return size+" "+unite;
+      var text;
+      if(commentsAreShown){
+        text = $scope.translation["actualites.info.label.comments.close"];
+      } else {
+        console.log( $scope.translation["actualites.info.label.comments.many"]);
+        text = $scope.translation["actualites.info.label.comments.many"]+" ("+info.comments.length+")";
+      }
+
+      return text;
     }
   }
 
@@ -136,5 +126,14 @@ angular.module('ent.actualites', [])
     }, function(err){
       alert('ERR:'+ err);
     });
+  }
+
+  function getTranslation(){
+    InfosService.getTranslation().then(function(response){
+      $scope.translation = angular.fromJson(response.data);
+      console.log($scope.translation);
+    }, function(err){
+      alert('ERR:'+ err);
+    })
   }
 });

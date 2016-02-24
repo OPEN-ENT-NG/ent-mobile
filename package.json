@@ -1,6 +1,6 @@
 {
-  "name": "ENT_mobile_12012016",
-  "version": "1.0.0",
+  "name": "ENT_mobile_1022016",
+  "version": "2.0.0",
   "description": "ENT mobile: An Ionic project",
   "dependencies": {
     "gulp": "^3.5.6",

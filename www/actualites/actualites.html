@@ -1,4 +1,4 @@
-<ion-view view-title="Actualités" ng-controller="InfosCtrl">
+<ion-view view-title={{translation["actualites.links.latest"]}} ng-controller="InfosCtrl">
   <ion-nav-buttons side="right">
     <button class="button button-icon button-clear fa fa-list-ul"  ng-click="goThreads()" ></button>
     <button class="button button-icon button-clear ion-android-more-vertical actustatus" ng-click = "openPopover($event)"></button>
@@ -14,7 +14,7 @@
         <div class="item item-avatar">
           <img ng-src="{{getImageUrl(info.thread_icon)}}" alt="icone {{info.thread_title}}"/>
           <h2>{{info.title}}</h2>
-          <h3>{{info.username}}</h3>
+          <h3>{{translation["actualites.info.label.author"]}} {{info.username}}</h3>
           <p>{{info.publication_date | date:'d MMMM y'}}</p>
         </div>
 
@@ -24,16 +24,15 @@
 
           <div ng-show="info.comments !=  null">
             <p  ng-click="toggleComments(info)" ng-class="{active: areCommentsShown(info)}" class="subdued comment">
-              {{getCountComments(info)}}
+                {{getCountComments(info, areCommentsShown(info))}}
             </p>
             <ion-item class="item-accordion"  ng-repeat="item in info.comments track by $index"  ng-show="areCommentsShown(info)">
-              <h3 style="font-weight: bold;">{{item.username}} à {{item.modified}}</h3>
+              <h3 style="font-weight: bold;">{{item.username}} {{translation["actualites.info.label.publication"]}}  {{item.modified}}</h3>
               <p style="color: black;">{{item.comment}}</p>
             </ion-item>
 
           </div>
         </ion-card-content>
-
       </ion-item>
     </ion-list>
   </ion-content>
