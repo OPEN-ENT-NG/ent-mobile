@@ -21,7 +21,6 @@ angular.module('ent.messagerie', ['ent.message_services', 'ent.message_folder', 
   }
 
   $scope.goToFolder = function(folder){
-    // href="#/app/messagerie/{{folder.name}}/{{folder.id}}"
     $state.go("app.message_folder", {nameFolder: folder.name, idFolder:folder.id})
   }
 
