@@ -34,7 +34,6 @@ angular.module('ent.message_services', [])
     return deferredCombinedItems.promise;
   }
 
-
   this.restoreSelectedMessages = function(arrayMessages){
     var promises = [];
     var deferredCombinedItems = $q.defer();
@@ -132,14 +131,14 @@ angular.module('ent.message_services', [])
     }
     return $ionicPopup.show({
 
-      templateUrl: 'templates/popup_move_mail.html',
+      templateUrl: 'messagerie/popup_move_mail.html',
       title: 'Déplacement de messages',
       subTitle: 'Choix du dossier',
       scope: scope,
       buttons: [
-        { text: 'Cancel' },
+        { text: 'Annuler' },
         {
-          text: '<b>Save</b>',
+          text: '<b>Ok</b>',
           type: 'bar-positive',
           onTap: function(e) {
             if (!scope.choice) {

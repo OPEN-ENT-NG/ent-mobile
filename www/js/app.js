@@ -30,12 +30,13 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
 })
 
 .config(function($stateProvider, $urlRouterProvider, $routeProvider, $ionicConfigProvider,  $httpProvider) {
-  $httpProvider.defaults.withCredentials = true;
   $httpProvider.interceptors.push(function($rootScope) {
     return {
       request: function(config) {
+        console.log("in request");
         if (localStorage.getItem('access_token')) {
           config.headers['Authorization'] = 'Bearer '+localStorage.getItem('access_token')
+          console.log("localStorage.getItem('access_token') "+localStorage.getItem('access_token'));
         }
         // console.log("loading:show");
         // $rootScope.$broadcast('loading:show')

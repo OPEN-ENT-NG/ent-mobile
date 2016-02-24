@@ -129,9 +129,10 @@ angular.module('ent.message_folder', ['ent.message_services'])
   }
 
   function getMessagesAndFolders(){
+    console.log("getMessagesAndFolders");
     $scope.nameFolder = $stateParams.nameFolder;
-    getExtraFolders();
     updateMessages();
+    getExtraFolders();
   }
 
   function updateMessages(){

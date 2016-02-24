@@ -83,9 +83,9 @@ angular.module('ent.controllers', [])
     localStorage.clear();
     $ionicHistory.clearHistory()
     $state.go("login");
-    window.cookies.clear(function() {
-      console.log('Cookies cleared!');
-    });
+    // window.cookies.clear(function() {
+    //   console.log('Cookies cleared!');
+    // });
     // ionic.Platform.exitApp(); // stops the app
   }
 })

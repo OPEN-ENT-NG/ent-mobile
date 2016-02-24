@@ -1,27 +1,12 @@
 angular.module('ent.messagerie', ['ent.message_services', 'ent.message_folder', 'ent.message_detail'])
 
-.controller('MessagerieFoldersCtrl', function($scope,$state, $rootScope, MessagerieServices,  $ionicLoading,  $cordovaVibration){
+.controller('MessagerieFoldersCtrl', function($scope, $state, $rootScope, MessagerieServices,  $ionicLoading,  $cordovaVibration, $ionicPlatform, $ionicHistory){
 
   getContacts();
   getFolders();
 
   $rootScope.writeWithUnreadNumber = function(folder){
     return folder.count!=0 ? folder.name+" ("+folder.count+")":folder.name;
-  }
-
-  $scope.enableCheckMessages = function (folder) {
-    if(!$scope.checkable){
-      $cordovaVibration.vibrate(100);     // Vibrate 100ms
-      $scope.checkable = true;
-      $scope.checkFolder (folder);
-    }
-  }
-  $scope.checkFolder = function(folder){
-    folder.checked = !folder.checked;
-  }
-
-  $scope.doAction = function(folder){
-    $scope.checkable ?  $scope.checkFolder(folder):goToFolder(folder);
   }
 
   $rootScope.newMail = function(){
@@ -35,8 +20,9 @@ angular.module('ent.messagerie', ['ent.message_services', 'ent.message_folder', 
     $scope.$apply();
   }
 
-  function goToFolder(folder){
-    $state.go('app.message_folder', {nameFolder: folder.nameFolder, idFolder: folder.id});
+  $scope.goToFolder = function(folder){
+    // href="#/app/messagerie/{{folder.name}}/{{folder.id}}"
+    $state.go("app.message_folder", {nameFolder: folder.name, idFolder:folder.id})
   }
 
   function getFolders(){
@@ -80,7 +66,6 @@ angular.module('ent.messagerie', ['ent.message_services', 'ent.message_folder', 
           name: resp.data[i].name,
           isPersonnal: true
         });
-
       }
     }).then(function(){
       var folderIds = [];
@@ -89,10 +74,11 @@ angular.module('ent.messagerie', ['ent.message_services', 'ent.message_folder', 
       })
       MessagerieServices.getCountUnread(folderIds).then(function (response){
         for(var i=0; i< response.length; i++){
-          console.log(response[i].count);
           $scope.folders[i].count = response[i].count;
         }
+        initCheckedValue();
         console.log($scope.folders);
+
         // $ionicLoading.hide();
         // $scope.checkable = false;
       })
@@ -100,6 +86,12 @@ angular.module('ent.messagerie', ['ent.message_services', 'ent.message_folder', 
       alert('ERR:'+ err);
     };
   }
+
+  function initCheckedValue(){
+  angular.forEach($scope.folders, function(folder){
+    folder.checked = false;
+  });
+}
 
   function getContacts () {
     $rootScope.contacts = [];
