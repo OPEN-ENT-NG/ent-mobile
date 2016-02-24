@@ -17,9 +17,9 @@
 
     <div class="item item-text-wrap">
       <div class="header-mail">
-        <h2>De: {{getRealName(mail.from, mail)}}<h2>
-          <span>A: {{getRealName(mail.to, mail)}}</span>
-          <span ng-show=mail.cc.length!=0 ng-repeat="person in mail.cc track by $index">Cc: {{getRealName(mail.cc[$index-1], mail)}}</span>
+        <h2>{{translationMessages["transfer.from"]}} {{getRealName(mail.from, mail)}}<h2>
+          <span>{{translationMessages["transfer.to"]}} {{getRealName(mail.to, mail)}}</span>
+          <span ng-show=mail.cc.length!=0 ng-repeat="person in mail.cc track by $index">{{translationMessages["transfer.cc"]}} {{getRealName(mail.cc[$index-1], mail)}}</span>
         </div>
 
         <div  class="item-text-wrap" ng-bind-html= "renderHtml(mail.body)"></div>

@@ -1,8 +1,10 @@
 <ion-popover-view class="fit" >
   <ion-content>
     <div >
-      <ion-checkbox ng-repeat="state in statusInfos"  ng-model="filterInfos[state.status]">
-        {{translation[state.nom]}}
+      <ion-checkbox ng-repeat="state in statusInfos"
+      ng-click="toggleStatus (state)"
+      ng-checked="selectedStatus.indexOf(state)>-1">
+        {{translationActus[state.nom]}}
       </ion-checkbox>
     </div>
   </ion-content>

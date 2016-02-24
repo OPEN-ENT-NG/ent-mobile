@@ -1,4 +1,4 @@
-angular.module('ent.blog', ['ent.controllers'])
+angular.module('ent.blog', [])
 
 .service('BlogsService', function($http, domainENT, $q, UserInfoService){
 

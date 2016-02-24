@@ -1,6 +1,11 @@
 angular.module('ent.message_services', [])
 
 .service('MessagerieServices', function($http, $q, domainENT){
+
+  this.getTranslation = function(){
+    return $http.get(domainENT+"/conversation/i18n");
+  }
+
   this.getMessagesFolder = function (url) {
     return $http.get(url);
   }
@@ -115,6 +120,27 @@ angular.module('ent.message_services', [])
     return $http.get(domainENT+"/conversation/visible");
   }
 
+  this.saveAsDraft = function(id, mailData){
+    return id !=0 ? saveFormerDraft(id, mailData):saveNewDraft(mailData);
+  }
+
+  function saveFormerDraft (id, mailData){
+    return {
+      method: 'PUT',
+      url: domainENT+'/conversation/draft/'+id,
+      data: mailData,
+      headers: { 'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8" }
+    }
+  }
+
+  function saveNewDraft (mailData){
+    return {
+      method:'POST',
+      url: domainENT+'/conversation/draft',
+      data: mailData,
+      headers: { 'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8" }
+    }
+  }
 })
 
 .factory("MoveMessagesPopupFactory", function ($ionicPopup, MessagerieServices) {

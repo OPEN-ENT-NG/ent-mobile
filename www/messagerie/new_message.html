@@ -7,9 +7,8 @@
   </ion-nav-buttons>
   <ion-content>
 
-
     <div class="item">
-      A
+      {{translationMessages["to"]}}
       <ion-list>
         <div ng-repeat="destinataire in email.destinatairesTo track by $index">
           <h2 >{{destinataire.displayName}} </h2>
@@ -17,7 +16,7 @@
         </div>
       </ion-list>
       <div>
-        <filter-box filtertext="searchTo" placeholder="To:"></filter-box>
+        <filter-box filtertext="searchTo" placeholder={{translationMessages["to"]}}></filter-box>
         <ion-list >
           <ion-item ng-show=searchTo.value.length!=0 ng-repeat="contact in contacts | filter: {displayName: searchTo.value} | limitTo: 5" ng-click="addContactTo(searchTo, contact)">
             <h3>{{contact.displayName}}</h3>
@@ -27,7 +26,7 @@
     </div>
 
     <div class="item">
-      Cc
+        {{translationMessages["cc"]}}
       <div>
         <ion-list>
           <div ng-repeat="destinataire in email.destinatairesCc track by $index">
@@ -36,7 +35,7 @@
           </div>
         </ion-list>
         <div>
-          <filter-box filtertext="searchCc" placeholder="Cc"></filter-box>
+          <filter-box filtertext="searchCc" placeholder={{translationMessages["cc"]}}></filter-box>
           <ion-list >
             <ion-item ng-show=searchCc.value.length!=0 ng-repeat="contact in contacts | filter: {displayName: searchCc.value} | limitTo: 5" ng-click="addContactCc(searchCc, contact)">
               <h3>{{contact.displayName}}</h3>
@@ -46,10 +45,10 @@
       </div>
     </div>
     <label class="item item-input" >
-      <input type="text" ng-model="email.sujet">
+      <input type="text" ng-model="email.sujet" placeholder={{translationMessages["subject"]}}>
     </label>
     <label class="item-input">
-      <input type="text"  ng-model="email.corps">
+      <input type="text"  ng-model="email.corps"  placeholder={{translationMessages["sniplet.ml.content.placeholder"]}}>
     </label>
 
   </ion-content>

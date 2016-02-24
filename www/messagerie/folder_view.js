@@ -1,9 +1,10 @@
-angular.module('ent.messagerie', ['ent.message_services', 'ent.message_folder', 'ent.message_detail'])
+angular.module('ent.messagerie', ['ent.message_services', 'ent.message_folder', 'ent.message_detail','ent.new_message'])
 
 .controller('MessagerieFoldersCtrl', function($scope, $state, $rootScope, MessagerieServices,  $ionicLoading,  $cordovaVibration, $ionicPlatform, $ionicHistory){
 
   getContacts();
   getFolders();
+  getTranslation();
 
   $rootScope.writeWithUnreadNumber = function(folder){
     return folder.count!=0 ? folder.name+" ("+folder.count+")":folder.name;
@@ -75,9 +76,6 @@ angular.module('ent.messagerie', ['ent.message_services', 'ent.message_folder', 
         for(var i=0; i< response.length; i++){
           $scope.folders[i].count = response[i].count;
         }
-        initCheckedValue();
-        console.log($scope.folders);
-
         // $ionicLoading.hide();
         // $scope.checkable = false;
       })
@@ -86,11 +84,13 @@ angular.module('ent.messagerie', ['ent.message_services', 'ent.message_folder', 
     };
   }
 
-  function initCheckedValue(){
-  angular.forEach($scope.folders, function(folder){
-    folder.checked = false;
-  });
-}
+  function getTranslation(){
+    MessagerieServices.getTranslation().then(function(response){
+      $rootScope.translationMessages = angular.fromJson(response.data);
+    }, function(err){
+      alert('ERR:'+ err);
+    })
+  }
 
   function getContacts () {
     $rootScope.contacts = [];
