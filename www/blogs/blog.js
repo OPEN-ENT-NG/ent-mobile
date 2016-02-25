@@ -3,6 +3,7 @@ angular.module('ent.blog', ['ent.blog_service'])
 
 .controller('BlogCtrl', function($scope, BlogsService, $stateParams, $ionicPopover){
 
+  $scope.nameBlog = $stateParams.nameBlog;
   $scope.statePosts = BlogsService.getStatusPosts();
   getPostsByBlogId($stateParams.idBlog);
 

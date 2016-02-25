@@ -1,18 +1,16 @@
-<ion-view view-title="Blogs">
+<ion-view view-title={{translationBlog["blog.title"]}}>
 
   <ion-content>
     <ion-refresher pulling-text="Actualiser" on-refresh="doRefreshBlogs()">
     </ion-refresher>
 
     <ion-list>
-
-      <a ng-repeat="blog in blogs track by $index" class="item item-thumbnail-left item-text-wrap" href="#/app/blog/id/{{blog._id}}">
+      <a ng-repeat="blog in blogs track by $index" class="item item-thumbnail-left item-text-wrap" ng-click="goToBlog(blog)">
         <img ng-src="{{getImageUrl(blog.thumbnail)}}"/>
         <h2>{{blog.title}}</h2>
         <h3>{{ blog.description }}</h3>
-        <h4>{{ blog.author.username }}</h4>
+        <h4>{{translationBlog["blog.by"]}} {{ blog.author.username }}</h4>
       </a>
-
     </ion-list>
 
   </ion-content>

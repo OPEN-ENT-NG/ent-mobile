@@ -120,7 +120,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   })
 
   .state('app.blog', {
-    url: '/blog/id/:idBlog',
+    url: '/blog/:nameBlog/:idBlog',
     views: {
       'menuContent': {
         templateUrl: 'blogs/blog.html',

@@ -81,7 +81,24 @@ angular.module('ent.blog_service', [])
   }
 
   this.getStatusPosts = function(){
-    return  ["SUBMITTED", "DRAFT","PUBLISHED"];
-  }
+    // return  [
+    //   {
+    //     name: "filters.submitted",
+    //     id: "SUBMITTED"
+    //   },
+    //   {
+    //     name: "filters.drafts",
+    //     id: "DRAFT"
+    //   },
+    //   {
+    //     name: "filters.published",
+    //     id: "PUBLISHED"
+    //   }];
+    return  ["SUBMITTED", "DRAFT", "PUBLISHED"];
+    }
 
-})
+    this.getTraduction = function(){
+      return $http.get(domainENT+"/blog/i18n");
+    }
+
+  })
