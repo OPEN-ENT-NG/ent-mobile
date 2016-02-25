@@ -114,7 +114,7 @@ angular.module('ent.actualites', [])
           publication_date: resp.data[i].publication_date,
           thread_id: resp.data[i].thread_id,
           username: resp.data[i].username,
-          thread_icon: resp.data[i].thread_icon,
+          thread_icon: $scope.setCorrectImage(resp.data[i].thread_icon,"/../../img/illustrations/actualites-default.png"),
           comments: angular.fromJson(resp.data[i].comments)
         });
       }
@@ -130,7 +130,7 @@ angular.module('ent.actualites', [])
         $scope.threads.push({
           thread_id: resp.data[i]._id,
           title: resp.data[i].title,
-          thread_icon: resp.data[i].icon
+          thread_icon: $scope.setCorrectImage(resp.data[i].icon, "/../../img/illustrations/actualites-default.png")
         });
       }
     }, function(err){

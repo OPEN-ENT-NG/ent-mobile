@@ -11,9 +11,9 @@
     <ion-nav-view name="menuContent"></ion-nav-view>
   </ion-side-menu-content>
 
-  <ion-side-menu side="left" ng-controller="UserInfoCtrl">
+  <ion-side-menu side="left" ng-controller="UserCtrl">
     <ion-header-bar class="bar-stable" >
-      <h1 class="title">{{userinfo.username}}</h1>
+      <h1 class="title">{{myUser.displayName}}</h1>
     </ion-header-bar>
     <ion-content>
       <div class="list dark">
@@ -29,10 +29,10 @@
           <i class="bullhornicon-"></i>
           Blog
         </ion-item>
-        <ion-item menu-close href="#/app/espace_doc">
+        <!-- <ion-item menu-close href="#/app/espace_doc">
           <i class="foldericon-"></i>
           Espace documentaire
-        </ion-item>
+        </ion-item> -->
         <div class="item item-divider"></div>
         <ion-item menu-close ng-click="logout()">
           <i class="officon-"></i>

@@ -1,12 +1,6 @@
-angular.module('ent.blog-list', [])
+angular.module('ent.blog-list', ['ent.blog_service'])
 
-.service('BlogsListService', function($http, domainENT){
-  this.getAllBlogs = function () {
-    return $http.get(domainENT+"/blog/list/all");
-  }
-})
-
-.controller('BlogListCtrl', function($scope, BlogsListService) {
+.controller('BlogListCtrl', function($scope, BlogsService) {
 
   getListBlogs();
 
@@ -18,8 +12,11 @@ angular.module('ent.blog-list', [])
 
   function getListBlogs (){
     $scope.blogs =[];
-    BlogsListService.getAllBlogs().then(function (resp) {
+    BlogsService.getAllBlogs().then(function (resp) {
       $scope.blogs = resp.data;
+      for(var i=0; i<$scope.blogs.length; i++){
+          $scope.blogs[i].thumbnail = $scope.setCorrectImage($scope.blogs[i].thumbnail ,"/../../img/illustrations/blog-default.png")
+      }
     }), function(err){
       alert('ERR:'+ err);
     }
