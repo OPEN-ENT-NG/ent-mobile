@@ -149,7 +149,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
 
   .state('login', {
     url: '/login',
-    templateUrl: 'templates/login-credentials.html',
+    templateUrl: 'authentification/login-credentials.html',
     controller: 'LoginCtrl'
   });
 
@@ -224,15 +224,6 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     return result;
   }
 
-  // function getAvatarImage (userId){
-  //   UserInfoService.getUserData(userId).then(function(resp){
-  //     console.log(domainENT+resp.data.result[0].photo);
-  //     return domainENT+resp.data.result[0].photo;
-  //   }), function(err){
-  //     alert('ERR:'+ err);
-  //   }
-  // }
-
   $scope.logout = function(){
     localStorage.clear();
     $ionicHistory.clearHistory()
@@ -253,10 +244,12 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
 });
 
 function findElementById(arraytosearch, valuetosearch) {
-  console.log("arraytosearch "+arraytosearch);
+  console.log("arraytosearch");
+  console.log(arraytosearch);
   console.log("valuetosearch "+valuetosearch);
 
   for (var i = 0; i < arraytosearch.length; i++) {
+    console.log("arraytosearch[i].id "+arraytosearch[i].id);
     if (arraytosearch[i].id == valuetosearch) {
       return arraytosearch[i];
     }

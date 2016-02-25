@@ -92,11 +92,12 @@ angular.module('ent.blog', ['ent.blog_service'])
 
     BlogsService.getAllPostsByBlogId(id, $scope.statePosts).then(function(res) {
       $scope.posts = res;
+      console.log(res);
     })
     .then(function(){
       BlogsService.getAuthors(id, $scope.posts).then(function(resAuthors) {
         for(var i=0; i<$scope.posts.length; i++){
-          $scope.posts[i].author.photo =  $scope.setCorrectImage($scope.posts[i].author.photo, "/../../img/illustrations/no-avatar.jpg");
+          $scope.posts[i].author.photo = $scope.setCorrectImage(findElementById(resAuthors, $scope.posts[i].author.userId).photo,"/../../img/illustrations/no-avatar.jpg");
         }
       })
       .then(function(){

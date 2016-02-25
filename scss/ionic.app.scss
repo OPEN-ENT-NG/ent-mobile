@@ -14,7 +14,15 @@ $assertive:                       #ef473a !default;
 $royal:                           #886aea !default;
 $dark:                            #444 !default;
 */
+// Theme
+$bar-content-bg:                  #f70;
+$bar-content-border:              transparent;
+$bar-content-text:                #fff;
 
+$bar-side-menu-height:            80px;
+$bar-side-menu-bg:                $bar-content-bg;
+$bar-side-menu-border:            $bar-content-border;
+$bar-side-menu-text:              $bar-content-text;
 
 $font-family-case: "fontello", sans-serif !default;
 
@@ -25,3 +33,38 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
 
 // Include all of Ionic
 @import "www/lib/ionic/scss/ionic";
+
+// Bar styles
+.bar-content {
+  @include bar-style($bar-content-bg, $bar-content-border, $bar-content-text);
+  .button {
+    @include button-style($bar-content-bg, $bar-content-border, $bar-content-bg, $bar-content-border, $bar-content-text);
+    @include button-clear(#fff, $bar-title-font-size);
+  }
+}
+
+.bar-side-menu {
+  @include bar-style($bar-side-menu-bg, $bar-side-menu-border, $bar-side-menu-text);
+  height: $bar-side-menu-height;
+  .item {
+    background: transparent;
+    border: none;
+  }
+  .item-avatar {
+    h2,
+    p {
+      color: $bar-side-menu-text;
+    }
+  }
+}
+
+.has-side-menu-header {
+  top: $bar-side-menu-height;
+}
+
+// Setting the default button to button-outline
+.button.active,
+.button.activated {
+  box-shadow: none;
+  color: #fff;
+}

@@ -22,8 +22,10 @@ angular.module('ent.user', [])
 
   UserFactory.getCurrentUser().then(function(res){
     UserFactory.whoAmI(res.data.userId).then(function(response) {
-      localStorage.setItem('myUser', response.data.result[0]);
       $scope.myUser = response.data.result[0];
+      $scope.myUser.photo = $scope.setCorrectImage($scope.myUser.photo, "/../../img/illustrations/no-avatar.jpg");
+      localStorage.setItem('myUser',   $scope.myUser);
+
       console.log($scope.myUser);
     })
   }), function errorCallback(response) {

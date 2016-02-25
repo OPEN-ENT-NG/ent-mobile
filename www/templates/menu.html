@@ -13,9 +13,20 @@
 
   <ion-side-menu side="left" ng-controller="UserCtrl">
     <ion-header-bar class="bar-stable" >
+      <!-- <div class="item-avatar">
+        <img ng-src="{{getImageUrl(myUser.photo)}}"/>
+      </div> -->
       <h1 class="title">{{myUser.displayName}}</h1>
     </ion-header-bar>
-    <ion-content>
+
+    <!-- <div class="bar bar-header bar-side-menu">
+      <div class="item item-avatar">
+        <img ng-src="{{getImageUrl(myUser.photo)}}"/>
+        <h2>{{myUser.displayName}}</h2>
+      </div>
+    </div> -->
+
+    <ion-content  class="has-side-menu-header">
       <div class="list dark">
         <ion-item menu-close href="#/app/actualites">
           <i class="newspapericon-"></i>
@@ -30,19 +41,19 @@
           Blog
         </ion-item>
         <!-- <ion-item menu-close href="#/app/espace_doc">
-          <i class="foldericon-"></i>
-          Espace documentaire
-        </ion-item> -->
-        <div class="item item-divider"></div>
-        <ion-item menu-close ng-click="logout()">
-          <i class="officon-"></i>
-          Déconnexion
-        </ion-item>
-      </div>
+        <i class="foldericon-"></i>
+        Espace documentaire
+      </ion-item> -->
+      <div class="item item-divider"></div>
+      <ion-item menu-close ng-click="logout()">
+        <i class="officon-"></i>
+        Déconnexion
+      </ion-item>
+    </div>
 
-    </ion-content>
-    <ion-footer-bar class="bar-stable" >
+  </ion-content>
+  <ion-footer-bar class="bar-stable" >
     <small>App v<span app-version></span></small>
-    </ion-footer-bar>
-  </ion-side-menu>
+  </ion-footer-bar>
+</ion-side-menu>
 </ion-side-menus>
