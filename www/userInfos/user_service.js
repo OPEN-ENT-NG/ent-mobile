@@ -24,7 +24,7 @@ angular.module('ent.user', [])
     UserFactory.whoAmI(res.data.userId).then(function(response) {
       $scope.myUser = response.data.result[0];
       $scope.myUser.photo = $scope.setProfileImage($scope.myUser.photo, res.data.userId);
-      localStorage.setItem('myUser',   $scope.myUser);
+      localStorage.setItem('myUser',  $scope.myUser);
 
       console.log($scope.myUser);
     })

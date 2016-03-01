@@ -14,7 +14,7 @@
           <img ng-src="{{getImageUrl(post.author.photo)}}"/>
           <h2>{{post.title}}</h2>
           <h3>{{translationBlog["blog.by"]}} {{post.author.username}}</h3>
-          <p>{{translationBlog["blog.on.date"]}} {{post.modified.$date | date:'d MMMM y'}}</p>
+          <p>{{blog.modified.$date ? formatDate(blog.created.$date) : formatDateLocale(blog.modified.$date)}}</p>
         </div>
 
         <ion-card-content class="item actucard">
@@ -26,7 +26,8 @@
               {{getCountComments(post)}}
             </p>
             <ion-item class="item-accordion"  ng-repeat="comment in post.comments track by $index"  ng-show="areCommentsShown(post)">
-              <h3 style="font-weight: bold;">{{comment.author.username}} {{translationBlog["blog.on.date"]}} {{comment.created.$date}}</h3>
+              <h3 style="font-weight: bold;">{{comment.author.username}}
+              {{comment.modified.$date ? formatDate(comment.created.$date) : formatDateLocale(comment.modified.$date)}}</h3>
               <p style="color: black;">{{comment.comment}}</p>
             </ion-item>
           </div>

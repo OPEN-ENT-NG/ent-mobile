@@ -72,6 +72,17 @@ angular.module('ent.blog', ['ent.blog_service'])
     }
   };
 
+  $scope.count = function (status){
+    console.log("in count");
+    var count =0;
+    for(var i=0; i<$scope.posts.length; i++){
+      if($scope.posts[i].status == status){
+        count ++;
+      }
+    }
+    return count;
+  }
+
   $ionicPopover.fromTemplateUrl('blogs/popover_blogs.html', {
     scope: $scope
   }).then(function(popover) {

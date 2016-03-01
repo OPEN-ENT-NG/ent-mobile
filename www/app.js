@@ -221,13 +221,43 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
       }
       result = localStorage.getItem('skin')+defaultImage;
     }
-    console.log(result);
     return result;
   }
 
   $scope.setProfileImage = function (regularPath, userId){
     return (regularPath != null && regularPath.length > 0 && regularPath != "no-avatar.jpg") ? regularPath:"/userbook/avatar/"+userId;
   }
+
+  var getDateAsMoment = function(date){
+    var momentDate;
+    if(moment.isMoment(date)) {
+      momentDate = date;
+    }
+    else if (date.$date) {
+      momentDate = moment(date.$date);
+    } else if (typeof date === "number"){
+      momentDate = moment.unix(date);
+    } else {
+      momentDate = moment(date);
+    }
+    return momentDate;
+  };
+
+
+  $scope.formatDate = function(date){
+    var momentDate = getDateAsMoment(date);
+    return moment(momentDate).calendar();
+  };
+
+  $scope.formatDateLocale = function(date){
+    if(moment(date) > moment().add(-1, 'days').startOf('day') && moment(date) < moment().endOf('day'))
+    return moment(date).calendar();
+
+    if(moment(date) > moment().add(-7, 'days').startOf('day') && moment(date) < moment().endOf('day'))
+    return moment(date).fromNow(); //this week
+
+    return moment(date).format("L");
+  };
 
   $scope.logout = function(){
     localStorage.clear();

@@ -1,4 +1,4 @@
-angular.module('ent.actualites', [])
+angular.module('ent.actualites', ['angularMoment'])
 
 .service('InfosService', function($http, domainENT){
   this.getAllInfos = function(){
@@ -118,6 +118,7 @@ angular.module('ent.actualites', [])
           comments: angular.fromJson(resp.data[i].comments)
         });
       }
+      console.log($scope.actualites);
     }, function(err){
       alert('ERR:'+ err);
     });
