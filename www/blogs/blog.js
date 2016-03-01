@@ -1,12 +1,16 @@
 angular.module('ent.blog', ['ent.blog_service'])
 
 
-.controller('BlogCtrl', function($scope, BlogsService, $stateParams, $ionicPopover){
+.controller('BlogCtrl', function($scope, BlogsService, $stateParams, $ionicPopover, $rootScope){
 
   $scope.nameBlog = $stateParams.nameBlog;
   $scope.statePosts = BlogsService.getStatusPosts();
   getPostsByBlogId($stateParams.idBlog);
 
+  console.log($scope.statePosts);
+  for (var i = 0; i < $scope.statePosts.length; i++) {
+    console.log($rootScope.translationBlog[$scope.statePosts[i].name]);
+  }
 
   $scope.getCountComments = function(post){
     if(post.comments != null){
@@ -51,7 +55,7 @@ angular.module('ent.blog', ['ent.blog_service'])
   };
 
   // selected states
-  $scope.filter = BlogsService.getStatusPosts();
+  $scope.filter = getStatusPostsId();
 
   // toggle selection for a given fruit by name
   $scope.toggleSelection = function toggleSelection(state) {
@@ -87,18 +91,25 @@ angular.module('ent.blog', ['ent.blog_service'])
     $scope.popover.remove();
   })
 
+  function getStatusPostsId(){
+    var array =[];
+    var values = BlogsService.getStatusPosts();
+    for(var i=0; i<values.length; i++){
+      array[i] = values[i].id;
+    }
+    return array;
+  }
   function getPostsByBlogId(id){
     $scope.posts = [];
     var commentsByPostArray = [];
 
-    BlogsService.getAllPostsByBlogId(id, $scope.statePosts).then(function(res) {
+    BlogsService.getAllPostsByBlogId(id, getStatusPostsId()).then(function(res) {
       $scope.posts = res;
-      console.log(res);
     })
     .then(function(){
       BlogsService.getAuthors(id, $scope.posts).then(function(resAuthors) {
         for(var i=0; i<$scope.posts.length; i++){
-          $scope.posts[i].author.photo = $scope.setCorrectImage(findElementById(resAuthors, $scope.posts[i].author.userId).photo,"/../../img/illustrations/no-avatar.jpg");
+          $scope.posts[i].author.photo = $scope.setProfileImage(findElementById(resAuthors, $scope.posts[i].author.userId).photo, $scope.posts[i].author.userId);
         }
       })
       .then(function(){

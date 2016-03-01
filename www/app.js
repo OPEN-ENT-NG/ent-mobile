@@ -221,7 +221,12 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
       }
       result = localStorage.getItem('skin')+defaultImage;
     }
+    console.log(result);
     return result;
+  }
+
+  $scope.setProfileImage = function (regularPath, userId){
+    return (regularPath != null && regularPath.length > 0 && regularPath != "no-avatar.jpg") ? regularPath:"/userbook/avatar/"+userId;
   }
 
   $scope.logout = function(){
@@ -244,12 +249,8 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
 });
 
 function findElementById(arraytosearch, valuetosearch) {
-  console.log("arraytosearch");
-  console.log(arraytosearch);
-  console.log("valuetosearch "+valuetosearch);
 
   for (var i = 0; i < arraytosearch.length; i++) {
-    console.log("arraytosearch[i].id "+arraytosearch[i].id);
     if (arraytosearch[i].id == valuetosearch) {
       return arraytosearch[i];
     }

@@ -25,9 +25,9 @@ angular.module('ent.blog_service', [])
     return deferredCombinedItemsPosts.promise;
   }
 
-  this.getPostsByStatus = function(id, status){
-    return $http.get(domainENT+"/blog/post/list/all/"+id+"?state="+status);
-  }
+  // this.getPostsByStatus = function(id, status){
+  //   return $http.get(domainENT+"/blog/post/list/all/"+id+"?state="+status);
+  // }
 
   this.getAuthors = function (idBlog, posts){
     var promisesAuthors = [];
@@ -81,20 +81,20 @@ angular.module('ent.blog_service', [])
   }
 
   this.getStatusPosts = function(){
-    // return  [
-    //   {
-    //     name: "filters.submitted",
-    //     id: "SUBMITTED"
-    //   },
-    //   {
-    //     name: "filters.drafts",
-    //     id: "DRAFT"
-    //   },
-    //   {
-    //     name: "filters.published",
-    //     id: "PUBLISHED"
-    //   }];
-    return  ["SUBMITTED", "DRAFT", "PUBLISHED"];
+    return  [
+      {
+        name: "filters.submitted",
+        id: "SUBMITTED"
+      },
+      {
+        name: "filters.drafts",
+        id: "DRAFT"
+      },
+      {
+        name: "filters.published",
+        id: "PUBLISHED"
+      }];
+    // return  ["SUBMITTED", "DRAFT", "PUBLISHED"];
     }
 
     this.getTraduction = function(){
