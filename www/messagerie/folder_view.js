@@ -34,22 +34,22 @@ angular.module('ent.messagerie', ['ent.message_services', 'ent.message_folder', 
     $scope.folders = [
       {
         id: "INBOX",
-        name: "INBOX",
+        name: "Inbox",
         isPersonnal: false
       },
       {
         id: "OUTBOX",
-        name: "OUTBOX",
+        name: "Outbox",
         isPersonnal: false
       },
       {
         id: "DRAFT",
-        name: "DRAFT",
+        name: "Draft",
         isPersonnal: false
       },
       {
         id: "TRASH",
-        name: "TRASH",
+        name: "Trash",
         isPersonnal: false
       },
       {

@@ -11,11 +11,22 @@
     <ion-nav-view name="menuContent"></ion-nav-view>
   </ion-side-menu-content>
 
-  <ion-side-menu side="left" ng-controller="UserInfoCtrl">
+  <ion-side-menu side="left" ng-controller="UserCtrl">
     <ion-header-bar class="bar-stable" >
-      <h1 class="title">{{userinfo.username}}</h1>
+      <!-- <div class="item-avatar">
+        <img ng-src="{{getImageUrl(myUser.photo)}}"/>
+      </div> -->
+      <h1 class="title">{{myUser.displayName}}</h1>
     </ion-header-bar>
-    <ion-content>
+
+    <!-- <div class="bar bar-header bar-side-menu">
+      <div class="item item-avatar">
+        <img ng-src="{{getImageUrl(myUser.photo)}}"/>
+        <h2>{{myUser.displayName}}</h2>
+      </div>
+    </div> -->
+
+    <ion-content  class="has-side-menu-header">
       <div class="list dark">
         <ion-item menu-close href="#/app/actualites">
           <i class="newspapericon-"></i>
@@ -40,9 +51,9 @@
         </ion-item>
       </div>
 
-    </ion-content>
-    <ion-footer-bar class="bar-stable" >
+  </ion-content>
+  <ion-footer-bar class="bar-stable" >
     <small>App v<span app-version></span></small>
-    </ion-footer-bar>
-  </ion-side-menu>
+  </ion-footer-bar>
+</ion-side-menu>
 </ion-side-menus>

@@ -1,4 +1,5 @@
-angular.module('ent.actualites', ['ent.actualites_service', 'ent.actualites_view','ent.threads'])
+
+angular.module('ent.actualites', ['ent.actualites_service', 'ent.actualites_view','ent.threads', 'angularMoment'])
 
 
 .controller('FilterActusCtrl', function($rootScope, InfosService){
@@ -33,17 +34,9 @@ angular.module('ent.actualites', ['ent.actualites_service', 'ent.actualites_view
   function getTranslation(){
     InfosService.getTranslation().then(function(response){
       $rootScope.translationActus = angular.fromJson(response.data);
+
     }, function(err){
       alert('ERR:'+ err);
     })
   }
 })
-
-function noFilter(filterObj) {
-  for (var key in filterObj) {
-    if (filterObj[key]) {
-      return false;
-    }
-  }
-  return true;
-}

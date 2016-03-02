@@ -1,92 +1,16 @@
-angular.module('ent.blog', [])
 
-.service('BlogsService', function($http, domainENT, $q, UserInfoService){
+angular.module('ent.blog', ['ent.blog_service'])
 
-  this.getAllPostsByBlogId = function(id, arrayStates){
-    var promisesPosts = [];
-    var deferredCombinedItemsPosts = $q.defer();
-    var combinedItemsPosts = [];
+.controller('BlogCtrl', function($scope, BlogsService, $stateParams, $ionicPopover, $rootScope){
 
-    angular.forEach(arrayStates, function(item) {
-      var deferredItemListPosts = $q.defer();
-      $http.get(domainENT+"/blog/post/list/all/"+id+"?state="+item).then(function(resp) {
-        combinedItemsPosts = combinedItemsPosts.concat(resp.data);
-        deferredItemListPosts.resolve();
-      });
-      promisesPosts.push(deferredItemListPosts.promise);
-    });
-
-    $q.all(promisesPosts).then(function() {
-      deferredCombinedItemsPosts.resolve(combinedItemsPosts);
-    });
-    return deferredCombinedItemsPosts.promise;
-  }
-
-  this.getPostsByStatus = function(id, status){
-    return $http.get(domainENT+"/blog/post/list/all/"+id+"?state="+status);
-  }
-
-  this.getAuthors = function (idBlog, posts){
-    var promisesAuthors = [];
-    var deferredCombinedItemsAuthors = $q.defer();
-    var combinedItemsAuthors = [];
-
-    angular.forEach(posts, function(item) {
-      var deferredItemListAuthors = $q.defer();
-      $http.get(domainENT+"/userbook/api/person?id="+item.author.userId).then(function(resp) {
-        combinedItemsAuthors = combinedItemsAuthors.concat(resp.data.result[0]);
-        deferredItemListAuthors.resolve();
-      });
-      promisesAuthors.push(deferredItemListAuthors.promise);
-    });
-
-    $q.all(promisesAuthors).then(function() {
-      deferredCombinedItemsAuthors.resolve(combinedItemsAuthors);
-    });
-    return deferredCombinedItemsAuthors.promise;
-  }
-
-  this.getComments = function(idBlog, posts){
-    var promisesComments = [];
-    var deferredCombinedItemsComments = $q.defer();
-    var combinedItemsComments = [];
-
-    angular.forEach(posts, function(item) {
-      var deferredItemListComments = $q.defer();
-      $http.get(domainENT+"/blog/comments/"+idBlog+"/"+item._id).then(function(resp) {
-        combinedItemsComments = combinedItemsComments.concat(resp.data);
-        deferredItemListComments.resolve();
-      });
-      promisesComments.push(deferredItemListComments.promise);
-    });
-
-    $q.all(promisesComments).then( function() {
-      deferredCombinedItemsComments.resolve(combinedItemsComments);
-    });
-    return deferredCombinedItemsComments.promise;
-  }
-
-  this.getCommentNumberByPost = function(idBlog, posts){
-    var commentsNumberByPost = [];
-
-    angular.forEach(posts, function(item) {
-      $http.get(domainENT+"/blog/comments/"+idBlog+"/"+item._id).then(function(resp) {
-        commentsNumberByPost.push(resp.data.length);
-      });
-    });
-    return commentsNumberByPost;
-  }
-
-  this.getStatusPosts = function(){
-    return  ["SUBMITTED", "DRAFT","PUBLISHED"];
-  }
-})
-
-.controller('BlogCtrl', function($scope, BlogsService, $stateParams, $ionicPopover){
-
+  $scope.nameBlog = $stateParams.nameBlog;
   $scope.statePosts = BlogsService.getStatusPosts();
   getPostsByBlogId($stateParams.idBlog);
 
+  console.log($scope.statePosts);
+  for (var i = 0; i < $scope.statePosts.length; i++) {
+    console.log($rootScope.translationBlog[$scope.statePosts[i].name]);
+  }
 
   $scope.getCountComments = function(post){
     if(post.comments != null){
@@ -131,7 +55,7 @@ angular.module('ent.blog', [])
   };
 
   // selected states
-  $scope.filter = BlogsService.getStatusPosts();
+  $scope.filter = getStatusPostsId();
 
   // toggle selection for a given fruit by name
   $scope.toggleSelection = function toggleSelection(state) {
@@ -148,7 +72,7 @@ angular.module('ent.blog', [])
     }
   };
 
-  $ionicPopover.fromTemplateUrl('templates/popover_blogs.html', {
+  $ionicPopover.fromTemplateUrl('blogs/popover_blogs.html', {
     scope: $scope
   }).then(function(popover) {
     $scope.popover = popover;
@@ -167,17 +91,26 @@ angular.module('ent.blog', [])
     $scope.popover.remove();
   })
 
+  function getStatusPostsId(){
+    var array =[];
+    var values = BlogsService.getStatusPosts();
+    for(var i=0; i<values.length; i++){
+      array[i] = values[i].id;
+    }
+    return array;
+  }
+  
   function getPostsByBlogId(id){
     $scope.posts = [];
     var commentsByPostArray = [];
 
-    BlogsService.getAllPostsByBlogId(id, $scope.statePosts).then(function(res) {
+    BlogsService.getAllPostsByBlogId(id, getStatusPostsId()).then(function(res) {
       $scope.posts = res;
     })
     .then(function(){
       BlogsService.getAuthors(id, $scope.posts).then(function(resAuthors) {
         for(var i=0; i<$scope.posts.length; i++){
-          $scope.posts[i].author.photo = resAuthors[i].photo;
+          $scope.posts[i].author.photo = $scope.setProfileImage(findElementById(resAuthors, $scope.posts[i].author.userId).photo, $scope.posts[i].author.userId);
         }
       })
       .then(function(){
