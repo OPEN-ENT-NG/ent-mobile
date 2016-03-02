@@ -9351,7 +9351,7 @@ input:checked + .checkbox-icon:after {
   opacity: 1; }
 
 .item-checkbox {
-  padding-left: 60px; }
+  padding-left: 25%; }
   .item-checkbox.active {
     box-shadow: none; }
 
