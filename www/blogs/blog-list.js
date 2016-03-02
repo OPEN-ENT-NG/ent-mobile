@@ -31,6 +31,10 @@ angular.module('ent.blog-list', ['ent.blog_service'])
   function getTraduction(){
     BlogsService.getTraduction().then(function(resp){
       $rootScope.translationBlog = resp.data;
+
+      $rootScope.translationBlog["filters.drafts"] = $rootScope.translationBlog["filters.drafts"].substring(0,$rootScope.translationBlog["filters.drafts"].indexOf('(')-1);
+      $rootScope.translationBlog["filters.submitted"] = $rootScope.translationBlog["filters.submitted"].substring(0,$rootScope.translationBlog["filters.submitted"].indexOf('(')-1);
+
     }), function(err){
       alert('ERR:'+ err);
     }
