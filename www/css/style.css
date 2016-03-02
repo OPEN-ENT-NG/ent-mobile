@@ -144,3 +144,68 @@ z-index: 1000;
 [ng\: cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x- ng-cloak {
   display: none !important;
 }
+
+/* add gmn */
+
+
+.img-responsive {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+    padding: 3% 0;
+}
+
+.fondbleu {
+  background-image: -webkit-linear-gradient(top, #0084CA 70%, #0084CA 30%);
+  background-image:    -moz-linear-gradient(top, #0084CA 70%, #0084CA 30%);
+  background-image:         linear-gradient(top, #0084CA 70%, #0084CA 30%);
+}
+
+.input-label {
+  color: #C4C4C4;
+}
+
+.button-login {
+  color: #FFF;
+  background-color: #FF8500;
+  border-color: #b2b2b2;
+  position: relative;
+  display: inline-block;
+  margin: 0;
+  padding: 0 12px;
+  min-width: 52px;
+  min-height: 47px;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 2px;
+  vertical-align: top;
+  text-align: center;
+  text-overflow: ellipsis;
+  font-size: 16px;
+  line-height: 42px;
+  cursor: pointer;
+}
+
+.taillelogin {
+  margin: 0 2%;
+  min-width: 52px;
+  min-height: 47px;
+  border-radius: 2px;
+}
+
+.item1 {
+  border-color: #ddd;
+  background-color: #fff;
+  color: #444;
+  position: relative;
+  z-index: 2;
+  display: block;
+  margin: -1px;
+  border-width: 1px;
+  border-style: solid;
+  font-size: 16px; }
+
+.item-checkbox1 {
+  padding-left: 11%;
+}
