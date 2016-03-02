@@ -120,7 +120,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   })
 
   .state('app.blog', {
-    url: '/blog/id/:idBlog',
+    url: '/blog/:nameBlog/:idBlog',
     views: {
       'menuContent': {
         templateUrl: 'blogs/blog.html',
@@ -159,7 +159,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
 })
 
 
-.controller('AppCtrl', function($scope, $sce, $state, $cordovaInAppBrowser, $cordovaFileTransfer,$cordovaProgress, $cordovaFileOpener2, domainENT, $ionicHistory){
+.controller('AppCtrl', function($scope, $sce, $state, $cordovaInAppBrowser, $cordovaFileTransfer,$cordovaProgress, $cordovaFileOpener2, domainENT, $ionicHistory, SkinFactory){
 
   $scope.renderHtml = function(text){
     if(text != null){
@@ -208,6 +208,27 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     if(path!=null && path!= ""){
       return domainENT+path;
     }
+  }
+
+  $scope.setCorrectImage = function(path, defaultImage){
+    var result;
+    if (path != null && path.length > 0){
+      result = path
+    } else {
+      if (!localStorage.getItem('skin')){
+        SkinFactory.getSkin().then(function(res) {
+          localStorage.setItem('skin', res.data.skin);
+          console.log(localStorage.getItem('skin'));
+          result = localStorage.getItem('skin')+defaultImage;
+        });
+      }
+      result = localStorage.getItem('skin')+defaultImage;
+    }
+    return result;
+  }
+
+  $scope.setProfileImage = function (regularPath, userId){
+    return (regularPath != null && regularPath.length > 0 && regularPath != "no-avatar.jpg") ? regularPath:"/userbook/avatar/"+userId;
   }
 
   $scope.logout = function(){
