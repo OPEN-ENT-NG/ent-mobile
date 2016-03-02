@@ -1,27 +1,10 @@
-angular.module('ent.actualites', ['angularMoment'])
-
-.service('InfosService', function($http, domainENT){
-  this.getAllInfos = function(){
-    return $http.get(domainENT+"/actualites/infos");
-  }
-
-  this.getAllThreads = function(){
-    return $http.get(domainENT+"/actualites/threads");
-  }
-
-  this.getStatusInfos = function(){
-    return [
-      {nom: "Brouillons", status: 1},
-      {nom: "Soumises", status: 2},
-      {nom: "Publiées", status: 3}
-    ];
-  }
-})
+angular.module('ent.actualites', ['ent.actualites_service'])
 
 .controller('InfosCtrl', function ($scope,$ionicPopover, $state, $rootScope, InfosService,$ionicLoading) {
   $scope.statusInfos = InfosService.getStatusInfos();
   getActualites();
   getThreads();
+  getTranslation();
 
   $scope.getCountComments = function(info){
     if(info.comments != null){
@@ -134,6 +117,14 @@ angular.module('ent.actualites', ['angularMoment'])
           thread_icon: $scope.setCorrectImage(resp.data[i].icon, "/../../img/illustrations/actualites-default.png")
         });
       }
+    }, function(err){
+      alert('ERR:'+ err);
+    });
+  }
+
+  function getTranslation(){
+    InfosService.getTranslation().then(function(resp){
+        $rootScope.translationActus = resp.data;
     }, function(err){
       alert('ERR:'+ err);
     });

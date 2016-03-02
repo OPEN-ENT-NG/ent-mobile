@@ -1,8 +1,9 @@
-angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute','ent.actualites','ent.blog','ent.blog-list','ent.auth', 'ent.messagerie', 'ent.new_message','ent.user'])
+angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute','ent.actualites','ent.blog','ent.blog-list','ent.auth', 'ent.messagerie', 'ent.new_message','ent.user','angularMoment'])
 
 .value("domainENT", "https://recette-leo.entcore.org")
 
-.run(function($ionicPlatform, $ionicLoading, $rootScope) {
+.run(function($ionicPlatform, $ionicLoading, $rootScope,$cordovaGlobalization,amMoment) {
+
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -26,6 +27,13 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     // $rootScope.$on('loading:hide', function() {
     //   $ionicLoading.hide()
     // })
+
+    $cordovaGlobalization.getPreferredLanguage().then( function(result) {
+      amMoment.changeLocale(result.value);
+      console.log(amMoment);
+      },function(error) {
+        // error
+      });
   });
 })
 
@@ -60,7 +68,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   .state('app', {
     url: '/app',
     abstract: true,
-    templateUrl: 'templates/menu.html',
+    templateUrl: 'menu.html',
     controller: 'AppCtrl'
   })
 
@@ -159,131 +167,132 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
 
 .controller('AppCtrl', function($scope, $sce, $state, $cordovaInAppBrowser, $cordovaFileTransfer,$cordovaProgress, $cordovaFileOpener2, domainENT, $ionicHistory, SkinFactory){
 
-  $scope.renderHtml = function(text){
-    if(text != null){
-      text = text.replace(/="\/\//g, "=\"https://");
-      text = text.replace(/="\//g, "=\""+domainENT+"/");
 
-      //pb dans le cas de téléchargement de fichiers
-      // var newString = text.replace(/href="([\S]+)"/g, "onClick=window.plugins.fileOpener.open(\"$1\")")
-      var newString = text.replace(/href="([\S]+)"/g, "onClick=\"window.open('$1', '_blank', 'location=no')\"");
 
-      // console.log(newString);
-      return $sce.trustAsHtml(newString);
-    }
-  }
+    $scope.renderHtml = function(text){
+      if(text != null){
+        text = text.replace(/="\/\//g, "=\"https://");
+        text = text.replace(/="\//g, "=\""+domainENT+"/");
 
-  $scope.downloadFile = function (filename, urlFile, fileMIMEType){
-    // Save location
-    var url = $sce.trustAsResourceUrl(urlFile);
-    var targetPath = cordova.file.externalRootDirectory + filename; //revoir selon la platforme
+        //pb dans le cas de téléchargement de fichiers
+        // var newString = text.replace(/href="([\S]+)"/g, "onClick=window.plugins.fileOpener.open(\"$1\")")
+        var newString = text.replace(/href="([\S]+)"/g, "onClick=\"window.open('$1', '_blank', 'location=no')\"");
 
-    $cordovaProgress.showSimpleWithLabelDetail(true, "Téléchargement en cours", filename);
-    $cordovaFileTransfer.download(url, targetPath, {}, true).then(function (result) {
-      $cordovaProgress.hide();
-      $scope.openLocalFile(targetPath, fileMIMEType);
-
-    }, function (error) {
-      alert('Error');
-    }, function (progress) {
-    });
-  }
-
-  $scope.openLocalFile = function (targetPath, fileMIMEType){
-
-    $cordovaFileOpener2.open(
-      targetPath,
-      fileMIMEType,
-      {
-        error : function(){ alert("nope") },
-        success : function(){ }
+        // console.log(newString);
+        return $sce.trustAsHtml(newString);
       }
-    );
-  }
-
-  $scope.getImageUrl= function(path){
-    if(path!=null && path!= ""){
-      return domainENT+path;
     }
-  }
 
-  $scope.setCorrectImage = function(path, defaultImage){
-    var result;
-    if(path != null && path.length > 0){
-      result = path;
-    } else {
-      if(!localStorage.getItem('skin')){
-        SkinFactory.getSkin().then(function(res) {
-          localStorage.setItem('skin', res.data.skin);
-          console.log(localStorage.getItem('skin'));
-          result = localStorage.getItem('skin')+defaultImage;
-        });
+    $scope.downloadFile = function (filename, urlFile, fileMIMEType){
+      // Save location
+      var url = $sce.trustAsResourceUrl(urlFile);
+      var targetPath = cordova.file.externalRootDirectory + filename; //revoir selon la platforme
+
+      $cordovaProgress.showSimpleWithLabelDetail(true, "Téléchargement en cours", filename);
+      $cordovaFileTransfer.download(url, targetPath, {}, true).then(function (result) {
+        $cordovaProgress.hide();
+        $scope.openLocalFile(targetPath, fileMIMEType);
+
+      }, function (error) {
+        alert('Error');
+      }, function (progress) {
+      });
+    }
+
+    $scope.openLocalFile = function (targetPath, fileMIMEType){
+
+      $cordovaFileOpener2.open(
+        targetPath,
+        fileMIMEType,
+        {
+          error : function(){ alert("nope") },
+          success : function(){ }
+        }
+      );
+    }
+
+    $scope.getImageUrl= function(path){
+      if(path!=null && path!= ""){
+        return domainENT+path;
       }
-      result = localStorage.getItem('skin')+defaultImage;
     }
-    return result;
-  }
 
-  $scope.setProfileImage = function (regularPath, userId){
-    return (regularPath != null && regularPath.length > 0 && regularPath != "no-avatar.jpg") ? regularPath:"/userbook/avatar/"+userId;
-  }
-
-  var getDateAsMoment = function(date){
-    var momentDate;
-    if(moment.isMoment(date)) {
-      momentDate = date;
+    $scope.setCorrectImage = function(path, defaultImage){
+      var result;
+      if(path != null && path.length > 0){
+        result = path;
+      } else {
+        if(!localStorage.getItem('skin')){
+          SkinFactory.getSkin().then(function(res) {
+            localStorage.setItem('skin', res.data.skin);
+            console.log(localStorage.getItem('skin'));
+            result = localStorage.getItem('skin')+defaultImage;
+          });
+        }
+        result = localStorage.getItem('skin')+defaultImage;
+      }
+      return result;
     }
-    else if (date.$date) {
-      momentDate = moment(date.$date);
-    } else if (typeof date === "number"){
-      momentDate = moment.unix(date);
-    } else {
-      momentDate = moment(date);
+
+    $scope.setProfileImage = function (regularPath, userId){
+      return (regularPath != null && regularPath.length > 0 && regularPath != "no-avatar.jpg") ? regularPath:"/userbook/avatar/"+userId;
     }
-    return momentDate;
-  };
 
+    var getDateAsMoment = function(date){
+      var momentDate;
+      if(moment.isMoment(date)) {
+        momentDate = date;
+      }
+      else if (date.$date) {
+        momentDate = moment(date.$date);
+      } else if (typeof date === "number"){
+        momentDate = moment.unix(date);
+      } else {
+        momentDate = moment(date);
+      }
+      return momentDate;
+    };
 
-  $scope.formatDate = function(date){
-    var momentDate = getDateAsMoment(date);
-    return moment(momentDate).calendar();
-  };
+    $scope.formatDate = function(date){
+      var momentDate = getDateAsMoment(date);
+      return moment(momentDate).calendar();
+    };
 
-  $scope.formatDateLocale = function(date){
-    if(moment(date) > moment().add(-1, 'days').startOf('day') && moment(date) < moment().endOf('day'))
-    return moment(date).calendar();
+    $scope.formatDateLocale = function(date){
+      if(moment(date) > moment().add(-1, 'days').startOf('day') && moment(date) < moment().endOf('day'))
+      return moment(date).calendar();
 
-    if(moment(date) > moment().add(-7, 'days').startOf('day') && moment(date) < moment().endOf('day'))
-    return moment(date).fromNow(); //this week
+      if(moment(date) > moment().add(-7, 'days').startOf('day') && moment(date) < moment().endOf('day'))
+      return moment(date).fromNow(); //this week
 
-    return moment(date).format("L");
-  };
+      return moment(date).format("L");
+    };
 
-  $scope.logout = function(){
-    localStorage.clear();
-    $ionicHistory.clearHistory()
-    $state.go("login");
-    window.cookies.clear(function() {
-      console.log('Cookies cleared!');
-    });
-    // ionic.Platform.exitApp(); // stops the app
-  }
-})
-
-.directive('appVersion', function () {
-  return function(scope, elm, attrs) {
-    cordova.getAppVersion(function (version) {
-      elm.text(version);
-    });
-  };
-});
-
-function findElementById(arraytosearch, valuetosearch) {
-
-  for (var i = 0; i < arraytosearch.length; i++) {
-    if (arraytosearch[i].id == valuetosearch) {
-      return arraytosearch[i];
+    $scope.logout = function(){
+      localStorage.clear();
+      $ionicHistory.clearHistory()
+      $state.go("login");
+      window.cookies.clear(function() {
+        console.log('Cookies cleared!');
+      });
+      // ionic.Platform.exitApp(); // stops the app
     }
+  })
+
+  .directive('appVersion', function () {
+    return function(scope, elm, attrs) {
+      cordova.getAppVersion(function (version) {
+        elm.text(version);
+      });
+    };
+  });
+
+  function findElementById(arraytosearch, valuetosearch) {
+
+    for (var i = 0; i < arraytosearch.length; i++) {
+      if (arraytosearch[i].id == valuetosearch) {
+        return arraytosearch[i];
+      }
+    }
+    return null;
   }
-  return null;
-}
