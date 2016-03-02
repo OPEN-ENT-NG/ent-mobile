@@ -15,7 +15,7 @@
           <img ng-src="{{getImageUrl(info.thread_icon)}}" alt="icone {{info.thread_title}}"/>
           <h2>{{info.title}}</h2>
           <h3>{{translationActus["actualites.info.label.author"]}} {{info.username}}</h3>
-          <p>{{info.publication_date}}</p>
+          <p>{{info.publication_date ? info.publication_date:info.created}}</p>
         </div>
 
         <ion-card-content class="item actucard " overflow-scroll="true">

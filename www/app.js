@@ -28,12 +28,12 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     //   $ionicLoading.hide()
     // })
 
-    $cordovaGlobalization.getPreferredLanguage().then( function(result) {
-      amMoment.changeLocale(result.value);
-      console.log(amMoment);
-      },function(error) {
-        // error
-      });
+    // $cordovaGlobalization.getPreferredLanguage().then( function(result) {
+    //   amMoment.changeLocale(result.value);
+    //   console.log(amMoment);
+    //   },function(error) {
+    //     // error
+    //   });
   });
 })
 
@@ -228,17 +228,15 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
             console.log(localStorage.getItem('skin'));
             result = localStorage.getItem('skin')+defaultImage;
           });
+        } else {
+          result = localStorage.getItem('skin')+defaultImage;
         }
-        result = localStorage.getItem('skin')+defaultImage;
+        console.log(result);
       }
       return result;
     }
 
-    $scope.setProfileImage = function (regularPath, userId){
-      return (regularPath != null && regularPath.length > 0 && regularPath != "no-avatar.jpg") ? regularPath:"/userbook/avatar/"+userId;
-    }
-
-    var getDateAsMoment = function(date){
+      var getDateAsMoment = function(date){
       var momentDate;
       if(moment.isMoment(date)) {
         momentDate = date;
@@ -286,6 +284,10 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
       });
     };
   });
+
+  function setProfileImage (regularPath, userId){
+    return (regularPath != null && regularPath.length > 0 && regularPath != "no-avatar.jpg") ? regularPath:"/userbook/avatar/"+userId;
+  }
 
   function findElementById(arraytosearch, valuetosearch) {
 

@@ -1,10 +1,17 @@
 angular.module('ent.actualites', ['ent.actualites_service'])
 
 .controller('InfosCtrl', function ($scope,$ionicPopover, $state, $rootScope, InfosService,$ionicLoading) {
+
+  $ionicLoading.show({
+    template: '<i class="spinnericon- "></i>'
+  });
+
   $scope.statusInfos = InfosService.getStatusInfos();
   getActualites();
   getThreads();
   getTranslation();
+
+  $ionicLoading.hide();
 
   $scope.getCountComments = function(info){
     if(info.comments != null){
@@ -101,7 +108,6 @@ angular.module('ent.actualites', ['ent.actualites_service'])
           comments: angular.fromJson(resp.data[i].comments)
         });
       }
-      console.log($scope.actualites);
     }, function(err){
       alert('ERR:'+ err);
     });

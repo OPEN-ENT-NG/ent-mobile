@@ -109,7 +109,7 @@ angular.module('ent.blog', ['ent.blog_service'])
     .then(function(){
       BlogsService.getAuthors(id, $scope.posts).then(function(resAuthors) {
         for(var i=0; i<$scope.posts.length; i++){
-          $scope.posts[i].author.photo = $scope.setProfileImage(findElementById(resAuthors, $scope.posts[i].author.userId).photo, $scope.posts[i].author.userId);
+          $scope.posts[i].author.photo = setProfileImage(findElementById(resAuthors, $scope.posts[i].author.userId).photo, $scope.posts[i].author.userId);
         }
       })
       .then(function(){

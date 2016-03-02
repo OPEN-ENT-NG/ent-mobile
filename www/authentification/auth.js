@@ -1,5 +1,5 @@
 angular.module('ent.auth', ['ent.user'])
-.controller('LoginCtrl', function($scope, $http, $cordovaInAppBrowser, $state, domainENT, SkinFactory) {
+.controller('LoginCtrl', function($scope, $http, $cordovaInAppBrowser, $state, domainENT) {
 
   // document.addEventListener("deviceready", onDeviceReady, false);
   // function onDeviceReady() {
