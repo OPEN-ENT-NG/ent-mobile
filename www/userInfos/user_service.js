@@ -40,7 +40,6 @@ angular.module('ent.user', [])
         $scope.myUser = response.data.result[0];
         $scope.myUser.photo = setProfileImage($scope.myUser.photo, res.data.userId);
         $scope.myUser.type = $scope.myUser.type[0];
-        localStorage.setItem('myUser',  $scope.myUser);
       })
     }), function errorCallback(response) {
       alert('Erreur '+response.status+' '+response.data.error);

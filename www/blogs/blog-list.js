@@ -23,7 +23,6 @@ angular.module('ent.blog-list', ['ent.blog_service'])
       for(var i=0; i<$scope.blogs.length; i++){
           $scope.blogs[i].thumbnail = $scope.setCorrectImage($scope.blogs[i].thumbnail ,"/../../img/illustrations/blog-default.png")
       }
-      console.log($scope.blogs);
     }), function(err){
       alert('ERR:'+ err);
     }

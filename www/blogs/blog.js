@@ -123,8 +123,6 @@ angular.module('ent.blog', ['ent.blog_service'])
             }
           }
         })
-        console.log($scope.posts);
-
       })
     }), function(err){
       console.log(err);
