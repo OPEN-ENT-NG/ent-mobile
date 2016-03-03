@@ -8,7 +8,6 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     console.log("new locale: "+result.value);
     amMoment.changeLocale(result.value);
   }, function(error) {
-    // error
     console.log(error);
   })
 
@@ -234,6 +233,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
       }
       result = localStorage.getItem('skin')+defaultImage;
     }
+    console.log(result);
     return result;
   }
 

@@ -6,32 +6,26 @@ angular.module('ent.actualites', ['ent.actualites_service'])
   getThreads();
   getTranslation();
 
-  $scope.getCountComments = function(info){
+  $scope.getCountComments = function(info, commentsAreShown){
     if(info.comments != null){
-      var size = info.comments.length;
-      var unite = size ==1 ? "Commentaire":"Commentaires";
-      return size+" "+unite;
+      var text;
+      if(commentsAreShown){
+        text = $scope.translationActus["actualites.info.label.comments.close"];
+      } else {
+        text = $scope.translationActus["actualites.info.label.comments"]+" ("+info.comments.length+")";
+      }
+      return text;
     }
   }
 
-  // $scope.getTitleWithStatus = function (info){
-  //   var status = "";
-  //   if(info.status!=3){
-  //     var tmp = "actualites.edition.status.";
-  //     status = " "+$scope.translationActus[tmp+info.status];
-  //   }
-  //   return info.title+status;
-  // }
-
   $scope.getStatusByInfo = function (status){
-      return $scope.translationActus["actualites.edition.status."+status];
+    return $scope.translationActus["actualites.edition.status."+status];
   }
   /*
   * if given group is the selected group, deselect it
   * else, select the given group
   */
   $scope.toggleComments = function(info) {
-    console.log(info.comments);
     if ($scope.areCommentsShown(info)) {
       $scope.shownComments = null;
     } else {
@@ -113,8 +107,8 @@ angular.module('ent.actualites', ['ent.actualites_service'])
           thread_icon: $scope.setCorrectImage(resp.data[i].thread_icon,"/../../img/illustrations/actualites-default.png"),
           comments: angular.fromJson(resp.data[i].comments)
         });
+        console.log($scope.infos[i]);
       }
-      console.log($scope.actualites);
     }, function(err){
       alert('ERR:'+ err);
     });
@@ -137,7 +131,7 @@ angular.module('ent.actualites', ['ent.actualites_service'])
 
   function getTranslation(){
     InfosService.getTranslation().then(function(resp){
-        $rootScope.translationActus = resp.data;
+      $rootScope.translationActus = resp.data;
     }, function(err){
       alert('ERR:'+ err);
     });

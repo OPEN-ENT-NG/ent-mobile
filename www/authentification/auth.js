@@ -1,21 +1,24 @@
 angular.module('ent.auth', ['ent.user'])
 .controller('LoginCtrl', function($scope, $http, $cordovaInAppBrowser, $state, domainENT, SkinFactory) {
 
-  // document.addEventListener("deviceready", onDeviceReady, false);
-  // function onDeviceReady() {
-  //   if(localStorage.getItem('access_token')== null){
-  //     login();
-  //   }
-  //   $state.go("app.actualites");
-  // }
+  document.addEventListener("deviceready", onDeviceReady, false);
+  function onDeviceReady() {
+    if(localStorage.getItem('access_token')){
+      $state.go("app.actualites");
+    }
+  }
 
   $scope.doLogin= function(){
     login();
-    // SkinFactory.getSkin().then(function(res) {
-    //   localStorage.setItem('skin', res.data.skin);
-    //   console.log(localStorage.getItem('skin'));
-    //   $state.go("app.actualites");
-    // });
+    SkinFactory.getSkin().then(function(res) {
+      localStorage.setItem('skin', res.data.skin)
+      console.log(localStorage.getItem('skin'))
+
+      
+      $state.go("app.actualites")
+    }, function errorCallback(response) {
+      alert('Erreur '+response.status+' '+response.data.error)
+    })
   }
 
   function login(){
@@ -27,7 +30,7 @@ angular.module('ent.auth', ['ent.user'])
 
 
         ref.close();
-         $state.go("app.actualites");
+        //  $state.go("app.actualites");
       }
     });
 

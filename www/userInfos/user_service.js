@@ -21,12 +21,10 @@ angular.module('ent.user', [])
   }
 })
 
-.controller('UserCtrl', function( UserFactory, $scope){
+.controller('UserCtrl', function(UserFactory, $scope){
 
   UserFactory.getTranslation().then(function(result){
     $scope.translationUser = result.data;
-    console.log($scope.translationUser);
-
   }), function errorCallback(response) {
     alert('Erreur '+response.status+' '+response.data.error);
   };
@@ -37,8 +35,6 @@ angular.module('ent.user', [])
       $scope.myUser.photo = $scope.setProfileImage($scope.myUser.photo, res.data.userId);
       $scope.myUser.type = $scope.myUser.type[0];
       localStorage.setItem('myUser',  $scope.myUser);
-
-      console.log($scope.myUser);
     })
   }), function errorCallback(response) {
     alert('Erreur '+response.status+' '+response.data.error);
