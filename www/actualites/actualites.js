@@ -14,6 +14,18 @@ angular.module('ent.actualites', ['ent.actualites_service'])
     }
   }
 
+  // $scope.getTitleWithStatus = function (info){
+  //   var status = "";
+  //   if(info.status!=3){
+  //     var tmp = "actualites.edition.status.";
+  //     status = " "+$scope.translationActus[tmp+info.status];
+  //   }
+  //   return info.title+status;
+  // }
+
+  $scope.getStatusByInfo = function (status){
+      return $scope.translationActus["actualites.edition.status."+status];
+  }
   /*
   * if given group is the selected group, deselect it
   * else, select the given group
@@ -95,6 +107,7 @@ angular.module('ent.actualites', ['ent.actualites_service'])
           content: resp.data[i].content,
           status: resp.data[i].status,
           publication_date: resp.data[i].publication_date,
+          modified: resp.data[i].modified,
           thread_id: resp.data[i].thread_id,
           username: resp.data[i].username,
           thread_icon: $scope.setCorrectImage(resp.data[i].thread_icon,"/../../img/illustrations/actualites-default.png"),

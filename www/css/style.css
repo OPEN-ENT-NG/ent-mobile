@@ -24,6 +24,10 @@ ion-popover-view.fit ion-content {
   text-decoration: underline;
 }
 
+.statusInfoTitle {
+  color: red;
+}
+
 .actustatus {
   padding-left: 10px !important;
   padding-right: 5px !important;
