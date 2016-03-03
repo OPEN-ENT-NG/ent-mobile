@@ -1,24 +1,32 @@
 angular.module('ent.auth', ['ent.user'])
-.controller('LoginCtrl', function($scope, $http, $cordovaInAppBrowser, $state, domainENT, SkinFactory) {
+.controller('LoginCtrl', function($scope, $http, $cordovaInAppBrowser, $state, domainENT, SkinFactory, $ionicLoading) {
+
 
   document.addEventListener("deviceready", onDeviceReady, false);
+
   function onDeviceReady() {
-    if(localStorage.getItem('access_token')){
+    if(localStorage.getItem('code')!=null){
       $state.go("app.actualites");
     }
   }
 
   $scope.doLogin= function(){
-    login();
-    SkinFactory.getSkin().then(function(res) {
-      localStorage.setItem('skin', res.data.skin)
-      console.log(localStorage.getItem('skin'))
+    // $ionicLoading.show({
+    //   template: '<i class="spinnericon- "></i>'
+    // });
 
-      
-      $state.go("app.actualites")
-    }, function errorCallback(response) {
-      alert('Erreur '+response.status+' '+response.data.error)
-    })
+    login();
+
+    // SkinFactory.getSkin().then(function(res) {
+    //   console.log(res);
+    //   localStorage.setItem('skin', res.data.skin)
+    //   console.log(localStorage.getItem('skin'))
+    //   $ionicLoading.hide();
+    // }, function errorCallback(response) {
+    //   alert('Erreur '+response.status+' '+response.data.error)
+    // })
+    $state.go("app.actualites");
+
   }
 
   function login(){
@@ -27,10 +35,7 @@ angular.module('ent.auth', ['ent.user'])
       var url = event.url;
       if(url.startsWith(domainENT+"/?code=")) {
         localStorage.setItem('code', url.substring(url.indexOf("code=")+5, url.lastIndexOf("&")));
-
-
         ref.close();
-        //  $state.go("app.actualites");
       }
     });
 

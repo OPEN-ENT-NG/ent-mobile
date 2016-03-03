@@ -1,15 +1,14 @@
 angular.module('ent.blog', ['ent.blog_service'])
 
 
-.controller('BlogCtrl', function($scope, BlogsService, $stateParams, $ionicPopover, $rootScope){
+.controller('BlogCtrl', function($scope, BlogsService, $stateParams, $ionicPopover, $rootScope, $filter){
 
   $scope.nameBlog = $stateParams.nameBlog;
   $scope.statePosts = BlogsService.getStatusPosts();
   getPostsByBlogId($stateParams.idBlog);
 
-  console.log($scope.statePosts);
-  for (var i = 0; i < $scope.statePosts.length; i++) {
-    console.log($rootScope.translationBlog[$scope.statePosts[i].name]);
+  $scope.getStatusByPost = function (state){
+    return $scope.translationBlog[$filter('lowercase')(state)]+" ";
   }
 
   $scope.getCountComments = function(post){
@@ -109,7 +108,7 @@ angular.module('ent.blog', ['ent.blog_service'])
     .then(function(){
       BlogsService.getAuthors(id, $scope.posts).then(function(resAuthors) {
         for(var i=0; i<$scope.posts.length; i++){
-          $scope.posts[i].author.photo = $scope.setProfileImage(findElementById(resAuthors, $scope.posts[i].author.userId).photo, $scope.posts[i].author.userId);
+          $scope.posts[i].author.photo = setProfileImage(findElementById(resAuthors, $scope.posts[i].author.userId).photo, $scope.posts[i].author.userId);
         }
       })
       .then(function(){
@@ -124,6 +123,8 @@ angular.module('ent.blog', ['ent.blog_service'])
             }
           }
         })
+        console.log($scope.posts);
+
       })
     }), function(err){
       console.log(err);

@@ -4,8 +4,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
 
 .run(function($ionicPlatform, $ionicLoading, $rootScope,$cordovaGlobalization,amMoment) {
 
-  $cordovaGlobalization.getPreferredLanguage().then( function(result) {
-    console.log("new locale: "+result.value);
+  $cordovaGlobalization.getPreferredLanguage().then(function(result) {
     amMoment.changeLocale(result.value);
   }, function(error) {
     console.log(error);
@@ -35,7 +34,6 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     //   $ionicLoading.hide()
     // })
 
-
   });
 })
 
@@ -44,8 +42,8 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     return {
       request: function(config) {
         if (localStorage.getItem('access_token')) {
-          config.headers['Authorization'] = 'Bearer '+localStorage.getItem('access_token')
-          console.log("localStorage.getItem('access_token') "+localStorage.getItem('access_token'));
+          // config.headers['Authorization'] = 'Bearer '+localStorage.getItem('access_token')
+          // console.log("localStorage.getItem('access_token') "+localStorage.getItem('access_token'));
         }
         // console.log("loading:show");
         // $rootScope.$broadcast('loading:show')
@@ -169,7 +167,10 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
 
 .controller('AppCtrl', function ($scope, $sce, $state, $cordovaInAppBrowser, $cordovaFileTransfer,$cordovaProgress, $cordovaFileOpener2, domainENT, $ionicHistory, SkinFactory){
 
-
+  SkinFactory.getSkin().then(function(res) {
+    localStorage.setItem('skin', res.data.skin);
+    console.log(localStorage.getItem('skin'));
+  });
 
   $scope.renderHtml = function (text){
     if(text != null){
@@ -230,23 +231,18 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
           console.log(localStorage.getItem('skin'));
           result = localStorage.getItem('skin')+defaultImage;
         });
+      } else {
+        result = localStorage.getItem('skin')+defaultImage;
       }
-      result = localStorage.getItem('skin')+defaultImage;
     }
-    console.log(result);
     return result;
-  }
-
-  $scope.setProfileImage = function (regularPath, userId){
-    return (regularPath != null && regularPath.length > 0 && regularPath != "no-avatar.jpg") ? regularPath:"/userbook/avatar/"+userId;
   }
 
   var getDateAsMoment = function(date){
     var momentDate;
     if(moment.isMoment(date)) {
       momentDate = date;
-    }
-    else if (date.$date) {
+    } else if (date.$date) {
       momentDate = moment(date.$date);
     } else if (typeof date === "number"){
       momentDate = moment.unix(date);
@@ -290,8 +286,12 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   };
 });
 
-function findElementById(arraytosearch, valuetosearch) {
 
+function setProfileImage (regularPath, userId){
+  return (regularPath != null && regularPath.length > 0 && regularPath != "no-avatar.jpg") ? regularPath:"/userbook/avatar/"+userId;
+}
+
+function findElementById(arraytosearch, valuetosearch) {
   for (var i = 0; i < arraytosearch.length; i++) {
     if (arraytosearch[i].id == valuetosearch) {
       return arraytosearch[i];
