@@ -1,6 +1,6 @@
-angular.module('ent.new_message', [])
+angular.module('ent.new_message', ['ent.message_services'])
 
-.controller('NewMessageCtrl', function($scope, $http, $rootScope, $ionicPopover, $state, $ionicHistory, domainENT){
+.controller('NewMessageCtrl', function($scope, $rootScope, $ionicPopover, $state, $ionicHistory, MessagerieServices ){
 
   $scope.email=[];
   if($rootScope.historyMail){
@@ -43,13 +43,13 @@ angular.module('ent.new_message', [])
   }
 
   $scope.sendMail = function(){
-    $http({
-      method: 'POST',
-      url: domainENT+'/conversation/send',
-      data: getMailData(),
-      headers: { 'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8" }
-    }).then(function(resp){
+    $ionicLoading.show({
+      template: '<i class="spinnericon- taille"></i>'
+    });
+  MessagerieServices.sendMail(getMailData()).then(function(resp){
       console.log("Success");
+      $ionicLoading.hide();
+      $state.go("app.messagerie");
     }, function(err){
       alert('ERR:'+ err);
     });
@@ -57,30 +57,31 @@ angular.module('ent.new_message', [])
 
   $scope.saveAsDraft = function(){
     var draftHasId = $scope.email.id !=0;
-    $http(draftHasId ? saveWithId($scope.email.id):saveNewDraft).then(function(resp){
+    if($scope.email.id !=0){
+      saveWithId($scope.mail.id);
+    } else{
+      saveNewDraft()
+    }
+  }
+
+  function saveWithId(id){
+    MessagerieServices.saveWithId($scope.email.id, getMailData()).then(function(resp){
       alert("Success "+resp.data.id);
+
+
       $state.go("app.messagerie");
     }, function(err){
       alert('ERR:'+ err);
     });
   }
 
-  function saveWithId(id){
-    return {
-      method: 'PUT',
-      url: domainENT+'/conversation/draft/'+$scope.email.id,
-      data: getMailData(),
-      headers: { 'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8" }
-    }
-  }
-
   function saveNewDraft(){
-    return {
-      method:'POST',
-      url: domainENT+'/conversation/draft',
-      data: getMailData(),
-      headers: { 'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8" }
-    }
+    MessagerieServices.saveNewDraft(getMailData()).then(function(resp){
+      alert("Success "+resp.data.id);
+      $state.go("app.messagerie");
+    }, function(err){
+      alert('ERR:'+ err);
+    });
   }
 
   function getContactsNames(idArray, fullArray){

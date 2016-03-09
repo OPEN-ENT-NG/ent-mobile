@@ -166,7 +166,14 @@ angular.module('ent.message_folder', ['ent.message_services'])
   function getExtraFolders(){
     MessagerieServices.getExtraFolders($stateParams.idFolder).then(function(resp){
       console.log(resp.data);
-      $scope.extraFolders = resp.data;
+      $scope.extraFolders = [];
+      for(var i = 0; i< resp.data.length; i++){
+        $scope.extraFolders.push({
+          id: resp.data[i].id,
+          name: resp.data[i].name,
+          isPersonnal: true
+        });
+      }
     }).then(function(){
       var folderIds = [];
       angular.forEach($scope.extraFolders, function(extraFolder) {

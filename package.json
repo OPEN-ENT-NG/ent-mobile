@@ -1,6 +1,6 @@
 {
-  "name": "ENT_mobile_12012016",
-  "version": "1.0.0",
+  "name": "ENT_mobile_08032016",
+  "version": "2.0.2",
   "description": "ENT mobile: An Ionic project",
   "dependencies": {
     "angular-moment": "^0.10.3",

@@ -5,8 +5,13 @@ angular.module('ent.auth', ['ent.user'])
   document.addEventListener("deviceready", onDeviceReady, false);
 
   function onDeviceReady() {
+    navigator.splashscreen.show();
+
     if(localStorage.getItem('code')!=null){
+      navigator.splashscreen.hide();
       $state.go("app.actualites");
+    } else {
+      navigator.splashscreen.hide();
     }
   }
 
@@ -14,7 +19,8 @@ angular.module('ent.auth', ['ent.user'])
     // $ionicLoading.show({
     //   template: '<i class="spinnericon- "></i>'
     // });
-
+    console.log("show splashscreen");
+    navigator.splashscreen.show();
     login();
 
     // SkinFactory.getSkin().then(function(res) {
@@ -25,7 +31,9 @@ angular.module('ent.auth', ['ent.user'])
     // }, function errorCallback(response) {
     //   alert('Erreur '+response.status+' '+response.data.error)
     // })
+
     $state.go("app.actualites");
+
 
   }
 
@@ -34,8 +42,12 @@ angular.module('ent.auth', ['ent.user'])
     ref.addEventListener('loadstart', function(event) {
       var url = event.url;
       if(url.startsWith(domainENT+"/?code=")) {
+
         localStorage.setItem('code', url.substring(url.indexOf("code=")+5, url.lastIndexOf("&")));
         ref.close();
+        console.log("hide splashscreen");
+        navigator.splashscreen.hide();
+
       }
     });
 

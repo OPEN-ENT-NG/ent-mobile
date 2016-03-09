@@ -1,6 +1,6 @@
 angular.module('ent.message_detail', ['ent.message_services'])
 
-.controller('MessagesDetailCtrl', function($scope, $rootScope, $state, domainENT, MessagerieServices,  $ionicLoading, $ionicHistory, DeleteMessagesPopupFactory){
+.controller('MessagesDetailCtrl', function($scope, $rootScope, $state, domainENT, MessagerieServices,  $ionicLoading, $ionicHistory, DeleteMessagesPopupFactory,MoveMessagesPopupFactory){
 
   getMessage($state.params.idMessage);
 
@@ -22,6 +22,24 @@ angular.module('ent.message_detail', ['ent.message_services'])
           alert('ERR:'+ err);
         });
       }
+    })
+  }
+  $scope.moveMessage = function(id){
+    var popupMove = MoveMessagesPopupFactory.getPopup($scope);
+    popupMove.then(function(res){
+
+      $ionicLoading.show({
+        template: '<i class="spinnericon- taille"></i>'
+      });
+      console.log(res);
+      if(res!=null){
+        MessagerieServices.moveMessage(id, res).then(function(){
+          $ionicHistory.goBack();
+        }, function(err){
+          alert('ERR:'+ err);
+        });
+      }
+      $ionicLoading.hide();
     })
   }
 

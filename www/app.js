@@ -74,6 +74,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
 
   .state('app.messagerie', {
     url: '/messagerie',
+    cache: false,
     views: {
       'menuContent': {
         templateUrl: 'messagerie/folder_view.html',
@@ -186,10 +187,15 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     }
   }
 
-  $scope.downloadFile = function (filename, urlFile, fileMIMEType){
+  $scope.downloadFile = function (filename, urlFile, fileMIMEType, module){
     // Save location
     var url = $sce.trustAsResourceUrl(urlFile);
     var targetPath = cordova.file.externalRootDirectory + filename; //revoir selon la platforme
+
+
+    if (ionic.Platform.isIOS()){
+
+    }
 
     $cordovaProgress.showSimpleWithLabelDetail(true, "Téléchargement en cours", filename);
     $cordovaFileTransfer.download(url, targetPath, {}, true).then(function (result) {
@@ -201,6 +207,10 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     }, function (progress) {
     });
   }
+
+
+
+  // tempDirectory
 
   $scope.openLocalFile = function (targetPath, fileMIMEType){
 
@@ -299,3 +309,36 @@ function findElementById(arraytosearch, valuetosearch) {
   }
   return null;
 }
+
+// function download(URL, Folder_Name, File_Name) {
+//   //step to request a file system
+//   window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, fileSystemSuccess, fileSystemFail);
+//
+//   function fileSystemSuccess(fileSystem) {
+//     var download_link = encodeURI(URL);
+//     ext = download_link.substr(download_link.lastIndexOf('.') + 1); //Get extension of URL
+//
+//     var directoryEntry = fileSystem.root; // to get root path of directory
+//     directoryEntry.getDirectory(Folder_Name, { create: true, exclusive: false }, onDirectorySuccess, onDirectoryFail); // creating folder in sdcard
+//     var rootdir = fileSystem.root;
+//     var fp = rootdir.fullPath; // Returns Fulpath of local directory
+//
+//     fp = fp + "/" + Folder_Name + "/" + File_Name + "." + ext; // fullpath and name of the file which we want to give
+//     // download function call
+//     filetransfer(download_link, fp);
+//   }
+//
+//   function onDirectorySuccess(parent) {
+//     // Directory created successfuly
+//   }
+//
+//   function onDirectoryFail(error) {
+//     //Error while creating directory
+//     alert("Unable to create new directory: " + error.code);
+//   }
+//
+//   function fileSystemFail(evt) {
+//     //Unable to access file system
+//     alert(evt.target.error.code);
+//   }
+// }

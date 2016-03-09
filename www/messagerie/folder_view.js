@@ -2,11 +2,17 @@ angular.module('ent.messagerie', ['ent.message_services', 'ent.message_folder', 
 
 .controller('MessagerieFoldersCtrl', function($scope, $state, $rootScope, MessagerieServices,  $ionicLoading,  $cordovaVibration, $ionicPlatform, $ionicHistory){
 
+  $ionicLoading.show({
+    template: '<i class="spinnericon- taille"></i>'
+  });
   getContacts();
   getFolders();
+  getTranslation();
+  $ionicLoading.hide();
 
   $rootScope.writeWithUnreadNumber = function(folder){
-    return folder.count!=0 ? folder.name+" ("+folder.count+")":folder.name;
+    var folderName = folder.isPersonnal ? folder.name : $rootScope.translationConversation[folder.name];
+    return folder.count!=0 ? folderName+" ("+folder.count+")":folderName;
   }
 
   $rootScope.newMail = function(){
@@ -21,34 +27,32 @@ angular.module('ent.messagerie', ['ent.message_services', 'ent.message_folder', 
   }
 
   $scope.goToFolder = function(folder){
-    $state.go("app.message_folder", {nameFolder: folder.name, idFolder:folder.id})
+    $state.go("app.message_folder", {nameFolder: folder.isPersonnal ? folder.name : $rootScope.translationConversation[folder.name], idFolder:folder.id})
   }
 
   function getFolders(){
-    // $ionicLoading.show({
-    //   template: '<i class="spinnericon- taille"></i>'
-    // });
+
     $scope.checkable = false;
 
     $scope.folders = [
       {
         id: "INBOX",
-        name: "Inbox",
+        name: "inbox",
         isPersonnal: false
       },
       {
         id: "OUTBOX",
-        name: "Outbox",
+        name: "outbox",
         isPersonnal: false
       },
       {
         id: "DRAFT",
-        name: "Draft",
+        name: "draft",
         isPersonnal: false
       },
       {
         id: "TRASH",
-        name: "Trash",
+        name: "trash",
         isPersonnal: false
       },
       {
@@ -77,9 +81,6 @@ angular.module('ent.messagerie', ['ent.message_services', 'ent.message_folder', 
         }
         initCheckedValue();
         console.log($scope.folders);
-
-        // $ionicLoading.hide();
-        // $scope.checkable = false;
       })
     }) , function(err){
       alert('ERR:'+ err);
@@ -114,6 +115,15 @@ angular.module('ent.messagerie', ['ent.message_services', 'ent.message_folder', 
     }, function(err){
       alert('ERR:'+ err);
     });
+  }
+
+  function getTranslation(){
+    MessagerieServices.getTranslation().then(function(resp) {
+      $rootScope.translationConversation = resp.data;
+    }), function(err){
+      alert('ERR:'+ err);
+    };
+
   }
 })
 .directive('onLongPress', function($timeout) {

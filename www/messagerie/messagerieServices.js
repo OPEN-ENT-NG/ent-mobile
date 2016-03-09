@@ -115,6 +115,30 @@ angular.module('ent.message_services', [])
     return $http.get(domainENT+"/conversation/visible");
   }
 
+  this.saveWithId = function(id, mailData){
+    var config = {
+      headers: { 'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8" }
+    };
+    return $http.post(domainENT+'/conversation/draft/'+id,mailData, config );
+  }
+
+  this.saveNewDraft = function (mailData){
+    var config = {
+      headers: { 'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8" }
+    };
+    return $http.post(domainENT+'/conversation/draft',mailData, config );
+  }
+
+  this.sendMail = function(mailData){
+    var config = {
+      headers: { 'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8" }
+    };
+    return $http.post(domainENT+'/conversation/send',mailData, config );
+  }
+
+  this.getTranslation = function(){
+    return $http.get(domainENT+'/conversation/i18n');
+  }
 })
 
 .factory("MoveMessagesPopupFactory", function ($ionicPopup, MessagerieServices) {
