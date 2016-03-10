@@ -1,7 +1,8 @@
 <ion-view view-title="Nouveau message" ng-init="transform()" ng-controller="NewMessageCtrl">
 
   <ion-nav-buttons side="right">
-    <button class="button button-icon attachicon-"  ng-click="" ></button>
+    <button class="button button-icon attachicon-"  ng-click="openFileChooser()" ></button>
+
     <button class="button button-icon button-clear ion-android-send"  ng-click="sendMail()" ></button>
     <button class="button button-icon button-clear fa fa-ellipsis-v actustatus" ng-click = "openPopover($event)"></button>
   </ion-nav-buttons>
@@ -9,7 +10,7 @@
 
 
     <div class="item">
-    {{translationConversation["transfer.to"]}}
+      {{translationConversation["transfer.to"]}}
       <ion-list>
         <div ng-repeat="destinataire in email.destinatairesTo track by $index">
           <h2 >{{destinataire.displayName}} </h2>
@@ -46,10 +47,10 @@
       </div>
     </div>
     <label class="item item-input" >
-      <input type="text" ng-model="email.sujet" placeholder={{translationConversation[subject]}}>
+      <input type="text" ng-model="email.sujet" placeholder={{translationConversation["sniplet.ml.subject.placeholder"]}}>
     </label>
-    <label class="item-input">
-      <input type="text"  ng-model="email.corps">
+    <label class="item-input fill-textarea">
+      <textarea class="msd-elastic: \n;" ng-model="email.corps" placeholder={{translationConversation["sniplet.ml.content.placeholder"]}}></textarea>
     </label>
 
   </ion-content>

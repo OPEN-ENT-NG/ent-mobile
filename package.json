@@ -39,7 +39,12 @@
       "id": "com.bez4pieci.cookies"
     },
     "cordova-plugin-vibration",
-    "cordova-plugin-globalization"
+    "cordova-plugin-globalization",
+    "org.apache.cordova.file-transfer",
+    {
+      "locator": "http://github.com/don/cordova-filechooser.git",
+      "id": "com.megster.cordova.FileChooser"
+    }
   ],
   "cordovaPlatforms": [
     "android",

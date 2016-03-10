@@ -5,13 +5,13 @@ angular.module('ent.messagerie', ['ent.message_services', 'ent.message_folder', 
   $ionicLoading.show({
     template: '<i class="spinnericon- taille"></i>'
   });
+  getTranslation();
   getContacts();
   getFolders();
-  getTranslation();
   $ionicLoading.hide();
 
   $rootScope.writeWithUnreadNumber = function(folder){
-    var folderName = folder.isPersonnal ? folder.name : $rootScope.translationConversation[folder.name];
+    var folderName = MessagerieServices.getPersonalFolderIds().indexOf(folder.id) ==-1 ? folder.name : $rootScope.translationConversation[folder.name];
     return folder.count!=0 ? folderName+" ("+folder.count+")":folderName;
   }
 
@@ -27,47 +27,24 @@ angular.module('ent.messagerie', ['ent.message_services', 'ent.message_folder', 
   }
 
   $scope.goToFolder = function(folder){
-    $state.go("app.message_folder", {nameFolder: folder.isPersonnal ? folder.name : $rootScope.translationConversation[folder.name], idFolder:folder.id})
+    $state.go("app.message_folder", {nameFolder: folder.name, idFolder:folder.id})
   }
 
   function getFolders(){
 
     $scope.checkable = false;
+    $scope.folders = [];
+    $scope.folders = MessagerieServices.getNonPersonalFolders();
+    $scope.folders.push({
+      id: "0",
+      name:""
 
-    $scope.folders = [
-      {
-        id: "INBOX",
-        name: "inbox",
-        isPersonnal: false
-      },
-      {
-        id: "OUTBOX",
-        name: "outbox",
-        isPersonnal: false
-      },
-      {
-        id: "DRAFT",
-        name: "draft",
-        isPersonnal: false
-      },
-      {
-        id: "TRASH",
-        name: "trash",
-        isPersonnal: false
-      },
-      {
-        id: "0",
-        name:"",
-        isPersonnal: false
-
-      }
-    ];
+    });
     MessagerieServices.getCustomFolders().then(function(resp){
       for(var i = 0; i< resp.data.length; i++){
         $scope.folders.push({
           id: resp.data[i].id,
-          name: resp.data[i].name,
-          isPersonnal: true
+          name: resp.data[i].name
         });
       }
     }).then(function(){
@@ -88,10 +65,10 @@ angular.module('ent.messagerie', ['ent.message_services', 'ent.message_folder', 
   }
 
   function initCheckedValue(){
-  angular.forEach($scope.folders, function(folder){
-    folder.checked = false;
-  });
-}
+    angular.forEach($scope.folders, function(folder){
+      folder.checked = false;
+    });
+  }
 
   function getContacts () {
     $rootScope.contacts = [];

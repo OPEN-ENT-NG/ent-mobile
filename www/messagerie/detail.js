@@ -5,7 +5,8 @@ angular.module('ent.message_detail', ['ent.message_services'])
   getMessage($state.params.idMessage);
 
   $scope.isDraft =  function(){
-    return "DRAFT" === $rootScope.nameFolder;
+    console.log($rootScope.nameFolder);
+    return "draft" === $rootScope.nameFolder;
   }
 
   $scope.trash = function(id){

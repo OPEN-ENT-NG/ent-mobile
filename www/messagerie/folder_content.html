@@ -1,5 +1,5 @@
 <ion-view ng-controller="InboxCtrl" ng-cloak>
-  <ion-nav-title>{{checkable ? getCountOfCheckedMessages():nameFolder}}</ion-nav-title>
+  <ion-nav-title>{{checkable ? getCountOfCheckedMessages(): getNameFolder(nameFolder)}}</ion-nav-title>
   <ion-nav-buttons side="right">
     <button class="button button-icon button-clear ion-trash-a" ng-show=checkable ng-click=deleteSelectedMessages()></button>
     <button class="button button-icon button-clear ion-filing" ng-show=checkable ng-click=showPopupMove()></button>

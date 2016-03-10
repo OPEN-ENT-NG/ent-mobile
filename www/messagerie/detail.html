@@ -1,9 +1,16 @@
 <ion-view title="Détail" ng-controller="MessagesDetailCtrl">
 
   <ion-nav-buttons side="right">
+
+    <button class="button button-icon button-clear ion-reply" ></button>
+    <button class="button button-icon button-clear ion-reply-all" ></button>
+    <button class="button button-icon button-clear ion-forward" ></button>
+    
     <button class="button button-icon button-clear fa fa-trash" ng-click = "trash(mail.id)"></button>
     <button class="button button-icon button-clear pencilicon-" ng-show="isDraft()" ng-click = "editMail()"></button>
     <button class="button button-icon button-clear ion-filing" ng-click=moveMessage(mail.id)></button>
+
+
 
   </ion-nav-buttons>
 

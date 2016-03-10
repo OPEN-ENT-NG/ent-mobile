@@ -2,6 +2,7 @@ angular.module('ent.message_folder', ['ent.message_services'])
 
 .controller('InboxCtrl', function($scope, $state, $stateParams, $rootScope, domainENT, MessagerieServices,  $ionicLoading,  $cordovaVibration, $ionicHistory, $ionicPlatform, MoveMessagesPopupFactory, DeleteMessagesPopupFactory){
 
+  $rootScope.nameFolder = $stateParams.nameFolder;
   getMessagesAndFolders();
 
   $scope.restoreMessages = function(){
@@ -15,7 +16,7 @@ angular.module('ent.message_folder', ['ent.message_services'])
   }
 
   $scope.canShowRestore = function(){
-    return $stateParams.nameFolder == "TRASH" && $scope.checkable;
+    return $stateParams.nameFolder == "trash" && $scope.checkable;
   }
 
   $scope.showPopupMove = function(){
@@ -59,6 +60,11 @@ angular.module('ent.message_folder', ['ent.message_services'])
         }
       })
     }
+  }
+
+  $scope.getNameFolder = function(folderName){
+    var nonPersonnalFolders = ["inbox", "outbox", "draft", "trash"];
+    return nonPersonnalFolders.indexOf(folderName) != -1 ? $rootScope.translationConversation[folderName]:folderName;
   }
 
   $scope.checkMessage = function(index){
@@ -112,7 +118,7 @@ angular.module('ent.message_folder', ['ent.message_services'])
   });
 
   $scope.doRefreshMessages = function() {
-    $scope.messages.unshift(getMessages(getUrlFolder()));
+    $scope.messages.unshift(updateMessages());
     $scope.extraFolders.unshift(getExtraFolders());
     $scope.$broadcast('scroll.refreshComplete');
     $scope.$apply()
@@ -129,7 +135,6 @@ angular.module('ent.message_folder', ['ent.message_services'])
   }
 
   function getMessagesAndFolders(){
-    console.log("getMessagesAndFolders");
     $scope.nameFolder = $stateParams.nameFolder;
     updateMessages();
     getExtraFolders();

@@ -1,6 +1,13 @@
 angular.module('ent.message_services', [])
 
 .service('MessagerieServices', function($http, $q, domainENT){
+
+
+  var configHeaders = {
+    headers: { 'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8" }
+  };
+
+
   this.getMessagesFolder = function (url) {
     return $http.get(url);
   }
@@ -62,15 +69,23 @@ angular.module('ent.message_services', [])
     var promises = [];
     var deferredCombinedItems = $q.defer();
     var combinedItems = [];
-    var url = nameFolder=="TRASH" ? domainENT+"/conversation/delete?id=":domainENT+"/conversation/trash?id=";
-
     angular.forEach(arrayMessages, function(item) {
       var deferredItemList = $q.defer();
-      $http.put(url+item.id).then(function(resp) {
-        combinedItems = combinedItems.concat(resp.data);
-        deferredItemList.resolve();
-      });
-      promises.push(deferredItemList.promise);
+      console.log(item);
+
+      if(nameFolder=="trash"){
+        $http.delete(domainENT+"/conversation/delete?id="+item.id).then(function(resp) {
+          combinedItems = combinedItems.concat(resp.data);
+          deferredItemList.resolve();
+        });
+        promises.push(deferredItemList.promise);
+      } else {
+        $http.put(domainENT+"/conversation/trash?id="+item.id).then(function(resp) {
+          combinedItems = combinedItems.concat(resp.data);
+          deferredItemList.resolve();
+        });
+        promises.push(deferredItemList.promise);
+      }
     });
 
     $q.all(promises).then(function() {
@@ -80,7 +95,7 @@ angular.module('ent.message_services', [])
   }
 
   this.trashMessage = function (id, nameFolder){
-    var url = nameFolder=="TRASH" ? domainENT+"/conversation/delete?id=":domainENT+"/conversation/trash?id=";
+    var url = nameFolder=="trash" ? domainENT+"/conversation/delete?id=":domainENT+"/conversation/trash?id=";
     return $http.put(url+id);
   }
 
@@ -116,28 +131,44 @@ angular.module('ent.message_services', [])
   }
 
   this.saveWithId = function(id, mailData){
-    var config = {
-      headers: { 'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8" }
-    };
-    return $http.post(domainENT+'/conversation/draft/'+id,mailData, config );
+    return $http.post(domainENT+'/conversation/draft/'+id,mailData, configHeaders );
   }
 
   this.saveNewDraft = function (mailData){
-    var config = {
-      headers: { 'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8" }
-    };
-    return $http.post(domainENT+'/conversation/draft',mailData, config );
+    return $http.post(domainENT+'/conversation/draft',mailData, configHeaders );
   }
 
   this.sendMail = function(mailData){
-    var config = {
-      headers: { 'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8" }
-    };
-    return $http.post(domainENT+'/conversation/send',mailData, config );
+    return $http.post(domainENT+'/conversation/send',mailData, configHeaders );
   }
 
   this.getTranslation = function(){
     return $http.get(domainENT+'/conversation/i18n');
+  }
+
+  this.getNonPersonalFolders = function(){
+    return [
+      {
+        id: "INBOX",
+        name: "inbox"
+      },
+      {
+        id: "OUTBOX",
+        name: "outbox"
+      },
+      {
+        id: "DRAFT",
+        name: "draft"
+      },
+      {
+        id: "TRASH",
+        name: "trash"
+      }
+    ];
+  }
+
+  this.getPersonalFolderIds = function(){
+    return[ "INBOX", "OUTBOX", "DRAFT", "TRASH"];
   }
 })
 
