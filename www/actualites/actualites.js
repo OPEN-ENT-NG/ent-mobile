@@ -116,7 +116,7 @@ angular.module('ent.actualites', ['ent.actualites_service'])
         });
       }
     }, function(err){
-      alert('ERR:'+ err);
+      $scope.showAlertError(err);
     });
   }
 
@@ -131,7 +131,7 @@ angular.module('ent.actualites', ['ent.actualites_service'])
         });
       }
     }, function(err){
-      alert('ERR:'+ err);
+      $scope.showAlertError(err);
     });
   }
 
@@ -139,7 +139,7 @@ angular.module('ent.actualites', ['ent.actualites_service'])
     InfosService.getTranslation().then(function(resp){
       $rootScope.translationActus = resp.data;
     }, function(err){
-      alert('ERR:'+ err);
+      $scope.showAlertError(err);
     });
   }
 });

@@ -166,12 +166,15 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   $urlRouterProvider.otherwise('/login');
 })
 
-.controller('AppCtrl', function ($scope, $sce, $state, $cordovaInAppBrowser, $cordovaFileTransfer,$cordovaProgress, $cordovaFileOpener2, domainENT, $ionicHistory, SkinFactory){
+.controller('AppCtrl', function ($scope, $sce, $state, $cordovaInAppBrowser, $cordovaFileTransfer,$cordovaProgress, $cordovaFileOpener2, domainENT, $ionicHistory, SkinFactory, $ionicPopup){
 
   SkinFactory.getSkin().then(function(res) {
     localStorage.setItem('skin', res.data.skin);
     console.log(localStorage.getItem('skin'));
+  } , function(err){
+    $scope.showAlertError(err);
   });
+
 
   $scope.renderHtml = function (text){
     if(text != null){
@@ -203,7 +206,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
       $scope.openLocalFile(targetPath, fileMIMEType);
 
     }, function (error) {
-      alert('Error');
+      $scope.showAlertError(error);
     }, function (progress) {
     });
   }
@@ -218,7 +221,9 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
       targetPath,
       fileMIMEType,
       {
-        error : function(){ alert("nope") },
+        error : function(){
+          $scope.showAlertError(error);
+        },
         success : function(){ }
       }
     );
@@ -277,14 +282,43 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     return moment(date).format("L");
   };
 
+  // An alert dialog
+  $scope.showAlertError = function(error) {
+    console.log(error);
+    var alertPopup = $ionicPopup.alert({
+      title: 'Erreur de connexion',
+      template: 'Erreur '+error.status+". Veuillez réessayer dans quelques instants."
+    });
+
+    alertPopup.then(function(res) {
+      $scope.logout();
+    });
+  };
+
+
   $scope.logout = function(){
     localStorage.clear();
     $ionicHistory.clearHistory()
+    $ionicHistory.clearCache();
     $state.go("login");
     window.cookies.clear(function() {
       console.log('Cookies cleared!');
     });
+
+    var success = function(status) {
+      console.log('Message: ' + status);
+    }
+
+    var error = function(status) {
+      console.log('Error: ' + status);
+    }
+
+    window.cache.clear( success, error );
+    window.cache.cleartemp(); //
     // ionic.Platform.exitApp(); // stops the app
+    location.reload();
+
+    // $state.go('login');
   }
 })
 
@@ -309,6 +343,8 @@ function findElementById(arraytosearch, valuetosearch) {
   }
   return null;
 }
+
+
 
 // function download(URL, Folder_Name, File_Name) {
 //   //step to request a file system
