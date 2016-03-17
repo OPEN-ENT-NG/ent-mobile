@@ -295,30 +295,28 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     });
   };
 
-
   $scope.logout = function(){
     localStorage.clear();
     $ionicHistory.clearHistory()
     $ionicHistory.clearCache();
+    navigator.splashscreen.show();
     $state.go("login");
     window.cookies.clear(function() {
       console.log('Cookies cleared!');
     });
 
-    var success = function(status) {
-      console.log('Message: ' + status);
-    }
-
-    var error = function(status) {
-      console.log('Error: ' + status);
-    }
-
-    window.cache.clear( success, error );
-    window.cache.cleartemp(); //
+    // var success = function(status) {
+    //   console.log('Message: ' + status);
+    // }
+    //
+    // var error = function(status) {
+    //   console.log('Error: ' + status);
+    // }
+    //
+    // window.cache.clear( success, error );
+    // window.cache.cleartemp(); //
     // ionic.Platform.exitApp(); // stops the app
     location.reload();
-
-    // $state.go('login');
   }
 })
 
