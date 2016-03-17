@@ -7,10 +7,6 @@ angular.module('ent.blog', ['ent.blog_service'])
   $scope.statePosts = BlogsService.getStatusPosts();
   getPostsByBlogId($stateParams.idBlog);
 
-  $scope.getStatusByPost = function (state){
-    return $scope.translationBlog[$filter('lowercase')(state)]+" ";
-  }
-
   $scope.getCountComments = function(post){
     if(post.comments != null){
       var size = post.comments.length;
@@ -43,67 +39,13 @@ angular.module('ent.blog', ['ent.blog_service'])
     $scope.$apply()
   }
 
-
-  $scope.filterByStatus = function (post) {
-    if ($scope.filter.length > 0) {
-      if ($scope.filter.indexOf(post.state) < 0){
-        return;
-      }
-    }
-    return post;
-  };
-
-  // selected states
-  $scope.filter = getStatusPostsId();
-
-  // toggle selection for a given fruit by name
-  $scope.toggleSelection = function toggleSelection(state) {
-    var idx = $scope.filter.indexOf(state);
-
-    // is currently selected
-    if (idx > -1) {
-      $scope.filter.splice(idx, 1);
-    }
-
-    // is newly selected
-    else {
-      $scope.filter.push(state);
-    }
-  };
-
-  $ionicPopover.fromTemplateUrl('blogs/popover_blogs.html', {
-    scope: $scope
-  }).then(function(popover) {
-    $scope.popover = popover;
-  });
-
-  $scope.openPopover = function($event) {
-    $scope.popover.show($event);
-  };
-
-  $scope.closePopover = function() {
-    $scope.popover.hide();
-  };
-
-  //Cleanup the popover when we're done with it!
-  $scope.$on('$destroy', function() {
-    $scope.popover.remove();
-  })
-
-  function getStatusPostsId(){
-    var array =[];
-    var values = BlogsService.getStatusPosts();
-    for(var i=0; i<values.length; i++){
-      array[i] = values[i].id;
-    }
-    return array;
-  }
   function getPostsByBlogId(id){
     $scope.posts = [];
     var commentsByPostArray = [];
 
-    BlogsService.getAllPostsByBlogId(id, getStatusPostsId()).then(function(res) {
-      $scope.posts = res;
+    BlogsService.getAllPostsByBlogId(id).then(function(res) {
+      $scope.posts = res.data;
+      console.log($scope.posts);
     })
     .then(function(){
       BlogsService.getAuthors(id, $scope.posts).then(function(resAuthors) {

@@ -6,7 +6,6 @@ angular.module('ent.actualites', ['ent.actualites_service'])
     template: '<i class="spinnericon- "></i>'
   });
 
-  $scope.statusInfos = InfosService.getStatusInfos();
   getActualites();
   getThreads();
   getTranslation();
@@ -25,9 +24,6 @@ angular.module('ent.actualites', ['ent.actualites_service'])
     }
   }
 
-  $scope.getStatusByInfo = function (status){
-    return $scope.translationActus["actualites.edition.status."+status];
-  }
   /*
   * if given group is the selected group, deselect it
   * else, select the given group
@@ -46,11 +42,6 @@ angular.module('ent.actualites', ['ent.actualites_service'])
 
   $scope.goThreads = function(){
     $state.go("app.threads");
-  };
-
-  $rootScope.filterInfos = [];
-  $scope.filterByStatus = function (state) {
-    return $rootScope.filterInfos[state.status] | noFilter($rootScope.filterInfos);
   };
 
   $rootScope.filterThreads = [];
@@ -79,41 +70,24 @@ angular.module('ent.actualites', ['ent.actualites_service'])
     $scope.$apply()
   }
 
-  $ionicPopover.fromTemplateUrl('actualites/popover_actualites.html', {
-    scope: $scope
-  }).then(function(popover) {
-    $scope.popover = popover;
-  });
-
-  $scope.openPopover = function($event) {
-    $scope.popover.show($event);
-  };
-
-  $scope.closePopover = function() {
-    $scope.popover.hide();
-  };
-
-  //Cleanup the popover when we're done with it!
-  $scope.$on('$destroy', function() {
-    $scope.popover.remove();
-  })
-
   function getActualites(){
     $scope.infos =[];
     InfosService.getAllInfos().then(function (resp) {
       for(var i = 0; i< resp.data.length; i++){
-        $scope.infos.push({
-          _id: resp.data[i]._id,
-          title: resp.data[i].title,
-          content: resp.data[i].content,
-          status: resp.data[i].status,
-          publication_date: resp.data[i].publication_date,
-          modified: resp.data[i].modified,
-          thread_id: resp.data[i].thread_id,
-          username: resp.data[i].username,
-          thread_icon: $scope.setCorrectImage(resp.data[i].thread_icon,"/../../img/illustrations/actualites-default.png"),
-          comments: angular.fromJson(resp.data[i].comments)
-        });
+        if(resp.data[i].status == 3){
+          $scope.infos.push({
+            _id: resp.data[i]._id,
+            title: resp.data[i].title,
+            content: resp.data[i].content,
+            publication_date: resp.data[i].publication_date,
+            modified: resp.data[i].modified,
+            thread_id: resp.data[i].thread_id,
+            username: resp.data[i].username,
+            thread_icon: $scope.setCorrectImage(resp.data[i].thread_icon,"/../../img/illustrations/actualites-default.png"),
+            comments: angular.fromJson(resp.data[i].comments)
+
+          });
+        }
       }
     }, function(err){
       $scope.showAlertError(err);
