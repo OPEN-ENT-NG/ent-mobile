@@ -21,7 +21,7 @@ angular.module('ent.user', [])
   }
 })
 
-.controller('UserCtrl', function( UserFactory, $scope){
+.controller('UserCtrl', function(UserFactory, $scope){
 
   getUser();
   getTraduction();
@@ -30,7 +30,7 @@ angular.module('ent.user', [])
     UserFactory.getTranslation().then(function(result){
       $scope.translationUser = result.data;
     }), function errorCallback(response) {
-      alert('Erreur '+response.status+' '+response.data.error);
+      $scope.showAlertError();
     };
   }
 
@@ -42,7 +42,7 @@ angular.module('ent.user', [])
         $scope.myUser.type = $scope.myUser.type[0];
       })
     }), function errorCallback(response) {
-      alert('Erreur '+response.status+' '+response.data.error);
+    $scope.showAlertError();
     };
   }
 })

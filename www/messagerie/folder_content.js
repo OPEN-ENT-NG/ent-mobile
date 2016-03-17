@@ -10,7 +10,7 @@ angular.module('ent.message_folder', ['ent.message_services'])
       getMessagesAndFolders();
     }
     , function(err){
-      alert('ERR:'+ err);
+      $scope.showAlertError();
       $ionicLoading.hide();
     });
   }
@@ -31,7 +31,7 @@ angular.module('ent.message_folder', ['ent.message_services'])
         MessagerieServices.moveMessages(getSelectedMessages(), res).then(function(){
           getMessagesAndFolders();
         }, function(err){
-          alert('ERR:'+ err);
+          $scope.showAlertError();
         });
       }
       $ionicLoading.hide();
@@ -55,7 +55,7 @@ angular.module('ent.message_folder', ['ent.message_services'])
           MessagerieServices.deleteSelectedMessages(messagesList, $stateParams.nameFolder).then(function(){
             getMessagesAndFolders();
           }, function(err){
-            alert('ERR:'+ err);
+            $scope.showAlertError();
           });
         }
       })
@@ -164,7 +164,7 @@ angular.module('ent.message_folder', ['ent.message_services'])
       initCheckedValue();
     }), function(err){
       $ionicLoading.hide();
-      alert('ERR:'+ err);
+      $scope.showAlertError();
     };
   };
 
@@ -192,7 +192,7 @@ angular.module('ent.message_folder', ['ent.message_services'])
       })
     }), function(err){
       $ionicLoading.hide();
-      alert('ERR:'+ err);
+      $scope.showAlertError();
     };
   }
 

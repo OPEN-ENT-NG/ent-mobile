@@ -60,7 +60,7 @@ angular.module('ent.messagerie', ['ent.message_services', 'ent.message_folder', 
         console.log($scope.folders);
       })
     }) , function(err){
-      alert('ERR:'+ err);
+      $scope.showAlertError();
     };
   }
 
@@ -90,7 +90,7 @@ angular.module('ent.messagerie', ['ent.message_services', 'ent.message_folder', 
         });
       };
     }, function(err){
-      alert('ERR:'+ err);
+      $scope.showAlertError();
     });
   }
 
