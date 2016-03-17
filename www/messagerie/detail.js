@@ -20,7 +20,7 @@ angular.module('ent.message_detail', ['ent.message_services'])
           $ionicHistory.clearCache();
           $ionicHistory.goBack();
         }, function(err){
-          alert('ERR:'+ err);
+          $scope.showAlertError();
         });
       }
     })
@@ -37,7 +37,7 @@ angular.module('ent.message_detail', ['ent.message_services'])
         MessagerieServices.moveMessage(id, res).then(function(){
           $ionicHistory.goBack();
         }, function(err){
-          alert('ERR:'+ err);
+          $scope.showAlertError();
         });
       }
       $ionicLoading.hide();
@@ -79,7 +79,7 @@ angular.module('ent.message_detail', ['ent.message_services'])
       $scope.mail = res.data;
       $ionicLoading.hide();
     }, function(err){
-      alert('ERR:'+ err);
+      $scope.showAlertError();
     });
   }
 });

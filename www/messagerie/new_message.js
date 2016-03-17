@@ -53,7 +53,7 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
         $ionicLoading.hide();
         $state.go("app.messagerie");
       }, function(err){
-        alert('ERR:'+ err);
+        $scope.showAlertError();
       });
     } else {
       var alertPopup = $ionicPopup.alert({
@@ -91,7 +91,7 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
         alert("Success "+resp.data.id);
         $state.go("app.messagerie");
       }, function(err){
-        alert('ERR:'+ err);
+        $scope.showAlertError();
       });
     }
 
@@ -100,7 +100,7 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
         alert("Success "+resp.data.id);
         $state.go("app.messagerie");
       }, function(err){
-        alert('ERR:'+ err);
+        $scope.showAlertError();
       });
     }
 
