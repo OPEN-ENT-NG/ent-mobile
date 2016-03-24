@@ -2,9 +2,9 @@
 
   <ion-nav-buttons side="right">
 
-    <button class="button button-icon button-clear ion-reply" ></button>
-    <button class="button button-icon button-clear ion-reply-all" ></button>
-    <button class="button button-icon button-clear ion-forward" ></button>
+    <button class="button button-icon button-clear ion-reply" ng-show="!isDraft()"  ng-click = "replyMail()"></button>
+    <button class="button button-icon button-clear ion-reply-all" ng-show="!isDraft()" ng-click = "replyAllMail()" ></button>
+    <button class="button button-icon button-clear ion-forward" ng-show="!isDraft()"   ng-click = "forwardMail()"></button>
 
     <button class="button button-icon button-clear fa fa-trash" ng-click = "trash(mail.id)"></button>
     <button class="button button-icon button-clear pencilicon-" ng-show="isDraft()" ng-click = "editMail()"></button>

@@ -170,6 +170,10 @@ angular.module('ent.message_services', [])
   this.getPersonalFolderIds = function(){
     return[ "INBOX", "OUTBOX", "DRAFT", "TRASH"];
   }
+
+  this.getStatusRedactionMessage = function(){
+    return ["DRAFT", "REPLY_ONE", "REPLY_ALL","FORWARD"];
+  }
 })
 
 .factory("MoveMessagesPopupFactory", function ($ionicPopup, MessagerieServices) {

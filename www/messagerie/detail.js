@@ -5,14 +5,13 @@ angular.module('ent.message_detail', ['ent.message_services'])
   getMessage($state.params.idMessage);
 
   $scope.isDraft =  function(){
-    console.log($rootScope.nameFolder);
     return "draft" === $rootScope.nameFolder;
   }
 
   $scope.trash = function(id){
     DeleteMessagesPopupFactory.getPopup().then(function(res){
       if(res){
-        $ionicLoading.show({
+        $ioniLoading.show({
           template: 'Chargement en cours...'
         });
         MessagerieServices.trashMessage(id, $rootScope.nameFolder).then(function(){
@@ -45,7 +44,28 @@ angular.module('ent.message_detail', ['ent.message_services'])
   }
 
   $scope.editMail = function(){
+    $scope.mail.action = "DRAFT";
+    goToNewMail();
+  }
+
+  $scope.replyMail = function(){
+    $scope.mail.status = "REPLY_ONE";
+    goToNewMail();
+  }
+
+  $scope.replyAllMail = function(){
+    $scope.mail.action = "REPLY_ALL";
+    goToNewMail();
+  }
+
+  $scope.forwardMail = function(){
+    $scope.mail.action = "FORWARD";
+    goToNewMail();
+  }
+
+  function goToNewMail(){
     $rootScope.historyMail = $scope.mail;
+    console.log($rootScope.historyMail);
     $state.go('app.new_message');
   }
 
@@ -55,7 +75,7 @@ angular.module('ent.message_detail', ['ent.message_services'])
     $scope.downloadFile(attachment.filename, attachmentUrl,attachment.contentType);
   }
 
-  $scope.getRealName = function(id, message){
+  $rootScope.getRealName = function(id, message){
     var returnName = "Inconnu";
     for(var i = 0; i< message.displayNames.length; i++){
       if(id == message.displayNames[i][0]){
