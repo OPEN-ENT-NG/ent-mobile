@@ -1,4 +1,4 @@
-angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute','ent.actualites','ent.blog','ent.blog-list','ent.auth', 'ent.messagerie', 'ent.new_message','ent.user','angularMoment'])
+angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute','ent.actualites','ent.blog','ent.blog-list','ent.auth', 'ent.messagerie', 'ent.new_message','ent.user','angularMoment','ent.test'])
 
 .value("domainENT", "https://recette-leo.entcore.org")
 
@@ -152,6 +152,15 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     views: {
       'menuContent': {
         templateUrl: 'actualites/threads.html'
+      }
+    }
+  })
+
+  .state('app.test', {
+    url: '/test',
+    views: {
+      'menuContent': {
+        templateUrl: 'test/wysiwyg.html'
       }
     }
   })

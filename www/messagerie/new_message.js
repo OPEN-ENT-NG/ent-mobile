@@ -1,9 +1,10 @@
-angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic'])
+angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic','textAngular'])
 
 .controller('NewMessageCtrl', function($scope, $rootScope, $ionicPopover, $state, $ionicHistory, MessagerieServices,$ionicLoading,$ionicPopup){
 
   $scope.email=[];
   if($rootScope.historyMail){
+    console.log("$rootScope.historyMail");
     console.log($rootScope.historyMail);
 
     if($rootScope.historyMail.action ==="DRAFT"){

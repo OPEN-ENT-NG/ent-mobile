@@ -6,6 +6,14 @@ ion-popover-view.fit ion-content {
   position: relative !important;
 }
 
+.ta-editor {
+  min-height: 300px;
+  height: auto;
+  overflow: auto;
+  font-family: inherit;
+  font-size: 100%;
+}
+
 .platform-android ion-popover-view.fit {
   margin-top: 10px !important;
 }

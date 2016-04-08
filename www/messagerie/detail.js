@@ -2,7 +2,7 @@ angular.module('ent.message_detail', ['ent.message_services'])
 
 .controller('MessagesDetailCtrl', function($scope, $rootScope, $state, domainENT, MessagerieServices,  $ionicLoading, $ionicHistory, DeleteMessagesPopupFactory,MoveMessagesPopupFactory){
 
-  getMessage($state.params.idMessage);
+  getMessage();
 
   $scope.isDraft =  function(){
     return "draft" === $rootScope.nameFolder;
@@ -83,12 +83,6 @@ angular.module('ent.message_detail', ['ent.message_services'])
       }
     }
     return returnName;
-  }
-
-  $scope.doRefreshMail = function() {
-    $scope.mail.unshift(getMessage($state.params.idMessage));
-    $scope.$broadcast('scroll.refreshComplete');
-    $scope.$apply()
   }
 
   function getMessage(){

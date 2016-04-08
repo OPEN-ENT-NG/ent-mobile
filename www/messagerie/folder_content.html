@@ -7,7 +7,7 @@
   </ion-nav-buttons>
 
   <ion-content>
-    <ion-refresher pulling-text="Actualiser" on-refresh="doRefreshMessages()">
+    <ion-refresher pulling-text="{{translationConversation[updating]}}" on-refresh="doRefreshMessages()">
     </ion-refresher>
     <ion-list>
       <ion-item ng-repeat="extraFolder in extraFolders" href="#/app/messagerie/{{extraFolder.name}}/{{extraFolder.id}}">
