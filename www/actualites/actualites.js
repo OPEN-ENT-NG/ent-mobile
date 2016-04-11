@@ -1,4 +1,9 @@
+<<<<<<< HEAD
 angular.module('ent.actualites', ['ent.actualites_service'])
+=======
+
+angular.module('ent.actualites', ['ent.actualites_service', 'ent.actualites_view','ent.threads', 'angularMoment'])
+>>>>>>> 0e88c3d2e38315404f80723ee46721b617eb26c4
 
 .controller('InfosCtrl', function ($scope,$ionicPopover, $state, $rootScope, InfosService,$ionicLoading) {
 
@@ -94,6 +99,7 @@ angular.module('ent.actualites', ['ent.actualites_service'])
           });
         }
       }
+
     }, function(err){
       $scope.showAlertError(err);
     });

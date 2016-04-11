@@ -38,6 +38,65 @@ angular.module('ent.blog', ['ent.blog_service'])
     $scope.$apply()
   }
 
+<<<<<<< HEAD
+=======
+
+  $scope.filterByStatus = function (post) {
+    if ($scope.filter.length > 0) {
+      if ($scope.filter.indexOf(post.state) < 0){
+        return;
+      }
+    }
+    return post;
+  };
+
+  // selected states
+  $scope.filter = getStatusPostsId();
+
+  // toggle selection for a given fruit by name
+  $scope.toggleSelection = function toggleSelection(state) {
+    var idx = $scope.filter.indexOf(state);
+
+    // is currently selected
+    if (idx > -1) {
+      $scope.filter.splice(idx, 1);
+    }
+
+    // is newly selected
+    else {
+      $scope.filter.push(state);
+    }
+  };
+
+  $ionicPopover.fromTemplateUrl('blogs/popover_blogs.html', {
+    scope: $scope
+  }).then(function(popover) {
+    $scope.popover = popover;
+  });
+
+  $scope.openPopover = function($event) {
+    $scope.popover.show($event);
+  };
+
+  $scope.closePopover = function() {
+    $scope.popover.hide();
+  };
+
+  //Cleanup the popover when we're done with it!
+  $scope.$on('$destroy', function() {
+    $scope.popover.remove();
+  })
+
+  function getStatusPostsId(){
+    var array =[];
+    var values = BlogsService.getStatusPosts();
+    for(var i=0; i<values.length; i++){
+      array[i] = values[i].id;
+    }
+    return array;
+  }
+
+>>>>>>> 0e88c3d2e38315404f80723ee46721b617eb26c4
   function getPostsByBlogId(id){
     $scope.posts = [];
     var commentsByPostArray = [];

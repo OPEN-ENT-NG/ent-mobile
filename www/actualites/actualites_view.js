@@ -1,4 +1,4 @@
-angular.module('ent.actualites_view', ['ent.actualites_service'])
+angular.module('ent.actualites_view', ['ent.actualites_service', 'angularMoment'])
 
 .controller('ActusCtrl', function ($scope,$ionicPopover, $state, $rootScope, InfosService,$ionicLoading) {
 

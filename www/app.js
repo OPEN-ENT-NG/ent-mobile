@@ -120,7 +120,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   })
 
   .state('app.blog', {
-    url: '/blog/id/:idBlog',
+    url: '/blog/:nameBlog/:idBlog',
     views: {
       'menuContent': {
         templateUrl: 'blogs/blog.html',
@@ -227,6 +227,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     }
   }
 
+<<<<<<< HEAD:www/app.js
   function getAvatarImage (userId){
     UserInfoService.getUserData(userId).then(function(resp){
       console.log(domainENT+resp.data.result[0].photo);
@@ -234,15 +235,43 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     }), function(err){
       alert('ERR:'+ err);
     }
+=======
+  $scope.setCorrectImage = function(path, defaultImage){
+    var result;
+    if (path != null && path.length > 0){
+      result = path
+    } else {
+      if (!localStorage.getItem('skin')){
+        SkinFactory.getSkin().then(function(res) {
+          localStorage.setItem('skin', res.data.skin);
+          console.log(localStorage.getItem('skin'));
+          result = localStorage.getItem('skin')+defaultImage;
+        });
+      }
+      result = localStorage.getItem('skin')+defaultImage;
+    }
+    return result;
+  }
+
+  $scope.setProfileImage = function (regularPath, userId){
+    return (regularPath != null && regularPath.length > 0 && regularPath != "no-avatar.jpg") ? regularPath:"/userbook/avatar/"+userId;
+>>>>>>> 0e88c3d2e38315404f80723ee46721b617eb26c4:www/app.js
   }
 
   $scope.logout = function(){
     localStorage.clear();
     $ionicHistory.clearHistory()
+<<<<<<< HEAD:www/app.js
     $state.go("login");
     // window.cookies.clear(function() {
     //   console.log('Cookies cleared!');
     // });
+=======
+    // $state.go("login");
+    window.cookies.clear(function() {
+      console.log('Cookies cleared!');
+    });
+>>>>>>> 0e88c3d2e38315404f80723ee46721b617eb26c4:www/app.js
     // ionic.Platform.exitApp(); // stops the app
   }
 })
