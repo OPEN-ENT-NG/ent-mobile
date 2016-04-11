@@ -16,7 +16,7 @@ angular.module('ent.messagerie', ['ent.message_services', 'ent.message_folder', 
   }
 
   $rootScope.newMail = function(){
-    $rootScope.historyMail = null;
+    $rootScope.historyMail = "";
     $state.go("app.new_message");
   }
 

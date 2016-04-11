@@ -43,29 +43,14 @@ angular.module('ent.message_detail', ['ent.message_services'])
     })
   }
 
-  $scope.editMail = function(){
-    $scope.mail.action = "DRAFT";
-    goToNewMail();
-  }
-
-  $scope.replyMail = function(){
-    $scope.mail.status = "REPLY_ONE";
-    goToNewMail();
-  }
-
-  $scope.replyAllMail = function(){
-    $scope.mail.action = "REPLY_ALL";
-    goToNewMail();
-  }
-
-  $scope.forwardMail = function(){
-    $scope.mail.action = "FORWARD";
+  $scope.editMail = function(action){
+    $scope.mail.action = action;
     goToNewMail();
   }
 
   function goToNewMail(){
     $rootScope.historyMail = $scope.mail;
-    console.log($rootScope.historyMail);
+    console.log($rootScope.historyMail.action);
     $state.go('app.new_message');
   }
 

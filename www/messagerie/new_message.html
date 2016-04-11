@@ -50,9 +50,9 @@
       <input type="text" ng-model="email.sujet" placeholder={{translationConversation["sniplet.ml.subject.placeholder"]}}>
     </label>
     <label class="item-input fill-textarea">
-      <!-- <textarea class="msd-elastic: \n;" ng-model="email.corps" placeholder={{translationConversation["sniplet.ml.content.placeholder"]}}></textarea> -->
+      <textarea class="msd-elastic: \n;" ng-model="email.corps" placeholder={{translationConversation["sniplet.ml.content.placeholder"]}}></textarea>
+        <!-- <text-angular ta-disabled=false ng-model="email.corps" ></text-angular> -->
 
-      <div text-angular="text-angular" name="email.corps" ng-model="htmlcontent" ta-disabled=false></div>
     </label>
 
   </ion-content>

@@ -4,12 +4,6 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
 
 .run(function($ionicPlatform, $ionicLoading, $rootScope,$cordovaGlobalization,amMoment) {
 
-  $cordovaGlobalization.getPreferredLanguage().then(function(result) {
-    amMoment.changeLocale(result.value);
-  }, function(error) {
-    console.log(error);
-  })
-
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -33,6 +27,11 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     // $rootScope.$on('loading:hide', function() {
     //   $ionicLoading.hide()
     // })
+    $cordovaGlobalization.getPreferredLanguage().then(function(result) {
+      amMoment.changeLocale(result.value);
+    }, function(error) {
+      console.log(error);
+    })
 
   });
 })

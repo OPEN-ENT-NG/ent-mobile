@@ -6,12 +6,24 @@ ion-popover-view.fit ion-content {
   position: relative !important;
 }
 
+#toolbarWC{
+  display: none !important;
+}
+
+#toolbarCC{
+  display: none !important;
+}
+
 .ta-editor {
   min-height: 300px;
   height: auto;
   overflow: auto;
   font-family: inherit;
   font-size: 100%;
+}
+
+.ta-toolbar {
+  text-align: center;
 }
 
 .platform-android ion-popover-view.fit {
