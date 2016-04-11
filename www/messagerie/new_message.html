@@ -1,14 +1,15 @@
 <ion-view view-title="Nouveau message" ng-init="transform()" ng-controller="NewMessageCtrl">
 
   <ion-nav-buttons side="right">
-    <button class="button button-icon attachicon-"  ng-click="" ></button>
+    <button class="button button-icon attachicon-"  ng-click="openFileChooser()" ></button>
+
     <button class="button button-icon button-clear ion-android-send"  ng-click="sendMail()" ></button>
     <button class="button button-icon button-clear fa fa-ellipsis-v actustatus" ng-click = "openPopover($event)"></button>
   </ion-nav-buttons>
   <ion-content>
 
     <div class="item">
-      {{translationMessages["to"]}}
+      {{translationConversation["transfer.to"]}}
       <ion-list>
         <div ng-repeat="destinataire in email.destinatairesTo track by $index">
           <h2 >{{destinataire.displayName}} </h2>
@@ -16,7 +17,7 @@
         </div>
       </ion-list>
       <div>
-        <filter-box filtertext="searchTo" placeholder={{translationMessages["to"]}}></filter-box>
+        <filter-box filtertext="searchTo" placeholder={{translationConversation["transfer.to"]}}></filter-box>
         <ion-list >
           <ion-item ng-show=searchTo.value.length!=0 ng-repeat="contact in contacts | filter: {displayName: searchTo.value} | limitTo: 5" ng-click="addContactTo(searchTo, contact)">
             <h3>{{contact.displayName}}</h3>
@@ -26,7 +27,7 @@
     </div>
 
     <div class="item">
-        {{translationMessages["cc"]}}
+      {{translationConversation["transfer.cc"]}}
       <div>
         <ion-list>
           <div ng-repeat="destinataire in email.destinatairesCc track by $index">
@@ -35,7 +36,7 @@
           </div>
         </ion-list>
         <div>
-          <filter-box filtertext="searchCc" placeholder={{translationMessages["cc"]}}></filter-box>
+          <filter-box filtertext="searchCc" placeholder={{translationConversation["transfer.cc"]}}></filter-box>
           <ion-list >
             <ion-item ng-show=searchCc.value.length!=0 ng-repeat="contact in contacts | filter: {displayName: searchCc.value} | limitTo: 5" ng-click="addContactCc(searchCc, contact)">
               <h3>{{contact.displayName}}</h3>
@@ -45,10 +46,13 @@
       </div>
     </div>
     <label class="item item-input" >
-      <input type="text" ng-model="email.sujet" placeholder={{translationMessages["subject"]}}>
+
+      <input type="text" ng-model="email.sujet" placeholder={{translationConversation["sniplet.ml.subject.placeholder"]}}>
     </label>
-    <label class="item-input">
-      <input type="text"  ng-model="email.corps"  placeholder={{translationMessages["sniplet.ml.content.placeholder"]}}>
+    <label class="item-input fill-textarea">
+      <textarea class="msd-elastic: \n;" ng-model="email.corps" placeholder={{translationConversation["sniplet.ml.content.placeholder"]}}></textarea>
+        <!-- <text-angular ta-disabled=false ng-model="email.corps" ></text-angular> -->
+
     </label>
 
   </ion-content>

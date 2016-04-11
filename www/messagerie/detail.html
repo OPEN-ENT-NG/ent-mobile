@@ -1,38 +1,42 @@
 <ion-view title="Détail" ng-controller="MessagesDetailCtrl">
 
   <ion-nav-buttons side="right">
+
+    <button class="button button-icon button-clear ion-reply" ng-show="!isDraft()"  ng-click = "editMail('REPLY_ONE')"></button>
+    <button class="button button-icon button-clear ion-reply-all" ng-show="!isDraft()" ng-click = "editMail('REPLY_ALL')" ></button>
+    <button class="button button-icon button-clear ion-forward" ng-show="!isDraft()"   ng-click = "editMail('FORWARD')"></button>
+
     <button class="button button-icon button-clear fa fa-trash" ng-click = "trash(mail.id)"></button>
-    <button class="button button-icon button-clear pencilicon-" ng-show="isDraft()" ng-click = "editMail()"></button>
-    <button class="button button-icon button-clear folder-open-2icon-"></button>
+    <button class="button button-icon button-clear pencilicon-" ng-show="isDraft()" ng-click = "editMail('DRAFT')"></button>
+    <button class="button button-icon button-clear ion-filing" ng-click=moveMessage(mail.id)></button>
+
   </ion-nav-buttons>
 
-  <ion-content>
-    <ion-refresher pulling-text="Actualiser" on-refresh="doRefreshMail()">
-    </ion-refresher>
+  <ion-content
 
     <div class="item">
       <h2>{{mail.subject}}</h2>
       <h3>{{mail.systemFolders}}</h3>
     </div>
 
-    <div class="item item-text-wrap">
-      <div class="header-mail">
-        <h2>{{translationMessages["transfer.from"]}} {{getRealName(mail.from, mail)}}<h2>
-          <span>{{translationMessages["transfer.to"]}} {{getRealName(mail.to, mail)}}</span>
-          <span ng-show=mail.cc.length!=0 ng-repeat="person in mail.cc track by $index">{{translationMessages["transfer.cc"]}} {{getRealName(mail.cc[$index-1], mail)}}</span>
+    <div class="item-text-wrap">
+      <div class="header-mail item">
+        <h2>{{translationConversation["transfer.from"]}} {{getRealName(mail.from, mail)}}<h2>
+          <span>{{translationConversation["transfer.to"]}} {{getRealName(mail.to, mail)}}</span>
+          <span ng-show=mail.cc.length!=0 ng-repeat="person in mail.cc track by $index">{{translationConversation["transfer.cc"]}} {{getRealName(mail.cc[$index-1], mail)}}</span>
         </div>
 
         <div  class="item-text-wrap" ng-bind-html= "renderHtml(mail.body)"></div>
 
         <div class="list" ng-show=mail.attachments.length!=0>
 
-            <div ng-repeat="attachment in mail.attachments track by $index" class="pj">
+          <div ng-repeat="attachment in mail.attachments track by $index" class="pj">
 
-              <button class=" button icon-left downloadicon- attachment item-text-wrap" ng-click="downloadAttachment(attachment.id)" >
-                <p> {{attachment.filename}}</p>
-              </button>
-            </div>
+            <button class=" button icon-left downloadicon- attachment item-text-wrap" ng-click="downloadAttachment(attachment.id)" >
+              <p> {{attachment.filename}}</p>
+            </button>
           </div>
         </div>
-      </ion-content>
-    </ion-view>
+      </div>
+    </ion-content>
+  </ion-view>
