@@ -1,11 +1,19 @@
 angular.module('ent.message_detail', ['ent.message_services'])
 
-.controller('MessagesDetailCtrl', function($scope, $rootScope, $state, domainENT, MessagerieServices,  $ionicLoading, $ionicHistory, DeleteMessagesPopupFactory,MoveMessagesPopupFactory){
+.controller('MessagesDetailCtrl', function($scope, $rootScope, $ionicPopover, $state, domainENT, MessagerieServices,  $ionicLoading, $ionicHistory, DeleteMessagesPopupFactory,MoveMessagesPopupFactory){
 
   getMessage();
 
   $scope.isDraft =  function(){
     return "draft" === $rootScope.nameFolder;
+  }
+
+  $scope.isInbox =  function(){
+    return "inbox" === $rootScope.nameFolder;
+  }
+
+  $scope.isTrash =  function(){
+    return "trash" === $rootScope.nameFolder;
   }
 
   $scope.trash = function(id){
@@ -43,10 +51,41 @@ angular.module('ent.message_detail', ['ent.message_services'])
     })
   }
 
+  $scope.restoreMessage = function(message){
+    $ionicLoading.show({
+      template: '<i class="spinnericon- taille"></i>'
+    });
+    MessagerieServices.restoreSelectedMessages(message).then(function(){
+      $ionicHistory.goBack();
+    }, function(err){
+      $scope.showAlertError();
+    });
+    $ionicLoading.hide();
+  }
+  
   $scope.editMail = function(action){
     $scope.mail.action = action;
     goToNewMail();
   }
+
+  $ionicPopover.fromTemplateUrl('messagerie/popover_messagerie_detail.html', {
+    scope: $scope
+  }).then(function(popover) {
+    $scope.popover = popover;
+  });
+
+  $scope.openPopover = function($event) {
+    $scope.popover.show($event);
+  };
+
+  $scope.closePopover = function() {
+    $scope.popover.hide();
+  };
+
+  //Cleanup the popover when we're done with it!
+  $scope.$on('$destroy', function() {
+    $scope.popover.remove();
+  })
 
   function goToNewMail(){
     $rootScope.historyMail = $scope.mail;
@@ -58,16 +97,6 @@ angular.module('ent.message_detail', ['ent.message_services'])
     var attachmentUrl = domainENT+"/conversation/message/"+$scope.mail.id+"/attachment/"+id;
     var attachment = findElementById($scope.mail.attachments, id);
     $scope.downloadFile(attachment.filename, attachmentUrl,attachment.contentType);
-  }
-
-  $rootScope.getRealName = function(id, message){
-    var returnName = "Inconnu";
-    for(var i = 0; i< message.displayNames.length; i++){
-      if(id == message.displayNames[i][0]){
-        returnName = message.displayNames[i][1];
-      }
-    }
-    return returnName;
   }
 
   function getMessage(){

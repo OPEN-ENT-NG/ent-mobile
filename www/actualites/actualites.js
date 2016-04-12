@@ -1,6 +1,6 @@
 angular.module('ent.actualites', ['ent.actualites_service'])
 
-.controller('InfosCtrl', function ($scope,$ionicPopover, $state, $rootScope, InfosService,$ionicLoading) {
+.controller('InfosCtrl', function ($scope, $state, $rootScope, InfosService,$ionicLoading) {
 
   $ionicLoading.show({
     template: '<i class="spinnericon- "></i>'

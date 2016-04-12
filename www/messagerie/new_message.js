@@ -2,26 +2,32 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
 
 .controller('NewMessageCtrl', function($scope, $rootScope, $ionicPopover, $state, $ionicHistory, MessagerieServices,$ionicLoading,$ionicPopup){
 
-  $scope.email=[];
+  $scope.email = {
+    destinatairesTo: [],
+    destinatairesCc: [],
+    sujet: '',
+    corps : '',
+    id: 0
+  };
 
   console.log("$rootScope.historyMail");
   console.log($rootScope.historyMail);
   switch($rootScope.historyMail.action){
     case "REPLY_ONE":
       console.log("switch reply one");
-      $scope.email.destinatairesTo = addAllContactsTo($rootScope.historyMail.from, $rootScope.historyMail.displayNames);
+      $scope.email.destinatairesTo = getContactsNames([$rootScope.historyMail.from]);
       $scope.email.destinatairesCc = [];
       $scope.email.sujet = $rootScope.translationConversation["reply.re"]+$rootScope.historyMail.subject;
-      $scope.email.corps= $scope.renderHtml($rootScope.historyMail.body)
+      $scope.email.corps= $rootScope.historyMail.body;
       $scope.email.id = $rootScope.historyMail.id;
       break;
 
       case "REPLY_ALL":
         console.log("switch reply_all");
-        $scope.email.destinatairesTo = getContactsNames([$rootScope.historyMail.from], $rootScope.historyMail.displayNames);
-        $scope.email.destinatairesCc = getContactsNames($rootScope.historyMail.cc, $rootScope.historyMail.displayNames);
+        $scope.email.destinatairesTo = getContactsNames([$rootScope.historyMail.from]);
+        $scope.email.destinatairesCc = getContactsNames($rootScope.historyMail.cc);
         $scope.email.sujet = $rootScope.translationConversation["reply.re"]+$rootScope.historyMail.subject;
-        $scope.email.corps= $scope.renderHtml($rootScope.historyMail.body)
+        $scope.email.corps= $rootScope.historyMail.body;
         $scope.email.id = $rootScope.historyMail.id;
         break;
 
@@ -30,49 +36,30 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
           $scope.email.destinatairesTo = [];
           $scope.email.destinatairesCc = [];
           $scope.email.sujet = $rootScope.translationConversation["reply.fw"]+$rootScope.historyMail.subject;
-          $scope.email.corps= $scope.renderHtml($rootScope.historyMail.body)
+          $scope.email.corps= $rootScope.historyMail.body;
           $scope.email.id = $rootScope.historyMail.id;
           break;
 
           case "DRAFT":
             console.log("switch draft");
-            $scope.email.destinatairesTo = getContactsNames($rootScope.historyMail.to, $rootScope.historyMail.displayNames);
-            $scope.email.destinatairesCc = getContactsNames($rootScope.historyMail.cc, $rootScope.historyMail.displayNames);
+            $scope.email.destinatairesTo = getContactsNames($rootScope.historyMail.to);
+            $scope.email.destinatairesCc = getContactsNames($rootScope.historyMail.cc);
             $scope.email.sujet = $rootScope.historyMail.subject;
-            $scope.email.corps= $scope.renderHtml($rootScope.historyMail.body.replace(/\<br\/\>/g, "\n"));
+            $scope.email.corps= $rootScope.historyMail.body.replace(/\<br\/\>/g, "\n");
             $scope.email.id = $rootScope.historyMail.id;
             break;
 
             //draft
             default:
               console.log("switch new");
-              $scope.email = {
-                destinatairesTo: [],
-                destinatairesCc: [],
-                sujet: '',
-                corps : '',
-                id: 0
-              };
               break;
             }
             console.log("$scope.email");
             console.log($scope.email);
 
-            $scope.addAllContactsTo = function(contactArray){
-              for(var i =0; i<contactArray.length; i++){
-                $scope.email.destinatairesTo.push(contactArray[i]);
-              }
-            }
-
             $scope.addContactTo = function(search, contact){
               $scope.email.destinatairesTo.push(contact);
               search.value ="";
-            }
-
-            $scope.addAllContactsCc = function(contactArray){
-              for(var i =0; i<contactArray.length; i++){
-                $scope.email.destinatairesCc.push(contactArray[i]);
-              }
             }
 
             $scope.addContactCc = function(search, contact){
@@ -150,14 +137,19 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
                 });
               }
 
-              function getContactsNames(idArray, fullArray){
+              function getContactsNames(idArray){
+                console.log("idArray");
+                console.log(idArray);
                 var contactList =[];
                 for(var j=0; j<idArray.length; j++){
                   var contact = [];
-                  for(var i=0; i<fullArray.length; i++){
-                    if(idArray[j]  === fullArray[i][0]){
-                      contact.id = idArray[j];
-                      contact.displayName=  fullArray[i][1];
+                  for(var i=0; i<$rootScope.historyMail.displayNames.length; i++){
+                    console.log("idArray[j]: "+idArray[j]);
+                    console.log("$rootScope.historyMail.displayNames[i][0]: "+$rootScope.historyMail.displayNames[i][0]);
+                    if(idArray[j]  === $rootScope.historyMail.displayNames[i][0]){
+                      contact._id = idArray[j];
+                      contact.displayName=  $rootScope.historyMail.displayNames[i][1];
+                      console.log(contact);
                       contactList.push(contact);
                     }
                   }
@@ -187,7 +179,12 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
 
               function addAllContactsTo (contactArray){
                 for(var i =0; i<contactArray.length; i++){
-                  $scope.email.destinatairesTo.push(contactArray[i]);
+                  var contact = {
+                    _id: contactArray[i],
+                    displayName: $rootScope.getRealName(contactArray[i], $rootScope.historyMail)
+                  }
+                  console.log(contact);
+                  $scope.email.destinatairesTo.push(contact);
                 }
               }
 
@@ -196,7 +193,7 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
                 $ionicHistory.goBack();
               }
 
-              $ionicPopover.fromTemplateUrl('messagerie/popover_messagerie.html', {
+              $ionicPopover.fromTemplateUrl('messagerie/popover_messagerie_new.html', {
                 scope: $scope
               }).then(function(popover) {
                 $scope.popover = popover;

@@ -124,7 +124,7 @@ angular.module('ent.message_folder', ['ent.message_services'])
     $scope.$apply()
   }
 
-  $scope.getRealName = function(id, message){
+  $rootScope.getRealName = function(id, message){
     var returnName = "Inconnu";
     for(var i = 0; i< message.displayNames.length; i++){
       if(id == message.displayNames[i][0]){

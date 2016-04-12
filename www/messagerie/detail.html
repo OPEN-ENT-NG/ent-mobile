@@ -2,14 +2,11 @@
 
   <ion-nav-buttons side="right">
 
-    <button class="button button-icon button-clear ion-reply" ng-show="!isDraft()"  ng-click = "editMail('REPLY_ONE')"></button>
-    <button class="button button-icon button-clear ion-reply-all" ng-show="!isDraft()" ng-click = "editMail('REPLY_ALL')" ></button>
-    <button class="button button-icon button-clear ion-forward" ng-show="!isDraft()"   ng-click = "editMail('FORWARD')"></button>
-
-    <button class="button button-icon button-clear fa fa-trash" ng-click = "trash(mail.id)"></button>
-    <button class="button button-icon button-clear pencilicon-" ng-show="isDraft()" ng-click = "editMail('DRAFT')"></button>
-    <button class="button button-icon button-clear ion-filing" ng-click=moveMessage(mail.id)></button>
-
+    <button class="button button-icon button-clear ion-reply" ng-show=isInbox()  ng-click=editMail('REPLY_ONE')></button>
+    <button class="button button-icon button-clear ion-reply-all" ng-show=isInbox() ng-click=editMail('REPLY_ALL')></button>
+    <button class="button button-icon button-clear ion-forward" ng-hide="isDraft()" ng-click=editMail('FORWARD')></button>
+    <button class="button button-icon button-clear pencilicon-" ng-show=isDraft() ng-click=editMail('DRAFT')></button>
+    <button class="button button-icon button-clear ion-android-more-vertical" ng-click=openPopover($event)></button>
   </ion-nav-buttons>
 
   <ion-content

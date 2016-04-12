@@ -31,16 +31,17 @@
       {{translationConversation["transfer.cc"]}}
       <div>
         <ion-list>
-          <div ng-repeat="destinataire in email.destinatairesCc track by $index">
-            <h2 >{{destinataire.displayName}} </h2>
-            <i class="cancel-circledicon-" ng-click="deleteFromDestinataireCc(destinataire)"></i>
-          </div>
+          <ion-item  ng-repeat="destinataire in email.destinatairesCc track by $index">
+            <h3 class"item-text-wrap" >{{destinataire.displayName}} </h2>
+            <i class="cancel-circledicon-" ng-click="deleteFromDestinataireTo(destinataire)"></i>
+          </ion-item >
         </ion-list>
         <div>
           <filter-box filtertext="searchCc" placeholder={{translationConversation["transfer.cc"]}}></filter-box>
           <ion-list >
             <ion-item ng-show=searchCc.value.length!=0 ng-repeat="contact in contacts | filter: {displayName: searchCc.value} | limitTo: 5" ng-click="addContactCc(searchCc, contact)">
-              <h3>{{contact.displayName}}</h3>
+              <h3 class"item-text-wrap">{{contact.displayName}}</h3>
+              <i class="cancel-circledicon-" ng-click="deleteFromDestinataireCc(contact)"></i>
             </ion-item>
           </ion-list>
         </div>
@@ -50,7 +51,7 @@
       <input type="text" ng-model="email.sujet" placeholder={{translationConversation["sniplet.ml.subject.placeholder"]}}>
     </label>
     <label class="item-input fill-textarea">
-      <textarea class="msd-elastic: \n;" ng-model="email.corps" placeholder={{translationConversation["sniplet.ml.content.placeholder"]}}></textarea>
+      <textarea class="msd-elastic: \n;" ng-bind-html=renderHtml(email.corps) ng-model="email.corps" placeholder={{translationConversation["sniplet.ml.content.placeholder"]}}></textarea>
         <!-- <text-angular ta-disabled=false ng-model="email.corps" ></text-angular> -->
 
     </label>
