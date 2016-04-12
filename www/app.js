@@ -227,51 +227,75 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     }
   }
 
-<<<<<<< HEAD:www/app.js
-  function getAvatarImage (userId){
-    UserInfoService.getUserData(userId).then(function(resp){
-      console.log(domainENT+resp.data.result[0].photo);
-      return domainENT+resp.data.result[0].photo;
-    }), function(err){
-      alert('ERR:'+ err);
-    }
-=======
   $scope.setCorrectImage = function(path, defaultImage){
-    var result;
-    if (path != null && path.length > 0){
-      result = path
-    } else {
-      if (!localStorage.getItem('skin')){
-        SkinFactory.getSkin().then(function(res) {
-          localStorage.setItem('skin', res.data.skin);
-          console.log(localStorage.getItem('skin'));
-          result = localStorage.getItem('skin')+defaultImage;
-        });
-      }
-      result = localStorage.getItem('skin')+defaultImage;
-    }
-    return result;
-  }
+     var result;
+     if(path != null && path.length > 0){
+       result = path;
+     } else {
+       if(!localStorage.getItem('skin')){
+         SkinFactory.getSkin().then(function(res) {
+           localStorage.setItem('skin', res.data.skin);
+           console.log(localStorage.getItem('skin'));
+           result = localStorage.getItem('skin')+defaultImage;
+         });
+      } else {
+        result = localStorage.getItem('skin')+defaultImage;
+       }
+     }
+     return result;
+   }
 
-  $scope.setProfileImage = function (regularPath, userId){
-    return (regularPath != null && regularPath.length > 0 && regularPath != "no-avatar.jpg") ? regularPath:"/userbook/avatar/"+userId;
->>>>>>> 0e88c3d2e38315404f80723ee46721b617eb26c4:www/app.js
-  }
+   var getDateAsMoment = function(date){
+     var momentDate;
+     if(moment.isMoment(date)) {
+       momentDate = date;
+     } else if (date.$date) {
+       momentDate = moment(date.$date);
+     } else if (typeof date === "number"){
+       momentDate = moment.unix(date);
+     } else {
+     momentDate = moment(date);
+     }
+     return momentDate;
+   };
+
+   $scope.formatDate = function(date){
+     var momentDate = getDateAsMoment(date);
+     return moment(momentDate).calendar();
+   };
+
+   $scope.formatDateLocale = function(date){
+     if(moment(date) > moment().add(-1, 'days').startOf('day') && moment(date) < moment().endOf('day'))
+     return moment(date).calendar();
+
+     if(moment(date) > moment().add(-7, 'days').startOf('day') && moment(date) < moment().endOf('day'))
+     return moment(date).fromNow(); //this week
+
+     return moment(date).format("L");
+   };
+
+   // An alert dialog
+   $scope.showAlertError = function(error) {
+     console.log(error);
+     var alertPopup = $ionicPopup.alert({
+       title: 'Erreur de connexion',
+       template: 'Erreur '+error.status+". Veuillez réessayer dans quelques instants."
+     });
+
+     alertPopup.then(function(res) {
+       $scope.logout();
+     });
+   };
+
 
   $scope.logout = function(){
     localStorage.clear();
     $ionicHistory.clearHistory()
-<<<<<<< HEAD:www/app.js
     $state.go("login");
-    // window.cookies.clear(function() {
-    //   console.log('Cookies cleared!');
-    // });
-=======
-    // $state.go("login");
     window.cookies.clear(function() {
       console.log('Cookies cleared!');
     });
->>>>>>> 0e88c3d2e38315404f80723ee46721b617eb26c4:www/app.js
+    location.reload();
     // ionic.Platform.exitApp(); // stops the app
   }
 })
@@ -283,6 +307,10 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     });
   };
 });
+
+function setProfileImage (regularPath, userId){
+    return (regularPath != null && regularPath.length > 0 && regularPath != "no-avatar.jpg") ? regularPath:"/userbook/avatar/"+userId;
+}
 
 function findElementById(arraytosearch, valuetosearch) {
   console.log("arraytosearch "+arraytosearch);
