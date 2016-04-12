@@ -1,4 +1,4 @@
-angular.module('ent.messagerie', ['ent.message_services', 'ent.message_folder', 'ent.message_detail','ent.new_message'])
+angular.module('ent.messagerie', ['ent.message_services', 'ent.message_folder', 'ent.message_detail'])
 
 .controller('MessagerieFoldersCtrl', function($scope, $state, $rootScope, MessagerieServices,  $ionicLoading,  $cordovaVibration, $ionicPlatform, $ionicHistory){
 
@@ -8,7 +8,6 @@ angular.module('ent.messagerie', ['ent.message_services', 'ent.message_folder', 
   getTranslation();
   getContacts();
   getFolders();
-
   $ionicLoading.hide();
 
   $rootScope.writeWithUnreadNumber = function(folder){

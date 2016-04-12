@@ -1,8 +1,9 @@
-angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute','ent.actualites','ent.blog','ent.blog-list','ent.auth', 'ent.messagerie'])
+angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute','ent.actualites','ent.blog','ent.blog-list','ent.auth', 'ent.messagerie', 'ent.new_message','ent.user','angularMoment','ent.test'])
 
 .value("domainENT", "https://recette-leo.entcore.org")
 
-.run(function($ionicPlatform, $ionicLoading, $rootScope) {
+.run(function($ionicPlatform, $ionicLoading, $rootScope,$cordovaGlobalization,amMoment) {
+
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -26,6 +27,12 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     // $rootScope.$on('loading:hide', function() {
     //   $ionicLoading.hide()
     // })
+    $cordovaGlobalization.getPreferredLanguage().then(function(result) {
+      amMoment.changeLocale(result.value);
+    }, function(error) {
+      console.log(error);
+    })
+
   });
 })
 
@@ -33,10 +40,9 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   $httpProvider.interceptors.push(function($rootScope) {
     return {
       request: function(config) {
-        // console.log("in request");
         if (localStorage.getItem('access_token')) {
-          config.headers['Authorization'] = 'Bearer '+localStorage.getItem('access_token')
-          console.log("localStorage.getItem('access_token') "+localStorage.getItem('access_token'));
+          // config.headers['Authorization'] = 'Bearer '+localStorage.getItem('access_token')
+          // console.log("localStorage.getItem('access_token') "+localStorage.getItem('access_token'));
         }
         // console.log("loading:show");
         // $rootScope.$broadcast('loading:show')
@@ -52,6 +58,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     }
   })
 
+
   if (!ionic.Platform.isIOS()) {
     $ionicConfigProvider.scrolling.jsScrolling(false);
   }
@@ -66,6 +73,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
 
   .state('app.messagerie', {
     url: '/messagerie',
+    cache: false,
     views: {
       'menuContent': {
         templateUrl: 'messagerie/folder_view.html',
@@ -133,8 +141,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     url: '/actualites',
     views: {
       'menuContent': {
-        templateUrl: 'actualites/actualites.html',
-        controller: "FilterActusCtrl"
+        templateUrl: 'actualites/actualites.html'
       }
     }
   })
@@ -148,6 +155,15 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     }
   })
 
+  .state('app.test', {
+    url: '/test',
+    views: {
+      'menuContent': {
+        templateUrl: 'test/wysiwyg.html'
+      }
+    }
+  })
+
   .state('login', {
     url: '/login',
     templateUrl: 'authentification/login-credentials.html',
@@ -157,28 +173,18 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/login');
 })
-.service('UserInfoService', function($http, domainENT){
-  this.getUserData = function (userId) {
-    return $http.get(domainENT+"/userbook/api/person?id="+userId);
-  }
 
-  this.getOAuthInfo = function (){
-    return $http.get(domainENT+'/auth/oauth2/userinfo');
-  }
-})
+.controller('AppCtrl', function ($scope, $sce, $state, $cordovaInAppBrowser, $cordovaFileTransfer,$cordovaProgress, $cordovaFileOpener2, domainENT, $ionicHistory, SkinFactory, $ionicPopup){
 
-.controller('UserInfoCtrl', function($scope, domainENT,UserInfoService) {
-  UserInfoService.getOAuthInfo().then(function(resp) {
-    $scope.userinfo = resp.data;
-  }, function(err) {
-    alert('ERR', err.data.status);
-
+  SkinFactory.getSkin().then(function(res) {
+    localStorage.setItem('skin', res.data.skin);
+    console.log(localStorage.getItem('skin'));
+  } , function(err){
+    $scope.showAlertError(err);
   });
-})
 
-.controller('AppCtrl', function($scope, $sce, $state, $cordovaInAppBrowser, $cordovaFileTransfer,$cordovaProgress, $cordovaFileOpener2, domainENT, UserInfoService, $ionicHistory){
 
-  $scope.renderHtml = function(text){
+  $scope.renderHtml = function (text){
     if(text != null){
       text = text.replace(/="\/\//g, "=\"https://");
       text = text.replace(/="\//g, "=\""+domainENT+"/");
@@ -192,11 +198,15 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     }
   }
 
-  $scope.downloadFile = function (filename, urlFile, fileMIMEType){
+  $scope.downloadFile = function (filename, urlFile, fileMIMEType, module){
     // Save location
-    console.log("downloadFile");
     var url = $sce.trustAsResourceUrl(urlFile);
     var targetPath = cordova.file.externalRootDirectory + filename; //revoir selon la platforme
+
+
+    if (ionic.Platform.isIOS()){
+
+    }
 
     $cordovaProgress.showSimpleWithLabelDetail(true, "Téléchargement en cours", filename);
     $cordovaFileTransfer.download(url, targetPath, {}, true).then(function (result) {
@@ -204,10 +214,14 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
       $scope.openLocalFile(targetPath, fileMIMEType);
 
     }, function (error) {
-      alert('Error');
+      $scope.showAlertError(error);
     }, function (progress) {
     });
   }
+
+
+
+  // tempDirectory
 
   $scope.openLocalFile = function (targetPath, fileMIMEType){
 
@@ -215,7 +229,9 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
       targetPath,
       fileMIMEType,
       {
-        error : function(){ alert("nope") },
+        error : function(){
+          $scope.showAlertError(error);
+        },
         success : function(){ }
       }
     );
@@ -228,75 +244,87 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   }
 
   $scope.setCorrectImage = function(path, defaultImage){
-     var result;
-     if(path != null && path.length > 0){
-       result = path;
-     } else {
-       if(!localStorage.getItem('skin')){
-         SkinFactory.getSkin().then(function(res) {
-           localStorage.setItem('skin', res.data.skin);
-           console.log(localStorage.getItem('skin'));
-           result = localStorage.getItem('skin')+defaultImage;
-         });
+    var result;
+    if(path != null && path.length > 0){
+      result = path;
+    } else {
+      if(!localStorage.getItem('skin')){
+        SkinFactory.getSkin().then(function(res) {
+          localStorage.setItem('skin', res.data.skin);
+          console.log(localStorage.getItem('skin'));
+          result = localStorage.getItem('skin')+defaultImage;
+        });
       } else {
         result = localStorage.getItem('skin')+defaultImage;
-       }
-     }
-     return result;
-   }
+      }
+    }
+    return result;
+  }
 
-   var getDateAsMoment = function(date){
-     var momentDate;
-     if(moment.isMoment(date)) {
-       momentDate = date;
-     } else if (date.$date) {
-       momentDate = moment(date.$date);
-     } else if (typeof date === "number"){
-       momentDate = moment.unix(date);
-     } else {
-     momentDate = moment(date);
-     }
-     return momentDate;
-   };
+  var getDateAsMoment = function(date){
+    var momentDate;
+    if(moment.isMoment(date)) {
+      momentDate = date;
+    } else if (date.$date) {
+      momentDate = moment(date.$date);
+    } else if (typeof date === "number"){
+      momentDate = moment.unix(date);
+    } else {
+      momentDate = moment(date);
+    }
+    return momentDate;
+  };
 
-   $scope.formatDate = function(date){
-     var momentDate = getDateAsMoment(date);
-     return moment(momentDate).calendar();
-   };
+  $scope.formatDate = function(date){
+    var momentDate = getDateAsMoment(date);
+    return moment(momentDate).calendar();
+  };
 
-   $scope.formatDateLocale = function(date){
-     if(moment(date) > moment().add(-1, 'days').startOf('day') && moment(date) < moment().endOf('day'))
-     return moment(date).calendar();
+  $scope.formatDateLocale = function(date){
+    if(moment(date) > moment().add(-1, 'days').startOf('day') && moment(date) < moment().endOf('day'))
+    return moment(date).calendar();
 
-     if(moment(date) > moment().add(-7, 'days').startOf('day') && moment(date) < moment().endOf('day'))
-     return moment(date).fromNow(); //this week
+    if(moment(date) > moment().add(-7, 'days').startOf('day') && moment(date) < moment().endOf('day'))
+    return moment(date).fromNow(); //this week
 
-     return moment(date).format("L");
-   };
+    return moment(date).format("L");
+  };
 
-   // An alert dialog
-   $scope.showAlertError = function(error) {
-     console.log(error);
-     var alertPopup = $ionicPopup.alert({
-       title: 'Erreur de connexion',
-       template: 'Erreur '+error.status+". Veuillez réessayer dans quelques instants."
-     });
+  // An alert dialog
+  $scope.showAlertError = function(error) {
+    console.log(error);
+    var alertPopup = $ionicPopup.alert({
+      title: 'Erreur de connexion',
+      template: 'Erreur '+error.status+". Veuillez réessayer dans quelques instants."
+    });
 
-     alertPopup.then(function(res) {
-       $scope.logout();
-     });
-   };
-
+    alertPopup.then(function(res) {
+      $scope.logout();
+    });
+  };
 
   $scope.logout = function(){
     localStorage.clear();
     $ionicHistory.clearHistory()
+    $ionicHistory.clearCache();
+    navigator.splashscreen.show();
     $state.go("login");
     window.cookies.clear(function() {
       console.log('Cookies cleared!');
     });
-    location.reload();
+
+    // var success = function(status) {
+    //   console.log('Message: ' + status);
+    // }
+    //
+    // var error = function(status) {
+    //   console.log('Error: ' + status);
+    // }
+    //
+    // window.cache.clear( success, error );
+    // window.cache.cleartemp(); //
     // ionic.Platform.exitApp(); // stops the app
+    location.reload();
   }
 })
 
@@ -308,14 +336,12 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   };
 });
 
+
 function setProfileImage (regularPath, userId){
-    return (regularPath != null && regularPath.length > 0 && regularPath != "no-avatar.jpg") ? regularPath:"/userbook/avatar/"+userId;
+  return (regularPath != null && regularPath.length > 0 && regularPath != "no-avatar.jpg") ? regularPath:"/userbook/avatar/"+userId;
 }
 
 function findElementById(arraytosearch, valuetosearch) {
-  console.log("arraytosearch "+arraytosearch);
-  console.log("valuetosearch "+valuetosearch);
-
   for (var i = 0; i < arraytosearch.length; i++) {
     if (arraytosearch[i].id == valuetosearch) {
       return arraytosearch[i];
@@ -323,3 +349,38 @@ function findElementById(arraytosearch, valuetosearch) {
   }
   return null;
 }
+
+
+
+// function download(URL, Folder_Name, File_Name) {
+//   //step to request a file system
+//   window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, fileSystemSuccess, fileSystemFail);
+//
+//   function fileSystemSuccess(fileSystem) {
+//     var download_link = encodeURI(URL);
+//     ext = download_link.substr(download_link.lastIndexOf('.') + 1); //Get extension of URL
+//
+//     var directoryEntry = fileSystem.root; // to get root path of directory
+//     directoryEntry.getDirectory(Folder_Name, { create: true, exclusive: false }, onDirectorySuccess, onDirectoryFail); // creating folder in sdcard
+//     var rootdir = fileSystem.root;
+//     var fp = rootdir.fullPath; // Returns Fulpath of local directory
+//
+//     fp = fp + "/" + Folder_Name + "/" + File_Name + "." + ext; // fullpath and name of the file which we want to give
+//     // download function call
+//     filetransfer(download_link, fp);
+//   }
+//
+//   function onDirectorySuccess(parent) {
+//     // Directory created successfuly
+//   }
+//
+//   function onDirectoryFail(error) {
+//     //Error while creating directory
+//     alert("Unable to create new directory: " + error.code);
+//   }
+//
+//   function fileSystemFail(evt) {
+//     //Unable to access file system
+//     alert(evt.target.error.code);
+//   }
+// }

@@ -1,10 +1,7 @@
 {
   "name": "ENT Mobile",
   "app_id": "com.entcore.mobile",
-  "gulpStartupTasks": [
-    "sass",
-    "watch"
-  ],
+  "gulpStartupTasks": ["sass", "watch"],
   "watchPatterns": [
     "www/**/*",
     "!www/lib/**/*"

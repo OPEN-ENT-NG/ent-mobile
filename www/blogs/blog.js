@@ -1,5 +1,6 @@
 angular.module('ent.blog', ['ent.blog_service'])
 
+
 .controller('BlogCtrl', function($scope, BlogsService, $stateParams, $ionicPopover, $rootScope, $filter){
 
   $scope.nameBlog = $stateParams.nameBlog;

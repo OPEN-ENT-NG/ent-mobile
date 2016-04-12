@@ -13,6 +13,7 @@
         <div class="item item-avatar item-text-wrap">
           <img ng-src="{{getImageUrl(info.thread_icon)}}" alt="icone {{info.thread_title}}"/>
           <h2>{{info.title}}</h2>
+
           <h3>{{translationActus["actualites.info.label.author"]}} {{info.username}}</h3>
           <p>{{(info.publication_date ? formatDate(info.publication_date) : formatDateLocale(info.modified))}}</p>
         </div>
@@ -32,6 +33,7 @@
 
           </div>
         </ion-card-content>
+
       </ion-item>
     </ion-list>
   </ion-content>
