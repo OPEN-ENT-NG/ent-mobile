@@ -1,17 +1,51 @@
-angular.module('ent.new_message', ['ent.message_services'])
+angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic'])
 
-.controller('NewMessageCtrl', function($scope, $rootScope, $ionicPopover, $state, $ionicHistory, MessagerieServices){
+.controller('NewMessageCtrl', function($scope, $rootScope, $ionicPopover, $state, $ionicHistory, MessagerieServices,$ionicLoading,$ionicPopup){
 
   $scope.email=[];
-  if($rootScope.historyMail){
-    console.log("history not null ");
-    $scope.email.corps= $scope.renderHtml($rootScope.historyMail.body);
-    $scope.email.sujet = $rootScope.historyMail.subject;
-    $scope.email.destinatairesTo = getContactsNames($rootScope.historyMail.to,$rootScope.historyMail.displayNames);
-    $scope.email.destinatairesCc = getContactsNames($rootScope.historyMail.cc,$rootScope.historyMail.displayNames);
+
+  console.log("$rootScope.historyMail");
+  console.log($rootScope.historyMail);
+  switch($rootScope.historyMail.action){
+    case "REPLY_ONE":
+    console.log("switch reply one");
+    $scope.email.destinatairesTo = addAllContactsTo($rootScope.historyMail.from, $rootScope.historyMail.displayNames);
+    $scope.email.destinatairesCc = [];
+    $scope.email.sujet = $rootScope.translationConversation["reply.re"]+$rootScope.historyMail.subject;
+    $scope.email.corps= $scope.renderHtml($rootScope.historyMail.body)
     $scope.email.id = $rootScope.historyMail.id;
-  } else {
-    console.log("no history");
+    break;
+
+    case "REPLY_ALL":
+    console.log("switch reply_all");
+    $scope.email.destinatairesTo = getContactsNames([$rootScope.historyMail.from], $rootScope.historyMail.displayNames);
+    $scope.email.destinatairesCc = getContactsNames($rootScope.historyMail.cc, $rootScope.historyMail.displayNames);
+    $scope.email.sujet = $rootScope.translationConversation["reply.re"]+$rootScope.historyMail.subject;
+    $scope.email.corps= $scope.renderHtml($rootScope.historyMail.body)
+    $scope.email.id = $rootScope.historyMail.id;
+    break;
+
+    case "FORWARD":
+    console.log("switch forward");
+    $scope.email.destinatairesTo = [];
+    $scope.email.destinatairesCc = [];
+    $scope.email.sujet = $rootScope.translationConversation["reply.fw"]+$rootScope.historyMail.subject;
+    $scope.email.corps= $scope.renderHtml($rootScope.historyMail.body)
+    $scope.email.id = $rootScope.historyMail.id;
+    break;
+
+    case "DRAFT":
+    console.log("switch draft");
+    $scope.email.destinatairesTo = getContactsNames($rootScope.historyMail.to, $rootScope.historyMail.displayNames);
+    $scope.email.destinatairesCc = getContactsNames($rootScope.historyMail.cc, $rootScope.historyMail.displayNames);
+    $scope.email.sujet = $rootScope.historyMail.subject;
+    $scope.email.corps= $scope.renderHtml($rootScope.historyMail.body.replace(/\<br\/\>/g, "\n"));
+    $scope.email.id = $rootScope.historyMail.id;
+    break;
+
+    //draft
+    default:
+    console.log("switch new");
     $scope.email = {
       destinatairesTo: [],
       destinatairesCc: [],
@@ -19,11 +53,26 @@ angular.module('ent.new_message', ['ent.message_services'])
       corps : '',
       id: 0
     };
+    break;
+  }
+  console.log("$scope.email");
+  console.log($scope.email);
+
+  $scope.addAllContactsTo = function(contactArray){
+    for(var i =0; i<contactArray.length; i++){
+      $scope.email.destinatairesTo.push(contactArray[i]);
+    }
   }
 
   $scope.addContactTo = function(search, contact){
     $scope.email.destinatairesTo.push(contact);
     search.value ="";
+  }
+
+  $scope.addAllContactsCc = function(contactArray){
+    for(var i =0; i<contactArray.length; i++){
+      $scope.email.destinatairesCc.push(contactArray[i]);
+    }
   }
 
   $scope.addContactCc = function(search, contact){
@@ -42,122 +91,170 @@ angular.module('ent.new_message', ['ent.message_services'])
   }
 
   $scope.sendMail = function(){
-    MessagerieServices.sendMail(getMailData()).then(function(resp){
-      console.log("Success");
-    }, function(err){
-      alert('ERR:'+ err);
-    });
+
+    if($scope.email.destinatairesTo.length >0){
+      $ionicLoading.show({
+        template: '<i class="spinnericon- taille"></i>'
+      });
+      MessagerieServices.sendMail(getMailData()).then(function(resp){
+        console.log("Success");
+        $ionicLoading.hide();
+        $state.go("app.messagerie");
+      }, function(err){
+        $scope.showAlertError();
+      });
+    } else {
+      var alertPopup = $ionicPopup.alert({
+        template: 'Impossible d\'envoyer le message',
+        title: 'Aucun destinataire !'
+      });
+
+      alertPopup.then(function(res) {
+        console.log('pas de destinataire');
+      });
+    }
   }
 
-  $scope.saveAsDraft = function(){
-    var draftHasId = $scope.email.id !=0;
-    MessagerieServices.saveAsDraft($scope.email.id , getMailData()).then(function(resp){
-      $state.go("app.messagerie");
-    }, function(err){
-      alert('ERR:'+ err);
-    });
-  }
+  $scope.openFileChooser = function(){
+    fileChooser.open(
+      function(uri) {
+        alert(uri);
+      },
+      function(err){
+        alert('ERR:'+ err);
+      });
+    }
 
-  function getContactsNames(idArray, fullArray){
-    var contactList =[];
-    console.log("idArray "+idArray);
-    for(var j=0; j<idArray.length; j++){
-      var contact = [];
-      for(var i=0; i<fullArray.length; i++){
-        if(idArray[j]  === fullArray[i][0]){
-          contact.id = idArray[j];
-          contact.displayName=  fullArray[i][1];
-          console.log(contact);
-          contactList.push(contact);
+    $scope.saveAsDraft = function(){
+      var draftHasId = $scope.email.id !=0;
+      if($scope.email.id !=0){
+        saveWithId($scope.mail.id);
+      } else{
+        saveNewDraft()
+      }
+    }
+
+    function saveWithId(id){
+      MessagerieServices.saveWithId($scope.email.id, getMailData()).then(function(resp){
+        $state.go("app.messagerie");
+      }, function(err){
+        $scope.showAlertError();
+      });
+    }
+
+    function saveNewDraft(){
+      MessagerieServices.saveNewDraft(getMailData()).then(function(resp){
+        $state.go("app.messagerie");
+      }, function(err){
+        $scope.showAlertError();
+      });
+    }
+
+    function getContactsNames(idArray, fullArray){
+      var contactList =[];
+      for(var j=0; j<idArray.length; j++){
+        var contact = [];
+        for(var i=0; i<fullArray.length; i++){
+          if(idArray[j]  === fullArray[i][0]){
+            contact.id = idArray[j];
+            contact.displayName=  fullArray[i][1];
+            contactList.push(contact);
+          }
         }
       }
+      return contactList;
     }
-    return contactList;
-  }
 
-  function getMailData(){
-    var newMail = {
-      subject : $scope.email.sujet,
-      body : $scope.email.corps,
-      to : getIdArray($scope.email.destinatairesTo),
-      cc: getIdArray($scope.email.destinatairesCc),
-    };
-    console.log(newMail);
-    return newMail;
-  }
+    function getMailData(){
 
-  function getIdArray(array){
-    var newArray = [];
-    for(var i=0; i < array.length; i++){
-      newArray.push(array[i]._id);
-    }
-    return newArray;
-  }
-
-  $scope.goToMessagerie = function () {
-    $scope.closePopover();
-    $ionicHistory.goBack();
-  }
-
-  $ionicPopover.fromTemplateUrl('messagerie/popover_messagerie.html', {
-    scope: $scope
-  }).then(function(popover) {
-    $scope.popover = popover;
-  });
-
-  $scope.openPopover = function($event) {
-    $scope.popover.show($event);
-  };
-
-  $scope.closePopover = function() {
-    $scope.popover.hide();
-  };
-
-  //Cleanup the popover when we're done with it!
-  $scope.$on('$destroy', function() {
-    $scope.popover.remove();
-  })
-})
-.directive('filterBox', function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    scope: {
-      getData: '&source',
-      model: '=?',
-      search: '=?filtertext',
-      placeholder: '@'
-    },
-    link: function(scope, element, attrs) {
-      attrs.minLength = attrs.minLength || 0;
-      scope.placeholder = attrs.placeholder || '';
-      scope.search = {value: ''};
-
-      if (attrs.source) {
-        scope.$watch('search.value', function (newValue, oldValue) {
-          if (newValue.length > attrs.minLength) {
-            scope.getData({str: newValue}).then(function (results) {
-              scope.model = results;
-            });
-          } else {
-            scope.model = [];
-          }
-        });
-      }
-
-      scope.clearSearch = function() {
-        scope.search.value = '';
+      var newMail = {
+        subject : $scope.email.sujet,
+        body : $scope.email.corps.replace(/\n/g, "<br/>"),
+        to : getIdArray($scope.email.destinatairesTo),
+        cc: getIdArray($scope.email.destinatairesCc),
       };
-    },
-    template:
-    ' <ion-input fixed-label id="filter-box" class=" item-input">' +
-    // '<span class="input-label">{{placeholder}}</span>'+
-    '<input type="search" ng-model="search.value" placeholder="{{placeholder}}" >' +
-    '</div>'
+      console.log(newMail);
+      return newMail;
+    }
 
-    // '<label class=" item-input item-floating-label" id="filter-box">'+
-    // '<span class="input-label">{{placeholder}}</span>'+
-    // '<input type="search" ng-model="search.value" placeholder="{{placeholder}}">'+
-    // '</label>'
-  };
-})
+    function getIdArray(array){
+      var newArray = [];
+      for(var i=0; i < array.length; i++){
+        newArray.push(array[i]._id);
+      }
+      return newArray;
+    }
+
+    function addAllContactsTo (contactArray){
+      for(var i =0; i<contactArray.length; i++){
+        $scope.email.destinatairesTo.push(contactArray[i]);
+      }
+    }
+
+    $scope.goToMessagerie = function () {
+      $scope.closePopover();
+      $ionicHistory.goBack();
+    }
+
+    $ionicPopover.fromTemplateUrl('messagerie/popover_messagerie.html', {
+      scope: $scope
+    }).then(function(popover) {
+      $scope.popover = popover;
+    });
+
+    $scope.openPopover = function($event) {
+      $scope.popover.show($event);
+    };
+
+    $scope.closePopover = function() {
+      $scope.popover.hide();
+    };
+
+    //Cleanup the popover when we're done with it!
+    $scope.$on('$destroy', function() {
+      $scope.popover.remove();
+    })
+  })
+  .directive('filterBox', function() {
+    return {
+      restrict: 'E',
+      replace: true,
+      scope: {
+        getData: '&source',
+        model: '=?',
+        search: '=?filtertext',
+        placeholder: '@'
+      },
+      link: function(scope, element, attrs) {
+        attrs.minLength = attrs.minLength || 0;
+        scope.placeholder = attrs.placeholder || '';
+        scope.search = {value: ''};
+
+        if (attrs.source) {
+          scope.$watch('search.value', function (newValue, oldValue) {
+            if (newValue.length > attrs.minLength) {
+              scope.getData({str: newValue}).then(function (results) {
+                scope.model = results;
+              });
+            } else {
+              scope.model = [];
+            }
+          });
+        }
+
+        scope.clearSearch = function() {
+          scope.search.value = '';
+        };
+      },
+      template:
+      ' <ion-input fixed-label id="filter-box" class=" item-input">' +
+      // '<span class="input-label">{{placeholder}}</span>'+
+      '<input type="search" ng-model="search.value" placeholder="{{placeholder}}" >' +
+      '</div>'
+
+      // '<label class=" item-input item-floating-label" id="filter-box">'+
+      // '<span class="input-label">{{placeholder}}</span>'+
+      // '<input type="search" ng-model="search.value" placeholder="{{placeholder}}">'+
+      // '</label>'
+    };
+  })

@@ -2,6 +2,7 @@ angular.module('ent.message_folder', ['ent.message_services'])
 
 .controller('InboxCtrl', function($scope, $state, $stateParams, $rootScope, domainENT, MessagerieServices,  $ionicLoading,  $cordovaVibration, $ionicHistory, $ionicPlatform, MoveMessagesPopupFactory, DeleteMessagesPopupFactory){
 
+  $rootScope.nameFolder = $stateParams.nameFolder;
   getMessagesAndFolders();
 
   $scope.restoreMessages = function(){
@@ -9,13 +10,13 @@ angular.module('ent.message_folder', ['ent.message_services'])
       getMessagesAndFolders();
     }
     , function(err){
-      alert('ERR:'+ err);
+      $scope.showAlertError();
       $ionicLoading.hide();
     });
   }
 
   $scope.canShowRestore = function(){
-    return $stateParams.nameFolder == "TRASH" && $scope.checkable;
+    return $stateParams.nameFolder == "trash" && $scope.checkable;
   }
 
   $scope.showPopupMove = function(){
@@ -30,7 +31,7 @@ angular.module('ent.message_folder', ['ent.message_services'])
         MessagerieServices.moveMessages(getSelectedMessages(), res).then(function(){
           getMessagesAndFolders();
         }, function(err){
-          alert('ERR:'+ err);
+          $scope.showAlertError();
         });
       }
       $ionicLoading.hide();
@@ -54,11 +55,16 @@ angular.module('ent.message_folder', ['ent.message_services'])
           MessagerieServices.deleteSelectedMessages(messagesList, $stateParams.nameFolder).then(function(){
             getMessagesAndFolders();
           }, function(err){
-            alert('ERR:'+ err);
+            $scope.showAlertError();
           });
         }
       })
     }
+  }
+
+  $scope.getNameFolder = function(folderName){
+    var nonPersonnalFolders = ["inbox", "outbox", "draft", "trash"];
+    return nonPersonnalFolders.indexOf(folderName) != -1 ? $rootScope.translationConversation[folderName]:folderName;
   }
 
   $scope.checkMessage = function(index){
@@ -112,7 +118,7 @@ angular.module('ent.message_folder', ['ent.message_services'])
   });
 
   $scope.doRefreshMessages = function() {
-    $scope.messages.unshift(getMessages(getUrlFolder()));
+    $scope.messages.unshift(updateMessages());
     $scope.extraFolders.unshift(getExtraFolders());
     $scope.$broadcast('scroll.refreshComplete');
     $scope.$apply()
@@ -129,7 +135,6 @@ angular.module('ent.message_folder', ['ent.message_services'])
   }
 
   function getMessagesAndFolders(){
-    console.log("getMessagesAndFolders");
     $scope.nameFolder = $stateParams.nameFolder;
     updateMessages();
     getExtraFolders();
@@ -159,14 +164,21 @@ angular.module('ent.message_folder', ['ent.message_services'])
       initCheckedValue();
     }), function(err){
       $ionicLoading.hide();
-      alert('ERR:'+ err);
+      $scope.showAlertError();
     };
   };
 
   function getExtraFolders(){
     MessagerieServices.getExtraFolders($stateParams.idFolder).then(function(resp){
       console.log(resp.data);
-      $scope.extraFolders = resp.data;
+      $scope.extraFolders = [];
+      for(var i = 0; i< resp.data.length; i++){
+        $scope.extraFolders.push({
+          id: resp.data[i].id,
+          name: resp.data[i].name,
+          isPersonnal: true
+        });
+      }
     }).then(function(){
       var folderIds = [];
       angular.forEach($scope.extraFolders, function(extraFolder) {
@@ -180,7 +192,7 @@ angular.module('ent.message_folder', ['ent.message_services'])
       })
     }), function(err){
       $ionicLoading.hide();
-      alert('ERR:'+ err);
+      $scope.showAlertError();
     };
   }
 

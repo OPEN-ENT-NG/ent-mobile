@@ -5,24 +5,8 @@ angular.module('ent.blog_service', [])
     return $http.get(domainENT+"/blog/list/all");
   }
 
-  this.getAllPostsByBlogId = function(id, arrayStates){
-    var promisesPosts = [];
-    var deferredCombinedItemsPosts = $q.defer();
-    var combinedItemsPosts = [];
-
-    angular.forEach(arrayStates, function(item) {
-      var deferredItemListPosts = $q.defer();
-      $http.get(domainENT+"/blog/post/list/all/"+id+"?state="+item).then(function(resp) {
-        combinedItemsPosts = combinedItemsPosts.concat(resp.data);
-        deferredItemListPosts.resolve();
-      });
-      promisesPosts.push(deferredItemListPosts.promise);
-    });
-
-    $q.all(promisesPosts).then(function() {
-      deferredCombinedItemsPosts.resolve(combinedItemsPosts);
-    });
-    return deferredCombinedItemsPosts.promise;
+  this.getAllPostsByBlogId = function(id){
+    return $http.get(domainENT+"/blog/post/list/all/"+id+"?state=PUBLISHED");
   }
 
   this.getAuthors = function (idBlog, posts){
@@ -76,25 +60,7 @@ angular.module('ent.blog_service', [])
     return commentsNumberByPost;
   }
 
-  this.getStatusPosts = function(){
-    return  [
-      {
-        name: "filters.submitted",
-        id: "SUBMITTED"
-      },
-      {
-        name: "filters.drafts",
-        id: "DRAFT"
-      },
-      {
-        name: "filters.published",
-        id: "PUBLISHED"
-      }];
-    // return  ["SUBMITTED", "DRAFT", "PUBLISHED"];
-    }
-
-    this.getTraduction = function(){
-      return $http.get(domainENT+"/blog/i18n");
-    }
-
-  })
+  this.getTraduction = function(){
+    return $http.get(domainENT+"/blog/i18n");
+  }
+})

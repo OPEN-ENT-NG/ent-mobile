@@ -14,8 +14,11 @@ $assertive:                       #ef473a !default;
 $royal:                           #886aea !default;
 $dark:                            #444 !default;
 */
+
+$positive:                        #4BAFD5 !default;
+
 // Theme
-$bar-content-bg:                  #f70;
+$bar-content-bg:                  $positive;
 $bar-content-border:              transparent;
 $bar-content-text:                #fff;
 
@@ -23,6 +26,7 @@ $bar-side-menu-height:            80px;
 $bar-side-menu-bg:                $bar-content-bg;
 $bar-side-menu-border:            $bar-content-border;
 $bar-side-menu-text:              $bar-content-text;
+
 
 $font-family-case: "fontello", sans-serif !default;
 

@@ -15,20 +15,34 @@ angular.module('ent.user', [])
   this.getCurrentUser = function () {
     return $http.get(domainENT+'/auth/oauth2/userinfo');
   }
+
+  this.getTranslation = function () {
+    return $http.get(domainENT+'/userbook/i18n');
+  }
 })
 
-.controller('UserCtrl', function(SkinFactory, UserFactory, $scope){
+.controller('UserCtrl', function(UserFactory, $scope){
 
+  getUser();
+  getTraduction();
 
-  UserFactory.getCurrentUser().then(function(res){
-    UserFactory.whoAmI(res.data.userId).then(function(response) {
-      $scope.myUser = response.data.result[0];
-      $scope.myUser.photo = $scope.setProfileImage($scope.myUser.photo, res.data.userId);
-      localStorage.setItem('myUser',  $scope.myUser);
+  function getTraduction(){
+    UserFactory.getTranslation().then(function(result){
+      $scope.translationUser = result.data;
+    }), function errorCallback(response) {
+      $scope.showAlertError();
+    };
+  }
 
-      console.log($scope.myUser);
-    })
-  }), function errorCallback(response) {
-    alert('Erreur '+response.status+' '+response.data.error);
-  };
+  function getUser(){
+    UserFactory.getCurrentUser().then(function(res){
+      UserFactory.whoAmI(res.data.userId).then(function(response) {
+        $scope.myUser = response.data.result[0];
+        $scope.myUser.photo = setProfileImage($scope.myUser.photo, res.data.userId);
+        $scope.myUser.type = $scope.myUser.type[0];
+      })
+    }), function errorCallback(response) {
+    $scope.showAlertError();
+    };
+  }
 })

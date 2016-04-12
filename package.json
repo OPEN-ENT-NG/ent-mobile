@@ -1,6 +1,6 @@
 {
-  "name": "ENT_mobile_1022016",
-  "version": "2.0.0",
+  "name": "ENT_mobile_12032016",
+  "version": "2.0.2",
   "description": "ENT mobile: An Ionic project",
   "dependencies": {
     "angular-moment": "^0.10.3",
@@ -39,7 +39,16 @@
       "id": "com.bez4pieci.cookies"
     },
     "cordova-plugin-vibration",
-    "cordova-plugin-globalization"
+    "cordova-plugin-globalization",
+    "org.apache.cordova.file-transfer",
+    {
+      "locator": "http://github.com/don/cordova-filechooser.git",
+      "id": "com.megster.cordova.FileChooser"
+    },
+    {
+      "locator": "https://github.com/tiltshiftfocus/cordova-plugin-cache.git",
+      "id": "org.apache.cordova.plugin.cache"
+    }
   ],
   "cordovaPlatforms": [
     "android",

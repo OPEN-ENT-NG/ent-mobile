@@ -1,17 +1,17 @@
 angular.module('ent.message_detail', ['ent.message_services'])
 
-.controller('MessagesDetailCtrl', function($scope, $rootScope, $state, domainENT, MessagerieServices,  $ionicLoading, $ionicHistory, DeleteMessagesPopupFactory){
+.controller('MessagesDetailCtrl', function($scope, $rootScope, $state, domainENT, MessagerieServices,  $ionicLoading, $ionicHistory, DeleteMessagesPopupFactory,MoveMessagesPopupFactory){
 
-  getMessage($state.params.idMessage);
+  getMessage();
 
   $scope.isDraft =  function(){
-    return "DRAFT" === $rootScope.nameFolder;
+    return "draft" === $rootScope.nameFolder;
   }
 
   $scope.trash = function(id){
     DeleteMessagesPopupFactory.getPopup().then(function(res){
       if(res){
-        $ionicLoading.show({
+        $ioniLoading.show({
           template: 'Chargement en cours...'
         });
         MessagerieServices.trashMessage(id, $rootScope.nameFolder).then(function(){
@@ -19,14 +19,38 @@ angular.module('ent.message_detail', ['ent.message_services'])
           $ionicHistory.clearCache();
           $ionicHistory.goBack();
         }, function(err){
-          alert('ERR:'+ err);
+          $scope.showAlertError();
         });
       }
     })
   }
+  $scope.moveMessage = function(id){
+    var popupMove = MoveMessagesPopupFactory.getPopup($scope);
+    popupMove.then(function(res){
 
-  $scope.editMail = function(){
+      $ionicLoading.show({
+        template: '<i class="spinnericon- taille"></i>'
+      });
+      console.log(res);
+      if(res!=null){
+        MessagerieServices.moveMessage(id, res).then(function(){
+          $ionicHistory.goBack();
+        }, function(err){
+          $scope.showAlertError();
+        });
+      }
+      $ionicLoading.hide();
+    })
+  }
+
+  $scope.editMail = function(action){
+    $scope.mail.action = action;
+    goToNewMail();
+  }
+
+  function goToNewMail(){
     $rootScope.historyMail = $scope.mail;
+    console.log($rootScope.historyMail.action);
     $state.go('app.new_message');
   }
 
@@ -36,7 +60,7 @@ angular.module('ent.message_detail', ['ent.message_services'])
     $scope.downloadFile(attachment.filename, attachmentUrl,attachment.contentType);
   }
 
-  $scope.getRealName = function(id, message){
+  $rootScope.getRealName = function(id, message){
     var returnName = "Inconnu";
     for(var i = 0; i< message.displayNames.length; i++){
       if(id == message.displayNames[i][0]){
@@ -44,12 +68,6 @@ angular.module('ent.message_detail', ['ent.message_services'])
       }
     }
     return returnName;
-  }
-
-  $scope.doRefreshMail = function() {
-    $scope.mail.unshift(getMessage($state.params.idMessage));
-    $scope.$broadcast('scroll.refreshComplete');
-    $scope.$apply()
   }
 
   function getMessage(){
@@ -60,7 +78,7 @@ angular.module('ent.message_detail', ['ent.message_services'])
       $scope.mail = res.data;
       $ionicLoading.hide();
     }, function(err){
-      alert('ERR:'+ err);
+      $scope.showAlertError();
     });
   }
 });

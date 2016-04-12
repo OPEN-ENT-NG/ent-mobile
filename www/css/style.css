@@ -6,6 +6,26 @@ ion-popover-view.fit ion-content {
   position: relative !important;
 }
 
+#toolbarWC{
+  display: none !important;
+}
+
+#toolbarCC{
+  display: none !important;
+}
+
+.ta-editor {
+  min-height: 300px;
+  height: auto;
+  overflow: auto;
+  font-family: inherit;
+  font-size: 100%;
+}
+
+.ta-toolbar {
+  text-align: center;
+}
+
 .platform-android ion-popover-view.fit {
   margin-top: 10px !important;
 }
@@ -22,6 +42,10 @@ ion-popover-view.fit ion-content {
   font-weight: bold;
   color: blue;
   text-decoration: underline;
+}
+
+.statusInTitle {
+  color: red;
 }
 
 .actustatus {
@@ -77,18 +101,18 @@ ion-popover-view.fit ion-content {
 
 .float-button {
 
-background-color:#FF8500;
-opacity: 0.9;
-color: white;
-border-radius: 50%;
-/*border-radius:15% 0 0 0;*/
-width: 30px;
-padding: 25px;
-font-size: 20px;
-position: fixed;
-bottom: 5%; /* Adjust height */
-right: 5%; /* Adjust position */
-z-index: 1000;
+  background-color:#FF8500;
+  opacity: 0.9;
+  color: white;
+  border-radius: 50%;
+  /*border-radius:15% 0 0 0;*/
+  width: 30px;
+  padding: 25px;
+  font-size: 20px;
+  position: fixed;
+  bottom: 5%; /* Adjust height */
+  right: 5%; /* Adjust position */
+  z-index: 1000;
 }
 
 .float-button .height_fix {
@@ -138,7 +162,7 @@ z-index: 1000;
 }
 
 .pj{
-  margin-bottom: 5px;
+  margin: 5px;
 }
 
 [ng\: cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x- ng-cloak {
@@ -153,7 +177,7 @@ z-index: 1000;
   max-width: 100%;
   height: auto;
   margin: 0 auto;
-    padding: 3% 0;
+  padding: 3% 0;
 }
 
 .fondbleu {
@@ -206,6 +230,26 @@ z-index: 1000;
   border-style: solid;
   font-size: 16px; }
 
-.item-checkbox1 {
-  padding-left: 11%;
+  .item-checkbox1 {
+    padding-left: 11%;
+  }
+
+  .fill-textarea {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+  }
+
+  .fileupload-example-5 {
+    position: relative;
+    overflow: hidden;
+}
+
+.fileupload-example-5 input {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    opacity: 0.001
 }

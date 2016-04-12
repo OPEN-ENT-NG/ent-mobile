@@ -157,9 +157,26 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/login');
 })
+.service('UserInfoService', function($http, domainENT){
+  this.getUserData = function (userId) {
+    return $http.get(domainENT+"/userbook/api/person?id="+userId);
+  }
 
+  this.getOAuthInfo = function (){
+    return $http.get(domainENT+'/auth/oauth2/userinfo');
+  }
+})
 
-.controller('AppCtrl', function($scope, $sce, $state, $cordovaInAppBrowser, $cordovaFileTransfer,$cordovaProgress, $cordovaFileOpener2, domainENT, $ionicHistory, SkinFactory){
+.controller('UserInfoCtrl', function($scope, domainENT,UserInfoService) {
+  UserInfoService.getOAuthInfo().then(function(resp) {
+    $scope.userinfo = resp.data;
+  }, function(err) {
+    alert('ERR', err.data.status);
+
+  });
+})
+
+.controller('AppCtrl', function($scope, $sce, $state, $cordovaInAppBrowser, $cordovaFileTransfer,$cordovaProgress, $cordovaFileOpener2, domainENT, UserInfoService, $ionicHistory){
 
   $scope.renderHtml = function(text){
     if(text != null){
@@ -210,6 +227,15 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     }
   }
 
+<<<<<<< HEAD:www/app.js
+  function getAvatarImage (userId){
+    UserInfoService.getUserData(userId).then(function(resp){
+      console.log(domainENT+resp.data.result[0].photo);
+      return domainENT+resp.data.result[0].photo;
+    }), function(err){
+      alert('ERR:'+ err);
+    }
+=======
   $scope.setCorrectImage = function(path, defaultImage){
     var result;
     if (path != null && path.length > 0){
@@ -229,15 +255,23 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
 
   $scope.setProfileImage = function (regularPath, userId){
     return (regularPath != null && regularPath.length > 0 && regularPath != "no-avatar.jpg") ? regularPath:"/userbook/avatar/"+userId;
+>>>>>>> 0e88c3d2e38315404f80723ee46721b617eb26c4:www/app.js
   }
 
   $scope.logout = function(){
     localStorage.clear();
     $ionicHistory.clearHistory()
+<<<<<<< HEAD:www/app.js
+    $state.go("login");
+    // window.cookies.clear(function() {
+    //   console.log('Cookies cleared!');
+    // });
+=======
     // $state.go("login");
     window.cookies.clear(function() {
       console.log('Cookies cleared!');
     });
+>>>>>>> 0e88c3d2e38315404f80723ee46721b617eb26c4:www/app.js
     // ionic.Platform.exitApp(); // stops the app
   }
 })

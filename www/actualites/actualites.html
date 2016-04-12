@@ -1,7 +1,6 @@
-<ion-view view-title={{translationActus["actualites.links.latest"]}} ng-controller="ActusCtrl">
+<ion-view view-title={{translationActus["actualites.title"]}} ng-controller="InfosCtrl">
   <ion-nav-buttons side="right">
     <button class="button button-icon button-clear fa fa-list-ul"  ng-click="goThreads()" ></button>
-    <button class="button button-icon button-clear ion-android-more-vertical actustatus" ng-click = "openPopover($event)"></button>
   </ion-nav-buttons>
 
   <ion-content >
@@ -9,14 +8,13 @@
     </ion-refresher>
 
     <ion-list>
-      <ion-item ng-repeat="info in filtered=(infos ) track by $index" class="card">
+      <ion-item ng-repeat="info in filtered=(infos | filter:filterByThread) track by $index" class="card">
 
-        <div class="item item-avatar">
+        <div class="item item-avatar item-text-wrap">
           <img ng-src="{{getImageUrl(info.thread_icon)}}" alt="icone {{info.thread_title}}"/>
           <h2>{{info.title}}</h2>
-
           <h3>{{translationActus["actualites.info.label.author"]}} {{info.username}}</h3>
-          <p>{{info.publication_date ? formatDate(info.publication_date) : formatDateLocale(info.modified)}}</p>
+          <p>{{(info.publication_date ? formatDate(info.publication_date) : formatDateLocale(info.modified))}}</p>
         </div>
 
         <ion-card-content class="item actucard " overflow-scroll="true">
@@ -28,7 +26,7 @@
                 {{getCountComments(info, areCommentsShown(info))}}
             </p>
             <ion-item class="item-accordion"  ng-repeat="item in info.comments track by $index"  ng-show="areCommentsShown(info)">
-              <h3 style="font-weight: bold;">{{item.username}} {{item.modified ? formatDate(item.created) : formatDateLocale(item.modified)}</h3>
+              <h3 style="font-weight: bold;">{{item.username}}, {{formatDateLocale(item.modified)}}</h3>
               <p style="color: black;">{{item.comment}}</p>
             </ion-item>
 

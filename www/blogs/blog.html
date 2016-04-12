@@ -1,20 +1,18 @@
 <ion-view view-title={{nameBlog}}>
 
-  <ion-nav-buttons side="right">
-    <button class="button button-icon button-clear fa fa-list" ng-click = "openPopover($event)"></button>
-  </ion-nav-buttons>
-
   <ion-content>
     <ion-refresher pulling-text="Actualiser" on-refresh="doRefreshPosts()">
     </ion-refresher>
 
     <ion-list>
-      <ion-item ng-repeat="post in filteredPosts=(posts | orderBy: 'modified.$date' : true | filter: filterByStatus) track by $index" class="card">
+      <ion-item ng-repeat="post in filteredPosts=(posts | orderBy: 'modified.$date' : true) track by $index" class="card">
         <div class="item item-avatar item-text-wrap">
           <img ng-src="{{getImageUrl(post.author.photo)}}"/>
+
           <h2>{{post.title}}</h2>
+
           <h3>{{translationBlog["blog.by"]}} {{post.author.username}}</h3>
-          <p>{{blog.modified.$date ? formatDate(blog.created.$date) : formatDateLocale(blog.modified.$date)}}</p>
+          <p>{{formatDateLocale(post.modified.$date)}}</p>
         </div>
 
         <ion-card-content class="item actucard">
@@ -26,14 +24,13 @@
               {{getCountComments(post)}}
             </p>
             <ion-item class="item-accordion"  ng-repeat="comment in post.comments track by $index"  ng-show="areCommentsShown(post)">
-              <h3 style="font-weight: bold;">{{comment.author.username}}
-              {{comment.modified.$date ? formatDate(comment.created.$date) : formatDateLocale(comment.modified.$date)}}</h3>
-              <p style="color: black;">{{comment.comment}}</p>
-            </ion-item>
-          </div>
-        </ion-card-content>
+              <h3 style="font-weight: bold;">{{comment.author.username}}, {{comment.modified.$date ? formatDateLocale(comment.modified.$date):formatDateLocale(comment.created.$date)}}</h3>
+                <p style="color: black;">{{comment.comment}}</p>
+              </ion-item>
+            </div>
+          </ion-card-content>
 
-      </ion-item>
-    </ion-list>
-  </ion-content>
-</ion-view>
+        </ion-item>
+      </ion-list>
+    </ion-content>
+  </ion-view>
