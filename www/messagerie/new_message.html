@@ -1,60 +1,57 @@
 <ion-view view-title="Nouveau message" ng-init="transform()" ng-controller="NewMessageCtrl">
 
   <ion-nav-buttons side="right">
-    <button class="button button-icon attachicon-"  ng-click="openFileChooser()" ></button>
-
     <button class="button button-icon button-clear ion-android-send"  ng-click="sendMail()" ></button>
-    <button class="button button-icon button-clear fa fa-ellipsis-v actustatus" ng-click = "openPopover($event)"></button>
+    <button class="button button-icon button-clear ion-android-more-vertical actustatus" ng-click = "openPopover($event)"></button>
   </ion-nav-buttons>
   <ion-content>
 
-
-    <div class="item">
-      {{translationConversation["transfer.to"]}}
+    <div class="item listeDestinataires">
       <ion-list>
-        <div ng-repeat="destinataire in email.destinatairesTo track by $index">
-          <h2 >{{destinataire.displayName}} </h2>
-          <i class="cancel-circledicon-" ng-click="deleteFromDestinataireTo(destinataire)"></i>
+        <div ng-repeat="destinataire in email.destinatairesTo track by $index" >
+          <div class="destinataireMessagerie item-text-wrap">
+            <h2>{{destinataire.displayName}} </h2>
+            <i class="cancel-circledicon-" ng-click="deleteFromDestinataireTo(destinataire)"></i>
+          </div>
         </div>
       </ion-list>
-      <div>
-        <filter-box filtertext="searchTo" placeholder={{translationConversation["transfer.to"]}}></filter-box>
-        <ion-list >
-          <ion-item ng-show=searchTo.value.length!=0 ng-repeat="contact in contacts | filter: {displayName: searchTo.value} | limitTo: 5" ng-click="addContactTo(searchTo, contact)">
-            <h3>{{contact.displayName}}</h3>
-          </ion-item>
-        </ion-list>
-      </div>
+      <filter-box filtertext="searchTo" placeholder={{translationConversation["transfer.to"]}}></filter-box>
+      <ion-list >
+        <ion-item ng-show=searchTo.value.length!=0 ng-repeat="contact in contacts | filter: {displayName: searchTo.value} | limitTo: 5" ng-click="addContactTo(searchTo, contact)">
+          <h3>{{contact.displayName}}</h3>
+        </ion-item>
+      </ion-list>
     </div>
 
-    <div class="item">
-      {{translationConversation["transfer.cc"]}}
-      <div>
-        <ion-list>
-          <ion-item  ng-repeat="destinataire in email.destinatairesCc track by $index">
-            <h3 class"item-text-wrap" >{{destinataire.displayName}} </h2>
-            <i class="cancel-circledicon-" ng-click="deleteFromDestinataireTo(destinataire)"></i>
-          </ion-item >
-        </ion-list>
-        <div>
-          <filter-box filtertext="searchCc" placeholder={{translationConversation["transfer.cc"]}}></filter-box>
-          <ion-list >
-            <ion-item ng-show=searchCc.value.length!=0 ng-repeat="contact in contacts | filter: {displayName: searchCc.value} | limitTo: 5" ng-click="addContactCc(searchCc, contact)">
-              <h3 class"item-text-wrap">{{contact.displayName}}</h3>
-              <i class="cancel-circledicon-" ng-click="deleteFromDestinataireCc(contact)"></i>
-            </ion-item>
-          </ion-list>
+    <div class="item listeDestinataires">
+      <ion-list>
+        <div ng-repeat="destinataire in email.destinatairesCc track by $index">
+          <div class="destinataireMessagerie item-text-wrap">
+            <h2>{{destinataire.displayName}} </h2>
+            <i class="cancel-circledicon-" ng-click="deleteFromDestinataireCc(destinataire)"></i>
+          </div>
         </div>
-      </div>
+      </ion-list>
+      <filter-box filtertext="searchCc" placeholder={{translationConversation["transfer.cc"]}}></filter-box>
+      <ion-list >
+        <ion-item ng-show=searchCc.value.length!=0 ng-repeat="contact in contacts | filter: {displayName: searchCc.value} | limitTo: 5" ng-click="addContactCc(searchCc, contact)">
+          <h3>{{contact.displayName}}</h3>
+        </ion-item>
+      </ion-list>
     </div>
+
     <label class="item item-input" >
       <input type="text" ng-model="email.sujet" placeholder={{translationConversation["sniplet.ml.subject.placeholder"]}}>
     </label>
     <label class="item-input fill-textarea">
       <textarea class="msd-elastic: \n;" ng-bind-html=renderHtml(email.corps) ng-model="email.corps" placeholder={{translationConversation["sniplet.ml.content.placeholder"]}}></textarea>
-        <!-- <text-angular ta-disabled=false ng-model="email.corps" ></text-angular> -->
+      <!-- <text-angular ta-disabled=false ng-model="email.corps" ></text-angular> -->
 
     </label>
+
+    <button class=" button icon-left downloadicon- attachment item-text-wrap" ng-show="attachements.length >0" >
+      <p> {{attachment.filename}}</p>
+    </button>
 
   </ion-content>
 </ion-view>

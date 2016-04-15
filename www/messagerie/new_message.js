@@ -244,14 +244,8 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
                   };
                 },
                 template:
-                ' <ion-input fixed-label id="filter-box" class=" item-input">' +
-                // '<span class="input-label">{{placeholder}}</span>'+
+                ' <ion-input fixed-label id="filter-box">' +
                 '<input type="search" ng-model="search.value" placeholder="{{placeholder}}" >' +
-                '</div>'
-
-                // '<label class=" item-input item-floating-label" id="filter-box">'+
-                // '<span class="input-label">{{placeholder}}</span>'+
-                // '<input type="search" ng-model="search.value" placeholder="{{placeholder}}">'+
-                // '</label>'
+                '</ion-input>'
               };
             })

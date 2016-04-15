@@ -1,0 +1,18 @@
+.listeDestinataires{
+  padding-bottom: 2px;
+}
+
+.destinataireMessagerie{
+  display: inline-flex;
+  background-color:#4BAFD5;
+  margin-bottom: 5px;
+}
+
+.destinataireMessagerie i{
+  margin: auto;
+}
+
+.destinataireMessagerie h2{
+  color: white;
+  margin: 5px
+}
