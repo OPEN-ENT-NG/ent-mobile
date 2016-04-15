@@ -10,6 +10,8 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
     id: 0
   };
 
+  removeMyself();
+
   console.log("$rootScope.historyMail");
   console.log($rootScope.historyMail);
   switch($rootScope.historyMail.action){
@@ -121,6 +123,20 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
                 }
               }
 
+              function removeMyself(){
+                for(var i=0; i< $rootScope.historyMail.to.length; i++){
+                  if($rootScope.myUser.id == $rootScope.historyMail.to[i]){
+                    $rootScope.historyMail.to.splice(i, 1);
+                  }
+                }
+
+                for(var i=0; i< $rootScope.historyMail.cc.length; i++){
+                  if($rootScope.myUser.id == $rootScope.historyMail.to[i]){
+                    $rootScope.historyMail.to.splice(i, 1);
+                  }
+                }
+              }
+
               function saveWithId(id){
                 MessagerieServices.saveWithId($scope.email.id, getMailData()).then(function(resp){
                   $state.go("app.messagerie");
@@ -144,12 +160,9 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
                 for(var j=0; j<idArray.length; j++){
                   var contact = [];
                   for(var i=0; i<$rootScope.historyMail.displayNames.length; i++){
-                    console.log("idArray[j]: "+idArray[j]);
-                    console.log("$rootScope.historyMail.displayNames[i][0]: "+$rootScope.historyMail.displayNames[i][0]);
                     if(idArray[j]  === $rootScope.historyMail.displayNames[i][0]){
                       contact._id = idArray[j];
                       contact.displayName=  $rootScope.historyMail.displayNames[i][1];
-                      console.log(contact);
                       contactList.push(contact);
                     }
                   }

@@ -21,7 +21,7 @@ angular.module('ent.user', [])
   }
 })
 
-.controller('UserCtrl', function(UserFactory, $scope){
+.controller('UserCtrl', function(UserFactory, $scope, $rootScope){
 
   getUser();
   getTraduction();
@@ -37,9 +37,10 @@ angular.module('ent.user', [])
   function getUser(){
     UserFactory.getCurrentUser().then(function(res){
       UserFactory.whoAmI(res.data.userId).then(function(response) {
-        $scope.myUser = response.data.result[0];
-        $scope.myUser.photo = setProfileImage($scope.myUser.photo, res.data.userId);
-        $scope.myUser.type = $scope.myUser.type[0];
+        $rootScope.myUser = response.data.result[0];
+        $rootScope.myUser.photo = setProfileImage($scope.myUser.photo, res.data.userId);
+        $rootScope.myUser.type = $rootScope.myUser.type[0];
+        console.log($rootScope.myUser);
       })
     }), function errorCallback(response) {
     $scope.showAlertError();
