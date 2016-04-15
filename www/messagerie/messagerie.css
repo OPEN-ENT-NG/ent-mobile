@@ -16,3 +16,16 @@
   color: white;
   margin: 5px
 }
+
+.header-mail h2.ng-binding {
+  font-size:14px;
+}
+
+.header-mail span.ng-binding {
+  font-size:14px;
+  color:CCC;
+}
+
+.pj{
+  margin: 5px;
+}

@@ -44,9 +44,8 @@
       <input type="text" ng-model="email.sujet" placeholder={{translationConversation["sniplet.ml.subject.placeholder"]}}>
     </label>
     <label class="item-input fill-textarea">
-      <textarea class="msd-elastic: \n;" ng-bind-html=renderHtml(email.corps) ng-model="email.corps" placeholder={{translationConversation["sniplet.ml.content.placeholder"]}}></textarea>
-      <!-- <text-angular ta-disabled=false ng-model="email.corps" ></text-angular> -->
-
+      <textarea class="msd-elastic: \n;" ng-model="email.corps" placeholder={{translationConversation["sniplet.ml.content.placeholder"]}}></textarea>
+      <!-- <text-angular ta-disabled=false ng-model="email.corps" placeholder={{translationConversation["sniplet.ml.content.placeholder"]}}></text-angular> -->
     </label>
 
     <button class=" button icon-left downloadicon- attachment item-text-wrap" ng-show="attachements.length >0" >

@@ -10,3 +10,11 @@ angular.module("ent.test", ['textAngular'])
 
 
 })
+
+.controller('WebCtrl', function($scope, domainENT){
+  console.log("in web ctrl");
+  $scope.getUrl = function (){
+    console.log(domainENT+"userbook/mon-compte.html");
+    return domainENT+"userbook/mon-compte.html";
+  }
+})

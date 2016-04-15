@@ -181,7 +181,7 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
                 for(var i =0; i<contactArray.length; i++){
                   var contact = {
                     _id: contactArray[i],
-                    displayName: $rootScope.getRealName(contactArray[i], $rootScope.historyMail)
+                    displayName: $rootScope.getRealName(contactArray[i], $rootScope.historyMail.displayNames)
                   }
                   console.log(contact);
                   $scope.email.destinatairesTo.push(contact);

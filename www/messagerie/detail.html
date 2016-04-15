@@ -8,7 +8,7 @@
     <button class="button button-icon button-clear ion-android-more-vertical actustatus" ng-click=openPopover($event)></button>
   </ion-nav-buttons>
 
-  <ion-content
+  <ion-content>
 
     <div class="item">
       <h2>{{mail.subject}}</h2>
@@ -17,22 +17,30 @@
 
     <div class="item-text-wrap">
       <div class="header-mail item">
-        <h2>{{translationConversation["transfer.from"]}} {{getRealName(mail.from, mail)}}<h2>
-          <span>{{translationConversation["transfer.to"]}} {{getRealName(mail.to, mail)}}</span>
-          <span ng-show=mail.cc.length!=0 ng-repeat="person in mail.cc track by $index">{{translationConversation["transfer.cc"]}} {{getRealName(mail.cc[$index-1], mail)}}</span>
-        </div>
+        <h2>{{translationConversation["transfer.from"]}} {{getRealName(mail.from, mail.displayNames)}}</h2>
 
-        <div  class="item-text-wrap" ng-bind-html= "renderHtml(mail.body)"></div>
+        <h2>
+          <span>{{translationConversation["transfer.to"]}}</span>
+          <span ng-repeat="person in getArrayNames(mail.to, mail) track by $indexTo">{{person.displayName}}<br/></span>
+        </h2>
 
-        <div class="list" ng-show=mail.attachments.length!=0>
+        <h2 ng-show="mail.cc.length != 0">
+          <span>{{translationConversation["transfer.cc"]}}</span>
+          <span ng-repeat="person in getArrayNames(mail.cc, mail) track by $indexCc">{{person.displayName}}<br/></span>
+        </h2>
+      </div>
 
-          <div ng-repeat="attachment in mail.attachments track by $index" class="pj" >
+      <div class="item-text-wrap" ng-bind-html= "renderHtml(mail.body)"></div>
 
-            <button class=" button icon-left downloadicon- attachment item-text-wrap" ng-click="downloadAttachment(attachment.id)" >
-              <p> {{attachment.filename}}</p>
-            </button>
-          </div>
+      <div class="list" ng-show=mail.attachments.length!=0>
+
+        <div ng-repeat="attachment in mail.attachments track by $index" class="pj" >
+
+          <button class=" button icon-left downloadicon- attachment item-text-wrap" ng-click="downloadAttachment(attachment.id)" >
+            <p> {{attachment.filename}}</p>
+          </button>
         </div>
       </div>
-    </ion-content>
-  </ion-view>
+    </div>
+  </ion-content>
+</ion-view>

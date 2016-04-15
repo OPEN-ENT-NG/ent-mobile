@@ -5,10 +5,19 @@ angular.module('ent.messagerie', ['ent.message_services', 'ent.message_folder', 
   $ionicLoading.show({
     template: '<i class="spinnericon- taille"></i>'
   });
-  getTranslation();
   getContacts();
   getFolders();
   $ionicLoading.hide();
+
+  $rootScope.getRealName = function (id, displayNames){
+    var returnName = "Inconnu";
+    for(var i = 0; i< displayNames.length; i++){
+      if(id == displayNames[i][0]){
+        returnName = displayNames[i][1];
+      }
+    }
+    return returnName;
+  }
 
   $rootScope.writeWithUnreadNumber = function(folder){
     var folderName = MessagerieServices.getPersonalFolderIds().indexOf(folder.id) ==-1 ? folder.name : $rootScope.translationConversation[folder.name];
@@ -92,15 +101,6 @@ angular.module('ent.messagerie', ['ent.message_services', 'ent.message_folder', 
     }, function(err){
       $scope.showAlertError();
     });
-  }
-
-  function getTranslation(){
-    MessagerieServices.getTranslation().then(function(resp) {
-      $rootScope.translationConversation = resp.data;
-    }), function(err){
-      alert('ERR:'+ err);
-    };
-
   }
 })
 .directive('onLongPress', function($timeout) {

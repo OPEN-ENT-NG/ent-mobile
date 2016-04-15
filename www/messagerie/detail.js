@@ -16,6 +16,19 @@ angular.module('ent.message_detail', ['ent.message_services'])
     return "trash" === $rootScope.nameFolder;
   }
 
+  $scope.getArrayNames = function (ids, mail){
+    var names = [];
+
+    for(var i=0; i< ids.length; i++){
+      names.push({
+        id: ids[i],
+        displayName: $rootScope.getRealName(ids[i], mail.displayNames)
+      });
+      console.log(names[i]);
+    }
+    return names;
+  }
+
   $scope.trash = function(id){
     DeleteMessagesPopupFactory.getPopup().then(function(res){
       if(res){
@@ -32,6 +45,9 @@ angular.module('ent.message_detail', ['ent.message_services'])
       }
     })
   }
+
+
+
   $scope.moveMessage = function(id){
     var popupMove = MoveMessagesPopupFactory.getPopup($scope);
     popupMove.then(function(res){
@@ -62,7 +78,7 @@ angular.module('ent.message_detail', ['ent.message_services'])
     });
     $ionicLoading.hide();
   }
-  
+
   $scope.editMail = function(action){
     $scope.mail.action = action;
     goToNewMail();
@@ -105,6 +121,7 @@ angular.module('ent.message_detail', ['ent.message_services'])
     });
     MessagerieServices.getMessage($state.params.idMessage).then(function(res) {
       $scope.mail = res.data;
+      console.log($scope.mail);
       $ionicLoading.hide();
     }, function(err){
       $scope.showAlertError();

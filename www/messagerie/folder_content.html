@@ -22,9 +22,9 @@
       <ion-item ng-repeat="message in messages track by $index" ng-click="doAction($index)" on-long-press="enableCheckMessages($index)">
         <div class="message">
           <input type="checkbox" ng-model="message.checked" ng-checked = "message.checked" ng-show=checkable>
-          <div>
+          <div class="item-text-wrap">
             <span class="right">{{message.date | date:'dd/MM/yy'}}</span>
-            <h2>{{getRealName(message.from, message)}}</h2>
+            <h2>{{getRealName(message.from, message.displayNames)}}</h2>
           </div>
           <i class="attachicon-" ng-show="message.attachments.length != 0"></i>
           <h2>{{message.subject}}</h2>

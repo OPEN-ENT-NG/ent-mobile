@@ -124,16 +124,6 @@ angular.module('ent.message_folder', ['ent.message_services'])
     $scope.$apply()
   }
 
-  $rootScope.getRealName = function(id, message){
-    var returnName = "Inconnu";
-    for(var i = 0; i< message.displayNames.length; i++){
-      if(id == message.displayNames[i][0]){
-        returnName = message.displayNames[i][1];
-      }
-    }
-    return returnName;
-  }
-
   function getMessagesAndFolders(){
     $scope.nameFolder = $stateParams.nameFolder;
     updateMessages();
