@@ -17,16 +17,16 @@
 
     <div class="item-text-wrap">
       <div class="header-mail item">
-        <h2>{{translationConversation["transfer.from"]}} {{getRealName(mail.from, mail.displayNames)}}</h2>
+        <h2>{{translationConversation["transfer.from"]}} {{mail.from[0].displayName}}</h2>
 
         <h2>
           <span>{{translationConversation["transfer.to"]}}</span>
-          <span ng-repeat="person in getArrayNames(mail.to, mail) track by $indexTo">{{person.displayName}}<br/></span>
+          <span ng-repeat="person in mail.to track by $indexTo">{{person.displayName}}<br/></span>
         </h2>
 
         <h2 ng-show="mail.cc.length != 0">
           <span>{{translationConversation["transfer.cc"]}}</span>
-          <span ng-repeat="person in getArrayNames(mail.cc, mail) track by $indexCc">{{person.displayName}}<br/></span>
+          <span ng-repeat="person in mail.cc track by $indexCc">{{person.displayName}}<br/></span>
         </h2>
       </div>
 

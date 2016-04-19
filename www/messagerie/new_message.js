@@ -9,15 +9,13 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
     corps : '',
     id: 0
   };
-
-  removeMyself();
-
   console.log("$rootScope.historyMail");
   console.log($rootScope.historyMail);
+
   switch($rootScope.historyMail.action){
     case "REPLY_ONE":
       console.log("switch reply one");
-      $scope.email.destinatairesTo = getContactsNames([$rootScope.historyMail.from]);
+      $scope.email.destinatairesTo = $rootScope.historyMail.from;
       $scope.email.destinatairesCc = [];
       $scope.email.sujet = $rootScope.translationConversation["reply.re"]+$rootScope.historyMail.subject;
       $scope.email.corps= $rootScope.historyMail.body;
@@ -26,8 +24,8 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
 
       case "REPLY_ALL":
         console.log("switch reply_all");
-        $scope.email.destinatairesTo = getContactsNames([$rootScope.historyMail.from]);
-        $scope.email.destinatairesCc = getContactsNames($rootScope.historyMail.cc);
+        $scope.email.destinatairesTo = $rootScope.historyMail.from.concat($rootScope.historyMail.to);
+        $scope.email.destinatairesCc = $rootScope.historyMail.cc;
         $scope.email.sujet = $rootScope.translationConversation["reply.re"]+$rootScope.historyMail.subject;
         $scope.email.corps= $rootScope.historyMail.body;
         $scope.email.id = $rootScope.historyMail.id;
@@ -44,8 +42,8 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
 
           case "DRAFT":
             console.log("switch draft");
-            $scope.email.destinatairesTo = getContactsNames($rootScope.historyMail.to);
-            $scope.email.destinatairesCc = getContactsNames($rootScope.historyMail.cc);
+            $scope.email.destinatairesTo = $rootScope.historyMail.to;
+            $scope.email.destinatairesCc = $rootScope.historyMail.cc;
             $scope.email.sujet = $rootScope.historyMail.subject;
             $scope.email.corps= $rootScope.historyMail.body.replace(/\<br\/\>/g, "\n");
             $scope.email.id = $rootScope.historyMail.id;
@@ -56,7 +54,9 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
               console.log("switch new");
               break;
             }
-            console.log("$scope.email");
+            removeMyself();
+
+            console.log("$scope.email spliced");
             console.log($scope.email);
 
             $scope.addContactTo = function(search, contact){
@@ -124,15 +124,17 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
               }
 
               function removeMyself(){
-                for(var i=0; i< $rootScope.historyMail.to.length; i++){
-                  if($rootScope.myUser.id == $rootScope.historyMail.to[i]){
-                    $rootScope.historyMail.to.splice(i, 1);
+                for(var i=0; i< $scope.email.destinatairesTo.length; i++){
+                  if($rootScope.myUser.id == $scope.email.destinatairesTo[i].id){
+                    $scope.email.destinatairesTo.splice(i, 1);
+                    console.log("splice to");
                   }
                 }
 
-                for(var i=0; i< $rootScope.historyMail.cc.length; i++){
-                  if($rootScope.myUser.id == $rootScope.historyMail.to[i]){
-                    $rootScope.historyMail.to.splice(i, 1);
+                for(var i=0; i< $scope.email.destinatairesCc.length; i++){
+                  if($rootScope.myUser.id == $scope.email.destinatairesCc[i].id){
+                    $scope.email.destinatairesCc.splice(i, 1);
+                    console.log("splice cc");
                   }
                 }
               }
@@ -153,22 +155,22 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
                 });
               }
 
-              function getContactsNames(idArray){
-                console.log("idArray");
-                console.log(idArray);
-                var contactList =[];
-                for(var j=0; j<idArray.length; j++){
-                  var contact = [];
-                  for(var i=0; i<$rootScope.historyMail.displayNames.length; i++){
-                    if(idArray[j]  === $rootScope.historyMail.displayNames[i][0]){
-                      contact._id = idArray[j];
-                      contact.displayName=  $rootScope.historyMail.displayNames[i][1];
-                      contactList.push(contact);
-                    }
-                  }
-                }
-                return contactList;
-              }
+              // function getContactsNames(idArray){
+              //   console.log("idArray");
+              //   console.log(idArray);
+              //   var contactList =[];
+              //   for(var j=0; j<idArray.length; j++){
+              //     var contact = [];
+              //     for(var i=0; i<$rootScope.historyMail.displayNames.length; i++){
+              //       if(idArray[j]  === $rootScope.historyMail.displayNames[i][0]){
+              //         contact._id = idArray[j];
+              //         contact.displayName=  $rootScope.historyMail.displayNames[i][1];
+              //         contactList.push(contact);
+              //       }
+              //     }
+              //   }
+              //   return contactList;
+              // }
 
               function getMailData(){
 
