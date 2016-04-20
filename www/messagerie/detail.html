@@ -12,7 +12,7 @@
 
     <div class="item">
       <h2>{{mail.subject}}</h2>
-      <h3>{{mail.systemFolders}}</h3>
+      <!-- <h3>{{mail.systemFolders}}</h3> -->
     </div>
 
     <div class="item-text-wrap">
@@ -28,9 +28,14 @@
           <span>{{translationConversation["transfer.cc"]}}</span>
           <span ng-repeat="person in mail.cc track by $indexCc">{{person.displayName}}<br/></span>
         </h2>
+
+        <h2 >
+          <span>{{translationConversation["transfer.date"]}}</span>
+          <span >{{mail.date | date: fulldate}}<br/></span>
+        </h2>
       </div>
 
-      <div class="item-text-wrap" ng-bind-html= "renderHtml(mail.body)"></div>
+      <div class="item-text-wrap item corpsMessage" ng-bind-html= "renderHtml(mail.body)"></div>
 
       <div class="list" ng-show=mail.attachments.length!=0>
 

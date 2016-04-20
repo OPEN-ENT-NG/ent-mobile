@@ -20,7 +20,7 @@ angular.module('ent.message_detail', ['ent.message_services'])
     DeleteMessagesPopupFactory.getPopup().then(function(res){
       if(res){
         $ioniLoading.show({
-          template: 'Chargement en cours...'
+          template: '<i class="spinnericon- taille"></i>'
         });
         MessagerieServices.trashMessage(id, $rootScope.nameFolder).then(function(){
           $ionicLoading.hide();

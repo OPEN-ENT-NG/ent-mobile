@@ -190,6 +190,7 @@ angular.module('ent.message_folder', ['ent.message_services'])
     angular.forEach($scope.messages, function(message){
       message.checked = false;
     });
+    console.log($scope.messages);
   }
 
   function goToMessage(index){

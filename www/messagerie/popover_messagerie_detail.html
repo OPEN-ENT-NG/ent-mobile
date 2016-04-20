@@ -11,7 +11,7 @@
       <a class="item"  ng-hide="isTrash()" ng-click=trash(mail.id)>{{translationConversation["delete"]}}</a>
 
       <!-- restaurer -->
-      <a class="item" ng-click="restoreMessage(mail.id)">{{translationConversation["restore"]}}</a>
+      <a class="item" ng-show="isTrash()" ng-click="restoreMessage(mail.id)">{{translationConversation["restore"]}}</a>
 
     </ion-list>
   </ion-content>

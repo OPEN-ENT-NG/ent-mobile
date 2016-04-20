@@ -131,7 +131,7 @@ angular.module('ent.message_services', [])
   }
 
   this.saveWithId = function(id, mailData){
-    return $http.post(domainENT+'/conversation/draft/'+id,mailData, configHeaders );
+    return $http.put(domainENT+'/conversation/draft/'+id,mailData, configHeaders );
   }
 
   this.saveNewDraft = function (mailData){

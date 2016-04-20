@@ -1,12 +1,13 @@
 angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic'])
 
-.controller('NewMessageCtrl', function($scope, $rootScope, $ionicPopover, $state, $ionicHistory, MessagerieServices,$ionicLoading,$ionicPopup){
+.controller('NewMessageCtrl', function($scope, $rootScope, $ionicPopover, $state, $ionicHistory, MessagerieServices,$ionicLoading,$ionicPopup, $filter){
 
   $scope.email = {
     destinatairesTo: [],
     destinatairesCc: [],
     sujet: '',
     corps : '',
+    newMessage: '',
     id: 0
   };
   console.log("$rootScope.historyMail");
@@ -18,7 +19,7 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
       $scope.email.destinatairesTo = $rootScope.historyMail.from;
       $scope.email.destinatairesCc = [];
       $scope.email.sujet = $rootScope.translationConversation["reply.re"]+$rootScope.historyMail.subject;
-      $scope.email.corps= $rootScope.historyMail.body;
+      $scope.email.corps= headerReponse()+$rootScope.historyMail.body;
       $scope.email.id = $rootScope.historyMail.id;
       break;
 
@@ -27,7 +28,7 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
         $scope.email.destinatairesTo = $rootScope.historyMail.from.concat($rootScope.historyMail.to);
         $scope.email.destinatairesCc = $rootScope.historyMail.cc;
         $scope.email.sujet = $rootScope.translationConversation["reply.re"]+$rootScope.historyMail.subject;
-        $scope.email.corps= $rootScope.historyMail.body;
+        $scope.email.corps= headerReponse()+$rootScope.historyMail.body;
         $scope.email.id = $rootScope.historyMail.id;
         break;
 
@@ -36,7 +37,7 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
           $scope.email.destinatairesTo = [];
           $scope.email.destinatairesCc = [];
           $scope.email.sujet = $rootScope.translationConversation["reply.fw"]+$rootScope.historyMail.subject;
-          $scope.email.corps= $rootScope.historyMail.body;
+          $scope.email.corps= headerReponse()+$rootScope.historyMail.body;
           $scope.email.id = $rootScope.historyMail.id;
           break;
 
@@ -45,7 +46,7 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
             $scope.email.destinatairesTo = $rootScope.historyMail.to;
             $scope.email.destinatairesCc = $rootScope.historyMail.cc;
             $scope.email.sujet = $rootScope.historyMail.subject;
-            $scope.email.corps= $rootScope.historyMail.body.replace(/\<br\/\>/g, "\n");
+            $scope.email.newMessage= $rootScope.historyMail.body.replace(/\<br\/\>/g, "\n");
             $scope.email.id = $rootScope.historyMail.id;
             break;
 
@@ -115,9 +116,9 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
               }
 
               $scope.saveAsDraft = function(){
-                var draftHasId = $scope.email.id !=0;
-                if($scope.email.id !=0){
-                  saveWithId($scope.mail.id);
+                var id =  $rootScope.historyMail.action != "DRAFT" ? 0:$scope.email.id;
+                if(id !=0){
+                  saveWithId(id);
                 } else{
                   saveNewDraft()
                 }
@@ -127,14 +128,12 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
                 for(var i=0; i< $scope.email.destinatairesTo.length; i++){
                   if($rootScope.myUser.id == $scope.email.destinatairesTo[i].id){
                     $scope.email.destinatairesTo.splice(i, 1);
-                    console.log("splice to");
                   }
                 }
 
                 for(var i=0; i< $scope.email.destinatairesCc.length; i++){
                   if($rootScope.myUser.id == $scope.email.destinatairesCc[i].id){
                     $scope.email.destinatairesCc.splice(i, 1);
-                    console.log("splice cc");
                   }
                 }
               }
@@ -155,30 +154,14 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
                 });
               }
 
-              // function getContactsNames(idArray){
-              //   console.log("idArray");
-              //   console.log(idArray);
-              //   var contactList =[];
-              //   for(var j=0; j<idArray.length; j++){
-              //     var contact = [];
-              //     for(var i=0; i<$rootScope.historyMail.displayNames.length; i++){
-              //       if(idArray[j]  === $rootScope.historyMail.displayNames[i][0]){
-              //         contact._id = idArray[j];
-              //         contact.displayName=  $rootScope.historyMail.displayNames[i][1];
-              //         contactList.push(contact);
-              //       }
-              //     }
-              //   }
-              //   return contactList;
-              // }
-
               function getMailData(){
 
                 var newMail = {
                   subject : $scope.email.sujet,
-                  body : $scope.email.corps.replace(/\n/g, "<br/>"),
+                  body : "<p>"+$scope.email.newMessage.replace(/\n/g, "<br/>")+"</p>"+$scope.email.corps,
                   to : getIdArray($scope.email.destinatairesTo),
-                  cc: getIdArray($scope.email.destinatairesCc),
+                  cc : getIdArray($scope.email.destinatairesCc),
+                  from : $rootScope.myUser.id
                 };
                 console.log(newMail);
                 return newMail;
@@ -202,6 +185,44 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
                   $scope.email.destinatairesTo.push(contact);
                 }
               }
+
+              function headerReponse(){
+                var from = $rootScope.historyMail.from[0].displayName;
+                var date = $filter('date')($rootScope.historyMail.date, 'medium');
+                var subject = $rootScope.historyMail.subject;
+
+                var to="";
+                for (var i = 0; i < $rootScope.historyMail.to.length; i++) {
+                  to += $rootScope.historyMail.to[i].displayName+" ";
+                }
+
+                var cc="";
+                for (var i = 0; i < $rootScope.historyMail.cc.length; i++) {
+                  cc += $rootScope.historyMail.cc[i].displayName+" ";
+                }
+
+                var header = "<p class=\"row ng-scope\"></p>"+
+                "<hr class=\"ng-scope\">"+
+                "<p class=\"ng-scope\"></p>"+
+                "<p class=\"medium-text ng-scope\">"+
+                "<span translate=\"\" key=\"transfer.from\"><span class=\"no-style ng-scope\">De : </span></span><em class=\"ng-binding\">"+from+"</em>"+
+                "<br>"+
+                "<span class=\"medium-importance\" translate=\"\" key=\"transfer.date\"><span class=\"no-style ng-scope\">Date: </span></span><em"+ "class=\"ng-binding\">"+
+                date+"</em> <br>"+
+                "<span class=\"medium-importance\" translate=\"\" key=\"transfer.subject\"><span class=\"no-style ng-scope\">Objet : </span></span><em"+ "class=\"ng-binding\">"+subject+"</em>"+
+                "<br>"+
+                "<span class=\"medium-importance\" translate=\"\" key=\"transfer.to\"><span class=\"no-style ng-scope\">A : </span></span>"+
+                "<em class=\"medium-importance\">"+to+"</em>"+
+                "<br>"+
+                "<span class=\"medium-importance\" translate=\"\" key=\"transfer.cc\"><span class=\"no-style ng-scope\">Copie à : </span></span>"+
+                "<em class=\"medium-importance ng-scope\">"+cc+
+                "</p><blockquote class=\"ng-scope\">"+
+                "<p class=\"ng-scope\" style=\"font-size: 24px; line-height: 24px;\">";
+
+                return header;
+
+              }
+
 
               $scope.goToMessagerie = function () {
                 $scope.closePopover();

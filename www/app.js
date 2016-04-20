@@ -1,8 +1,9 @@
 angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute','ent.actualites','ent.blog','ent.blog-list','ent.auth', 'ent.messagerie', 'ent.new_message','ent.user','angularMoment','ent.test'])
 
+// .value("domainENT", "https://preprod-leo.entcore.org")
 .value("domainENT", "https://recette-leo.entcore.org")
 
-.run(function($ionicPlatform, $ionicLoading, $rootScope,$cordovaGlobalization,amMoment) {
+.run(function($ionicPlatform, $ionicLoading, $rootScope,$cordovaGlobalization, amMoment) {
 
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -28,10 +29,18 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     //   $ionicLoading.hide()
     // })
     $cordovaGlobalization.getPreferredLanguage().then(function(result) {
+      localStorage.setItem('preferredLanguage', result.value);
       amMoment.changeLocale(result.value);
     }, function(error) {
       console.log(error);
     })
+
+    // $cordovaGlobalization.getPreferredLanguage().then(function(result) {
+    //   localStorage.setItem('preferredLanguage', result.value);
+    //   amMoment.changeLocale(result.value);
+    // }, function(error) {
+    //   console.log(error);
+    // })
 
   });
 })

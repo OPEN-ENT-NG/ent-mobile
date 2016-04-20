@@ -38,6 +38,10 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
 // Include all of Ionic
 @import "www/lib/ionic/scss/ionic";
 
+.title {
+  right: auto !important; 
+}
+
 // Bar styles
 .bar-content {
   @include bar-style($bar-content-bg, $bar-content-border, $bar-content-text);
