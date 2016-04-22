@@ -1,6 +1,6 @@
 angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic'])
 
-.controller('NewMessageCtrl', function($scope, $rootScope, $ionicPopover, $state, $ionicHistory, MessagerieServices,$ionicLoading,$ionicPopup, $filter){
+.controller('NewMessageCtrl', function($scope, $rootScope, $ionicPopover, $state, $ionicHistory, MessagerieServices,$ionicLoading,$ionicPopup, $filter, domainENT){
 
   $scope.email = {
     destinatairesTo: [],
@@ -8,6 +8,7 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
     sujet: '',
     corps : '',
     newMessage: '',
+    attachments: [],
     id: 0
   };
   console.log("$rootScope.historyMail");
@@ -21,6 +22,7 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
       $scope.email.sujet = $rootScope.translationConversation["reply.re"]+$rootScope.historyMail.subject;
       $scope.email.corps= headerReponse()+$rootScope.historyMail.body;
       $scope.email.id = $rootScope.historyMail.id;
+      $scope.email.attachments = [];
       break;
 
       case "REPLY_ALL":
@@ -30,6 +32,7 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
         $scope.email.sujet = $rootScope.translationConversation["reply.re"]+$rootScope.historyMail.subject;
         $scope.email.corps= headerReponse()+$rootScope.historyMail.body;
         $scope.email.id = $rootScope.historyMail.id;
+        $scope.email.attachments = [];
         break;
 
         case "FORWARD":
@@ -39,6 +42,7 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
           $scope.email.sujet = $rootScope.translationConversation["reply.fw"]+$rootScope.historyMail.subject;
           $scope.email.corps= headerReponse()+$rootScope.historyMail.body;
           $scope.email.id = $rootScope.historyMail.id;
+          $scope.email.attachments = $rootScope.historyMail.attachments;
           break;
 
           case "DRAFT":
@@ -48,6 +52,7 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
             $scope.email.sujet = $rootScope.historyMail.subject;
             $scope.email.newMessage= $rootScope.historyMail.body.replace(/\<br\/\>/g, "\n");
             $scope.email.id = $rootScope.historyMail.id;
+            $scope.email.attachments = [];
             break;
 
             //draft
@@ -122,6 +127,12 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
                 } else{
                   saveNewDraft()
                 }
+              }
+
+              $scope.downloadAttachment = function (id){
+                var attachmentUrl = domainENT+"/conversation/message/"+$scope.email.id+"/attachment/"+id;
+                var attachment = findElementById($scope.email.attachments, id);
+                $scope.downloadFile(attachment.filename, attachmentUrl,attachment.contentType);
               }
 
               function removeMyself(){

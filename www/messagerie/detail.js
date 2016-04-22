@@ -98,7 +98,7 @@ angular.module('ent.message_detail', ['ent.message_services'])
   $scope.downloadAttachment = function (id){
     var attachmentUrl = domainENT+"/conversation/message/"+$scope.mail.id+"/attachment/"+id;
     var attachment = findElementById($scope.mail.attachments, id);
-    $scope.downloadFile(attachment.filename, attachmentUrl,attachment.contentType);
+    $scope.downloadFile(attachment.filename, attachmentUrl,attachment.contentType, "conversation");
   }
 
   function getMessage(){

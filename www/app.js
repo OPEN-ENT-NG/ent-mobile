@@ -35,13 +35,8 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
       console.log(error);
     })
 
-    // $cordovaGlobalization.getPreferredLanguage().then(function(result) {
-    //   localStorage.setItem('preferredLanguage', result.value);
-    //   amMoment.changeLocale(result.value);
-    // }, function(error) {
-    //   console.log(error);
-    // })
-
+    window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
+    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFS, fail);
   });
 })
 
@@ -211,12 +206,9 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   $scope.downloadFile = function (filename, urlFile, fileMIMEType, module){
     // Save location
     var url = $sce.trustAsResourceUrl(urlFile);
-    var targetPath = cordova.file.externalRootDirectory + filename; //revoir selon la platforme
-
-
-    if (ionic.Platform.isIOS()){
-
-    }
+    var targetPath = window.FS.root.nativeURL+"ENT/"+module+"/" + filename; //revoir selon la platforme
+    console.log(window.FS.root);
+    console.log(targetPath);
 
     $cordovaProgress.showSimpleWithLabelDetail(true, "Téléchargement en cours", filename);
     $cordovaFileTransfer.download(url, targetPath, {}, true).then(function (result) {
@@ -224,6 +216,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
       $scope.openLocalFile(targetPath, fileMIMEType);
 
     }, function (error) {
+      $cordovaProgress.hide();
       $scope.showAlertError(error);
     }, function (progress) {
     });
@@ -309,7 +302,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     });
 
     alertPopup.then(function(res) {
-      $scope.logout();
+      $ionicHistory.goBack();
     });
   };
 
@@ -368,4 +361,50 @@ function findElementById(arraytosearch, valuetosearch) {
     }
   }
   return null;
+}
+
+
+function fail() {
+  console.log("failed to get filesystem");
+}
+
+function gotFS(fileSystem) {
+  window.FS = fileSystem;
+
+  var printDirPath = function(entry){
+    console.log("Dir path - " + entry.fullPath);
+  }
+
+  createDirectory("ENT/conversation", printDirPath);
+  createDirectory("ENT/workspace", printDirPath);
+}
+
+function createDirectory(path, success){
+  var dirs = path.split("/").reverse();
+  var root = window.FS.root;
+
+  var createDir = function(dir){
+    console.log("create dir " + dir);
+    root.getDirectory(dir, {
+      create : true,
+      exclusive : false
+    }, successCB, failCB);
+  };
+
+  var successCB = function(entry){
+    console.log("dir created " + entry.fullPath);
+    root = entry;
+    if(dirs.length > 0){
+      createDir(dirs.pop());
+    }else{
+      console.log("all dir created");
+      success(entry);
+    }
+  };
+
+  var failCB = function(){
+    console.log("failed to create dir " + dir);
+  };
+
+  createDir(dirs.pop());
 }

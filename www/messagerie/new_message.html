@@ -49,9 +49,15 @@
 
     <div class="item-text-wrap item" ng-bind-html= "renderHtml(email.corps)" ng-show="email.corps.length!=0"></div>
 
-    <button class=" button icon-left downloadicon- attachment item-text-wrap" ng-show="attachements.length >0" >
+    <button class=" button icon-left downloadicon- attachment item-text-wrap" ng-show="attachments.length >0" >
       <p> {{attachment.filename}}</p>
     </button>
+
+    <div ng-repeat="attachment in email.attachments track by $index" class="pj" >
+      <button class=" button icon-left downloadicon- attachment item-text-wrap" ng-click="downloadAttachment(attachment.id)" >
+        <p> {{attachment.filename}}</p>
+      </button>
+    </div>
 
   </ion-content>
 </ion-view>

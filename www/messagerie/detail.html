@@ -1,4 +1,4 @@
-<ion-view title={{translationConversation["conversation.title"]}} ng-controller="MessagesDetailCtrl">
+<ion-view ng-controller="MessagesDetailCtrl">
 
   <ion-nav-buttons side="right">
     <button class="button button-icon button-clear ion-reply" ng-show=isInbox()  ng-click=editMail('REPLY_ONE')></button>
@@ -40,7 +40,6 @@
       <div class="list" ng-show=mail.attachments.length!=0>
 
         <div ng-repeat="attachment in mail.attachments track by $index" class="pj" >
-
           <button class=" button icon-left downloadicon- attachment item-text-wrap" ng-click="downloadAttachment(attachment.id)" >
             <p> {{attachment.filename}}</p>
           </button>
