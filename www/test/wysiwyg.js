@@ -1,4 +1,4 @@
-angular.module("ent.test", ['textAngular'])
+angular.module("ent.test", ['textAngular', 'file-model'])
 
 
 .controller('TestCtrl', function($scope){
@@ -17,4 +17,13 @@ angular.module("ent.test", ['textAngular'])
     console.log(domainENT+"userbook/mon-compte.html");
     return domainENT+"userbook/mon-compte.html";
   }
+})
+
+.controller('InputFileCtrl', function($scope, domainENT){
+  $scope.file = null;
+
+  $scope.$watch('file', function (newVal) {
+    if (newVal)
+    console.log(newVal);
+  })
 })

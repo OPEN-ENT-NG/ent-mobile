@@ -1,0 +1,23 @@
+
+<ion-view ng-controller="InputFileCtrl">
+
+  <ion-content>
+    <h1>angular-file-model</h1>
+    <p>Here you can test <code>angular-file-model</code>.</p>
+
+    <p>If you like it, go grab the code at <a href='https://github.com/ghostbar/angular-file-model'>github</a> or bower (with <code>bower install angular-file-model</code>)!</p>
+
+    <form>
+      <input type='file' file-model='file'>
+    </form>
+
+    <p ng-if='file'>
+      The name of your file is {{ file.name }} and the size is of {{ file.size }} bytes.
+    </p>
+
+    <p ng-if='file'>
+      If you want to have something like ngChange the best way ATM is to use a $scope.$watch over the variable you pass to file-model just like in this code.
+    </p>
+
+  </ion-content>
+</ion-view>

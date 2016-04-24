@@ -163,7 +163,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     url: '/test',
     views: {
       'menuContent': {
-        templateUrl: 'test/profile_frame.html'
+        templateUrl: 'test/input_file.html'
       }
     }
   })
@@ -207,7 +207,6 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     // Save location
     var url = $sce.trustAsResourceUrl(urlFile);
     var targetPath = window.FS.root.nativeURL+"ENT/"+module+"/" + filename; //revoir selon la platforme
-    console.log(window.FS.root);
     console.log(targetPath);
 
     $cordovaProgress.showSimpleWithLabelDetail(true, "Téléchargement en cours", filename);

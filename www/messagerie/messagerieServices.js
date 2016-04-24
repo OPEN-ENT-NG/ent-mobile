@@ -2,7 +2,6 @@ angular.module('ent.message_services', [])
 
 .service('MessagerieServices', function($http, $q, domainENT){
 
-
   var configHeaders = {
     headers: { 'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8" }
   };

@@ -42,10 +42,6 @@
     "cordova-plugin-globalization",
     "org.apache.cordova.file-transfer",
     {
-      "locator": "http://github.com/don/cordova-filechooser.git",
-      "id": "com.megster.cordova.FileChooser"
-    },
-    {
       "locator": "https://github.com/tiltshiftfocus/cordova-plugin-cache.git",
       "id": "org.apache.cordova.plugin.cache"
     }
