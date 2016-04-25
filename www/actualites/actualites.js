@@ -85,7 +85,6 @@ angular.module('ent.actualites', ['ent.actualites_service'])
             username: resp.data[i].username,
             thread_icon: $scope.setCorrectImage(resp.data[i].thread_icon,"/../../img/illustrations/actualites-default.png"),
             comments: angular.fromJson(resp.data[i].comments)
-
           });
         }
       }

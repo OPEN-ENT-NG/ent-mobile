@@ -2,7 +2,7 @@
 
   <ion-nav-buttons side="right">
     <label >
-      <input style="display:none;" type='file' onchange="angular.element(this).scope().fileNameChanged(this)" >
+      <input style="display:none;" type='file' onchange="angular.element(this).scope().addAttachment(this)" >
       <i class="button button-icon button-clear attachicon- 40"></i>
     </label>
     <button class="button button-icon button-clear ion-android-send"  ng-click="sendMail()" ></button>
@@ -52,14 +52,23 @@
       <textarea class="msd-elastic: \n;" ng-model="email.newMessage" placeholder={{translationConversation["sniplet.ml.content.placeholder"]}}></textarea>
     </label>
 
-    <div class="item-text-wrap item" ng-bind-html= "renderHtml(email.corps)" ng-show="email.corps.length!=0"></div>
-
     <!--graphisme à revoir -->
-    <div ng-repeat="attachment in email.attachments" class="pj" >
+    <!-- <div ng-repeat="attachment in email.attachments" class="pj" >
       <button class=" button icon-left downloadicon- attachment item-text-wrap" ng-click="downloadAttachment(attachment.id)" >
         <p> {{attachment.name}}</p>
-      </button>
-    </div>
+      </button> -->
+      <ion-list>
+        <div ng-repeat="attachment in email.attachments track by $index">
+          <div class="ajoutPJ item-text-wrap">
+            <p>{{attachment.filename}} ({{getSizeFile(attachment)}})</p>
+            <i class="cancel-circledicon-" ng-click="deleteAttachment($index)"></i>
+          </div>
+        </div>
+      </ion-list>
+
+    <div class="item-text-wrap item" ng-bind-html= "renderHtml(email.corps)" ng-show="email.corps.length!=0"></div>
+
+
 
 
   </ion-content>

@@ -68,3 +68,17 @@
   font-size:12px;
   color: #CCC;
 }
+
+.ajoutPJ{
+  display: inline-flex;
+  background: #F0F0F0;
+  padding: 2px;
+  text-align: center;
+  margin-bottom: 5px;
+  width: 95%;
+}
+
+.ajoutPJ p {
+  font-size: 14px;
+
+}
