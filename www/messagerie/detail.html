@@ -12,7 +12,6 @@
 
     <div class="item">
       <h2>{{mail.subject}}</h2>
-      <!-- <h3>{{mail.systemFolders}}</h3> -->
     </div>
 
     <div class="item-text-wrap">
@@ -21,12 +20,12 @@
 
         <h2>
           <span>{{translationConversation["transfer.to"]}}</span>
-          <span ng-repeat="person in mail.to track by $indexTo">{{person.displayName}}<br/></span>
+          <span ng-repeat="personTo in mail.to track by personTo.entId">{{personTo.displayName}}<br/></span>
         </h2>
 
         <h2 ng-show="mail.cc.length != 0">
           <span>{{translationConversation["transfer.cc"]}}</span>
-          <span ng-repeat="person in mail.cc track by $indexCc">{{person.displayName}}<br/></span>
+          <span ng-repeat="personCc in mail.cc track by personCc.entId" >{{personCc.displayName}}<br/></span>
         </h2>
 
         <h2 >

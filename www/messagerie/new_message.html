@@ -54,7 +54,7 @@
 
     <div class="item-text-wrap item" ng-bind-html= "renderHtml(email.corps)" ng-show="email.corps.length!=0"></div>
 
-    <!-- //graphisme à revoir -->
+    <!--graphisme à revoir -->
     <div ng-repeat="attachment in email.attachments" class="pj" >
       <button class=" button icon-left downloadicon- attachment item-text-wrap" ng-click="downloadAttachment(attachment.id)" >
         <p> {{attachment.name}}</p>

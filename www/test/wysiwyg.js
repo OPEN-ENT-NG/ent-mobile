@@ -1,4 +1,4 @@
-angular.module("ent.test", ['textAngular'])
+angular.module("ent.test", [])
 
 
 .controller('TestCtrl', function($scope){

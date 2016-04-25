@@ -1,4 +1,4 @@
-angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic','file-model'])
+angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic'])
 
 .controller('NewMessageCtrl', function($scope, $rootScope, $ionicPopover, $state, $ionicHistory, MessagerieServices,$ionicLoading,$ionicPopup, $filter, domainENT){
 

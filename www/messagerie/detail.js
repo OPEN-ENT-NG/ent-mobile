@@ -123,7 +123,8 @@ angular.module('ent.message_detail', ['ent.message_services'])
     for(var i=0; i< ids.length; i++){
       names.push({
         id: ids[i],
-        displayName: $rootScope.getRealName(ids[i], mail.displayNames)
+        displayName: $rootScope.getRealName(ids[i], mail.displayNames),
+        entId: i
       });
     }
     return names;
