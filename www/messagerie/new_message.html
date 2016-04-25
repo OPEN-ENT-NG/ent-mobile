@@ -1,6 +1,10 @@
 <ion-view view-title="Nouveau message" ng-init="transform()" ng-controller="NewMessageCtrl">
 
   <ion-nav-buttons side="right">
+    <label >
+      <input style="display:none;" type='file' onchange="angular.element(this).scope().fileNameChanged(this)" >
+      <i class="button button-icon button-clear attachicon- 40"></i>
+    </label>
     <button class="button button-icon button-clear ion-android-send"  ng-click="sendMail()" ></button>
     <button class="button button-icon button-clear ion-android-more-vertical actustatus" ng-click = "openPopover($event)"></button>
   </ion-nav-buttons>
@@ -43,25 +47,20 @@
     <label class="item item-input" >
       <input type="text" ng-model="email.sujet" placeholder={{translationConversation["sniplet.ml.subject.placeholder"]}}>
     </label>
+
     <label class="item-input fill-textarea item">
       <textarea class="msd-elastic: \n;" ng-model="email.newMessage" placeholder={{translationConversation["sniplet.ml.content.placeholder"]}}></textarea>
     </label>
 
     <div class="item-text-wrap item" ng-bind-html= "renderHtml(email.corps)" ng-show="email.corps.length!=0"></div>
 
-    <div ng-repeat="attachment in email.attachments track by $index" class="pj" >
+    <!-- //graphisme à revoir -->
+    <div ng-repeat="attachment in email.attachments" class="pj" >
       <button class=" button icon-left downloadicon- attachment item-text-wrap" ng-click="downloadAttachment(attachment.id)" >
-        <p> {{attachment.filename}}</p>
+        <p> {{attachment.name}}</p>
       </button>
     </div>
 
-    <form>
-      <input type='file' file-model='file' onchange="console.log(scope.file)">
-    </form>
-
-    <p ng-if='file'>
-      The name of your file is {{ file.name }} and the size is of {{ file.size }} bytes.
-    </p>
 
   </ion-content>
 </ion-view>

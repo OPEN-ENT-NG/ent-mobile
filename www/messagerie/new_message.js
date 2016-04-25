@@ -120,17 +120,15 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic',
       saveNewDraft()
     }
   }
-
-  $scope.file = null;
-  $scope.$watch('file', function (newVal) {
-    if (newVal){
-      console.log("new file");
-      console.log(newVal);
-
+  $scope.fileNameChanged = function(ele){
+    files = ele.files;
+    for(var i =0; i<files.length; i++){
+      console.log(files[i].name);
+      $scope.email.attachments.push(files[i])
+      console.log($scope.email);
     }
-    console.log("new file");
-    console.log(newVal);
-  });
+    $scope.$apply();
+  }
 
   $scope.downloadAttachment = function (id){
     var attachmentUrl = domainENT+"/conversation/message/"+$scope.email.id+"/attachment/"+id;

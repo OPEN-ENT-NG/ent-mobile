@@ -1,4 +1,4 @@
-angular.module("ent.test", ['textAngular', 'file-model'])
+angular.module("ent.test", ['textAngular'])
 
 
 .controller('TestCtrl', function($scope){
@@ -20,10 +20,15 @@ angular.module("ent.test", ['textAngular', 'file-model'])
 })
 
 .controller('InputFileCtrl', function($scope, domainENT){
-  $scope.file = null;
 
-  $scope.$watch('file', function (newVal) {
-    if (newVal)
-    console.log(newVal);
-  })
+  $scope.files = [];
+  $scope.fileNameChanged = function(ele){
+    files = ele.files;
+    namesArr = [];
+    for(var i =0; i<files.length; i++){
+      console.log(files[i].name);
+      $scope.files.push(files[i])
+      console.log( $scope.files);
+    }
+  }
 })
