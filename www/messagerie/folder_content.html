@@ -1,9 +1,9 @@
 <ion-view ng-controller="InboxCtrl" ng-cloak>
   <ion-nav-title>{{checkable ? getCountOfCheckedMessages(): getNameFolder(nameFolder)}}</ion-nav-title>
   <ion-nav-buttons side="right">
-    <button class="button button-icon button-clear ion-trash-a" ng-show=checkable ng-click=deleteSelectedMessages()></button>
-    <button class="button button-icon button-clear ion-filing" ng-show=checkable ng-click=showPopupMove()></button>
-    <button class="button button-icon button-clear ion-refresh" ng-show=canShowRestore() ng-click="restoreMessages()"></button>
+    <button class="button button-icon button-clear ion-trash-a buttonActionBar" ng-if=checkable ng-click=deleteSelectedMessages()></button>
+    <button class="button button-icon button-clear ion-filing buttonActionBar" ng-if=checkable ng-click=showPopupMove()></button>
+    <button class="button button-icon button-clear ion-refresh buttonActionBar" ng-if=canShowRestore() ng-click="restoreMessages()"></button>
   </ion-nav-buttons>
 
   <ion-content>
@@ -11,34 +11,50 @@
     </ion-refresher>
     <ion-list>
       <ion-item ng-repeat="extraFolder in extraFolders" href="#/app/messagerie/{{extraFolder.name}}/{{extraFolder.id}}">
-          <i class="foldericon-"></i>
-          {{writeWithUnreadNumber(extraFolder)}}
+        <i class="foldericon-"></i>
+        {{writeWithUnreadNumber(extraFolder)}}
       </ion-item>
     </ion-list>
 
     <div class="item item-divider" ng-show=extraFolders.length!=0 ></div>
-
     <ion-list>
       <ion-item ng-repeat="message in messages track by $index" ng-click="doAction($index)" on-long-press="enableCheckMessages($index)">
 
         <div ng-if="!message.unread" class="message">
-          <input type="checkbox" ng-model="message.checked" ng-checked = "message.checked" ng-show=checkable>
-          <div class="item-text-wrap">
+          <input type="checkbox" ng-model="message.checked" ng-checked = "message.checked" ng-show=checkable style="vertical-align: -webkit-baseline-middle;">
+
+
+          <div  class="item-text-wrap" style="float: right; width: 90%;" ng-if=checkable>
             <span class="right">{{message.date | date:'dd/MM/yy'}}</span>
             <h2>{{getRealName(message.from, message.displayNames)}}</h2>
+            <i class="attachicon-" ng-show="message.attachments.length != 0"></i>
+            <h2>{{message.subject}}</h2>
           </div>
-          <i class="attachicon-" ng-show="message.attachments.length != 0"></i>
-          <h2>{{message.subject}}</h2>
+
+          <div class="item-text-wrap" style="float: right; width: 100%;" ng-if=!checkable>
+            <span class="right">{{message.date | date:'dd/MM/yy'}}</span>
+            <h2>{{getRealName(message.from, message.displayNames)}}</h2>
+            <i class="attachicon-" ng-show="message.attachments.length != 0"></i>
+            <h2>{{message.subject}}</h2>
+          </div>
         </div>
 
         <div ng-if="message.unread" class="unreadMessage">
           <input type="checkbox" ng-model="message.checked" ng-checked = "message.checked" ng-show=checkable>
-          <div class="item-text-wrap">
+          <div  class="item-text-wrap" style="float: right; width: 90%;" ng-if=checkable>
             <span class="right">{{message.date | date:'dd/MM/yy'}}</span>
             <h2>{{getRealName(message.from, message.displayNames)}}</h2>
+            <i class="attachicon-" ng-show="message.attachments.length != 0"></i>
+            <h2>{{message.subject}}</h2>
           </div>
-          <i class="attachicon-" ng-show="message.attachments.length != 0"></i>
-          <h2>{{message.subject}}</h2>
+
+          <div class="item-text-wrap" style="float: right; width: 100%;" ng-if=!checkable>
+            <span class="right">{{message.date | date:'dd/MM/yy'}}</span>
+            <h2>{{getRealName(message.from, message.displayNames)}}</h2>
+            <i class="attachicon-" ng-show="message.attachments.length != 0"></i>
+            <h2>{{message.subject}}</h2>
+          </div>
+
         </div>
 
       </ion-item>

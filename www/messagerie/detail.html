@@ -5,7 +5,7 @@
     <button class="button button-icon button-clear ion-reply-all" ng-show=isInbox() ng-click=editMail('REPLY_ALL')></button>
     <button class="button button-icon button-clear ion-forward" ng-hide="isDraft()" ng-click=editMail('FORWARD')></button>
     <button class="button button-icon button-clear pencilicon-" ng-show=isDraft() ng-click=editMail('DRAFT')></button>
-    <button class="button button-icon button-clear ion-android-more-vertical actustatus" ng-click=openPopover($event)></button>
+    <button class="button button-icon button-clear ion-android-more-vertical buttonActionBar" ng-click=openPopover($event)></button>
   </ion-nav-buttons>
 
   <ion-content>

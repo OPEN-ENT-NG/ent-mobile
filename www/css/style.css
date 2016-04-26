@@ -10,25 +10,7 @@ ion-popover-view.fit ion-content {
   margin-top: 10px !important;
 }
 
-.actucard img, iframe{
-  max-width:100%;
-}
-
-.actucard h1 {
-  font-size: 14px;
-}
-
-.actucard a {
-  font-weight: bold;
-  color: blue;
-  text-decoration: underline;
-}
-
-.statusInTitle {
-  color: red;
-}
-
-.actustatus {
+.buttonActionBar {
   padding-left: 10px !important;
   padding-right: 5px !important;
 }
@@ -51,73 +33,11 @@ ion-popover-view.fit ion-content {
   display: block !important;
 }
 
-.attachment{
-  width: 100%;
-  height: auto;
-}
-
-.middle-attachment{
-  position: relative;
-  width: 80%;
-  background-color: yellow;
-  padding: 2%;
-  vertical-align: middle;
-}
-.right-attachment{
-  width: 10%;
-  position: relative;
-  text-align:center;
-  vertical-align: middle;
-  background-color: red;
-}
-
-.left-attachment{
-  position: relative;
-  width: 10%;
-  text-align:center;
-  vertical-align: middle;
-  background-color: green;
-}
-
-.float-button {
-
-  background-color:#FF8500;
-  opacity: 0.9;
-  color: white;
-  border-radius: 50%;
-  /*border-radius:15% 0 0 0;*/
-  width: 30px;
-  padding: 25px;
-  font-size: 20px;
-  position: fixed;
-  bottom: 5%; /* Adjust height */
-  right: 5%; /* Adjust position */
-  z-index: 1000;
-}
-
-.float-button .height_fix {
-  margin-top: 100%;
-  border: 1px solid red;
-}
-
-.float-button .content {
-  position: absolute;
-  left: 0;
-  top: 75%;
-  height: 100%;
-  width: 100%;
-  text-align: center !important;
-  margin-top: -20px;
-  color: white;
-}
-
 [ng\: cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x- ng-cloak {
   display: none !important;
 }
 
 /* add gmn */
-
-
 .img-responsive {
   display: block;
   max-width: 100%;

@@ -1,12 +1,12 @@
 <ion-view view-title="Nouveau message" ng-init="transform()" ng-controller="NewMessageCtrl">
 
   <ion-nav-buttons side="right">
-    <label >
+    <label class="logoAjoutPj">
       <input style="display:none;" type='file' onchange="angular.element(this).scope().addAttachment(this)" >
       <i class="button button-icon button-clear attachicon-"></i>
     </label>
     <button class="button button-icon button-clear ion-android-send"  ng-click="sendMail()" ></button>
-    <button class="button button-icon button-clear ion-android-more-vertical actustatus" ng-click = "openPopover($event)"></button>
+    <button class="button button-icon button-clear ion-android-more-vertical buttonActionBar" ng-click = "openPopover($event)"></button>
   </ion-nav-buttons>
   <ion-content>
 
@@ -52,19 +52,17 @@
       <textarea class="msd-elastic: \n;" ng-model="email.newMessage" placeholder={{translationConversation["sniplet.ml.content.placeholder"]}}></textarea>
     </label>
 
-    <!--graphisme à revoir -->
-    <!-- <div ng-repeat="attachment in email.attachments" class="pj" >
-      <button class=" button icon-left downloadicon- attachment item-text-wrap" ng-click="downloadAttachment(attachment.id)" >
-        <p> {{attachment.name}}</p>
-      </button> -->
+
+    <div class="item">
       <ion-list>
         <div ng-repeat="attachment in email.attachments track by $index">
-          <div class="ajoutPJ item-text-wrap">
+          <div class="destinataireMessagerie item-text-wrap">
             <p>{{attachment.filename}} ({{getSizeFile(attachment)}})</p>
             <i class="cancel-circledicon-" ng-click="deleteAttachment($index)"></i>
           </div>
         </div>
       </ion-list>
+    </div>
 
     <div class="item-text-wrap item" ng-bind-html= "renderHtml(email.corps)" ng-show="email.corps.length!=0"></div>
 

@@ -189,11 +189,10 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
             }
 
             function getMailData(){
-
               var newMail = {
                 id: $scope.email.id,
-                subject : $scope.email.sujet,
-                body : "<p>"+$scope.email.newMessage.replace(/\n/g, "<br/>")+"</p>"+$scope.email.corps,
+                subject : $scope.email.sujet ? $scope.email.sujet: $rootScope.translationConversation["nosubject"],
+                body : $scope.email.newMessage.replace(/\n/g, "<br/>") ? "<p>"+$scope.email.newMessage.replace(/\n/g, "<br/>")+"</p>"+$scope.email.corps: $scope.email.corps,
                 to : getIdArray($scope.email.destinatairesTo),
                 cc : getIdArray($scope.email.destinatairesCc),
                 from : $rootScope.myUser.id

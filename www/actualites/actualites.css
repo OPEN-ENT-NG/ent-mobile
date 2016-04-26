@@ -1,3 +1,17 @@
+.actucard img, iframe{
+  max-width:100%;
+}
+
+.actucard h1 {
+  font-size: 14px;
+}
+
+.actucard a {
+  font-weight: bold;
+  color: blue;
+  text-decoration: underline;
+}
+
 .commentActualites h3{
   font-weight: bold;
 }
