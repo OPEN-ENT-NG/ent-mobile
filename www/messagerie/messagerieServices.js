@@ -6,14 +6,12 @@ angular.module('ent.message_services', [])
     headers: { 'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8" }
   };
 
-  this.uploadAttachment = function (file, messageId){
-    var fd = new FormData();
-    fd.append('file', file);
 
-    return $http.post(domainENT+'/conversation/message/'+messageId+'/attachment', fd, {
-      transformRequest: angular.identity,
-      headers: {'Content-Type': undefined}
-    })
+  this.postAttachment = function(messageId, attachment){
+      return $http.post(domainENT+"/conversation/message/"+ messageId +"/attachment",  attachment, {
+            transformRequest: angular.identity,
+            headers: {'Content-Type': undefined}
+        });
   }
 
   this.getMessagesFolder = function (url) {
@@ -147,7 +145,7 @@ angular.module('ent.message_services', [])
   }
 
   this.sendMail = function(mailData){
-    return $http.post(domainENT+'/conversation/send',mailData, configHeaders );
+    return $http.post(domainENT+'/conversation/send?id='+mailData.id,mailData, configHeaders );
   }
 
   this.getTranslation = function(){

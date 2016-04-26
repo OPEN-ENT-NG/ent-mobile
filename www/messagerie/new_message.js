@@ -95,6 +95,7 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
                   $ionicLoading.hide();
                   $state.go("app.messagerie");
                 }, function(err){
+                  console.log(err);
                   $scope.showAlertError();
                 });
               } else {
@@ -110,23 +111,32 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
             }
 
             $scope.saveAsDraft = function(){
-                saveWithId($scope.email.id)
+              saveWithId($scope.email.id)
             }
             $scope.addAttachment = function(ele){
-              files = ele.files;
+              $ionicLoading.show({
+                template: '<i class="spinnericon- taille"></i>'
+              });
+              var attachment = ele.files[0];
+              console.log(attachment);
 
-              MessagerieServices.uploadAttachment(files, $scope.email.id).then(function(resp){
+              var formData = new FormData()
+              formData.append('file', attachment)
 
-                console.log("uploadAttachment ok");
-                console.log(resp);
+              MessagerieServices.postAttachment($scope.email.id, formData).then(function(result){
+                console.log(result);
+                $ionicLoading.hide();
                 $scope.email.attachments.push({
-                  contentType: files.type,
-                  filename: files.name,
-                  size: files.size
+                  contentType: attachment.type,
+                  filename: attachment.name,
+                  size: attachment.size,
+                  id: result.data.id,
+                  name: "file"
                 })
                 $scope.$apply()
-              }, function(error){
-                console.log("uploadAttachment ko");
+              }, function(e){
+                $ionicLoading.hide();
+                $scope.showAlertError(e);
               });
             }
 
@@ -181,6 +191,7 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
             function getMailData(){
 
               var newMail = {
+                id: $scope.email.id,
                 subject : $scope.email.sujet,
                 body : "<p>"+$scope.email.newMessage.replace(/\n/g, "<br/>")+"</p>"+$scope.email.corps,
                 to : getIdArray($scope.email.destinatairesTo),
@@ -304,7 +315,7 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
               },
               template:
               ' <ion-input fixed-label id="filter-box">' +
-              '<input type="search" ng-model="search.value" placeholder="{{placeholder}}" >' +
+              '<input type="search" ng-model="search.value" placeholder="{{placeholder}}" class="inputDestinataire">' +
               '</ion-input>'
             };
           })

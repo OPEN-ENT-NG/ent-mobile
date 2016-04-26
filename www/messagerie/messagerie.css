@@ -2,6 +2,10 @@
   padding-bottom: 2px;
 }
 
+.inputDestinataire{
+  width: 100%
+}
+
 .destinataireMessagerie{
   display: inline-flex;
   background-color:#4BAFD5;
