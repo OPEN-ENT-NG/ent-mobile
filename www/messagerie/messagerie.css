@@ -135,15 +135,23 @@
 
 .ajoutPJ{
   display: inline-flex;
-  background: #F0F0F0;
-  padding: 2px;
-  text-align: center;
+  background-color: #F0F0F0;
   margin-bottom: 5px;
-  width: 95%;
+  width: 100%;
+  padding: 2%;
 }
 
 .ajoutPJ p {
-  font-size: 14px;
+  width: 70%;
+  padding: 2%
+}
+
+.ajoutPJ i {
+  margin: auto;
+}
+
+.ajoutPJ i:hover {
+  color: white;
 }
 
 .logoAjoutPj{

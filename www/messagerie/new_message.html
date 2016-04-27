@@ -56,7 +56,7 @@
     <div class="item">
       <ion-list>
         <div ng-repeat="attachment in email.attachments track by $index">
-          <div class="destinataireMessagerie item-text-wrap">
+          <div class="ajoutPJ item-text-wrap">
             <p>{{attachment.filename}} ({{getSizeFile(attachment)}})</p>
             <i class="cancel-circledicon-" ng-click="deleteAttachment($index)"></i>
           </div>

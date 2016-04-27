@@ -52,7 +52,7 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
             $scope.email.sujet = $rootScope.historyMail.subject;
             $scope.email.newMessage= $rootScope.historyMail.body.replace(/\<br\/\>/g, "\n");
             $scope.email.id = $rootScope.historyMail.id;
-            $scope.email.attachments = [];
+            $scope.email.attachments = $rootScope.historyMail.attachments;
             break;
 
             //draft

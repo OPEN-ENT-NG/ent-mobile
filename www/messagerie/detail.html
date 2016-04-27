@@ -36,14 +36,27 @@
 
       <div class="item-text-wrap item corpsMessage" ng-bind-html= "renderHtml(mail.body)"></div>
 
-      <div class="list" ng-show=mail.attachments.length!=0>
+      <!-- <div class="list" ng-show=mail.attachments.length!=0>
 
         <div ng-repeat="attachment in mail.attachments track by $index" class="pj" >
           <button class=" button icon-left downloadicon- attachment item-text-wrap" ng-click="downloadAttachment(attachment.id)" >
             <p> {{attachment.filename}}</p>
           </button>
         </div>
+      </div> -->
+
+      <div class="item" ng-show=mail.attachments.length!=0>
+        <ion-list>
+          <div ng-repeat="attachment in mail.attachments track by $index">
+            <div class="ajoutPJ item-text-wrap">
+              <i class="downloadicon-"  ng-click="downloadAttachment(attachment.id)"></i>
+              <p>{{attachment.filename}} ({{getSizeFile(attachment)}})</p>
+              <i class="cancel-circledicon-" ng-click="deleteAttachment($index)"></i>
+            </div>
+          </div>
+        </ion-list>
       </div>
+
     </div>
   </ion-content>
 </ion-view>
