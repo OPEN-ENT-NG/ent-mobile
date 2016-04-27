@@ -150,12 +150,25 @@
   margin: auto;
 }
 
-.ajoutPJ i:hover {
-  color: white;
-}
-
 .logoAjoutPj{
   zoom: 90%;
   margin: auto;
   margin-right: 10px;
+}
+
+.borderBottomItemDismissed{
+  border-bottom-style: none;
+}
+
+.borderTopItemDismissed{
+  border-top-style: none;
+}
+
+.writtingZone{
+  height: 10%;
+}
+
+.fillParent{
+  width: 100% !important;
+  height: 100% !important;
 }

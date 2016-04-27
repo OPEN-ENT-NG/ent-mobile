@@ -3,7 +3,7 @@ angular.module('ent.messagerie', ['ent.message_services', 'ent.message_folder', 
 .controller('MessagerieFoldersCtrl', function($scope, $state, $rootScope, MessagerieServices,  $ionicLoading,  $cordovaVibration, $ionicPlatform, $ionicHistory){
 
   $ionicLoading.show({
-    template: '<i class="spinnericon- taille"></i>'
+    template: '<ion-spinner icon="android"/>'
   });
   getContacts();
   getFolders();

@@ -48,15 +48,16 @@
       <input type="text" ng-model="email.sujet" placeholder={{translationConversation["sniplet.ml.subject.placeholder"]}}>
     </label>
 
-    <label class="item-input fill-textarea item">
-      <textarea class="msd-elastic: \n;" ng-model="email.newMessage" placeholder={{translationConversation["sniplet.ml.content.placeholder"]}}></textarea>
+    <label class="item-input fill-textarea item borderBottomItemDismissed writtingZone">
+      <textarea class="fillParent msd-elastic: \n;" ng-model="email.newMessage" placeholder={{translationConversation["sniplet.ml.content.placeholder"]}}></textarea>
     </label>
 
 
-    <div class="item">
+    <div class="item borderTopItemDismissed borderBottomItemDismissed" ng-show="email.attachments.length>0">
       <ion-list>
         <div ng-repeat="attachment in email.attachments track by $index">
           <div class="ajoutPJ item-text-wrap">
+            <i class="downloadicon-"  ng-click="downloadAttachment(attachment.id)"></i>
             <p>{{attachment.filename}} ({{getSizeFile(attachment)}})</p>
             <i class="cancel-circledicon-" ng-click="deleteAttachment($index)"></i>
           </div>
@@ -64,7 +65,7 @@
       </ion-list>
     </div>
 
-    <div class="item-text-wrap item" ng-bind-html= "renderHtml(email.corps)" ng-show="email.corps.length!=0"></div>
+    <div class="item-text-wrap item borderTopItemDismissed" ng-bind-html= "renderHtml(email.corps)" ng-show="email.corps.length!=0" overflow-scroll="true"></div>
 
 
 

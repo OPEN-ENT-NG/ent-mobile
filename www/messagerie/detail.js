@@ -19,8 +19,8 @@ angular.module('ent.message_detail', ['ent.message_services'])
   $scope.trash = function(id){
     DeleteMessagesPopupFactory.getPopup().then(function(res){
       if(res){
-        $ioniLoading.show({
-          template: '<i class="spinnericon- taille"></i>'
+        $ionicLoading.show({
+          template: '<ion-spinner icon="android"/>'
         });
         MessagerieServices.trashMessage(id, $rootScope.nameFolder).then(function(){
           $ionicLoading.hide();
@@ -38,7 +38,7 @@ angular.module('ent.message_detail', ['ent.message_services'])
     popupMove.then(function(res){
 
       $ionicLoading.show({
-        template: '<i class="spinnericon- taille"></i>'
+        template: '<ion-spinner icon="android"/>'
       });
       console.log(res);
       if(res!=null){
@@ -54,7 +54,7 @@ angular.module('ent.message_detail', ['ent.message_services'])
 
   $scope.restoreMessage = function(message){
     $ionicLoading.show({
-      template: '<i class="spinnericon- taille"></i>'
+      template: '<ion-spinner icon="android"/>'
     });
     MessagerieServices.restoreSelectedMessages(message).then(function(){
       $ionicHistory.goBack();
@@ -103,7 +103,7 @@ angular.module('ent.message_detail', ['ent.message_services'])
 
   function getMessage(){
     $ionicLoading.show({
-      template: 'Chargement en cours...'
+      template: '<ion-spinner icon="android"/>'
     });
     MessagerieServices.getMessage($state.params.idMessage).then(function(res) {
       $scope.mail = res.data;

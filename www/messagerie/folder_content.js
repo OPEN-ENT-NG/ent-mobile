@@ -3,6 +3,7 @@ angular.module('ent.message_folder', ['ent.message_services'])
 .controller('InboxCtrl', function($scope, $state, $stateParams, $rootScope, domainENT, MessagerieServices,  $ionicLoading,  $cordovaVibration, $ionicHistory, $ionicPlatform, MoveMessagesPopupFactory, DeleteMessagesPopupFactory){
 
   $rootScope.nameFolder = $stateParams.nameFolder;
+  console.log( $stateParams.nameFolder );
   getMessagesAndFolders();
 
   $scope.restoreMessages = function(){
@@ -24,7 +25,7 @@ angular.module('ent.message_folder', ['ent.message_services'])
     popupMove.then(function(res){
 
       $ionicLoading.show({
-        template: '<i class="spinnericon- taille"></i>'
+        template: '<ion-spinner icon="spiral"/>'
       });
       console.log(res);
       if(res!=null){
@@ -147,7 +148,7 @@ angular.module('ent.message_folder', ['ent.message_services'])
 
   function getMessages (url){
     $ionicLoading.show({
-      template: '<i class="spinnericon- taille"></i>'
+      template: '<ion-spinner icon="spiral"/>'
     });
     MessagerieServices.getMessagesFolder(url).then(function (response) {
       $scope.messages = response.data;

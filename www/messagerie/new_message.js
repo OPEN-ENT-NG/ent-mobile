@@ -1,6 +1,6 @@
 angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic'])
 
-.controller('NewMessageCtrl', function($scope, $rootScope, $ionicPopover, $state, $ionicHistory, MessagerieServices,$ionicLoading,$ionicPopup, $filter, domainENT){
+.controller('NewMessageCtrl', function($scope, $rootScope, $ionicPopover, $state, $ionicHistory, MessagerieServices,$ionicLoading,$ionicPopup,domainENT, $filter){
 
   $scope.email = {
     destinatairesTo: [],
@@ -88,7 +88,7 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
 
               if($scope.email.destinatairesTo.length >0){
                 $ionicLoading.show({
-                  template: '<i class="spinnericon- taille"></i>'
+                  template: '<ion-spinner icon="android"/>'
                 });
                 MessagerieServices.sendMail(getMailData()).then(function(resp){
                   console.log("Success");
@@ -115,7 +115,7 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
             }
             $scope.addAttachment = function(ele){
               $ionicLoading.show({
-                template: '<i class="spinnericon- taille"></i>'
+                template: '<ion-spinner icon="android"/>'
               });
               var attachment = ele.files[0];
               console.log(attachment);
@@ -149,10 +149,6 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
               var attachmentUrl = domainENT+"/conversation/message/"+$scope.email.id+"/attachment/"+id;
               var attachment = findElementById($scope.email.attachments, id);
               $scope.downloadFile(attachment.filename, attachmentUrl,attachment.contentType);
-            }
-
-            $scope.getSizeFile = function (file){
-              return $filter('bytes')(file.size);
             }
 
             function removeMyself(){
@@ -317,13 +313,4 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
               '<input type="search" ng-model="search.value" placeholder="{{placeholder}}" class="inputDestinataire">' +
               '</ion-input>'
             };
-          })
-          .filter('bytes', function() {
-            return function(bytes, precision) {
-              if (isNaN(parseFloat(bytes)) || !isFinite(bytes)) return '-';
-              if (typeof precision === 'undefined') precision = 1;
-              var units = ['bytes', 'kB', 'MB', 'GB', 'TB', 'PB'],
-              number = Math.floor(Math.log(bytes) / Math.log(1024));
-              return (bytes / Math.pow(1024, Math.floor(number))).toFixed(precision) +  ' ' + units[number];
-            }
           });

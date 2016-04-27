@@ -23,7 +23,6 @@
         <div ng-if="!message.unread" class="message">
           <input type="checkbox" ng-model="message.checked" ng-checked = "message.checked" ng-show=checkable style="vertical-align: -webkit-baseline-middle;">
 
-
           <div  class="item-text-wrap" style="float: right; width: 90%;" ng-if=checkable>
             <span class="right">{{message.date | date:'dd/MM/yy'}}</span>
             <h2>{{getRealName(message.from, message.displayNames)}}</h2>

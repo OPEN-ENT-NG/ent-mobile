@@ -1,10 +1,10 @@
-<ion-view ng-controller="MessagesDetailCtrl">
+<ion-view ng-controller="MessagesDetailCtrl" view-title={{nameFolder}}>
 
   <ion-nav-buttons side="right">
-    <button class="button button-icon button-clear ion-reply" ng-show=isInbox()  ng-click=editMail('REPLY_ONE')></button>
-    <button class="button button-icon button-clear ion-reply-all" ng-show=isInbox() ng-click=editMail('REPLY_ALL')></button>
-    <button class="button button-icon button-clear ion-forward" ng-hide="isDraft()" ng-click=editMail('FORWARD')></button>
-    <button class="button button-icon button-clear pencilicon-" ng-show=isDraft() ng-click=editMail('DRAFT')></button>
+    <button class="button button-icon button-clear ion-reply" ng-if=isInbox()  ng-click=editMail('REPLY_ONE')></button>
+    <button class="button button-icon button-clear ion-reply-all" ng-if=isInbox() ng-click=editMail('REPLY_ALL')></button>
+    <button class="button button-icon button-clear ion-forward" ng-if="!isDraft()" ng-click=editMail('FORWARD')></button>
+    <button class="button button-icon button-clear pencilicon-" ng-if=isDraft() ng-click=editMail('DRAFT')></button>
     <button class="button button-icon button-clear ion-android-more-vertical buttonActionBar" ng-click=openPopover($event)></button>
   </ion-nav-buttons>
 
@@ -34,24 +34,14 @@
         </h2>
       </div>
 
-      <div class="item-text-wrap item corpsMessage" ng-bind-html= "renderHtml(mail.body)"></div>
+      <div class="item-text-wrap item corpsMessage" ng-bind-html= "renderHtml(mail.body)" ng-show=mail.body overflow-scroll="true" style="max-width:100%;"></div>
 
-      <!-- <div class="list" ng-show=mail.attachments.length!=0>
-
-        <div ng-repeat="attachment in mail.attachments track by $index" class="pj" >
-          <button class=" button icon-left downloadicon- attachment item-text-wrap" ng-click="downloadAttachment(attachment.id)" >
-            <p> {{attachment.filename}}</p>
-          </button>
-        </div>
-      </div> -->
-
-      <div class="item" ng-show=mail.attachments.length!=0>
+      <div class="item borderBottomItemDismissed borderTopItemDismissed" ng-show=mail.attachments.length!=0>
         <ion-list>
           <div ng-repeat="attachment in mail.attachments track by $index">
             <div class="ajoutPJ item-text-wrap">
               <i class="downloadicon-"  ng-click="downloadAttachment(attachment.id)"></i>
               <p>{{attachment.filename}} ({{getSizeFile(attachment)}})</p>
-              <i class="cancel-circledicon-" ng-click="deleteAttachment($index)"></i>
             </div>
           </div>
         </ion-list>

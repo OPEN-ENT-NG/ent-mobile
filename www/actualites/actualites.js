@@ -3,7 +3,7 @@ angular.module('ent.actualites', ['ent.actualites_service'])
 .controller('InfosCtrl', function ($scope, $state, $rootScope, InfosService,$ionicLoading) {
 
   $ionicLoading.show({
-    template: '<i class="spinnericon- "></i>'
+    template: '<ion-spinner icon="android"/>'
   });
 
   getActualites();
