@@ -16,13 +16,18 @@ angular.module('ent.message_detail', ['ent.message_services'])
     return "trash" === $rootScope.nameFolder;
   }
 
-  $scope.trash = function(id){
+  $rootScope.isPersonnalFolder = function(nameFolder){
+    var nonPersonnalFolders = ["inbox", "outbox", "draft", "trash"];
+    console.log(nonPersonnalFolders.indexOf(nameFolder) != -1);
+    return nonPersonnalFolders.indexOf(nameFolder) == -1;
+  }
+  $scope.trash = function(){
     DeleteMessagesPopupFactory.getPopup().then(function(res){
       if(res){
         $ionicLoading.show({
           template: '<ion-spinner icon="android"/>'
         });
-        MessagerieServices.trashMessage(id, $rootScope.nameFolder).then(function(){
+        MessagerieServices.deleteSelectedMessages([$scope.mail], $rootScope.nameFolder).then(function(){
           $ionicLoading.hide();
           AlertMessagePopupFactory.getPopup($rootScope.translationConversation["delete"], "Message(s) supprimé(s)").then(function() {
             $ionicHistory.clearCache();
@@ -93,6 +98,8 @@ angular.module('ent.message_detail', ['ent.message_services'])
 
   function goToNewMail(){
     $rootScope.historyMail = $scope.mail;
+    console.log($scope.mail);
+
     console.log($rootScope.historyMail);
     $state.go('app.new_message');
   }

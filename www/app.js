@@ -21,13 +21,6 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
         navigator.splashscreen.hide();
       }, 3000 - 1000);
     }
-    // $rootScope.$on('loading:show', function() {
-    //   $ionicLoading.show({template: 'foo'})
-    // })
-    //
-    // $rootScope.$on('loading:hide', function() {
-    //   $ionicLoading.hide()
-    // })
     $cordovaGlobalization.getPreferredLanguage().then(function(result) {
       localStorage.setItem('preferredLanguage', result.value);
       amMoment.changeLocale(result.value);
@@ -177,7 +170,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   $urlRouterProvider.otherwise('/login');
 })
 
-.controller('AppCtrl', function ($scope, $rootScope, $sce, $state, $cordovaInAppBrowser, $cordovaFileTransfer,$cordovaProgress, $cordovaFileOpener2, domainENT, $ionicHistory, SkinFactory, $ionicPopup,MessagerieServices, $filter){
+.controller('AppCtrl', function ($scope, $rootScope, $sce, $state, $cordovaInAppBrowser, $cordovaFileTransfer,$cordovaProgress, $cordovaFileOpener2, domainENT, $ionicHistory, SkinFactory, $ionicPopup, ActualitesService, MessagerieServices, BlogsService, $filter){
 
   SkinFactory.getSkin().then(function(res) {
     localStorage.setItem('skin', res.data.skin);
@@ -185,7 +178,9 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     $scope.showAlertError(err);
   });
 
+  getTranslationActualites();
   getTranslationConversation();
+  getTraductionBlogs();
 
 
   $scope.renderHtml = function (text){
@@ -328,6 +323,13 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     location.reload();
   }
 
+  function getTranslationActualites(){
+    ActualitesService.getTranslation().then(function(resp){
+      $rootScope.translationActus = resp.data;
+    }, function(err){
+      $scope.showAlertError(err);
+    });
+  }
 
   function getTranslationConversation(){
     MessagerieServices.getTranslation().then(function(resp) {
@@ -335,6 +337,18 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     }), function(err){
       alert('ERR:'+ err);
     };
+  }
+
+  function getTraductionBlogs(){
+    BlogsService.getTraduction().then(function(resp){
+      $rootScope.translationBlog = resp.data;
+
+      $rootScope.translationBlog["filters.drafts"] = $rootScope.translationBlog["filters.drafts"].substring(0,$rootScope.translationBlog["filters.drafts"].indexOf('(')-1);
+      $rootScope.translationBlog["filters.submitted"] = $rootScope.translationBlog["filters.submitted"].substring(0,$rootScope.translationBlog["filters.submitted"].indexOf('(')-1);
+
+    }), function(err){
+      alert('ERR:'+ err);
+    }
   }
 
 })

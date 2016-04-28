@@ -1,6 +1,6 @@
 angular.module('ent.actualites', ['ent.actualites_service'])
 
-.controller('InfosCtrl', function ($scope, $state, $rootScope, InfosService,$ionicLoading) {
+.controller('ActualitesCtrl', function ($scope, $state, $rootScope, ActualitesService,$ionicLoading) {
 
   $ionicLoading.show({
     template: '<ion-spinner icon="android"/>'
@@ -8,7 +8,6 @@ angular.module('ent.actualites', ['ent.actualites_service'])
 
   getActualites();
   getThreads();
-  getTranslation();
 
   $ionicLoading.hide();
 
@@ -72,7 +71,7 @@ angular.module('ent.actualites', ['ent.actualites_service'])
 
   function getActualites(){
     $scope.infos =[];
-    InfosService.getAllInfos().then(function (resp) {
+    ActualitesService.getAllInfos().then(function (resp) {
       for(var i = 0; i< resp.data.length; i++){
         if(resp.data[i].status == 3){
           $scope.infos.push({
@@ -95,7 +94,7 @@ angular.module('ent.actualites', ['ent.actualites_service'])
 
   function getThreads(){
     $scope.threads = [];
-    InfosService.getAllThreads().then(function(resp){
+    ActualitesService.getAllThreads().then(function(resp){
       for(var i = 0; i< resp.data.length; i++){
         $scope.threads.push({
           thread_id: resp.data[i]._id,
@@ -103,14 +102,6 @@ angular.module('ent.actualites', ['ent.actualites_service'])
           thread_icon: $scope.setCorrectImage(resp.data[i].icon, "/../../img/illustrations/actualites-default.png")
         });
       }
-    }, function(err){
-      $scope.showAlertError(err);
-    });
-  }
-
-  function getTranslation(){
-    InfosService.getTranslation().then(function(resp){
-      $rootScope.translationActus = resp.data;
     }, function(err){
       $scope.showAlertError(err);
     });

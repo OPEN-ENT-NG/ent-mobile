@@ -25,7 +25,7 @@ angular.module('ent.message_folder', ['ent.message_services'])
     popupMove.then(function(res){
 
       $ionicLoading.show({
-        template: '<ion-spinner icon="spiral"/>'
+        template: '<ion-spinner icon="android"/>'
       });
       console.log(res);
       if(res!=null){
@@ -142,7 +142,7 @@ angular.module('ent.message_folder', ['ent.message_services'])
 
   function getMessages (url){
     $ionicLoading.show({
-      template: '<ion-spinner icon="spiral"/>'
+      template: '<ion-spinner icon="android"/>'
     });
     MessagerieServices.getMessagesFolder(url).then(function (response) {
       $scope.messages = response.data;

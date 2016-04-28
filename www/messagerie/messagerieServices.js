@@ -100,11 +100,6 @@ angular.module('ent.message_services', [])
     return deferredCombinedItems.promise;
   }
 
-  this.trashMessage = function (id, nameFolder){
-    var url = nameFolder=="trash" ? domainENT+"/conversation/delete?id=":domainENT+"/conversation/trash?id=";
-    return $http.put(url+id);
-  }
-
   this.getMessage = function(id){
     return $http.get(domainENT+"/conversation/message/"+id);
   }

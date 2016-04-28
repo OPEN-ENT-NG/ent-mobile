@@ -1,10 +1,9 @@
 angular.module('ent.blog', ['ent.blog_service'])
 
 
-.controller('BlogCtrl', function($scope, BlogsService, $stateParams, $ionicPopover, $rootScope, $filter){
+.controller('BlogCtrl', function($scope, BlogsService, $stateParams, $ionicPopover, $rootScope, $filter, $ionicLoading){
 
   $scope.nameBlog = $stateParams.nameBlog;
-  $scope.statePosts = BlogsService.getStatusPosts();
   getPostsByBlogId($stateParams.idBlog);
 
   $scope.getCountComments = function(post){
@@ -40,6 +39,9 @@ angular.module('ent.blog', ['ent.blog_service'])
   }
 
   function getPostsByBlogId(id){
+    $ionicLoading.show({
+      template: '<ion-spinner icon="android"/>'
+    });
     $scope.posts = [];
     var commentsByPostArray = [];
 
@@ -65,9 +67,11 @@ angular.module('ent.blog', ['ent.blog_service'])
             }
           }
         })
+        $ionicLoading.hide();
       })
     }), function(err){
-      console.log(err);
+      $ionicLoading.hide();
+      $scope.showAlertError(err)
     }
   }
 });
