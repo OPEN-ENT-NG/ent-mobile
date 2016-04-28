@@ -8,10 +8,10 @@ angular.module('ent.message_services', [])
 
 
   this.postAttachment = function(messageId, attachment){
-      return $http.post(domainENT+"/conversation/message/"+ messageId +"/attachment",  attachment, {
-            transformRequest: angular.identity,
-            headers: {'Content-Type': undefined}
-        });
+    return $http.post(domainENT+"/conversation/message/"+ messageId +"/attachment",  attachment, {
+      transformRequest: angular.identity,
+      headers: {'Content-Type': undefined}
+    });
   }
 
   this.getMessagesFolder = function (url) {
@@ -182,7 +182,7 @@ angular.module('ent.message_services', [])
   }
 })
 
-.factory("MoveMessagesPopupFactory", function ($ionicPopup, MessagerieServices) {
+.factory("MoveMessagesPopupFactory", function ($ionicPopup, MessagerieServices, $rootScope) {
 
   function getPopup(scope) {
     MessagerieServices.getCustomFolders().then(function (resp) {
@@ -197,8 +197,8 @@ angular.module('ent.message_services', [])
     return $ionicPopup.show({
 
       templateUrl: 'messagerie/popup_move_mail.html',
-      title: 'Déplacement de messages',
-      subTitle: 'Choix du dossier',
+      title: $rootScope.translationConversation["mail.move"],
+      subTitle: $rootScope.translationConversation["destination.folder"],
       scope: scope,
       buttons: [
         { text: 'Annuler' },
@@ -220,15 +220,27 @@ angular.module('ent.message_services', [])
     getPopup: getPopup
   };
 })
-.factory("DeleteMessagesPopupFactory", function ($ionicPopup, MessagerieServices) {
+.factory("DeleteMessagesPopupFactory", function ($ionicPopup, $rootScope) {
 
   function getPopup() {
     return $ionicPopup.confirm({
-      title: 'Suppression de message(s)',
+      title: $rootScope.translationConversation["delete"],
       template: 'Êtes-vous sûr(e) de vouloir supprimer ce(s) message(s) ?'
     })
   }
   return {
     getPopup: getPopup
   };
-});
+})
+.factory("AlertMessagePopupFactory", function ($ionicPopup) {
+
+  function getPopup(titre, message) {
+    return $ionicPopup.alert({
+      title: titre,
+      template: message
+    })
+  }
+    return {
+      getPopup: getPopup
+    };
+  });

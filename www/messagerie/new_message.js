@@ -1,6 +1,6 @@
 angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic'])
 
-.controller('NewMessageCtrl', function($scope, $rootScope, $ionicPopover, $state, $ionicHistory, MessagerieServices,$ionicLoading,$ionicPopup,domainENT, $filter){
+.controller('NewMessageCtrl', function($scope, $rootScope, $ionicPopover, $state, $ionicHistory, MessagerieServices,$ionicLoading,$ionicPopup,domainENT, $filter,AlertMessagePopupFactory){
 
   $scope.email = {
     destinatairesTo: [],
@@ -168,7 +168,10 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
             function saveWithId(id){
               MessagerieServices.saveWithId($scope.email.id, getMailData()).then(function(resp){
                 $scope.closePopover();
-                $state.go("app.messagerie");
+                AlertMessagePopupFactory.getPopup($rootScope.translationConversation["save"], $rootScope.translationConversation["draft.saved"]).then(function() {
+                  $ionicHistory.clearCache();
+                  $ionicHistory.goBack();
+                })
               }, function(err){
                 $scope.showAlertError();
               });

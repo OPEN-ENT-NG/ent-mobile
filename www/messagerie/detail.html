@@ -1,5 +1,5 @@
-<ion-view ng-controller="MessagesDetailCtrl" view-title={{nameFolder}}>
-
+<ion-view ng-controller="MessagesDetailCtrl">
+  <ion-nav-title>{{checkable ? getCountOfCheckedMessages(): getNameFolder(nameFolder)}}</ion-nav-title>
   <ion-nav-buttons side="right">
     <button class="button button-icon button-clear ion-reply" ng-if=isInbox()  ng-click=editMail('REPLY_ONE')></button>
     <button class="button button-icon button-clear ion-reply-all" ng-if=isInbox() ng-click=editMail('REPLY_ALL')></button>
@@ -34,7 +34,7 @@
         </h2>
       </div>
 
-      <div class="item-text-wrap item corpsMessage" ng-bind-html= "renderHtml(mail.body)" ng-show=mail.body overflow-scroll="true" style="max-width:100%;"></div>
+      <div class="item-text-wrap item corpsMessage htmlEntContent" ng-bind-html= "renderHtml(mail.body)" ng-show=mail.body overflow-scroll="true"></div>
 
       <div class="item borderBottomItemDismissed borderTopItemDismissed" ng-show=mail.attachments.length!=0>
         <ion-list>

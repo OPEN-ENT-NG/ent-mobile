@@ -18,7 +18,7 @@
           <p>{{(info.publication_date ? formatDate(info.publication_date) : formatDateLocale(info.modified))}}</p>
         </div>
 
-        <ion-card-content class="item actucard " overflow-scroll="true">
+        <ion-card-content class="item htmlEntContent actucard" overflow-scroll="true">
 
           <div class="item-text-wrap" ng-bind-html=renderHtml(info.content)></div>
 

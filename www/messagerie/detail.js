@@ -1,6 +1,6 @@
 angular.module('ent.message_detail', ['ent.message_services'])
 
-.controller('MessagesDetailCtrl', function($scope, $rootScope, $ionicPopover, $state, domainENT, MessagerieServices,  $ionicLoading, $ionicHistory, DeleteMessagesPopupFactory,MoveMessagesPopupFactory){
+.controller('MessagesDetailCtrl', function($scope, $rootScope, $ionicPopover, $state, domainENT, MessagerieServices,  $ionicLoading, $ionicHistory, DeleteMessagesPopupFactory,MoveMessagesPopupFactory, AlertMessagePopupFactory){
 
   getMessage();
 
@@ -24,8 +24,10 @@ angular.module('ent.message_detail', ['ent.message_services'])
         });
         MessagerieServices.trashMessage(id, $rootScope.nameFolder).then(function(){
           $ionicLoading.hide();
-          $ionicHistory.clearCache();
-          $ionicHistory.goBack();
+          AlertMessagePopupFactory.getPopup($rootScope.translationConversation["delete"], "Message(s) supprimé(s)").then(function() {
+            $ionicHistory.clearCache();
+            $ionicHistory.goBack();
+          })
         }, function(err){
           $scope.showAlertError();
         });

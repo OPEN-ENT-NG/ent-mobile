@@ -63,7 +63,7 @@ angular.module('ent.message_folder', ['ent.message_services'])
     }
   }
 
-  $scope.getNameFolder = function(folderName){
+  $rootScope.getNameFolder = function(folderName){
     var nonPersonnalFolders = ["inbox", "outbox", "draft", "trash"];
     return nonPersonnalFolders.indexOf(folderName) != -1 ? $rootScope.translationConversation[folderName]:folderName;
   }
@@ -76,7 +76,7 @@ angular.module('ent.message_folder', ['ent.message_services'])
     $scope.checkable ?  $scope.checkMessage(index):goToMessage(index)
   }
 
-  $scope.getCountOfCheckedMessages = function(){
+  $rootScope.getCountOfCheckedMessages = function(){
     return getSelectedMessages().length;
   }
 

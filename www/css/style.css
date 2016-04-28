@@ -6,6 +6,10 @@ ion-popover-view.fit ion-content {
   position: relative !important;
 }
 
+.htmlEntContent *{
+    max-width:100%;
+}
+
 .platform-android ion-popover-view.fit {
   margin-top: 10px !important;
 }
@@ -31,10 +35,6 @@ ion-popover-view.fit ion-content {
 .item.item-accordion.ng-hide-add,
 .item.item-accordion.ng-hide-remove {
   display: block !important;
-}
-
-[ng\: cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x- ng-cloak {
-  display: none !important;
 }
 
 /* add gmn */
