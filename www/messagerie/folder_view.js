@@ -18,10 +18,9 @@ angular.module('ent.messagerie', ['ent.message_services', 'ent.message_folder', 
     }
     return returnName;
   }
-
-  $rootScope.writeWithUnreadNumber = function(folder){
-    var folderName = MessagerieServices.getPersonalFolderIds().indexOf(folder.id) ==-1 ? folder.name : $rootScope.translationConversation[folder.name];
-    return folder.count!=0 ? folderName+" ("+folder.count+")":folderName;
+  $rootScope.getNameFolder = function(nameFolder){
+    var nonPersonnalFolders = ["inbox", "outbox", "draft", "trash"];
+    return nonPersonnalFolders.indexOf(nameFolder) != -1 ? $rootScope.translationConversation[nameFolder]:nameFolder;
   }
 
   $rootScope.newMail = function(){

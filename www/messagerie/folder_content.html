@@ -12,7 +12,7 @@
     <ion-list>
       <ion-item ng-repeat="extraFolder in extraFolders" href="#/app/messagerie/{{extraFolder.name}}/{{extraFolder.id}}">
         <i class="foldericon-"></i>
-        {{writeWithUnreadNumber(extraFolder)}}
+        {{getNameFolder(extraFolder.name)}} <span ng-show="folder.count>0">({{extraFolder.count}})</span>
       </ion-item>
     </ion-list>
 

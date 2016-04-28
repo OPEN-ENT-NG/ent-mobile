@@ -1,14 +1,14 @@
 <ion-view view-title={{translationConversation["user.folders"]}}  ng-controller="MessagerieFoldersCtrl">
 
   <ion-content>
-    <ion-refresher pulling-text="Actualiser" on-refresh="doRefreshFolders()">
+    <ion-refresher pulling-text={{translationConversation["updating"]}} on-refresh="doRefreshFolders()">
     </ion-refresher>
 
     <ion-list>
       <div ng-repeat="folder in folders track by $index">
         <ion-item ng-show=folder.name.length!=0 ng-click="goToFolder(folder)">
           <i class="foldericon-"></i>
-          {{writeWithUnreadNumber(folder)}}
+          {{getNameFolder(folder.name)}} <span ng-show="folder.count>0">({{folder.count}})</span>
         </ion-item>
         <div class="item item-divider" ng-hide=folder.name.length!=0></div>
       </div>

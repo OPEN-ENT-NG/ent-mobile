@@ -62,12 +62,6 @@ angular.module('ent.message_folder', ['ent.message_services'])
       })
     }
   }
-
-  $rootScope.getNameFolder = function(folderName){
-    var nonPersonnalFolders = ["inbox", "outbox", "draft", "trash"];
-    return nonPersonnalFolders.indexOf(folderName) != -1 ? $rootScope.translationConversation[folderName]:folderName;
-  }
-
   $scope.checkMessage = function(index){
     $scope.messages[index].checked = !$scope.messages[index].checked;
   }
