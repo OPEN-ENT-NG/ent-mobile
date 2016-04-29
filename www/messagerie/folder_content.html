@@ -11,7 +11,7 @@
     </ion-refresher>
     <ion-list>
       <ion-item ng-repeat="extraFolder in extraFolders" href="#/app/messagerie/{{extraFolder.name}}/{{extraFolder.id}}">
-        <i class="foldericon-"></i>
+        <i class="folder-open-2icon-"></i>
         {{getNameFolder(extraFolder.name)}} <span ng-show="folder.count>0">({{extraFolder.count}})</span>
       </ion-item>
     </ion-list>

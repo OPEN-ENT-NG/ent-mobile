@@ -1,4 +1,4 @@
-angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute','ent.actualites','ent.blog','ent.blog-list','ent.auth', 'ent.messagerie', 'ent.new_message','ent.user','angularMoment','ent.test'])
+angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute','ent.actualites','ent.blog','ent.blog-list','ent.auth', 'ent.messagerie','ent.workspace','ent.user','angularMoment','ent.test'])
 
 // .value("domainENT", "https://preprod-leo.entcore.org")
 .value("domainENT", "https://recette-leo.entcore.org")
@@ -104,15 +104,6 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     }
   })
 
-  .state('app.espace_doc', {
-    url: '/espace_doc',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/espace_doc.html'
-      }
-    }
-  })
-
   .state('app.blog-list', {
     url: '/blog-list',
     views: {
@@ -151,6 +142,24 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     }
   })
 
+  .state('app.workspace', {
+    url: '/workspace',
+    views: {
+      'menuContent': {
+        templateUrl: 'workspace/main_workspace.html'
+      }
+    }
+  })
+
+  .state('app.workpace_folder_content', {
+    url: '/workspace/:nameWorkspaceFolder',
+    views: {
+      'menuContent': {
+        templateUrl: 'workspace/workspace_folder_content.html'
+      }
+    }
+  })
+
   .state('app.test', {
     url: '/test',
     views: {
@@ -167,10 +176,12 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   });
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/login');
+  // $urlRouterProvider.otherwise('/login');
+  $urlRouterProvider.otherwise('/app/workspace/documents');
+
 })
 
-.controller('AppCtrl', function ($scope, $rootScope, $sce, $state, $cordovaInAppBrowser, $cordovaFileTransfer,$cordovaProgress, $cordovaFileOpener2, domainENT, $ionicHistory, SkinFactory, $ionicPopup, ActualitesService, MessagerieServices, BlogsService, $filter){
+.controller('AppCtrl', function ($scope, $rootScope, $sce, $state, $cordovaInAppBrowser, $cordovaFileTransfer,$cordovaProgress, $cordovaFileOpener2, domainENT, $ionicHistory, SkinFactory, $ionicPopup, ActualitesService, MessagerieServices, BlogsService, WorkspaceService, $filter){
 
   SkinFactory.getSkin().then(function(res) {
     localStorage.setItem('skin', res.data.skin);
@@ -181,6 +192,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   getTranslationActualites();
   getTranslationConversation();
   getTraductionBlogs();
+  getTraductionWorkspace();
 
 
   $scope.renderHtml = function (text){
@@ -351,8 +363,14 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     }
   }
 
+  function getTraductionWorkspace(){
+    WorkspaceService.getTranslation().then(function(resp) {
+      $rootScope.translationWorkspace = resp.data;
+    }), function(err){
+      alert('ERR:'+ err);
+    };
+  }
 })
-
 .directive('appVersion', function () {
   return function(scope, elm, attrs) {
     cordova.getAppVersion(function (version) {

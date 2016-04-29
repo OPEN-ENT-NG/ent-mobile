@@ -1,0 +1,43 @@
+<ion-view ng-controller="WorkspaceFolderContentCtlr" view-title={{translationWorkspace[nameWorkspaceFolder]}}>
+
+  <ion-content>
+
+<!--Real folders and docs -->
+    <ion-list>
+      <ion-item ng-repeat="folder in folders track by $index" class="item item-text-wrap">
+          <i class="folder-open-2icon-" ></i>
+          {{folder.name}}
+      </ion-item>
+    </ion-list>
+
+    <div class="item item-divider"></div>
+
+    <ion-list>
+      <a ng-repeat="doc in documents track by $index" class="item item-thumbnail-left item-text-wrap" >
+        <img ng-src="{{getImageUrl(blog.thumbnail)}}"/>
+        <h2>{{blog.title}}</h2>
+        <h3>{{ blog.description }}</h3>
+        <h4>{{translationBlog["blog.by"]}} {{ blog.author.username }}</h4>
+      </a>
+    </ion-list>
+        <!-- <ion-item >
+          <i class="folder-open-2icon-"></i>
+
+        </ion-item>
+
+        <ion-item >
+          <i class="folder-open-2icon-"></i>
+          {{translationWorkspace["shared"]}}
+        </ion-item>
+
+        <ion-item >
+          <i class="folder-open-2icon-"></i>
+          {{translationWorkspace["appDocuments"]}}
+        </ion-item>
+
+        <ion-item >
+          <i class="folder-open-2icon-"></i>
+          {{translationWorkspace["trash"]}}
+        </ion-item> -->
+  </ion-content>
+</ion-view>
