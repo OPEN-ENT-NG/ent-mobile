@@ -1,0 +1,25 @@
+.icon-blue {
+    color: #4BAFD5;
+}
+
+.icon-file {
+  vertical-align: -webkit-baseline-middle;
+}
+
+.info-file {
+  display: inline-table;
+}
+
+.col {
+  border: solid 1px grey;
+  border-bottom-style: none;
+  border-right-style: none;
+}
+
+.col:last-child {
+  border-right: solid 1px grey;
+}
+
+.row:last-child .col {
+  border-bottom: solid 1px grey;
+}

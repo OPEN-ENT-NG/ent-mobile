@@ -155,6 +155,17 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     url: '/workspace/:nameWorkspaceFolder',
     views: {
       'menuContent': {
+        controller: 'WorkspaceFolderContentCtlr',
+        templateUrl: 'workspace/workspace_folder_content.html'
+      }
+    }
+  })
+
+  .state('app.workpace_trash', {
+    url: '/workspace/TRASH',
+    views: {
+      'menuContent': {
+        controller: 'WorkspaceTrashContentCtlr',
         templateUrl: 'workspace/workspace_folder_content.html'
       }
     }
@@ -176,8 +187,8 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   });
 
   // if none of the above states are matched, use this as the fallback
-  // $urlRouterProvider.otherwise('/login');
-  $urlRouterProvider.otherwise('/app/workspace/documents');
+  $urlRouterProvider.otherwise('/login');
+  // $urlRouterProvider.otherwise('/app/workspace/documents');
 
 })
 
@@ -303,7 +314,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     console.log(error);
     var alertPopup = $ionicPopup.alert({
       title: 'Erreur de connexion',
-      template: 'Erreur '+error.status+". Veuillez réessayer dans quelques instants."
+      template: "Nous recontrons actuellement des problèmes. Veuillez réessayer dans quelques instants."
     });
 
     alertPopup.then(function(res) {
