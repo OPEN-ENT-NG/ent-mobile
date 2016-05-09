@@ -2,6 +2,7 @@ angular.module('ent.workspace_trash',['ent.workspace_service'])
 
 .controller('WorkspaceTrashContentCtlr', function($scope,WorkspaceService, $ionicLoading, MimeTypeFactory){
 
+  $scope.nameWorkspaceFolder = "trash";
   getData();
 
   function getData(){
