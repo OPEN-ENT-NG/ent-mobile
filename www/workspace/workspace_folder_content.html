@@ -1,6 +1,8 @@
 <ion-view view-title={{translationWorkspace[nameWorkspaceFolder]}}>
 
   <ion-content>
+    <ion-refresher pulling-text="{{translationWorkspace[loading]}}" on-refresh="doRefresh()"></ion-refresher>
+
     <ion-list >
       <ion-item ng-repeat="folder in folders track by $index" class="item item-text-wrap">
         <i class="folder-open-2icon- icon-file" ></i>

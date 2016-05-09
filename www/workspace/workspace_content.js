@@ -8,6 +8,12 @@ angular.module('ent.workspace',['ent.workspace_service', 'ent.workspace_trash'])
 
   getData();
 
+  $scope.doRefresh = function(){
+    getData()
+    $scope.$broadcast('scroll.refreshComplete')
+    $scope.$apply()
+  }
+
   function getData(){
     $ionicLoading.show({
       template: '<ion-spinner icon="android"/>'

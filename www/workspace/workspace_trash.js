@@ -5,6 +5,13 @@ angular.module('ent.workspace_trash',['ent.workspace_service'])
   $scope.nameWorkspaceFolder = "trash";
   getData();
 
+  $scope.doRefresh = function(){
+    getData()
+    $scope.$broadcast('scroll.refreshComplete')
+    $scope.$apply()
+  }
+
+
   function getData(){
     $ionicLoading.show({
       template: '<ion-spinner icon="android"/>'

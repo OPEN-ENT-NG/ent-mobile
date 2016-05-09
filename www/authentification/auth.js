@@ -12,6 +12,7 @@ angular.module('ent.auth', ['ent.user'])
       $state.go("app.actualites");
     } else {
       login();
+      $state.go("app.actualites");
 
     }
   }
