@@ -15,9 +15,9 @@ angular.module('ent.workspace',['ent.workspace_service', 'ent.workspace_trash'])
     WorkspaceService.getDocumentsByFilter($scope.filter).then(function(result){
       $scope.documents = []
       for(var i=0; i<result.data.length;i++){
-        $scope.documents.push(setIcons(result.data[i]));
+        $scope.documents.push(MimeTypeFactory.setIcons(result.data[i]));
       }
-      console.log($scope.documents);
+      console.log("files: "+$scope.documents.length);
       if($scope.filter!="appDocuments"){
         getFolders($scope.filter)
       }
@@ -28,33 +28,23 @@ angular.module('ent.workspace',['ent.workspace_service', 'ent.workspace_trash'])
     });
   }
 
-  function getDocuments(filter){
-    WorkspaceService.getDocumentsByFilter(filter).then(function(result){
-      $scope.documents = []
-      for(var i=0; i<result.data.length;i++){
-        $scope.documents.push(setIcons(result.data[i]));
-      }
-      console.log($scope.documents);
-    })
-  }
-
   function getFolders(filter){
     WorkspaceService.getFoldersByFilter(filter).then(function(res){
       $scope.folders = res.data
-      console.log($scope.folders)
+      console.log("folders: "+$scope.folders.length)
     })
   }
 
-  function setIcons(doc){
-    if(doc.hasOwnProperty('thumbnails')){
-      doc.icon_image = "/workspace/document/"+doc._id+"?thumbnail=120x120";
-    }
-    doc.icon_class = MimeTypeFactory.getThumbnailByMimeType(doc.metadata["content-type"]);
-    return doc;
-  }
+
 })
 
-
+// function setIcons(doc){
+//   if(doc.hasOwnProperty('thumbnails')){
+//     doc.icon_image = "/workspace/document/"+doc._id+"?thumbnail=120x120";
+//   }
+//   doc.icon_class = MimeTypeFactory.getThumbnailByMimeType(doc.metadata["content-type"]);
+//   return doc;
+// }
 
 
 function getFilter(nameWorkspaceFolder){

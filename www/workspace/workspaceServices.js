@@ -10,8 +10,12 @@ angular.module('ent.workspace_service', [])
     return $http.get(domainENT+"/workspace/documents?filter="+parametersUrl(filter));
   }
 
-  this.getTrashContent = function(){
+  this.getTrashFilesContent = function(){
     return $http.get(domainENT+"/workspace/documents/Trash?filter=owner&_="+getTimeInMillis());
+  }
+
+  this.getTrashFolders = function(){
+    return $http.get(domainENT+"/workspace/folders/list?filter=owner&_="+getTimeInMillis());
   }
 
   this.getTranslation = function(){
@@ -20,7 +24,7 @@ angular.module('ent.workspace_service', [])
 
   var parametersUrl = function(filter){
     var entFilter = filter=="appDocuments" ? "protected":filter;
-    return params = entFilter=="owner" ? entFilter+"&hierarchical=true&_="+getTimeInMillis():entFilter+"&_="+getTimeInMillis();
+    return params = entFilter+"&hierarchical=true&_="+getTimeInMillis();
   }
 
   var getTimeInMillis = function(){
@@ -42,8 +46,17 @@ angular.module('ent.workspace_service', [])
     return thumbnail;
   }
 
+  function setIcons(doc){
+    if(doc.hasOwnProperty('thumbnails')){
+      doc.icon_image = "/workspace/document/"+doc._id+"?thumbnail=120x120";
+    }
+    doc.icon_class = getThumbnailByMimeType(doc.metadata["content-type"]);
+    return doc;
+  }
+
   return {
-    getThumbnailByMimeType: getThumbnailByMimeType
+    getThumbnailByMimeType: getThumbnailByMimeType,
+    setIcons: setIcons
   };
 })
 

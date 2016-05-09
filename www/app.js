@@ -162,7 +162,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   })
 
   .state('app.workpace_trash', {
-    url: '/workspace/TRASH',
+    url: '/trashWorkspace',
     views: {
       'menuContent': {
         controller: 'WorkspaceTrashContentCtlr',
