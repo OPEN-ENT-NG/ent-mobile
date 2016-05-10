@@ -16,7 +16,7 @@
     <div class="item item-divider" ng-show="folders.length>0 && documents.length>0"></div>
 
     <ion-list>
-      <a class="item  item-text-wrap" ng-repeat="doc in documents track by $index">
+      <a class="item  item-text-wrap" ng-repeat="doc in documents track by $index" ng-click="goToFile(doc)">
         <i class="{{doc.icon_class}} icon-file" ></i>
         <div class="info-file">
           <h2>{{doc.name}}</h2>
@@ -26,4 +26,12 @@
     </ion-list>
 
   </ion-content>
+
+  <div class="float-button">
+    <span class="height-fix">
+      <a class="content ">
+        <i class="plusicon-"> </i>
+      </a>
+    </span>
+  </div>
 </ion-view>

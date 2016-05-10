@@ -24,8 +24,8 @@
               {{getCountComments(post)}}
             </p>
             <ion-item class="item-accordion"  ng-repeat="comment in post.comments track by $index"  ng-show="areCommentsShown(post)">
-              <h3 style="font-weight: bold;">{{comment.author.username}}, {{comment.modified.$date ? formatDateLocale(comment.modified.$date):formatDateLocale(comment.created.$date)}}</h3>
-                <p style="color: black;">{{comment.comment}}</p>
+              <h3>{{comment.author.username}}, {{comment.modified.$date ? formatDateLocale(comment.modified.$date):formatDateLocale(comment.created.$date)}}</h3>
+                <p>{{comment.comment}}</p>
               </ion-item>
             </div>
           </ion-card-content>

@@ -181,6 +181,16 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     }
   })
 
+  .state('app.workspace_file', {
+    url: '/workspace/file',
+    views: {
+      'menuContent': {
+        controller: 'WorkspaceFileCtlr',
+        templateUrl: 'workspace/file.html'
+      }
+    }
+  })
+
   .state('app.test', {
     url: '/test',
     views: {

@@ -10,16 +10,19 @@
   display: inline-table;
 }
 
-.col {
-  border: solid 1px grey;
-  border-bottom-style: none;
-  border-right-style: none;
+.file-image{
+    max-width: 100%;
+    height: auto;
 }
 
-.col:last-child {
-  border-right: solid 1px grey;
+.doc_icon{
+  font-size: 120px;
 }
 
-.row:last-child .col {
-  border-bottom: solid 1px grey;
+.cardImage{
+  margin: 10%;
+}
+
+.doc_comments{
+  margin-top: 10%;
 }

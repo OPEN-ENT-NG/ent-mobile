@@ -24,6 +24,14 @@ ion-popover-view.fit ion-content {
   font-style: italic;
 }
 
+.comment h3 {
+  font-weight: bold;
+}
+
+.comment p {
+  color: black;
+}
+
 .item.item-accordion {
   padding-top: 1;
   padding-bottom: 1;
@@ -118,4 +126,16 @@ ion-popover-view.fit ion-content {
     left: 0;
     right: 0;
     opacity: 0.001
+}
+
+.cardCenter {
+  text-align: center;
+}
+
+.comment h3{
+  font-weight: bold;
+}
+
+.comment p {
+  color: black;
 }
