@@ -3,19 +3,23 @@ angular.module('ent.workspace_service', [])
 .service('WorkspaceService', function($http, domainENT){
 
   this.getFoldersByFilter = function(filter){
-    return $http.get(domainENT+"/workspace/folders/list?filter="+parametersUrl(filter));
+    return $http.get(domainENT+"/workspace/folders/list?filter="+parametersUrl(filter))
   }
 
   this.getDocumentsByFilter = function(filter){
-    return $http.get(domainENT+"/workspace/documents?filter="+parametersUrl(filter));
+    return $http.get(domainENT+"/workspace/documents?filter="+parametersUrl(filter))
+  }
+
+  this.getDocumentsByFolderAndFilter = function(folderName,filter){
+    return $http.get(domainENT+'/workspace/documents/'+folderName+'?filter='+filter+'&hierarchical=true&_='+getTimeInMillis())
   }
 
   this.getTrashFilesContent = function(){
-    return $http.get(domainENT+"/workspace/documents/Trash?filter=owner&_="+getTimeInMillis());
+    return $http.get(domainENT+"/workspace/documents/Trash?filter=owner&_="+getTimeInMillis())
   }
 
-  this.getTrashFolders = function(){
-    return $http.get(domainENT+"/workspace/folders/list?filter=owner&_="+getTimeInMillis());
+  this.getCompleteFoldersByFilter = function(filter) {
+    return $http.get(domainENT+'/workspace/folders/list?filter=' + filter + '&_='+getTimeInMillis())
   }
 
   this.getTranslation = function(){

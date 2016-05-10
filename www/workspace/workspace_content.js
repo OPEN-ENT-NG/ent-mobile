@@ -1,17 +1,24 @@
-angular.module('ent.workspace',['ent.workspace_service', 'ent.workspace_trash'])
+angular.module('ent.workspace',['ent.workspace_service', 'ent.workspace_trash','ent.workspace_folder_depth'])
 
-.controller('WorkspaceFolderContentCtlr', function($scope, $stateParams, WorkspaceService, $ionicLoading, MimeTypeFactory){
+.controller('WorkspaceFolderContentCtlr', function($scope, $rootScope, $stateParams, $state, WorkspaceService, $ionicLoading, MimeTypeFactory){
 
-  $scope.nameWorkspaceFolder = $stateParams.nameWorkspaceFolder;
   $scope.filter = getFilter($stateParams.nameWorkspaceFolder);
   console.log($scope.filter);
 
   getData();
 
+  $scope.gotInDepthFolder = function(folder){
+    $state.go('app.workspace_folder_depth', {filtre:$scope.filter, parentFolderName: folder.name})
+  }
+
   $scope.doRefresh = function(){
     getData()
     $scope.$broadcast('scroll.refreshComplete')
     $scope.$apply()
+  }
+
+  $scope.getTitle = function(){
+    return $rootScope.translationWorkspace[$stateParams.nameWorkspaceFolder]
   }
 
   function getData(){
@@ -43,15 +50,6 @@ angular.module('ent.workspace',['ent.workspace_service', 'ent.workspace_trash'])
 
 
 })
-
-// function setIcons(doc){
-//   if(doc.hasOwnProperty('thumbnails')){
-//     doc.icon_image = "/workspace/document/"+doc._id+"?thumbnail=120x120";
-//   }
-//   doc.icon_class = MimeTypeFactory.getThumbnailByMimeType(doc.metadata["content-type"]);
-//   return doc;
-// }
-
 
 function getFilter(nameWorkspaceFolder){
   var filter ="";

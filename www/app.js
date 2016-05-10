@@ -171,6 +171,16 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     }
   })
 
+  .state('app.workspace_folder_depth', {
+    url: '/workspace/:filtre/:parentFolderName/:nameFolder',
+    views: {
+      'menuContent': {
+        controller: 'WorkspaceFolderDepthCtlr',
+        templateUrl: 'workspace/workspace_folder_content.html'
+      }
+    }
+  })
+
   .state('app.test', {
     url: '/test',
     views: {
