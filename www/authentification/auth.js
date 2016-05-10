@@ -12,7 +12,7 @@ angular.module('ent.auth', ['ent.user'])
       $state.go("app.actualites");
     } else {
       login();
-      $state.go("app.actualites");
+
 
     }
   }
@@ -48,7 +48,7 @@ angular.module('ent.auth', ['ent.user'])
         ref.close();
         console.log("hide splashscreen");
         navigator.splashscreen.hide();
-
+        $state.go("app.actualites");
       }
     });
 
