@@ -63,7 +63,6 @@ angular.module('ent.workspace_service', [])
             default:
               break;
             }
-            console.log(dimensions);
             doc.icon_image = "/workspace/document/"+doc._id+"?thumbnail="+dimensions;
           }
           doc.icon_class = getThumbnailByMimeType(doc.metadata["content-type"]);

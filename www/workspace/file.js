@@ -1,6 +1,6 @@
 angular.module('ent.workspace_file',['ent.workspace_service'])
 
-.controller('WorkspaceFileCtlr', function($scope, $rootScope){
+.controller('WorkspaceFileCtlr', function($scope, $rootScope, $ionicPopover){
   console.log($rootScope.doc);
 
   $rootScope.doc.ownerPhoto = '/userbook/avatar/'+$rootScope.doc.owner
@@ -28,4 +28,23 @@ angular.module('ent.workspace_file',['ent.workspace_service'])
   $scope.areCommentsShown = function(doc) {
     return $scope.shownComments === doc;
   };
+
+  $ionicPopover.fromTemplateUrl('workspace/popover_file.html', {
+    scope: $scope
+  }).then(function(popover) {
+    $scope.popover = popover;
+  });
+
+  $scope.openPopover = function($event) {
+    $scope.popover.show($event);
+  };
+
+  $scope.closePopover = function() {
+    $scope.popover.hide();
+  };
+
+  //Cleanup the popover when we're done with it!
+  $scope.$on('$destroy', function() {
+    $scope.popover.remove();
+  })
 })

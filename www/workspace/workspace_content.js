@@ -17,6 +17,11 @@ angular.module('ent.workspace',['ent.workspace_service', 'ent.workspace_trash','
       $state.go('app.workspace_file')
   }
 
+  $rootScope.importFile = function(doc){
+    var attachment = ele.files[0];
+    console.log(attachment);
+  }
+
   $scope.doRefresh = function(){
     getData()
     $scope.$broadcast('scroll.refreshComplete')
