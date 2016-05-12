@@ -1,13 +1,17 @@
 angular.module('ent.workspace_file',['ent.workspace_service'])
 
-.controller('WorkspaceFileCtlr', function($scope, $rootScope, $ionicPopover, domainENT, WorkspaceService, $ionicLoading, $stateParams){
+.controller('WorkspaceFileCtlr', function($scope, $rootScope, $ionicPopup, domainENT, WorkspaceService, $ionicLoading, $stateParams){
   console.log($rootScope.doc);
   $rootScope.doc.ownerPhoto = '/userbook/avatar/'+$rootScope.doc.owner
 
-  $scope.downloadDoc = function(doc){
-    console.log(doc);
-    var docUrl = domainENT+"/workspace/document/"+doc._id;
-    $scope.downloadFile(doc.name, docUrl,doc.metadata['content-type'], "workspace");
+  $scope.downloadDoc = function(){
+    var docUrl = domainENT+"/workspace/document/"+$rootScope.doc._id;
+    $scope.downloadFile($rootScope.doc.name, docUrl,$rootScope.doc.metadata['content-type'], "workspace");
+  }
+
+
+  $scope.hello = function(){
+    alert('hi')
   }
 
   $scope.commentDoc = function (){
@@ -35,11 +39,45 @@ angular.module('ent.workspace_file',['ent.workspace_service'])
     });
 
     myPopup.then(function(res) {
-      console.log('Tapped!', res);
       $ionicLoading.show({
         template: '<ion-spinner icon="android"/>'
       });
       WorkspaceService.commentDocById($rootScope.doc._id, res).then(function(result){
+        updateDoc($rootScope.doc)
+        $ionicLoading.hide()
+      }, function(err){
+        $ionicLoading.hide()
+        $scope.showAlertError()
+      });
+    })
+  }
+
+  $scope.renameDoc = function (){
+    var myPopup = $ionicPopup.show({
+      template: '<input type="text" ng-model="doc.name">',
+      title: $rootScope.translationWorkspace["workspace.rename"],
+      scope: $scope,
+      buttons: [
+        { text: $rootScope.translationWorkspace["cancel"] },
+        {
+          text: '<b>'+$rootScope.translationWorkspace["workspace.rename"]+'</b>',
+          type: 'button-positive',
+          onTap: function(e) {
+            if (!$scope.doc.name) {
+              e.preventDefault();
+            } else {
+              return $scope.doc.name;
+            }
+          }
+        }
+      ]
+    });
+
+    myPopup.then(function(res) {
+      $ionicLoading.show({
+        template: '<ion-spinner icon="android"/>'
+      });
+      WorkspaceService.renameDoc($rootScope.doc._id, res).then(function(result){
         updateDoc($rootScope.doc)
         $ionicLoading.hide()
       }, function(err){

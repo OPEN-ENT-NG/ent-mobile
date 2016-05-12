@@ -35,15 +35,29 @@
 
       </div>
     </div>
+  </ion-content>
 
-  </div>
+  <nav mfb-menu position="br" effect="zoomin" label="hover here"
+  active-icon="ion-plus-round" resting-icon="ion-plus-round"
+  toggling-method="click">
+  <button mfb-button icon="downloadicon-" ng-click="downloadDoc()"></button>
+  <button mfb-button icon="ion-edit" ng-click="renameDoc()"></button>
 
-</ion-content>
-<div class="float-button-workspace" ng-click='downloadDoc(doc)'>
-  <span class="height-fix">
-    <a class="content ">
-      <i class="downloadicon-"> </i>
-    </a>
-  </span>
+</nav>
+<!-- <div class="float-button-workspace" ng-click='downloadDoc(doc)'>
+<span class="height-fix">
+<a class="content ">
+<i class="downloadicon-"> </i>
+</a>
+</span>
 </div>
+-->
+<!-- <nav mfb-menu position="br" effect="zoomin" label="hover here"
+active-icon="ion-plus-round" resting-icon="ion-plus-round"
+toggling-method="click">
+<button mfb-button icon="downloadicon-" ng-click=downloadDoc()></button>
+<button mfb-button icon="pencilicon-" ng-click=renameDoc()></button>
+
+</nav> -->
+
 </ion-view>

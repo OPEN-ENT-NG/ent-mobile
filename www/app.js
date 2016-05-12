@@ -1,5 +1,7 @@
-angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute','ent.actualites','ent.blog','ent.blog-list','ent.auth', 'ent.messagerie','ent.workspace','ent.user','angularMoment','ent.test', 'ng-mfb'])
+angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute','ent.actualites','ent.blog','ent.blog-list','ent.auth',
+'ent.messagerie','ent.workspace','ent.user','angularMoment','ent.test', 'ng-mfb'])
 
+// .value("domainENT", "https://ent.picardie.fr")
 // .value("domainENT", "https://preprod-leo.entcore.org")
 .value("domainENT", "https://recette-leo.entcore.org")
 

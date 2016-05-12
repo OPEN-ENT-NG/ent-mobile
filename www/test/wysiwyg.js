@@ -31,4 +31,8 @@ angular.module("ent.test", [])
       console.log( $scope.files);
     }
   }
+
+  $scope.hello = function(){
+    alert('hi')
+  }
 })

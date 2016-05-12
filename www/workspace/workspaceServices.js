@@ -32,8 +32,14 @@ angular.module('ent.workspace_service', [])
   }
 
   this.commentDocById = function (id, comment){
-
     return $http.post(domainENT+'/workspace/document/'+id+'/comment', "comment="+ comment, configHeaders)
+  }
+
+  this.renameDoc = function (id, newName){
+    var data = {
+      name: newName
+    }
+    return $http.put(domainENT+'/workspace/document/'+id, data)
   }
 
   this.getTranslation = function(){
