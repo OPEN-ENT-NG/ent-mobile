@@ -5,6 +5,7 @@
 
     <ion-list >
       <ion-item ng-repeat="folder in folders track by $index" class="item item-text-wrap" ng-click="gotInDepthFolder(folder)">
+        <!-- <img ng-src={{getImageUrl(folder_icon)}}></img> -->
         <i class="folder-open-2icon- icon-file" ></i>
         <div class="info-file">
           <h2>{{folder.name}}</h2>
@@ -16,23 +17,13 @@
     <div class="item item-divider" ng-show="folders.length>0 && documents.length>0"></div>
 
     <ion-list>
-      <a class="item  item-text-wrap" ng-repeat="doc in documents track by $index" ng-click="goToFile(doc)">
-        <i class="{{doc.icon_class}} icon-file" ></i>
-        <div class="info-file">
-          <h2>{{doc.name}}</h2>
-          <h3>{{doc.ownerName}}</h3>
-        </div>
-      </a>
+
+      <ion-item ng-repeat="doc in documents track by $index" class="item item-text-wrap item-thumbnail-left " ng-click="goToFile(doc)">
+        <img ng-src={{getImageUrl(doc.icon_image)}}></img>
+        <h2>{{doc.name}}</h2>
+        <h3>{{doc.ownerName}}</h3>
+      </ion-item>
     </ion-list>
-  
+
   </ion-content>
-
-
-  <!-- <nav mfb-menu position="br" effect="zoomin" active-icon="ion-plus-round" resting-icon="ion-plus-round" toggling-method="click">
-    <button mfb-button icon="folder-open-2icon-" label="{{translationWorkspace[loading]}}"></button> -->
-    <!-- <label mfb-button icon="doc-texticon-" label="{{translationWorkspace[loading]}}">
-    <input style="display:none;" type='file' onchange="angular.element(this).scope().importFile(this)" >
-  </label> -->
-
-
 </ion-view>

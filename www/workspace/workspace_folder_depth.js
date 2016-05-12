@@ -1,8 +1,11 @@
 angular.module('ent.workspace_folder_depth',['ent.workspace_service'])
 
-.controller('WorkspaceFolderDepthCtlr', function($scope, $stateParams, $state, WorkspaceService, $ionicLoading, MimeTypeFactory){
+.controller('WorkspaceFolderDepthCtlr', function($scope, $rootScope, $stateParams, $state, WorkspaceService, $ionicLoading, MimeTypeFactory){
 
   var fullFolderName = $stateParams.nameFolder.length !=0 ? $stateParams.parentFolderName + '_' + $stateParams.nameFolder : $stateParams.parentFolderName;
+
+  console.log('$stateParams.parentFolderName '+$stateParams.parentFolderName);
+  console.log('$stateParams.nameFolder '+$stateParams.nameFolder);
 
   getData();
 
@@ -20,6 +23,12 @@ angular.module('ent.workspace_folder_depth',['ent.workspace_service'])
     $state.go('app.workspace_folder_depth', {filtre:$stateParams.filtre, parentFolderName: fullFolderName, nameFolder: folder.name})
   }
 
+  $scope.goToFile = function (doc) {
+      doc.folder = $stateParams.nameFolder.length !=0 ? $stateParams.nameFolder:doc.folder
+      $rootScope.doc = doc
+      $state.go('app.workspace_file', {filtre:$stateParams.filtre})
+  }
+
 
   function getData(){
     $ionicLoading.show({
@@ -35,8 +44,6 @@ angular.module('ent.workspace_folder_depth',['ent.workspace_service'])
 
         if(res.data[i].folder.startsWith(fullFolderName+'_')){
           var childFolderName = folder.folder.slice(fullFolderName.length+1)
-          console.log(folder);
-          console.log(childFolderName);
           if(childFolderName == folder.name){
             $scope.folders.push(folder)
           }

@@ -1,26 +1,18 @@
 <ion-view view-title={{doc.folder}} >
 
-  <ion-nav-buttons side="right">
-    <button class="button button-icon button-clear ion-android-more-vertical buttonActionBar" ></button>
-  </ion-nav-buttons>
-
   <ion-content>
     <div class="card">
 
       <div class="item item-avatar item-text-wrap">
-        <img src="{{getImageUrl(doc.ownerPhoto)}}">
+        <img ng-src="{{getImageUrl(doc.ownerPhoto)}}">
         <h2>{{doc.name}}</h2>
         <h3>{{doc.ownerName}}</h3>
         <p>{{doc.modified ? formatDateLocale(doc.modified) : formatDateLocale(doc.created)}}</p>
       </div>
 
       <ion-card-content class="item">
-        <div class="cardCenter" ng-if='doc.icon_image'>
+        <div class="cardCenter">
           <img class="file-image" ng-src="{{getImageUrl(doc.icon_image)}}" >
-        </div>
-
-        <div class="cardCenter cardImage"  ng-if='!doc.icon_image'>
-          <i class="{{doc.icon_class}} icon-blue doc_icon" ></i>
         </div>
 
         <div class="comment"  ng-show="post.comments.length != 0">
@@ -35,8 +27,23 @@
 
       </ion-card-content>
 
+      <div class="item">
+        <a class="subdued" ng-click='commentDoc()'>
+          <i class="ion-chatbox comment-button"></i>
+          {{translationWorkspace["workspace.comment"]}}
+        </a>
+
+      </div>
     </div>
 
-  </ion-content>
+  </div>
 
+</ion-content>
+<div class="float-button-workspace" ng-click='downloadDoc(doc)'>
+  <span class="height-fix">
+    <a class="content ">
+      <i class="downloadicon-"> </i>
+    </a>
+  </span>
+</div>
 </ion-view>

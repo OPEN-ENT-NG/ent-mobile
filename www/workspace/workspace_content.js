@@ -1,4 +1,4 @@
-angular.module('ent.workspace',['ent.workspace_service', 'ent.workspace_trash','ent.workspace_folder_depth', 'ent.workspace_file'])
+angular.module('ent.workspace_content',['ent.workspace_service'])
 
 .controller('WorkspaceFolderContentCtlr', function($scope, $rootScope, $stateParams, $state, WorkspaceService, $ionicLoading, MimeTypeFactory){
 
@@ -9,12 +9,12 @@ angular.module('ent.workspace',['ent.workspace_service', 'ent.workspace_trash','
     $state.go('app.workspace_folder_depth', {filtre:filter, parentFolderName: folder.name})
   }
 
-  $rootScope.goToFile = function (doc) {
+  $scope.goToFile = function (doc) {
       if(!doc.hasOwnProperty('folder')){
         doc.folder = $rootScope.translationWorkspace[$stateParams.nameWorkspaceFolder]
       }
       $rootScope.doc = doc
-      $state.go('app.workspace_file')
+      $state.go('app.workspace_file', {filtre:filter, folder:$stateParams.nameWorkspaceFolder})
   }
 
   $rootScope.importFile = function(doc){
@@ -36,7 +36,7 @@ angular.module('ent.workspace',['ent.workspace_service', 'ent.workspace_trash','
     $ionicLoading.show({
       template: '<ion-spinner icon="android"/>'
     });
-    WorkspaceService.getDocumentsByFilter(filter).then(function(result){
+    WorkspaceService.getDocumentsByFilter(filter, filter==="owner").then(function(result){
       $scope.documents = []
       for(var i=0; i<result.data.length;i++){
         $scope.documents.push(MimeTypeFactory.setIcons(result.data[i]));
@@ -53,13 +53,11 @@ angular.module('ent.workspace',['ent.workspace_service', 'ent.workspace_trash','
   }
 
   function getFolders(filter){
-    WorkspaceService.getFoldersByFilter(filter).then(function(res){
-      $scope.folders = res.data
+    WorkspaceService.getFoldersByFilter(filter, filter=="owner").then(function(res){
+      $scope.folders = res.data;
       console.log("folders: "+$scope.folders.length)
     })
   }
-
-
 })
 
 function getFilter(nameWorkspaceFolder){

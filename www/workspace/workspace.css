@@ -1,5 +1,5 @@
 .icon-blue {
-    color: #4BAFD5;
+  color: #4BAFD5;
 }
 
 .icon-file {
@@ -11,8 +11,8 @@
 }
 
 .file-image{
-    max-width: 100%;
-    height: auto;
+  max-width: 100%;
+  height: auto;
 }
 
 .doc_icon{
@@ -57,4 +57,9 @@
   text-align: center !important;
   margin-top: -20px;
   color: white;
+}
+
+.comment-button{
+  font-size: x-large;
+  vertical-align: middle;
 }
