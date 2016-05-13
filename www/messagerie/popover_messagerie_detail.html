@@ -4,6 +4,12 @@
       <!-- edition -->
       <a class="item" ng-show=isDraft() ng-click=editMail('DRAFT')>{{translationConversation["modify"]}}</a>
 
+      <!-- reply all -->
+      <a class="item" ng-show=isInbox() ng-click=editMail('REPLY_ALL')>{{translationConversation["replyall"]}}</a>
+
+      <!-- reply all -->
+      <a class="item" ng-show="!isDraft()"  ng-click=editMail('FORWARD')>{{translationConversation["transfer"]}}</a>
+
       <!-- déplacer -->
       <a class="item"  ng-hide="isTrash()" ng-click=moveMessage(mail.id)>{{translationConversation["move.inside.folder"]}}</a>
 
