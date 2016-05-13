@@ -31,6 +31,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
     window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFS, fail);
   });
+
 })
 
 .config(function($stateProvider, $urlRouterProvider, $routeProvider, $ionicConfigProvider,  $httpProvider) {
@@ -179,7 +180,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   $urlRouterProvider.otherwise('/login');
 })
 
-.controller('AppCtrl', function ($scope, $rootScope, $sce, $state, $cordovaInAppBrowser, $cordovaFileTransfer,$cordovaProgress, $cordovaFileOpener2, domainENT, $ionicHistory, SkinFactory, $ionicPopup, ActualitesService, MessagerieServices, BlogsService, $filter){
+.controller('AppCtrl', function ($scope, $rootScope, $sce, $state, $cordovaInAppBrowser, $cordovaFileTransfer,$cordovaProgress, $cordovaFileOpener2, domainENT, $ionicHistory, SkinFactory, $ionicPopup, ActualitesService, MessagerieServices,PronoteService, BlogsService, $filter){
 
   SkinFactory.getSkin().then(function(res) {
     localStorage.setItem('skin', res.data.skin);
@@ -189,6 +190,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
 
   getTranslationActualites();
   getTranslationConversation();
+  // getTranslationPronotes();
   getTraductionBlogs();
 
 
@@ -347,6 +349,14 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
       alert('ERR:'+ err);
     };
   }
+
+  // function getTranslationPronotes(){
+  //   PronoteService.getTranslation().then(function(resp) {
+  //     $rootScope.translationPronotes = resp.data;
+  //   }), function(err){
+  //     alert('ERR:'+ err);
+  //   };
+  // }
 
   function getTraductionBlogs(){
     BlogsService.getTraduction().then(function(resp){
