@@ -2,14 +2,9 @@ angular.module('ent.actualites', ['ent.actualites_service'])
 
 .controller('ActualitesCtrl', function ($scope, $state, $rootScope, ActualitesService,$ionicLoading) {
 
-  $ionicLoading.show({
-    template: '<ion-spinner icon="android"/>'
-  });
+
 
   getActualites();
-  getThreads();
-
-  $ionicLoading.hide();
 
   $scope.getCountComments = function(info, commentsAreShown){
     if(info.comments != null){
@@ -43,7 +38,6 @@ angular.module('ent.actualites', ['ent.actualites_service'])
     $state.go("app.threads");
   };
 
-  $rootScope.filterThreads = [];
   $scope.filterByThread = function (thread) {
     return $rootScope.filterThreads[thread.thread_id]| noFilter($rootScope.filterThreads);
   };
@@ -58,19 +52,27 @@ angular.module('ent.actualites', ['ent.actualites_service'])
   }
 
   $scope.doRefreshInfos = function() {
+    $rootScope.filterThreads = [];
     $scope.infos.unshift(getActualites());
     $scope.$broadcast('scroll.refreshComplete');
     $scope.$apply()
   }
 
   $scope.doRefreshThreads = function() {
-    $scope.threads.unshift(getThreads());
+    $scope.threads.unshift(getActualites());
     $scope.$broadcast('scroll.refreshComplete');
     $scope.$apply()
   }
 
   function getActualites(){
+    $ionicLoading.show({
+      template: '<ion-spinner icon="android"/>'
+    });
+
     $scope.infos =[];
+    $scope.threads = [];
+    var threadIds = []
+
     ActualitesService.getAllInfos().then(function (resp) {
       for(var i = 0; i< resp.data.length; i++){
         if(resp.data[i].status == 3){
@@ -85,24 +87,21 @@ angular.module('ent.actualites', ['ent.actualites_service'])
             thread_icon: $scope.setCorrectImage(resp.data[i].thread_icon,"/../../img/illustrations/actualites-default.png"),
             comments: angular.fromJson(resp.data[i].comments)
           });
+
+          var thread = {
+            thread_id:  resp.data[i].thread_id,
+            title: resp.data[i].thread_title,
+            thread_icon: $scope.setCorrectImage(resp.data[i].thread_icon, "/../../img/illustrations/actualites-default.png")
+          }
+          if(threadIds.indexOf(thread.thread_id)==-1){
+            $scope.threads.push(thread);
+            threadIds.push(thread.thread_id)
+          }
         }
       }
+      $ionicLoading.hide();
     }, function(err){
-      $scope.showAlertError(err);
-    });
-  }
-
-  function getThreads(){
-    $scope.threads = [];
-    ActualitesService.getAllThreads().then(function(resp){
-      for(var i = 0; i< resp.data.length; i++){
-        $scope.threads.push({
-          thread_id: resp.data[i]._id,
-          title: resp.data[i].title,
-          thread_icon: $scope.setCorrectImage(resp.data[i].icon, "/../../img/illustrations/actualites-default.png")
-        });
-      }
-    }, function(err){
+      $ionicLoading.hide();
       $scope.showAlertError(err);
     });
   }

@@ -172,6 +172,8 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
 
 .controller('AppCtrl', function ($scope, $rootScope, $sce, $state, $cordovaInAppBrowser, $cordovaFileTransfer,$cordovaProgress, $cordovaFileOpener2, domainENT, $ionicHistory, SkinFactory, $ionicPopup, ActualitesService, MessagerieServices, BlogsService, $filter){
 
+  $rootScope.filterThreads = [];
+
   SkinFactory.getSkin().then(function(res) {
     localStorage.setItem('skin', res.data.skin);
   } , function(err){
