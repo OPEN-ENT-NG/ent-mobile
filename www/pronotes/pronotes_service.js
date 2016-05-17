@@ -1,7 +1,7 @@
 angular.module('ent.pronotes_service', [])
 
 .service('PronoteService', function($http, domainENT){
-  this.getAllPronotes = function(){
+  this.getAllApps = function(){
     return $http.get(domainENT+"/applications-list");
   }
 

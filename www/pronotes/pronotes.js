@@ -2,7 +2,7 @@ angular.module('ent.listing_users', ['ent.pronotes_service'])
 
   .controller('ListingUsersCtrl', function ($scope, $rootScope, $window, PronoteService ) {
 
-    PronoteService.getAllPronotes().then(function(resp){
+    PronoteService.getAllApps().then(function(resp){
       $scope.pronotes = [];
       if(resp != null)
         for(var i=0  ; i < resp.data.apps.length ; i++){
