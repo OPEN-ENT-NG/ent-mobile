@@ -65,6 +65,7 @@ angular.module('ent.message_folder', ['ent.message_services'])
   $scope.checkMessage = function(index){
     $scope.messages[index].checked = !$scope.messages[index].checked;
   }
+  console.log($scope.messages);
 
   $scope.doAction = function(index){
     $scope.checkable ?  $scope.checkMessage(index):goToMessage(index)

@@ -1,4 +1,4 @@
-angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute','ent.actualites','ent.blog','ent.blog-list','ent.auth', 'ent.messagerie', 'ent.new_message','ent.user','ent.listing_users','angularMoment','ent.test'])
+angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute','ent.actualites','ent.blog','ent.blog-list','ent.auth', 'ent.messagerie', 'ent.new_message','ent.user','ent.pronotes','angularMoment','ent.test'])
 
 // .value("domainENT", "https://preprod-leo.entcore.org")
 .value("domainENT", "https://recette-leo.entcore.org")
@@ -143,11 +143,11 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     }
   })
 
-  .state('app.listing_users', {
+  .state('app.pronotes', {
     url: '/pronotes',
     views: {
       'menuContent': {
-        templateUrl: 'pronotes/listing_users.html'
+        templateUrl: 'pronotes/pronotes.html'
       }
     }
   })
