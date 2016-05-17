@@ -21,6 +21,7 @@ angular.module('ent.message_detail', ['ent.message_services'])
     console.log(nonPersonnalFolders.indexOf(nameFolder) != -1);
     return nonPersonnalFolders.indexOf(nameFolder) == -1;
   }
+
   $scope.trash = function(){
     DeleteMessagesPopupFactory.getPopup().then(function(res){
       if(res){
