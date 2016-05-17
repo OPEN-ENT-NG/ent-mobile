@@ -1,17 +1,12 @@
 angular.module('ent.workspace_file',['ent.workspace_service'])
 
-.controller('WorkspaceFileCtlr', function($scope, $rootScope, $ionicPopup, domainENT, WorkspaceService, $ionicLoading, $stateParams){
+.controller('WorkspaceFileCtlr', function($scope, $rootScope, $ionicPopup, domainENT, WorkspaceService, $ionicLoading, $stateParams, DeleteDocPopupFactory){
   console.log($rootScope.doc);
   $rootScope.doc.ownerPhoto = '/userbook/avatar/'+$rootScope.doc.owner
 
   $scope.downloadDoc = function(){
     var docUrl = domainENT+"/workspace/document/"+$rootScope.doc._id;
     $scope.downloadFile($rootScope.doc.name, docUrl,$rootScope.doc.metadata['content-type'], "workspace");
-  }
-
-
-  $scope.hello = function(){
-    alert('hi')
   }
 
   $scope.commentDoc = function (){
@@ -90,6 +85,25 @@ angular.module('ent.workspace_file',['ent.workspace_service'])
     })
   }
 
+  $scope.trashDoc = function(doc){
+    var popupMove = DeleteDocPopupFactory.getPopup($scope);
+    popupMove.then(function(res){
+
+      $ionicLoading.show({
+        template: '<ion-spinner icon="android"/>'
+      });
+      if(res!=null){
+        WorkspaceService.trashDoc($rootScope.doc._id).then(function(){
+          $ionicLoading.hide();
+          //back
+        }, function(err){
+          $ionicLoading.hide();
+          $scope.showAlertError();
+        });
+      }
+    })
+
+  }
 
   $scope.getCountComments = function(doc, commentsAreShown){
     if(doc.comments != null){

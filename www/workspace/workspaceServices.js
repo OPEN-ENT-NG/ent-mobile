@@ -37,6 +37,10 @@ angular.module('ent.workspace_service', [])
     return $http.put(domainENT+'/workspace/rename/document/'+id, {name: newName})
   }
 
+  this.trashDoc = function (id){
+    return $http.put(domainENT+'/workspace/document/trash/'+id)
+  }
+
   this.getTranslation = function(){
     return $http.get(domainENT+"/workspace/i18n");
   }
@@ -51,6 +55,18 @@ angular.module('ent.workspace_service', [])
     var n = d.getTime();
     return n;
   }
+})
+.factory("DeleteDocPopupFactory", function ($ionicPopup, $rootScope) {
+
+  function getPopup() {
+    return $ionicPopup.confirm({
+      title: $rootScope.translationWorkspace["workspace.delete"],
+      template: 'Êtes-vous sûr(e) de vouloir supprimer ce document ?'
+    })
+  }
+  return {
+    getPopup: getPopup
+  };
 })
 
 .factory("MimeTypeFactory", function(){
