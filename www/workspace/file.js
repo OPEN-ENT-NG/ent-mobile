@@ -74,16 +74,19 @@ angular.module('ent.workspace_file',['ent.workspace_service'])
     });
 
     myPopup.then(function(res) {
-      $ionicLoading.show({
-        template: '<ion-spinner icon="android"/>'
-      });
-      WorkspaceService.renameDoc($rootScope.doc._id, res).then(function(result){
-        updateDoc($rootScope.doc)
-        $ionicLoading.hide()
-      }, function(err){
-        $ionicLoading.hide()
-        $scope.showAlertError()
-      });
+      console.log(res);
+      if(res){
+        $ionicLoading.show({
+          template: '<ion-spinner icon="android"/>'
+        });
+        WorkspaceService.renameDoc($rootScope.doc._id, res).then(function(result){
+          updateDoc($rootScope.doc)
+          $ionicLoading.hide()
+        }, function(err){
+          $ionicLoading.hide()
+          $scope.showAlertError()
+        });
+      }
     })
   }
 

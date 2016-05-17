@@ -11,8 +11,6 @@ angular.module('ent.workspace_service', [])
   }
 
   this.getDocumentsByFilter = function(filter,hierarchical){
-
-    console.log($http.get(domainENT+"/workspace/documents?filter="+parametersUrl(filter,hierarchical)));
     return $http.get(domainENT+"/workspace/documents?filter="+parametersUrl(filter,hierarchical))
   }
   this.getCompleteDocumentsByFilter = function(filter,hierarchical){
@@ -36,10 +34,7 @@ angular.module('ent.workspace_service', [])
   }
 
   this.renameDoc = function (id, newName){
-    var data = {
-      name: newName
-    }
-    return $http.put(domainENT+'/workspace/document/'+id, data)
+    return $http.put(domainENT+'/workspace/rename/document/'+id, {name: newName})
   }
 
   this.getTranslation = function(){
