@@ -1,6 +1,6 @@
 angular.module('ent.message_folder', ['ent.message_services'])
 
-.controller('InboxCtrl', function($scope, $state, $stateParams, $rootScope, domainENT, MessagerieServices,  $ionicLoading,  $cordovaVibration, $ionicHistory, $ionicPlatform, MoveMessagesPopupFactory, DeleteMessagesPopupFactory){
+.controller('InboxCtrl', function($scope, $state, $stateParams, $rootScope, domainENT, MessagerieServices,  $ionicLoading,  $cordovaVibration, $ionicHistory, $ionicPlatform, MoveMessagesPopupFactory, DeleteMessagesPopupFactory,$ionicListDelegate){
 
   $rootScope.nameFolder = $stateParams.nameFolder;
   console.log( $stateParams.nameFolder );
@@ -47,6 +47,22 @@ angular.module('ent.message_folder', ['ent.message_services'])
     }
   }
 
+  $scope.deleteMessage = function(mail){
+    $ionicLoading.show({
+      template: '<ion-spinner icon="android"/>'
+    });
+    MessagerieServices.deleteSelectedMessages([mail], $rootScope.nameFolder).then(function(){
+      $ionicHistory.clearCache();
+      $ionicListDelegate.closeOptionButtons()
+      updateMessages()
+      $ionicLoading.hide();
+    }, function(err){
+      $ionicLoading.hide();
+      $scope.showAlertError();
+    });
+  }
+
+
   $scope.deleteSelectedMessages = function(){
     var messagesList = getSelectedMessages();
     if(messagesList.length >0){
@@ -62,6 +78,7 @@ angular.module('ent.message_folder', ['ent.message_services'])
       })
     }
   }
+
   $scope.checkMessage = function(index){
     $scope.messages[index].checked = !$scope.messages[index].checked;
   }
