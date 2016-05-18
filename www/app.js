@@ -193,6 +193,16 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     }
   })
 
+  .state('app.workspace_file_versions', {
+    url: '/workspace/file/versions/',
+    views: {
+      'menuContent': {
+        controller: 'FileVersionCtrl',
+        templateUrl: 'workspace/file_versions.html'
+      }
+    }
+  })
+
   .state('app.test', {
     url: '/test',
     views: {
@@ -403,7 +413,26 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
       alert('ERR:'+ err);
     };
   }
+
+  $scope.getConfirmPopup = function(title, template) {
+    return $ionicPopup.confirm({
+      title: title,
+      template: template
+    })
+  }
 })
+// .factory("ConfirmPopupFactory", function ($ionicPopup, title, template) {
+//
+//   function getPopup() {
+//     return $ionicPopup.confirm({
+//       title: title,
+//       template: template
+//     })
+//   }
+//   return {
+//     getPopup: getPopup
+//   };
+// })
 .directive('appVersion', function () {
   return function(scope, elm, attrs) {
     cordova.getAppVersion(function (version) {

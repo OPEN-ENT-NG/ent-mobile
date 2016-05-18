@@ -1,0 +1,16 @@
+<ion-view view-title={{doc.name}} >
+
+  <ion-content>
+    <ion-list>
+      <ion-item ng-repeat="version in versions track by $index" ng-click="downloadVersion(version)">
+        <i class="fa fa-times" ng-show="$index != 0" ng-click=deleteVersion(version._id)></i>
+        <div class="item-text-wrap" style="float: right; width: 90%;">
+          <h2>{{version.name}}</h2>
+          <h3>{{formatDateLocale(version.date.$date)}}</h3>
+          <h3>{{version.userName}}</h3>
+          <h4>{{getSizeFile(version.metadata)}}</h4>
+        </div>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>

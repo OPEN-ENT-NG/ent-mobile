@@ -39,7 +39,7 @@ angular.module('ent.user', [])
       UserFactory.whoAmI(res.data.userId).then(function(response) {
         $rootScope.myUser = response.data.result[0];
         $rootScope.myUser.photo = setProfileImage($scope.myUser.photo, res.data.userId);
-        $rootScope.myUser.type = $rootScope.myUser.type[0];
+        $rootScope.myUser.type = "directory."+$rootScope.myUser.type[0];
         console.log($rootScope.myUser);
       })
     }), function errorCallback(response) {

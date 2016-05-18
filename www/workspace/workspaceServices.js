@@ -41,6 +41,14 @@ angular.module('ent.workspace_service', [])
     return $http.put(domainENT+'/workspace/document/trash/'+id)
   }
 
+  this.versionDoc = function (id){
+    return $http.get(domainENT+'/workspace/document/'+id+'/revisions?_='+getTimeInMillis())
+  }
+
+  this.deleteVersion = function(idDoc, idVersion){
+    return $http.delete(domainENT+'/workspace/document/'+idDoc+'/revision/'+idVersion)
+  }
+
   this.getTranslation = function(){
     return $http.get(domainENT+"/workspace/i18n");
   }
