@@ -143,20 +143,21 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     }
   })
 
-  .state('app.pronotes', {
-    url: '/pronotes',
-    views: {
-      'menuContent': {
-        templateUrl: 'pronotes/pronotes.html'
-      }
-    }
-  })
 
   .state('app.threads', {
     url: '/threads',
     views: {
       'menuContent': {
         templateUrl: 'actualites/threads.html'
+      }
+    }
+  })
+
+  .state('app.pronotes', {
+    url: '/pronotes',
+    views: {
+      'menuContent': {
+        templateUrl: 'pronotes/pronotes.html'
       }
     }
   })
@@ -180,7 +181,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   $urlRouterProvider.otherwise('/login');
 })
 
-.controller('AppCtrl', function ($scope, $rootScope, $sce, $state, $cordovaInAppBrowser, $cordovaFileTransfer,$cordovaProgress, $cordovaFileOpener2, domainENT, $ionicHistory, SkinFactory, $ionicPopup, ActualitesService, MessagerieServices,PronoteService, BlogsService, $filter){
+.controller('AppCtrl', function ($scope, $rootScope, $sce, $state, $cordovaInAppBrowser, $ionicSideMenuDelegate, $cordovaFileTransfer,$cordovaProgress, $cordovaFileOpener2, domainENT, $ionicHistory, SkinFactory, $ionicPopup, ActualitesService, MessagerieServices,PronoteService, BlogsService, $filter){
 
   $rootScope.filterThreads = [];
 
@@ -192,9 +193,23 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
 
   getTranslationActualites();
   getTranslationConversation();
-  // getTranslationPronotes();
   getTraductionBlogs();
 
+  $scope.$watch(function () {
+    return $ionicSideMenuDelegate.getOpenRatio();
+  },function (ratio) {
+    if (ratio == 1){
+      var folderIds = [];
+      folderIds.push("INBOX");
+      MessagerieServices.getCountUnread(folderIds).then(function (response){
+        for(var i=0; i< response.length; i++){
+          console.log(response[i]);
+          console.log(response[i].count);
+          $scope.badgeMessagerie = response[i].count==0 ? "" : ""+response[i].count;
+        }
+      });
+    }
+  });
 
   $scope.renderHtml = function (text){
     if(text != null){
@@ -351,14 +366,6 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
       alert('ERR:'+ err);
     };
   }
-
-  // function getTranslationPronotes(){
-  //   PronoteService.getTranslation().then(function(resp) {
-  //     $rootScope.translationPronotes = resp.data;
-  //   }), function(err){
-  //     alert('ERR:'+ err);
-  //   };
-  // }
 
   function getTraductionBlogs(){
     BlogsService.getTraduction().then(function(resp){

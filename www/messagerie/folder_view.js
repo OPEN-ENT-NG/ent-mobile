@@ -18,6 +18,7 @@ angular.module('ent.messagerie', ['ent.message_services', 'ent.message_folder', 
     }
     return returnName;
   }
+
   $rootScope.getNameFolder = function(nameFolder){
     var nonPersonnalFolders = ["inbox", "outbox", "draft", "trash"];
     return nonPersonnalFolders.indexOf(nameFolder) != -1 ? $rootScope.translationConversation[nameFolder]:nameFolder;
@@ -60,7 +61,7 @@ angular.module('ent.messagerie', ['ent.message_services', 'ent.message_folder', 
       angular.forEach($scope.folders, function(folder) {
         folderIds.push(folder.id);
       })
-      MessagerieServices.getCountUnread(folderIds).then(function (response){
+      MessagerieServices.getCountUnread(folderIds,$scope.unr).then(function (response){
         for(var i=0; i< response.length; i++){
           $scope.folders[i].count = response[i].count;
         }

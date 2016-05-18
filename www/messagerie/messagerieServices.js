@@ -147,6 +147,7 @@ angular.module('ent.message_services', [])
     return $http.get(domainENT+'/conversation/i18n');
   }
 
+
   this.getNonPersonalFolders = function(){
     return [
       {
