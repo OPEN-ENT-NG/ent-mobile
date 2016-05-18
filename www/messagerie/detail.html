@@ -1,17 +1,9 @@
 <ion-view ng-controller="MessagesDetailCtrl">
   <ion-nav-title>{{checkable ? getCountOfCheckedMessages(): getNameFolder(nameFolder)}}</ion-nav-title>
   <ion-nav-buttons side="right">
-<<<<<<< HEAD
-    <button class="button button-icon button-clear ion-reply" ng-if="isInbox() || isPersonnalFolder(nameFolder)"  ng-click=editMail('REPLY_ONE')></button>
-    <button class="button button-icon button-clear ion-reply-all" ng-if="isInbox() || isPersonnalFolder(nameFolder)" ng-click=editMail('REPLY_ALL')></button>
-    <button class="button button-icon button-clear ion-forward" ng-if="!isDraft()" ng-click=editMail('FORWARD')></button>
-    <button class="button button-icon button-clear pencilicon-" ng-if=isDraft() ng-click=editMail('DRAFT')></button>
-    <button class="button button-icon button-clear ion-trash-a buttonActionBar"  ng-if="!isDraft()" ng-click=trash()></button>
-
-=======
     <button class="button button-icon button-clear ion-reply" ng-if=isInbox()  ng-click=editMail('REPLY_ONE')></button>
->>>>>>> bac9a6570639d1a59d885494a6755c3c963db9e3
     <button class="button button-icon button-clear ion-android-more-vertical buttonActionBar" ng-click=openPopover($event)></button>
+
   </ion-nav-buttons>
 
   <ion-content>
