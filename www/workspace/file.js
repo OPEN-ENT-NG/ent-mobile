@@ -1,6 +1,6 @@
 angular.module('ent.workspace_file',['ent.workspace_service'])
 
-.controller('WorkspaceFileCtlr', function($scope, $rootScope, $ionicPopup, domainENT, WorkspaceService, $ionicLoading, $stateParams, DeleteDocPopupFactory){
+.controller('WorkspaceFileCtlr', function($scope, $rootScope, $ionicPopup, domainENT, WorkspaceService, $ionicLoading, $stateParams, DeleteDocPopupFactory, $ionicHistory){
   console.log($rootScope.doc);
   $rootScope.doc.ownerPhoto = '/userbook/avatar/'+$rootScope.doc.owner
 
@@ -89,12 +89,14 @@ angular.module('ent.workspace_file',['ent.workspace_service'])
     var popupMove = DeleteDocPopupFactory.getPopup($scope);
     popupMove.then(function(res){
 
-      $ionicLoading.show({
-        template: '<ion-spinner icon="android"/>'
-      });
       if(res!=null){
+        $ionicLoading.show({
+          template: '<ion-spinner icon="android"/>'
+        });
         WorkspaceService.trashDoc($rootScope.doc._id).then(function(){
           $ionicLoading.hide();
+          $ionicHistory.clearCache();
+          $ionicHistory.goBack();
           //back
         }, function(err){
           $ionicLoading.hide();
@@ -102,7 +104,10 @@ angular.module('ent.workspace_file',['ent.workspace_service'])
         });
       }
     })
+  }
 
+  $scope.versions = function(){
+    
   }
 
   $scope.getCountComments = function(doc, commentsAreShown){

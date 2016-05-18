@@ -3,7 +3,10 @@ angular.module('ent.workspace_content',['ent.workspace_service'])
 .controller('WorkspaceFolderContentCtlr', function($scope, $rootScope, $stateParams, $state, WorkspaceService, $ionicLoading, MimeTypeFactory){
 
   var filter = getFilter($stateParams.nameWorkspaceFolder);
-  getData();
+  
+  $scope.init = function(){
+    getData();
+  }
 
   $scope.gotInDepthFolder = function(folder){
     $state.go('app.workspace_folder_depth', {filtre:filter, parentFolderName: folder.name})

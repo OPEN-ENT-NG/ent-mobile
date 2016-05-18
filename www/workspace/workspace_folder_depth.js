@@ -7,7 +7,9 @@ angular.module('ent.workspace_folder_depth',['ent.workspace_service'])
   console.log('$stateParams.parentFolderName '+$stateParams.parentFolderName);
   console.log('$stateParams.nameFolder '+$stateParams.nameFolder);
 
-  getData();
+  $scope.init = function(){
+    getData();
+  }
 
   $scope.doRefresh = function(){
     getData()

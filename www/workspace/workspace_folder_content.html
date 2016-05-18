@@ -1,4 +1,4 @@
-<ion-view view-title={{getTitle()}}>
+<ion-view view-title={{getTitle()}} ng-init=init() cache-view="false">
 
   <ion-content>
     <ion-refresher pulling-text="{{translationWorkspace[loading]}}" on-refresh="doRefresh()"></ion-refresher>

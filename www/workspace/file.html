@@ -1,6 +1,6 @@
 <ion-view view-title={{doc.folder}} >
 
-  <ion-content>
+  <ion-content class="true">
     <div class="card">
 
       <div class="item item-avatar item-text-wrap">
@@ -37,10 +37,57 @@
     </div>
   </ion-content>
 
+
+  <ion-footer-bar align-title="left" class="bar-stable">
+    <div class="buttons">
+      <button class="button ion-edit">{{translationWorkspace["workspace.rename"]}}</button>
+    </div>
+    <div class="buttons" ng-click="doSomething()">
+      <button class="button ion-trash-a">{{translationWorkspace["workspace.delete"]}}</button>
+    </div>
+    <div class="buttons" ng-click="doSomething()">
+      <button class="button fa fa-code-fork">{{translationWorkspace["workspace.versions.list"]}}</button>
+    </div>
+  </ion-footer-bar>
+
+
+  <!-- <div class="bar bar-footer bar-stable">
+  <div class="title">{{translationWorkspace["workspace.rename"]}}</div>
+  <div class="title">{{translationWorkspace["workspace.delete"]}}</div>
+  <div class="title">{{translationWorkspace["workspace.versions.list"]}}</div>
+  <button class="button button-icon button-clear downloadicon-"></button> -->
+  <!-- <div class="title">Title</div> -->
+  <!-- <button ng-click="renameDoc()">{{translationWorkspace["workspace.rename"]}}</button>
+  <button ng-click="trashDoc()">{{translationWorkspace["workspace.delete"]}}</button>
+  <button ng-click="versions()">{{translationWorkspace["workspace.versions.list"]}}</button> -->
+
+  <!-- </div>  -->
+
   <nav mfb-menu position="br" effect="zoomin" active-icon="ion-plus-round" resting-icon="ion-plus-round" toggling-method="click">
     <button mfb-button icon="downloadicon-" ng-click="downloadDoc()" label="Télécharger"></button>
-    <button mfb-button icon="ion-edit" ng-click="renameDoc()" label={{translationWorkspace["workspace.rename"]}}></button>
-    <button mfb-button icon="ion-trash-a" ng-click="trashDoc()" label={{translationWorkspace["workspace.delete"]}}></button>
+    <!-- <button mfb-button icon="ion-edit" ng-click="renameDoc()" label={{translationWorkspace["workspace.rename"]}}></button> -->
+    <!-- <button mfb-button icon="ion-trash-a" ng-click="trashDoc()" label={{translationWorkspace["workspace.delete"]}}></button> -->
+    <!-- <button mfb-button icon="fa fa-code-fork " ng-click="versions()" label={{translationWorkspace["workspace.versions.list"]}}></button> -->
   </nav>
+
+  <!-- <ion-tabs class="tabs-icon-top tabs-color-active-positive"> -->
+
+  <!-- Dashboard Tab -->
+  <!-- <ion-tab title="Status" icon-off="ion-ios-pulse" icon-on="ion-ios-pulse-strong" href="#/tab/dash">
+  <ion-nav-view name="tab-dash"></ion-nav-view>
+</ion-tab> -->
+
+<!-- Chats Tab -->
+<!-- <ion-tab title="Chats" icon-off="ion-ios-chatboxes-outline" icon-on="ion-ios-chatboxes" href="#/tab/chats">
+<ion-nav-view name="tab-chats"></ion-nav-view>
+</ion-tab> -->
+
+<!-- Account Tab -->
+<!-- <ion-tab title="Account" icon-off="ion-ios-gear-outline" icon-on="ion-ios-gear" href="#/tab/account">
+<ion-nav-view name="tab-account"></ion-nav-view>
+</ion-tab>
+
+
+</ion-tabs> -->
 
 </ion-view>

@@ -56,6 +56,20 @@ angular.module('ent.workspace_service', [])
     return n;
   }
 })
+
+.factory("VersionsDocPopupFactory", function ($ionicPopup, $rootScope) {
+
+  function getPopup() {
+    return $ionicPopup.confirm({
+      title: $rootScope.translationWorkspace["workspace.delete"],
+      template: 'Êtes-vous sûr(e) de vouloir supprimer ce document ?'
+    })
+  }
+  return {
+    getPopup: getPopup
+  };
+})
+
 .factory("DeleteDocPopupFactory", function ($ionicPopup, $rootScope) {
 
   function getPopup() {

@@ -16,6 +16,7 @@ $dark:                            #444 !default;
 */
 
 $positive:                        #4BAFD5 !default;
+$stable:                          #FF8500 !default;
 
 // Theme
 $bar-content-bg:                  $positive;
@@ -39,7 +40,7 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
 @import "www/lib/ionic/scss/ionic";
 
 .title {
-  right: auto !important; 
+  right: auto !important;
 }
 
 // Bar styles
