@@ -143,20 +143,21 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     }
   })
 
-  .state('app.pronotes', {
-    url: '/pronotes',
-    views: {
-      'menuContent': {
-        templateUrl: 'pronotes/pronotes.html'
-      }
-    }
-  })
 
   .state('app.threads', {
     url: '/threads',
     views: {
       'menuContent': {
         templateUrl: 'actualites/threads.html'
+      }
+    }
+  })
+
+  .state('app.pronotes', {
+    url: '/pronotes',
+    views: {
+      'menuContent': {
+        templateUrl: 'pronotes/pronotes.html'
       }
     }
   })
@@ -190,7 +191,6 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
 
   getTranslationActualites();
   getTranslationConversation();
-  // getTranslationPronotes();
   getTraductionBlogs();
 
 
@@ -334,6 +334,28 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     location.reload();
   }
 
+  // Setter & init badgeMessagerie
+  $scope.initBadgeMessagerie = function(){
+    var folderIds = [];
+    folderIds.push("INBOX");
+    MessagerieServices.getCountUnread(folderIds).then(function (response){
+      for(var i=0; i< response.length; i++){
+        console.log(response[i]);
+        console.log(response[i].count);
+        $scope.setBadgeMessagerie(response[i].count);
+
+      }
+    })
+  };
+  $scope.setBadgeMessagerie = function(nb){
+    if(nb!=0){
+      $scope.badgeMessagerie = ""+nb;
+    } else{
+      $scope.badgeMessagerie = "" ;
+    }
+  }
+  $scope.initBadgeMessagerie();
+
   function getTranslationActualites(){
     ActualitesService.getTranslation().then(function(resp){
       $rootScope.translationActus = resp.data;
@@ -349,14 +371,6 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
       alert('ERR:'+ err);
     };
   }
-
-  // function getTranslationPronotes(){
-  //   PronoteService.getTranslation().then(function(resp) {
-  //     $rootScope.translationPronotes = resp.data;
-  //   }), function(err){
-  //     alert('ERR:'+ err);
-  //   };
-  // }
 
   function getTraductionBlogs(){
     BlogsService.getTraduction().then(function(resp){
