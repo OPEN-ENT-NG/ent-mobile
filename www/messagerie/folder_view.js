@@ -62,7 +62,6 @@ angular.module('ent.messagerie', ['ent.message_services', 'ent.message_folder', 
         folderIds.push(folder.id);
       })
       MessagerieServices.getCountUnread(folderIds,$scope.unr).then(function (response){
-        $scope.setBadgeMessagerie(response[0].count);
         for(var i=0; i< response.length; i++){
           $scope.folders[i].count = response[i].count;
         }

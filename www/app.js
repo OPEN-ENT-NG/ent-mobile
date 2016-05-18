@@ -181,7 +181,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   $urlRouterProvider.otherwise('/login');
 })
 
-.controller('AppCtrl', function ($scope, $rootScope, $sce, $state, $cordovaInAppBrowser, $cordovaFileTransfer,$cordovaProgress, $cordovaFileOpener2, domainENT, $ionicHistory, SkinFactory, $ionicPopup, ActualitesService, MessagerieServices,PronoteService, BlogsService, $filter){
+.controller('AppCtrl', function ($scope, $rootScope, $sce, $state, $cordovaInAppBrowser, $ionicSideMenuDelegate, $cordovaFileTransfer,$cordovaProgress, $cordovaFileOpener2, domainENT, $ionicHistory, SkinFactory, $ionicPopup, ActualitesService, MessagerieServices,PronoteService, BlogsService, $filter){
 
   SkinFactory.getSkin().then(function(res) {
     localStorage.setItem('skin', res.data.skin);
@@ -193,6 +193,21 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   getTranslationConversation();
   getTraductionBlogs();
 
+  $scope.$watch(function () {
+    return $ionicSideMenuDelegate.getOpenRatio();
+  },function (ratio) {
+    if (ratio == 1){
+      var folderIds = [];
+      folderIds.push("INBOX");
+      MessagerieServices.getCountUnread(folderIds).then(function (response){
+        for(var i=0; i< response.length; i++){
+          console.log(response[i]);
+          console.log(response[i].count);
+          $scope.badgeMessagerie = response[i].count==0 ? "" : ""+response[i].count;
+        }
+      });
+    }
+  });
 
   $scope.renderHtml = function (text){
     if(text != null){
@@ -333,28 +348,6 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     // ionic.Platform.exitApp(); // stops the app
     location.reload();
   }
-
-  // Setter & init badgeMessagerie
-  $scope.initBadgeMessagerie = function(){
-    var folderIds = [];
-    folderIds.push("INBOX");
-    MessagerieServices.getCountUnread(folderIds).then(function (response){
-      for(var i=0; i< response.length; i++){
-        console.log(response[i]);
-        console.log(response[i].count);
-        $scope.setBadgeMessagerie(response[i].count);
-
-      }
-    })
-  };
-  $scope.setBadgeMessagerie = function(nb){
-    if(nb!=0){
-      $scope.badgeMessagerie = ""+nb;
-    } else{
-      $scope.badgeMessagerie = "" ;
-    }
-  }
-  $scope.initBadgeMessagerie();
 
   function getTranslationActualites(){
     ActualitesService.getTranslation().then(function(resp){
