@@ -414,10 +414,12 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     };
   }
 
-  $scope.getConfirmPopup = function(title, template) {
+  $scope.getConfirmPopup = function(title, template, cancelText, okText) {
     return $ionicPopup.confirm({
       title: title,
-      template: template
+      template: template,
+      cancelText: cancelText,
+      okText: okText
     })
   }
 })

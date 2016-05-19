@@ -63,3 +63,15 @@
   font-size: x-large;
   vertical-align: middle;
 }
+
+#infos{
+  width: 75%;
+  margin-left: 12%;
+}
+
+.version i{
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: x-large;
+}
