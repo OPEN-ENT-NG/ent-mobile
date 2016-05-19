@@ -197,16 +197,12 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
 
   $scope.$watch(function () {
     return $ionicSideMenuDelegate.getOpenRatio();
-  },function (ratio) {
+  }, function (ratio) {
     if (ratio == 1){
-      var folderIds = [];
-      folderIds.push("INBOX");
-      MessagerieServices.getCountUnread(folderIds).then(function (response){
-        for(var i=0; i< response.length; i++){
-          console.log(response[i]);
-          console.log(response[i].count);
-          $scope.badgeMessagerie = response[i].count==0 ? "" : ""+response[i].count;
-        }
+      MessagerieServices.getCountUnread(["INBOX"]).then(function (response){
+        $scope.badgeMessagerie = response[0].count
+      } , function(err){
+        $scope.showAlertError(err)
       });
     }
   });
