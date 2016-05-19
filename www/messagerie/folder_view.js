@@ -2,12 +2,9 @@ angular.module('ent.messagerie', ['ent.message_services', 'ent.message_folder', 
 
 .controller('MessagerieFoldersCtrl', function($scope, $state, $rootScope, MessagerieServices,  $ionicLoading,  $cordovaVibration, $ionicPlatform, $ionicHistory){
 
-  $ionicLoading.show({
-    template: '<ion-spinner icon="android"/>'
-  });
+
   getContacts();
   getFolders();
-  $ionicLoading.hide();
 
   $rootScope.getRealName = function (id, displayNames){
     var returnName = "Inconnu";
@@ -41,6 +38,10 @@ angular.module('ent.messagerie', ['ent.message_services', 'ent.message_folder', 
 
   function getFolders(){
 
+    $ionicLoading.show({
+      template: '<ion-spinner icon="android"/>'
+    });
+
     $scope.checkable = false;
     $scope.folders = [];
     $scope.folders = MessagerieServices.getNonPersonalFolders();
@@ -61,14 +62,18 @@ angular.module('ent.messagerie', ['ent.message_services', 'ent.message_folder', 
       angular.forEach($scope.folders, function(folder) {
         folderIds.push(folder.id);
       })
-      MessagerieServices.getCountUnread(folderIds,$scope.unr).then(function (response){
+      MessagerieServices.getCountUnread(folderIds).then(function (response){
         for(var i=0; i< response.length; i++){
+          console.log($scope.folders[i].name);
+          console.log(response[i].count);
           $scope.folders[i].count = response[i].count;
         }
         initCheckedValue();
         console.log($scope.folders);
+        $ionicLoading.hide();
       })
     }) , function(err){
+      $ionicLoading.hide();
       $scope.showAlertError();
     };
   }
@@ -80,6 +85,9 @@ angular.module('ent.messagerie', ['ent.message_services', 'ent.message_folder', 
   }
 
   function getContacts () {
+    $ionicLoading.show({
+      template: '<ion-spinner icon="android"/>'
+    });
     $rootScope.contacts = [];
     MessagerieServices.getContactsService().then(function(resp){
       for(var i = 0; i< resp.data.groups.length; i++){
@@ -98,7 +106,9 @@ angular.module('ent.messagerie', ['ent.message_services', 'ent.message_folder', 
           profile:  resp.data.users[i].status
         });
       };
+      $ionicLoading.hide()
     }, function(err){
+      $ionicLoading.hide()
       $scope.showAlertError();
     });
   }
