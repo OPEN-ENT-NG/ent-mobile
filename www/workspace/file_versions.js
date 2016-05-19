@@ -4,6 +4,26 @@ angular.module('ent.workspace_file_versions',['ent.workspace_service'])
 
   getData($rootScope.doc._id)
 
+  $scope.doRefreshVersions = function() {
+    getData($rootScope.doc._id)
+    $scope.$broadcast('scroll.refreshComplete');
+    $scope.$apply()
+  }
+
+  $scope.addVersion = function(ele){
+    // $ionicLoading.show({
+    //   template: '<ion-spinner icon="android"/>'
+    // });
+    var attachment = ele.files[0];
+    console.log(attachment);
+    console.log(ele.files);
+
+    var formData = new FormData()
+    formData.append('file', attachment)
+
+    // MessagerieServices.postAttachment($scope.email.id, formData)
+  }
+
   $scope.downloadVersion = function(version){
     $scope.getConfirmPopup('Télécharger', 'Voulez-vous télécharger cette version de ce fichier ?', $rootScope.translationWorkspace["cancel"], 'OK' ).then(function(res){
       console.log(res);
