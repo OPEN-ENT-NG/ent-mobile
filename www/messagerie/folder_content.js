@@ -188,7 +188,12 @@ angular.module('ent.message_folder', ['ent.message_services'])
         folderIds.push(extraFolder.id);
       })
       MessagerieServices.getCountUnread(folderIds).then(function (response){
+        console.log(folderIds)
+        console.log(response);
         for(var i=0; i< response.length; i++){
+          console.log($scope.extraFolders[i]);
+          console.log(response[i].count);
+
           $scope.extraFolders[i].count = response[i].count;
         }
         $ionicLoading.hide();

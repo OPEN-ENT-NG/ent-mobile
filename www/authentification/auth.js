@@ -7,7 +7,7 @@ angular.module('ent.auth', ['ent.user'])
   function onDeviceReady() {
     // navigator.splashscreen.show();
 
-    if(localStorage.getItem('code')!=null){
+    if(localStorage.getItem('login')){
       navigator.splashscreen.hide();
       $state.go("app.actualites");
     } else {
@@ -41,12 +41,13 @@ angular.module('ent.auth', ['ent.user'])
     var ref = window.open(domainENT+'/auth/oauth2/auth?response_type=code&state=blip&scope=userinfo&client_id=appmobile&redirect_uri='+domainENT,'_self','location=no','toolbar=no', 'clearcache=yes', 'clearsessioncache=yes');
     ref.addEventListener('loadstart', function(event) {
       var url = event.url;
-      if(url.startsWith(domainENT+"/?code=")) {
+      if(url.startsWith(domainENT+"/timeline")) {
 
-        localStorage.setItem('code', url.substring(url.indexOf("code=")+5, url.lastIndexOf("&")));
+        localStorage.setItem('login', true);
         ref.close();
         console.log("hide splashscreen");
         navigator.splashscreen.hide();
+        $state.go("app.actualites");
 
       }
     });
