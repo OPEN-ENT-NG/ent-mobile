@@ -3,9 +3,15 @@ angular.module('ent.workspace_content',['ent.workspace_service'])
 .controller('WorkspaceFolderContentCtlr', function($scope, $rootScope, $stateParams, $state, WorkspaceService, $ionicLoading, MimeTypeFactory){
 
   var filter = getFilter($stateParams.nameWorkspaceFolder);
-  
+
   $scope.init = function(){
     getData();
+  }
+
+  $rootScope.isMyDocuments = function(){
+    console.log($stateParams.nameWorkspaceFolder == "documents");
+    console.log($stateParams.nameWorkspaceFolder)
+    $stateParams.nameWorkspaceFolder == "documents"
   }
 
   $scope.gotInDepthFolder = function(folder){

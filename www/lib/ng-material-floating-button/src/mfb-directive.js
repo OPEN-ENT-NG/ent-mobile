@@ -40,6 +40,21 @@
       '</ul>'
     );
 
+    $templateCache.put('ng-mfb-menu-single.tpl.html',
+      '<ul class="mfb-component--{{position}} mfb-{{effect}}"' +
+      '    data-mfb-toggle="{{togglingMethod}}" data-mfb-state="{{menuState}}" data-mfb-label="{{label}}">' +
+      '  <li class="mfb-component__wrap">' +
+      '    <a ng-click="clicked()" ng-mouseenter="hovered()" ng-mouseleave="hovered()"' +
+      '       ng-attr-data-mfb-label="{{label}}" class="mfb-component__button--main">' +
+      '     <i class="mfb-component__main-icon--resting {{resting}}"></i>' +
+      '     <i class="mfb-component__main-icon--active {{active}}"></i>' +
+      '    </a>' +
+      // '    <ul class="mfb-component__list" ng-transclude>' +
+      // '    </ul>' +
+      '</li>' +
+      '</ul>'
+    );
+
     $templateCache.put('ng-mfb-button-default.tpl.html',
       '<li>' +
       '  <a data-mfb-label="{{label}}" class="mfb-component__button--child">' +
@@ -59,6 +74,25 @@
       '     </md-button>' +
       '  </a>' +
       '</li>'
+    );
+
+    $templateCache.put('ng-mfb-button-no-label.tpl.html',
+      '<li>' +
+      '  <a class="mfb-component__button--child">' +
+      '    <i class="mfb-component__child-icon {{icon}}">' +
+      '    </i>' +
+      '  </a>' +
+      '</li>'
+    );
+
+    $templateCache.put('ng-mfb-button-input-file.tpl.html',
+    '<li>' +
+    '  <label data-mfb-label="{{label}}" class="mfb-component__button--child">' +
+    '    <i class="mfb-component__child-icon {{icon}}">' +
+    '    </i>' +
+    '   <input style="display:none;" type=\'file\'>' +
+    '  </label>' +
+    '</li>'
     );
   }]);
 

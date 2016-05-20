@@ -1,51 +1,32 @@
 <ion-view view-title={{doc.name}} >
+  
+  <ion-content>
+    <ion-refresher on-refresh="doRefreshVersions()">
+    </ion-refresher>
+    <ion-list>
+      <ion-item ng-repeat="version in versions track by $index" class="version">
+        <i class="downloadicon-" ng-click=downloadVersion(version)></i>
 
-  <!-- <ion-nav-buttons side="right">
-  <label>
-  <input multiple style="display:none;" type='file' onchange="angular.element(this).scope().addVersion(this)" >
-  <i class="button button-icon button-clear plusicon-"></i>
-</label>
-</ion-nav-buttons> -->
+        <div class="item-text-wrap" id=infos>
+          <h2>{{version.name}}</h2>
+          <h3>{{formatDateLocale(version.date.$date)}}</h3>
+          <h3>{{version.userName}}</h3>
+          <h4>{{getSizeFile(version.metadata)}}</h4>
 
-<ion-content>
-  <ion-refresher on-refresh="doRefreshVersions()">
-  </ion-refresher>
-  <ion-list>
-    <ion-item ng-repeat="version in versions track by $index" class="version">
-      <i class="downloadicon-" ng-click=downloadVersion(version)></i>
+        </div>
+        <i class="ion-trash-a" ng-show="$index != 0" ng-click=deleteVersion(version._id) style="margin-left: 80%;"></i>
+      </ion-item>
+    </ion-list>
 
-      <div class="item-text-wrap" id=infos>
-        <h2>{{version.name}}</h2>
-        <h3>{{formatDateLocale(version.date.$date)}}</h3>
-        <h3>{{version.userName}}</h3>
-        <h4>{{getSizeFile(version.metadata)}}</h4>
+  </ion-content>
 
-      </div>
-      <i class="ion-trash-a" ng-show="$index != 0" ng-click=deleteVersion(version._id) style="margin-left: 80%;"></i>
-    </ion-item>
-  </ion-list>
-</ion-content>
-<nav mfb-menu position="br" effect="zoomin" active-icon="ion-plus-round" resting-icon="ion-plus-round" toggling-method="click">
-  <!-- <a mfb-button label="Ajouter une version">
-  <input  style="display:none;" type='file' onchange="angular.element(this).scope().addVersion(this)" >
-  <i class="button button-icon button-clear plusicon-"></i>
-</a> -->
-
-<ul class="mfb-component__list">
-  <!-- a child button, repeat as many times as needed -->
-  <li>
-    <a  data-mfb-label="the label text of the a child button" class="mfb-component__button--child">
-      <i class="mfb-component__child-icon"></i>
-      <div>
-        <span>Upload</span>
-        <input type="file" />
-      </div>
-    </a>
-  </li>
-</ul>
-<!-- <button mfb-button icon="downloadicon-" ng-click="downloadDoc()" label="Télécharger"></button> -->
-<!-- <button mfb-button icon="ion-edit" ng-click="renameDoc()" label={{translationWorkspace["workspace.rename"]}}></button> -->
-<!-- <button mfb-button icon="ion-trash-a" ng-click="trashDoc()" label={{translationWorkspace["workspace.delete"]}}></button> -->
-<!-- <button mfb-button icon="fa fa-code-fork " ng-click="versions()" label={{translationWorkspace["workspace.versions.list"]}}></button> -->
-</nav>
+  <nav mfb-menu position="br" effect="zoomin" active-icon="ion-plus-round" resting-icon="ion-plus-round" toggling-method="click">
+    <li>
+      <label data-mfb-label={{translationWorkspace["workspace.add.version"]}} class="mfb-component__button--child">
+        <i class="mfb-component__child-icon fa fa-code-fork">
+        </i>
+        <input style="display:none;" type='file' onchange="angular.element(this).scope().addVersion(this)">
+      </label>
+    </li>
+  </nav>
 </ion-view>

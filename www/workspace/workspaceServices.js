@@ -45,8 +45,26 @@ angular.module('ent.workspace_service', [])
     return $http.get(domainENT+'/workspace/document/'+id+'/revisions?_='+getTimeInMillis())
   }
 
+  this.putNewVersion = function (id, newVersion){
+    return $http.put(domainENT+'/workspace/document/'+id+'?thumbnail=120x120&thumbnail=290x290', newVersion, {
+      transformRequest: angular.identity,
+      headers: {'Content-Type': undefined}
+    });
+  }
+
   this.deleteVersion = function(idDoc, idVersion){
     return $http.delete(domainENT+'/workspace/document/'+idDoc+'/revision/'+idVersion)
+  }
+
+  this.uploadDoc = function(doc){
+    return $http.post(domainENT+'/workspace/document?thumbnail=120x120&thumbnail=290x290', doc, {
+      transformRequest: angular.identity,
+      headers: {'Content-Type': undefined}
+    });
+  }
+
+  this.moveDoc = function(idDoc, folderName){
+    return $http.put(domainENT+'/workspace/documents/move/'+idDoc+'/'+folderName)
   }
 
   this.getTranslation = function(){

@@ -5,7 +5,6 @@
 
     <ion-list >
       <ion-item ng-repeat="folder in folders track by $index" class="item item-text-wrap" ng-click="gotInDepthFolder(folder)">
-        <!-- <img ng-src={{getImageUrl(folder_icon)}}></img> -->
         <i class="folder-open-2icon- icon-file" ></i>
         <div class="info-file">
           <h2>{{folder.name}}</h2>
@@ -26,4 +25,13 @@
     </ion-list>
 
   </ion-content>
+  <nav mfb-menu position="br" effect="zoomin" active-icon="ion-plus-round" resting-icon="ion-plus-round" toggling-method="click">
+    <li>
+      <label data-mfb-label={{translationWorkspace["workspace.add.document"]}} class="mfb-component__button--child">
+        <i class="mfb-component__child-icon fa fa-upload">
+        </i>
+        <!-- <input style="display:none;" type='file' onchange="angular.element(this).scope().addDocument(this)"> -->
+      </label>
+    </li>
+  </nav>
 </ion-view>

@@ -3,7 +3,6 @@ angular.module('ent.workspace_file_versions',['ent.workspace_service'])
 .controller('FileVersionCtrl', function($scope, $rootScope, WorkspaceService,$ionicLoading, domainENT){
 
   getData($rootScope.doc._id)
-
   $scope.doRefreshVersions = function() {
     getData($rootScope.doc._id)
     $scope.$broadcast('scroll.refreshComplete');
@@ -11,17 +10,21 @@ angular.module('ent.workspace_file_versions',['ent.workspace_service'])
   }
 
   $scope.addVersion = function(ele){
-    // $ionicLoading.show({
-    //   template: '<ion-spinner icon="android"/>'
-    // });
-    var attachment = ele.files[0];
-    console.log(attachment);
-    console.log(ele.files);
+    $ionicLoading.show({
+      template: '<ion-spinner icon="android"/>'
+    });
+    var newVersion = ele.files[0];
+    console.log(newVersion);
 
     var formData = new FormData()
-    formData.append('file', attachment)
-
-    // MessagerieServices.postAttachment($scope.email.id, formData)
+    formData.append('file', newVersion)
+    WorkspaceService.putNewVersion($rootScope.doc._id, formData).then(function(result){
+      $ionicLoading.hide()
+      getData($rootScope.doc._id)
+    }, function(err){
+      $ionicLoading.hide()
+      $scope.showAlertError()
+    });
   }
 
   $scope.downloadVersion = function(version){
@@ -59,10 +62,11 @@ angular.module('ent.workspace_file_versions',['ent.workspace_service'])
     });
     WorkspaceService.versionDoc(fileId).then(function(result){
       $scope.versions = result.data
+      $rootScope.doc = result.data[result.data.length-1]
       $ionicLoading.hide()
     }, function(err){
       $ionicLoading.hide()
-      $scope.showAlertError()
+      $scope.showAlertError(err)
     });
   }
 })

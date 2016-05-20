@@ -31,6 +31,29 @@ angular.module('ent.workspace_folder_depth',['ent.workspace_service'])
       $state.go('app.workspace_file', {filtre:$stateParams.filtre})
   }
 
+  $scope.addDocument = function(ele){
+    $ionicLoading.show({
+      template: '<ion-spinner icon="android"/>'
+    });
+    var newDoc = ele.files[0];
+    console.log(newDoc);
+
+    var formData = new FormData()
+    formData.append('file', newDoc)
+    WorkspaceService.uploadDoc(formData).then(function(result){
+      // $ionicLoading.hide()
+      console.log(result);
+      console.log(fullFolderName);
+      // WorkspaceService.moveDoc()
+      getData();
+      $ionicLoading.hide()
+
+    }, function(err){
+      $ionicLoading.hide()
+      $scope.showAlertError()
+    });
+  }
+
 
   function getData(){
     $ionicLoading.show({
