@@ -1,0 +1,77 @@
+.icon-blue {
+  color: #4BAFD5;
+}
+
+.icon-file {
+  vertical-align: -webkit-baseline-middle;
+}
+
+.info-file {
+  display: inline-table;
+}
+
+.file-image{
+  max-width: 100%;
+  height: auto;
+}
+
+.doc_icon{
+  font-size: 120px;
+}
+
+.cardImage{
+  margin: 10%;
+}
+
+.doc_comments{
+  margin-top: 10%;
+}
+
+.float-button-workspace {
+
+  background-color:#FF8500;
+  opacity: 0.9;
+  color: white;
+  border-radius: 50%;
+  /*border-radius:15% 0 0 0;*/
+  width: 30px;
+  padding: 25px;
+  font-size: 20px;
+  position: fixed;
+  bottom: 5%; /* Adjust height */
+  right: 5%; /* Adjust position */
+  z-index: 1000;
+}
+
+.float-button-workspace .height_fix {
+  margin-top: 100%;
+  border: 1px solid red;
+}
+
+.float-button-workspace .content {
+  position: absolute;
+  left: 0;
+  top: 70%;
+  height: 100%;
+  width: 100%;
+  text-align: center !important;
+  margin-top: -20px;
+  color: white;
+}
+
+.comment-button{
+  font-size: x-large;
+  vertical-align: middle;
+}
+
+#infos{
+  width: 75%;
+  margin-left: 12%;
+}
+
+.version i{
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: x-large;
+}

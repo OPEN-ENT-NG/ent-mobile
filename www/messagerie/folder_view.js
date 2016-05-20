@@ -1,4 +1,4 @@
-angular.module('ent.messagerie', ['ent.message_services', 'ent.message_folder', 'ent.message_detail'])
+angular.module('ent.messagerie', ['ent.message_services', 'ent.message_folder', 'ent.message_detail', 'ent.new_message'])
 
 .controller('MessagerieFoldersCtrl', function($scope, $state, $rootScope, MessagerieServices,  $ionicLoading,  $cordovaVibration, $ionicPlatform, $ionicHistory){
 

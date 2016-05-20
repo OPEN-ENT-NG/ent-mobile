@@ -7,7 +7,7 @@
     <ion-list>
       <div ng-repeat="folder in folders track by $index">
         <ion-item ng-show=folder.name.length!=0 ng-click="goToFolder(folder)">
-          <i class="foldericon-"></i>
+          <i class="folder-open-2icon-"></i>
           {{getNameFolder(folder.name)}} <span ng-show="folder.count>0">({{folder.count}})</span>
         </ion-item>
         <div class="item item-divider" ng-hide=folder.name.length!=0></div>

@@ -8,11 +8,10 @@ angular.module('ent.message_folder', ['ent.message_services'])
 
   $scope.restoreMessages = function(){
     MessagerieServices.restoreSelectedMessages(getSelectedMessages()).then(function(){
-      getMessagesAndFolders();
-    }
-    , function(err){
-      $scope.showAlertError();
-      $ionicLoading.hide();
+      getMessagesAndFolders()
+    }, function(err){
+      $scope.showAlertError()
+      $ionicLoading.hide()
     });
   }
 

@@ -123,6 +123,7 @@ angular.module('ent.message_detail', ['ent.message_services'])
       console.log($scope.mail);
       $ionicLoading.hide();
     }, function(err){
+      $ionicLoading.hide();
       $scope.showAlertError();
     });
   }

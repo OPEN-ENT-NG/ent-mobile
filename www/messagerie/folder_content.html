@@ -11,7 +11,7 @@
     </ion-refresher>
     <ion-list>
       <ion-item ng-repeat="extraFolder in extraFolders" href="#/app/messagerie/{{extraFolder.name}}/{{extraFolder.id}}">
-        <i class="foldericon-"></i>
+        <i class="folder-open-2icon-"></i>
         {{getNameFolder(extraFolder.name)}} <span ng-show="folder.count>0">({{extraFolder.count}})</span>
       </ion-item>
     </ion-list>
@@ -24,14 +24,14 @@
           <input type="checkbox" ng-model="message.checked" ng-checked = "message.checked" ng-show=checkable style="vertical-align: -webkit-baseline-middle;">
 
           <div  class="item-text-wrap" style="float: right; width: 90%;" ng-if=checkable>
-            <span class="right">{{message.date | date:'dd/MM/yy'}}</span>
+            <span class="right">{{formatDateLocale(message.date)}}</span>
             <h2>{{getRealName(message.from, message.displayNames)}}</h2>
             <i class="attachicon-" ng-show="message.attachments.length != 0"></i>
             <h2>{{message.subject}}</h2>
           </div>
 
           <div class="item-text-wrap" style="float: right; width: 100%;" ng-if=!checkable>
-            <span class="right">{{message.date | date:'dd/MM/yy'}}</span>
+            <span class="right">{{formatDateLocale(message.date)}}</span>
             <h2>{{getRealName(message.from, message.displayNames)}}</h2>
             <i class="attachicon-" ng-show="message.attachments.length != 0"></i>
             <h2>{{message.subject}}</h2>
@@ -41,14 +41,14 @@
         <div ng-if="message.unread" class="unreadMessage">
           <input type="checkbox" ng-model="message.checked" ng-checked = "message.checked" ng-show=checkable>
           <div  class="item-text-wrap" style="float: right; width: 90%;" ng-if=checkable>
-            <span class="right">{{message.date | date:'dd/MM/yy'}}</span>
+            <span class="right">{{formatDateLocale(message.date)}}</span>
             <h2>{{getRealName(message.from, message.displayNames)}}</h2>
             <i class="attachicon-" ng-show="message.attachments.length != 0"></i>
             <h2>{{message.subject}}</h2>
           </div>
 
           <div class="item-text-wrap" style="float: right; width: 100%;" ng-if=!checkable>
-            <span class="right">{{message.date | date:'dd/MM/yy'}}</span>
+            <span class="right">{{formatDateLocale(message.date)}}</span>
             <h2>{{getRealName(message.from, message.displayNames)}}</h2>
             <i class="attachicon-" ng-show="message.attachments.length != 0"></i>
             <h2>{{message.subject}}</h2>

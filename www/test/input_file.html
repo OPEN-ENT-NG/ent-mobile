@@ -1,29 +1,72 @@
 
 <ion-view ng-controller="InputFileCtrl">
+  <!--
+  <nav mfb-menu position="br" effect="zoomin" label="hover here"
+  active-icon="ion-edit" resting-icon="ion-plus-round"
+  toggling-method="click">
+  <button mfb-button icon="paper-airplane" label="menu item"></button> -->
+</nav>
+<ion-content>
 
-  <ion-content>
-    <!-- <h1>angular-file-model</h1>
-    <p>Here you can test <code>angular-file-model</code>.</p>
 
-    <p>If you like it, go grab the code at <a href='https://github.com/ghostbar/angular-file-model'>github</a> or bower (with <code>bower install angular-file-model</code>)!</p>
 
-    <form>
-    <input type='file' ng-model='file'>
-  </form>
+  <!-- <h1>angular-file-model</h1>
+  <p>Here you can test <code>angular-file-model</code>.</p>
 
-  <p ng-if='file'>
-  The name of your file is {{ file.name }} and the size is of {{ file.size }} bytes.
+  <p>If you like it, go grab the code at <a href='https://github.com/ghostbar/angular-file-model'>github</a> or bower (with <code>bower install angular-file-model</code>)!</p>
+
+  <form>
+  <input type='file' ng-model='file'>
+</form>
+
+<p ng-if='file'>
+The name of your file is {{ file.name }} and the size is of {{ file.size }} bytes.
 </p>
 
 <p ng-if='file'>
 If you want to have something like ngChange the best way ATM is to use a $scope.$watch over the variable you pass to file-model just like in this code.
 </p> -->
 
-<label >
-  <input style="display:none;" type='file' onchange="angular.element(this).scope().fileNameChanged(this)" >
-  <i class=" attachicon- taille "></i>
-</label>
+<!-- <label >
+<input style="display:none;" type='file' onchange="angular.element(this).scope().fileNameChanged(this)" >
+<i class=" attachicon- taille "></i>
+</label> -->
 
 
 </ion-content>
+
+<nav mfb-menu position="br" effect="zoomin" label="hover here"
+     active-icon="ion-edit" resting-icon="ion-plus-round"
+     toggling-method="click">
+  <button mfb-button icon="paper-airplane" label="menu item" ng-click="hello()"></button>
+</nav>
+<!--
+<ul id="menu" class="mfb-component--br mfb-zoomin" data-mfb-toggle="click">
+      <li class="mfb-component__wrap">
+        <a href="#" class="mfb-component__button--main">
+          <i class="mfb-component__main-icon--resting ion-plus-round"></i>
+          <i class="mfb-component__main-icon--active ion-close-round"></i>
+        </a>
+        <ul class="mfb-component__list">
+          <li>
+            <a href="https://github.com/nobitagit/material-floating-button/" data-mfb-label="View on Github" class="mfb-component__button--child">
+              <i class="mfb-component__child-icon ion-social-github"></i>
+            </a>
+          </li>
+          <li>
+            <a href="https://github.com/nobitagit" data-mfb-label="Follow me on Github" class="mfb-component__button--child">
+              <i class="mfb-component__child-icon ion-social-octocat"></i>
+            </a>
+          </li>
+
+          <li>
+            <a href="http://twitter.com/share?text=Check this material floating button component!&url=http://nobitagit.github.io/material-floating-button/&hashtags=material,design,button,css"
+               data-mfb-label="Share on Twitter" class="mfb-component__button--child">
+              <i class="mfb-component__child-icon ion-social-twitter"></i>
+            </a>
+          </li>
+        </ul>
+      </li>
+    </ul> -->
+
 </ion-view>

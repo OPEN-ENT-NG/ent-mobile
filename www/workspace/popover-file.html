@@ -1,0 +1,27 @@
+<ion-popover-view class="fit">
+  <ion-content>
+    <ion-list>
+      <!-- télécharger -->
+      <a class="item" ng-click=downloadDoc()>Télécharger</a>
+
+      <!-- renommmer -->
+      <a class="item" ng-click=renameDoc()>{{translationWorkspace["workspace.rename"]}}</a>
+
+      <!-- supprimer -->
+      <a class="item" ng-click=trashDoc()>{{translationWorkspace["workspace.delete"]}}</a>
+
+      <!-- versions -->
+      <a class="item" ng-click=goVersion()>{{translationWorkspace["workspace.versions.list"]}}</a>
+
+      <!-- partager -->
+      <a class="item" ng-click="">{{translationWorkspace["workspace.share"]}}</a>
+
+      <!-- copier -->
+      <a class="item" ng-click="">{{translationWorkspace["workspace.copy"]}}</a>
+
+      <!-- déplacer -->
+      <a class="item" ng-click="">{{translationWorkspace["workspace.move"]}}</a>
+
+    </ion-list>
+  </ion-content>
+</ion-popover-view>

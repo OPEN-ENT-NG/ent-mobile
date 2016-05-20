@@ -1,5 +1,7 @@
-angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute','ent.actualites','ent.blog','ent.blog-list','ent.auth', 'ent.messagerie', 'ent.new_message','ent.user','ent.pronotes','angularMoment','ent.test'])
+angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute','ent.actualites','ent.blog','ent.blog-list','ent.auth',
+'ent.messagerie','ent.workspace','ent.user','ent.pronotes','angularMoment','ent.test', 'ng-mfb'])
 
+// .value("domainENT", "https://ent.picardie.fr")
 // .value("domainENT", "https://preprod-leo.entcore.org")
 .value("domainENT", "https://recette-leo.entcore.org")
 
@@ -105,15 +107,6 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     }
   })
 
-  .state('app.espace_doc', {
-    url: '/espace_doc',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/espace_doc.html'
-      }
-    }
-  })
-
   .state('app.blog-list', {
     url: '/blog-list',
     views: {
@@ -162,6 +155,65 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     }
   })
 
+  .state('app.workspace', {
+    url: '/workspace',
+    views: {
+      'menuContent': {
+        templateUrl: 'workspace/main_workspace.html'
+      }
+    }
+  })
+
+  .state('app.workpace_folder_content', {
+    url: '/workspace/:nameWorkspaceFolder',
+    views: {
+      'menuContent': {
+        controller: 'WorkspaceFolderContentCtlr',
+        templateUrl: 'workspace/workspace_folder_content.html'
+      }
+    }
+  })
+
+  .state('app.workpace_trash', {
+    url: '/trashWorkspace',
+    views: {
+      'menuContent': {
+        controller: 'WorkspaceTrashContentCtlr',
+        templateUrl: 'workspace/workspace_folder_content.html'
+      }
+    }
+  })
+
+  .state('app.workspace_folder_depth', {
+    url: '/workspace/:filtre/:parentFolderName/:nameFolder',
+    views: {
+      'menuContent': {
+        controller: 'WorkspaceFolderDepthCtlr',
+        templateUrl: 'workspace/workspace_folder_content.html'
+      }
+    }
+  })
+
+  .state('app.workspace_file', {
+    url: '/workspace/file/:filtre',
+    views: {
+      'menuContent': {
+        controller: 'WorkspaceFileCtlr',
+        templateUrl: 'workspace/file.html'
+      }
+    }
+  })
+
+  .state('app.workspace_file_versions', {
+    url: '/workspace/file/versions/',
+    views: {
+      'menuContent': {
+        controller: 'FileVersionCtrl',
+        templateUrl: 'workspace/file_versions.html'
+      }
+    }
+  })
+
   .state('app.test', {
     url: '/test',
     views: {
@@ -179,11 +231,14 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
 
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/login');
+  // $urlRouterProvider.otherwise('/app/workspace/documents');
+
 })
 
-.controller('AppCtrl', function ($scope, $rootScope, $sce, $state, $cordovaInAppBrowser, $ionicSideMenuDelegate, $cordovaFileTransfer,$cordovaProgress, $cordovaFileOpener2, domainENT, $ionicHistory, SkinFactory, $ionicPopup, ActualitesService, MessagerieServices,PronoteService, BlogsService, $filter){
+.controller('AppCtrl', function ($scope, $rootScope, $sce, $state, $cordovaInAppBrowser, $ionicSideMenuDelegate, $cordovaFileTransfer,$cordovaProgress, $cordovaFileOpener2, domainENT, $ionicHistory, SkinFactory, $ionicPopup, ActualitesService, MessagerieServices,PronoteService, BlogsService, WorkspaceService, $filter){
 
   $rootScope.filterThreads = [];
+
 
   SkinFactory.getSkin().then(function(res) {
     localStorage.setItem('skin', res.data.skin);
@@ -194,6 +249,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   getTranslationActualites();
   getTranslationConversation();
   getTraductionBlogs();
+  getTraductionWorkspace();
 
   $scope.$watch(function () {
     return $ionicSideMenuDelegate.getOpenRatio();
@@ -313,143 +369,172 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   // An alert dialog
   $scope.showAlertError = function(error) {
     console.log(error);
-    var alertPopup = $ionicPopup.alert({
-      title: 'Erreur de connexion',
-      template: 'Erreur '+error.status+". Veuillez réessayer dans quelques instants."
+    var title = 'Erreur de connexion'
+    var template = "Vous n'avez pas le droit d'accéder à ce contenu."
+    if(error){
+      if(error.hasOwnProperty('status'))
+      switch (error.status) {
+        case 401:
+          title: "Oups !"
+          template = "Nous recontrons actuellement des problèmes. Veuillez réessayer dans quelques instants."
+          break;
+          default:
+          }
+        }
+
+        var alertPopup = $ionicPopup.alert({
+          title: title,
+          template: template
+        });
+
+        alertPopup.then(function(res) {
+          $ionicHistory.goBack();
+        });
+      };
+
+      $scope.logout = function(){
+        localStorage.clear();
+        $ionicHistory.clearHistory()
+        $ionicHistory.clearCache();
+        navigator.splashscreen.show();
+        $state.go("login");
+        window.cookies.clear(function() {
+          console.log('Cookies cleared!');
+        });
+
+        // var success = function(status) {
+        //   console.log('Message: ' + status);
+        // }
+        //
+        // var error = function(status) {
+        //   console.log('Error: ' + status);
+        // }
+        //
+        // window.cache.clear( success, error );
+        // window.cache.cleartemp(); //
+        // ionic.Platform.exitApp(); // stops the app
+        location.reload();
+      }
+
+      function getTranslationActualites(){
+        ActualitesService.getTranslation().then(function(resp){
+          $rootScope.translationActus = resp.data;
+        }, function(err){
+          $scope.showAlertError(err);
+        });
+      }
+
+      function getTranslationConversation(){
+        MessagerieServices.getTranslation().then(function(resp) {
+          $rootScope.translationConversation = resp.data;
+        }), function(err){
+          alert('ERR:'+ err);
+        };
+      }
+
+      function getTraductionBlogs(){
+        BlogsService.getTraduction().then(function(resp){
+          $rootScope.translationBlog = resp.data;
+
+          $rootScope.translationBlog["filters.drafts"] = $rootScope.translationBlog["filters.drafts"].substring(0,$rootScope.translationBlog["filters.drafts"].indexOf('(')-1);
+          $rootScope.translationBlog["filters.submitted"] = $rootScope.translationBlog["filters.submitted"].substring(0,$rootScope.translationBlog["filters.submitted"].indexOf('(')-1);
+
+        }), function(err){
+          alert('ERR:'+ err);
+        }
+      }
+
+      function getTraductionWorkspace(){
+        WorkspaceService.getTranslation().then(function(resp) {
+          $rootScope.translationWorkspace = resp.data;
+        }), function(err){
+          alert('ERR:'+ err);
+        };
+      }
+
+      $scope.getConfirmPopup = function(title, template, cancelText, okText) {
+        return $ionicPopup.confirm({
+          title: title,
+          template: template,
+          cancelText: cancelText,
+          okText: okText
+        })
+      }
+    })
+
+    .directive('appVersion', function () {
+      return function(scope, elm, attrs) {
+        cordova.getAppVersion(function (version) {
+          elm.text(version);
+        });
+      };
+    })
+    .filter('bytes', function() {
+      return function(bytes, precision) {
+        if (isNaN(parseFloat(bytes)) || !isFinite(bytes)) return '-';
+        if (typeof precision === 'undefined') precision = 1;
+        var units = ['bytes', 'kB', 'MB', 'GB', 'TB', 'PB'],
+        number = Math.floor(Math.log(bytes) / Math.log(1024));
+        return (bytes / Math.pow(1024, Math.floor(number))).toFixed(precision) +  ' ' + units[number];
+      }
     });
 
-    alertPopup.then(function(res) {
-      $ionicHistory.goBack();
-    });
-  };
 
-  $scope.logout = function(){
-    localStorage.clear();
-    $ionicHistory.clearHistory()
-    $ionicHistory.clearCache();
-    navigator.splashscreen.show();
-    $state.go("login");
-    window.cookies.clear(function() {
-      console.log('Cookies cleared!');
-    });
-
-    // var success = function(status) {
-    //   console.log('Message: ' + status);
-    // }
-    //
-    // var error = function(status) {
-    //   console.log('Error: ' + status);
-    // }
-    //
-    // window.cache.clear( success, error );
-    // window.cache.cleartemp(); //
-    // ionic.Platform.exitApp(); // stops the app
-    location.reload();
-  }
-
-  function getTranslationActualites(){
-    ActualitesService.getTranslation().then(function(resp){
-      $rootScope.translationActus = resp.data;
-    }, function(err){
-      $scope.showAlertError(err);
-    });
-  }
-
-  function getTranslationConversation(){
-    MessagerieServices.getTranslation().then(function(resp) {
-      $rootScope.translationConversation = resp.data;
-    }), function(err){
-      alert('ERR:'+ err);
-    };
-  }
-
-  function getTraductionBlogs(){
-    BlogsService.getTraduction().then(function(resp){
-      $rootScope.translationBlog = resp.data;
-
-      $rootScope.translationBlog["filters.drafts"] = $rootScope.translationBlog["filters.drafts"].substring(0,$rootScope.translationBlog["filters.drafts"].indexOf('(')-1);
-      $rootScope.translationBlog["filters.submitted"] = $rootScope.translationBlog["filters.submitted"].substring(0,$rootScope.translationBlog["filters.submitted"].indexOf('(')-1);
-
-    }), function(err){
-      alert('ERR:'+ err);
+    function setProfileImage (regularPath, userId){
+      return (regularPath != null && regularPath.length > 0 && regularPath != "no-avatar.jpg") ? regularPath:"/userbook/avatar/"+userId;
     }
-  }
 
-})
-
-.directive('appVersion', function () {
-  return function(scope, elm, attrs) {
-    cordova.getAppVersion(function (version) {
-      elm.text(version);
-    });
-  };
-})
-.filter('bytes', function() {
-  return function(bytes, precision) {
-    if (isNaN(parseFloat(bytes)) || !isFinite(bytes)) return '-';
-    if (typeof precision === 'undefined') precision = 1;
-    var units = ['bytes', 'kB', 'MB', 'GB', 'TB', 'PB'],
-    number = Math.floor(Math.log(bytes) / Math.log(1024));
-    return (bytes / Math.pow(1024, Math.floor(number))).toFixed(precision) +  ' ' + units[number];
-  }
-});
-
-
-function setProfileImage (regularPath, userId){
-  return (regularPath != null && regularPath.length > 0 && regularPath != "no-avatar.jpg") ? regularPath:"/userbook/avatar/"+userId;
-}
-
-function findElementById(arraytosearch, valuetosearch) {
-  for (var i = 0; i < arraytosearch.length; i++) {
-    if (arraytosearch[i].id == valuetosearch) {
-      return arraytosearch[i];
+    function findElementById(arraytosearch, valuetosearch) {
+      for (var i = 0; i < arraytosearch.length; i++) {
+        if (arraytosearch[i].id == valuetosearch) {
+          return arraytosearch[i];
+        }
+      }
+      return null;
     }
-  }
-  return null;
-}
 
 
-function fail() {
-  console.log("failed to get filesystem");
-}
+    function fail() {
+      console.log("failed to get filesystem");
+    }
 
-function gotFS(fileSystem) {
-  window.FS = fileSystem;
+    function gotFS(fileSystem) {
+      window.FS = fileSystem;
 
-  var printDirPath = function(entry){
-    console.log("Dir path - " + entry.fullPath);
-  }
+      var printDirPath = function(entry){
+        console.log("Dir path - " + entry.fullPath);
+      }
 
-  createDirectory("ENT/conversation", printDirPath);
-  createDirectory("ENT/workspace", printDirPath);
-}
+      createDirectory("ENT/conversation", printDirPath);
+      createDirectory("ENT/workspace", printDirPath);
+    }
 
-function createDirectory(path, success){
-  var dirs = path.split("/").reverse();
-  var root = window.FS.root;
+    function createDirectory(path, success){
+      var dirs = path.split("/").reverse();
+      var root = window.FS.root;
 
-  var createDir = function(dir){
-    console.log("create dir " + dir);
-    root.getDirectory(dir, {
-      create : true,
-      exclusive : false
-    }, successCB, failCB);
-  };
+      var createDir = function(dir){
+        console.log("create dir " + dir);
+        root.getDirectory(dir, {
+          create : true,
+          exclusive : false
+        }, successCB, failCB);
+      };
 
-  var successCB = function(entry){
-    console.log("dir created " + entry.fullPath);
-    root = entry;
-    if(dirs.length > 0){
+      var successCB = function(entry){
+        console.log("dir created " + entry.fullPath);
+        root = entry;
+        if(dirs.length > 0){
+          createDir(dirs.pop());
+        }else{
+          console.log("all dir created");
+          success(entry);
+        }
+      };
+
+      var failCB = function(){
+        console.log("failed to create dir " + dir);
+      };
+
       createDir(dirs.pop());
-    }else{
-      console.log("all dir created");
-      success(entry);
     }
-  };
-
-  var failCB = function(){
-    console.log("failed to create dir " + dir);
-  };
-
-  createDir(dirs.pop());
-}
