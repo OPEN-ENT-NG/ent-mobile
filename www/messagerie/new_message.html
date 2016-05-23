@@ -48,8 +48,9 @@
       <input type="text" ng-model="email.sujet" placeholder={{translationConversation["sniplet.ml.subject.placeholder"]}}>
     </label>
 
-    <label class="item-input fill-textarea item borderBottomItemDismissed writtingZone">
-      <textarea class="fillParent msd-elastic: \n;" ng-model="email.newMessage" placeholder={{translationConversation["sniplet.ml.content.placeholder"]}}></textarea>
+    <label class="item-input item borderBottomItemDismissed">
+      <textarea id="textMessage" ng-model="email.newMessage" ng-keyup="expandText()"
+      ng-keydown="expandText()" placeholder={{translationConversation["sniplet.ml.content.placeholder"]}}></textarea>
     </label>
 
 
