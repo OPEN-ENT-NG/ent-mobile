@@ -58,7 +58,7 @@
         <div ng-repeat="attachment in email.attachments track by $index">
           <div class="ajoutPJ item-text-wrap">
             <i class="downloadicon-"  ng-click="downloadAttachment(attachment.id)"></i>
-            <p>{{attachment.filename}} ({{getSizeFile(attachment)}})</p>
+            <p>{{attachment.filename}} ({{getSizeFile(attachment.size)}})</p>
             <i class="cancel-circledicon-" ng-click="deleteAttachment($index)"></i>
           </div>
         </div>

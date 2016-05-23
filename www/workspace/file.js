@@ -1,6 +1,6 @@
 angular.module('ent.workspace_file',['ent.workspace_service'])
 
-.controller('WorkspaceFileCtlr', function($scope, $rootScope, $ionicPopup, domainENT, WorkspaceService, $ionicLoading, $stateParams, DeleteDocPopupFactory, $ionicHistory,  $ionicPopover,$state){
+.controller('WorkspaceFileCtlr', function($scope, $rootScope, $ionicPopup, domainENT, WorkspaceService, $ionicLoading, $stateParams, $ionicHistory,  $ionicPopover,$state){
 
   console.log($rootScope.doc);
   $rootScope.doc.ownerPhoto = '/userbook/avatar/'+$rootScope.doc.owner
@@ -12,8 +12,6 @@ angular.module('ent.workspace_file',['ent.workspace_service'])
 
   $scope.commentDoc = function (){
     $scope.data = {};
-
-    // An elaborate, custom popup
     var myPopup = $ionicPopup.show({
       template: '<input type="text" ng-model="data.comment">',
       title: $rootScope.translationWorkspace["workspace.comment"],
@@ -87,8 +85,7 @@ angular.module('ent.workspace_file',['ent.workspace_service'])
   }
 
   $scope.trashDoc = function(doc){
-    var popupMove = DeleteDocPopupFactory.getPopup($scope);
-    popupMove.then(function(res){
+    $scope.getConfirmPopup($rootScope.translationWorkspace["workspace.delete"], $rootScope.translationWorkspace["confirm.remove"], $rootScope.translationWorkspace["cancel"], $rootScope.translationWorkspace["confirm"]).then(function(res){
 
       if(res!=null){
         $ionicLoading.show({

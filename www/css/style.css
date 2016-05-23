@@ -139,3 +139,7 @@ ion-popover-view.fit ion-content {
 .comment p {
   color: black;
 }
+
+.dismiss-title .popup-head {
+  display: none;
+}

@@ -1,5 +1,5 @@
 <ion-view view-title={{doc.name}} >
-  
+
   <ion-content>
     <ion-refresher on-refresh="doRefreshVersions()">
     </ion-refresher>
@@ -11,7 +11,7 @@
           <h2>{{version.name}}</h2>
           <h3>{{formatDateLocale(version.date.$date)}}</h3>
           <h3>{{version.userName}}</h3>
-          <h4>{{getSizeFile(version.metadata)}}</h4>
+          <h4>{{getSizeFile(version.metadata.size)}}</h4>
 
         </div>
         <i class="ion-trash-a" ng-show="$index != 0" ng-click=deleteVersion(version._id) style="margin-left: 80%;"></i>

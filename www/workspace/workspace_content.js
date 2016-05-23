@@ -1,6 +1,6 @@
 angular.module('ent.workspace_content',['ent.workspace_service'])
 
-.controller('WorkspaceFolderContentCtlr', function($scope, $rootScope, $stateParams, $state, WorkspaceService, $ionicLoading, MimeTypeFactory){
+.controller('WorkspaceFolderContentCtlr', function($scope, $rootScope, $stateParams, $state, WorkspaceService, $ionicLoading, MimeTypeFactory, $cordovaProgress){
 
   var filter = getFilter($stateParams.nameWorkspaceFolder);
 
@@ -9,9 +9,7 @@ angular.module('ent.workspace_content',['ent.workspace_service'])
   }
 
   $rootScope.isMyDocuments = function(){
-    console.log($stateParams.nameWorkspaceFolder == "documents");
-    console.log($stateParams.nameWorkspaceFolder)
-    $stateParams.nameWorkspaceFolder == "documents"
+    return $stateParams.nameWorkspaceFolder == "documents"
   }
 
   $scope.gotInDepthFolder = function(folder){
@@ -19,16 +17,43 @@ angular.module('ent.workspace_content',['ent.workspace_service'])
   }
 
   $scope.goToFile = function (doc) {
-      if(!doc.hasOwnProperty('folder')){
-        doc.folder = $rootScope.translationWorkspace[$stateParams.nameWorkspaceFolder]
-      }
-      $rootScope.doc = doc
-      $state.go('app.workspace_file', {filtre:filter, folder:$stateParams.nameWorkspaceFolder})
+    if(!doc.hasOwnProperty('folder')){
+      doc.folder = $rootScope.translationWorkspace[$stateParams.nameWorkspaceFolder]
+    }
+    $rootScope.doc = doc
+    $state.go('app.workspace_file', {filtre:filter, folder:$stateParams.nameWorkspaceFolder})
   }
 
-  $rootScope.importFile = function(doc){
-    var attachment = ele.files[0];
-    console.log(attachment);
+  $scope.addDocument = function(ele){
+    var newDoc = ele.files[0];
+    console.log(newDoc);
+
+    if(newDoc.size > $rootScope.translationWorkspace["max.file.size"]){
+        $scope.getAlertPopupNoTitle($rootScope.translationWorkspace["file.too.large.limit"]+ $scope.getSizeFile(parseInt($rootScope.translationWorkspace["max.file.size"])))
+    } else {
+      $cordovaProgress.showSimpleWithLabelDetail(true, "Ajout en cours", newDoc.name);
+
+      var formData = new FormData()
+      formData.append('file', newDoc)
+      WorkspaceService.uploadDoc(formData).then(function(result){
+        console.log(result);
+        var menu = document.getElementById('actionMenu')
+        console.log(menu);
+        // menu.close();
+
+        WorkspaceService.getDocumentsByFilter(filter, filter==="owner").then(function(result){
+          $scope.documents = []
+          for(var i=0; i<result.data.length;i++){
+            $scope.documents.push(MimeTypeFactory.setIcons(result.data[i]));
+          }
+          console.log("files: "+$scope.documents.length);
+        })
+        $cordovaProgress.hide()
+      }, function(err){
+        $cordovaProgress.hide()
+        $scope.showAlertError()
+      });
+    }
   }
 
   $scope.doRefresh = function(){
