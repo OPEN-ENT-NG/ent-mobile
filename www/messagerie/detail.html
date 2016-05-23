@@ -43,7 +43,7 @@
           <div ng-repeat="attachment in mail.attachments track by $index">
             <div class="ajoutPJ item-text-wrap">
               <i class="downloadicon-"  ng-click="downloadAttachment(attachment.id)"></i>
-              <p>{{attachment.filename}} ({{getSizeFile(attachment)}})</p>
+              <p>{{attachment.filename}} ({{getSizeFile(attachment.size)}})</p>
             </div>
           </div>
         </ion-list>

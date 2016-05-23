@@ -28,30 +28,32 @@ angular.module('ent.workspace_content',['ent.workspace_service'])
     var newDoc = ele.files[0];
     console.log(newDoc);
 
-    if(newDoc.size > $rootScope.translationWorkspace["max.file.size"])
+    if(newDoc.size > $rootScope.translationWorkspace["max.file.size"]){
+        $scope.getAlertPopupNoTitle($rootScope.translationWorkspace["file.too.large.limit"]+ $scope.getSizeFile(parseInt($rootScope.translationWorkspace["max.file.size"])))
+    } else {
+      $cordovaProgress.showSimpleWithLabelDetail(true, "Ajout en cours", newDoc.name);
 
-    $cordovaProgress.showSimpleWithLabelDetail(true, "Ajout de document en cours", newDoc.name);
+      var formData = new FormData()
+      formData.append('file', newDoc)
+      WorkspaceService.uploadDoc(formData).then(function(result){
+        console.log(result);
+        var menu = document.getElementById('actionMenu')
+        console.log(menu);
+        // menu.close();
 
-    var formData = new FormData()
-    formData.append('file', newDoc)
-    WorkspaceService.uploadDoc(formData).then(function(result){
-      console.log(result);
-      var menu = document.getElementById('actionMenu')
-      console.log(menu);
-      // menu.close();
-
-      WorkspaceService.getDocumentsByFilter(filter, filter==="owner").then(function(result){
-        $scope.documents = []
-        for(var i=0; i<result.data.length;i++){
-          $scope.documents.push(MimeTypeFactory.setIcons(result.data[i]));
-        }
-        console.log("files: "+$scope.documents.length);
-      })
-      $cordovaProgress.hide()
-    }, function(err){
-      $cordovaProgress.hide()
-      $scope.showAlertError()
-    });
+        WorkspaceService.getDocumentsByFilter(filter, filter==="owner").then(function(result){
+          $scope.documents = []
+          for(var i=0; i<result.data.length;i++){
+            $scope.documents.push(MimeTypeFactory.setIcons(result.data[i]));
+          }
+          console.log("files: "+$scope.documents.length);
+        })
+        $cordovaProgress.hide()
+      }, function(err){
+        $cordovaProgress.hide()
+        $scope.showAlertError()
+      });
+    }
   }
 
   $scope.doRefresh = function(){

@@ -337,8 +337,8 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     return moment(date).format("L");
   };
 
-  $scope.getSizeFile = function (file){
-    return $filter('bytes')(file.size);
+  $scope.getSizeFile = function (size){
+    return $filter('bytes')(size);
   }
 
   // An alert dialog
@@ -435,8 +435,24 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
           okText: okText
         })
       }
-    })
 
+      $scope.getAlertPopup = function(title, template) {
+        return $ionicPopup.alert({
+          title: title,
+          template: template,
+          okText: 'OK'
+        })
+      }
+
+      $scope.getAlertPopupNoTitle = function(template) {
+        return $ionicPopup.alert({
+          template: template,
+          cssClass: 'dismiss-title', // Hide title
+          okText: 'OK'
+        })
+      }
+
+    })
     .directive('appVersion', function () {
       return function(scope, elm, attrs) {
         cordova.getAppVersion(function (version) {
