@@ -57,7 +57,7 @@ angular.module('ent.workspace_service', [])
   }
 
   this.uploadDoc = function(doc){
-    return $http.post(domainENT+'/workspace/document?thumbnail=120x120&thumbnail=290x290', doc, {
+    return $http.post(domainENT+'/workspace/document?thumbnail=120x120&thumbnail=290x290&quality=0.8', doc, {
       transformRequest: angular.identity,
       headers: {'Content-Type': undefined}
     });
@@ -84,19 +84,6 @@ angular.module('ent.workspace_service', [])
 })
 
 .factory("VersionsDocPopupFactory", function ($ionicPopup, $rootScope) {
-
-  function getPopup() {
-    return $ionicPopup.confirm({
-      title: $rootScope.translationWorkspace["workspace.delete"],
-      template: 'Êtes-vous sûr(e) de vouloir supprimer ce document ?'
-    })
-  }
-  return {
-    getPopup: getPopup
-  };
-})
-
-.factory("DeleteDocPopupFactory", function ($ionicPopup, $rootScope) {
 
   function getPopup() {
     return $ionicPopup.confirm({

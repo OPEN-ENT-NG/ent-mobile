@@ -1,6 +1,6 @@
 angular.module('ent.workspace_folder_depth',['ent.workspace_service'])
 
-.controller('WorkspaceFolderDepthCtlr', function($scope, $rootScope, $stateParams, $state, WorkspaceService, $ionicLoading, MimeTypeFactory){
+.controller('WorkspaceFolderDepthCtlr', function($scope, $rootScope, $stateParams, $state, WorkspaceService, $ionicLoading, MimeTypeFactory, $cordovaProgress){
 
   var fullFolderName = $stateParams.nameFolder.length !=0 ? $stateParams.parentFolderName + '_' + $stateParams.nameFolder : $stateParams.parentFolderName;
 
@@ -26,63 +26,66 @@ angular.module('ent.workspace_folder_depth',['ent.workspace_service'])
   }
 
   $scope.goToFile = function (doc) {
-      doc.folder = $stateParams.nameFolder.length !=0 ? $stateParams.nameFolder:doc.folder
-      $rootScope.doc = doc
-      $state.go('app.workspace_file', {filtre:$stateParams.filtre})
+    doc.folder = $stateParams.nameFolder.length !=0 ? $stateParams.nameFolder:doc.folder
+    $rootScope.doc = doc
+    $state.go('app.workspace_file', {filtre:$stateParams.filtre})
   }
 
   $scope.addDocument = function(ele){
-    $ionicLoading.show({
-      template: '<ion-spinner icon="android"/>'
-    });
+
     var newDoc = ele.files[0];
     console.log(newDoc);
+    $cordovaProgress.showSimpleWithLabelDetail(true, "Ajout de document en cours", newDoc.name);
 
     var formData = new FormData()
     formData.append('file', newDoc)
     WorkspaceService.uploadDoc(formData).then(function(result){
-      // $ionicLoading.hide()
       console.log(result);
       console.log(fullFolderName);
-      // WorkspaceService.moveDoc()
-      getData();
-      $ionicLoading.hide()
-
+      WorkspaceService.moveDoc(result.data._id, fullFolderName).then(function(res){
+          console.log(res);
+          WorkspaceService.getDocumentsByFolderAndFilter(fullFolderName, $stateParams.filtre).then(function(result){
+            for(var i=0; i<result.data.length;i++){
+              $scope.documents.push(MimeTypeFactory.setIcons(result.data[i]));
+            }
+          })
+      })
+      $cordovaProgress.hide()
     }, function(err){
-      $ionicLoading.hide()
-      $scope.showAlertError()
-    });
-  }
+    $cordovaProgress.hide()
+    $scope.showAlertError()
+  });
+}
 
 
-  function getData(){
-    $ionicLoading.show({
-      template: '<ion-spinner icon="android"/>'
-    })
-    $scope.documents = []
-    $scope.folders = []
+function getData(){
+  $ionicLoading.show({
+    template: '<ion-spinner icon="android"/>'
+  })
+  $scope.documents = []
+  $scope.folders = []
 
-    WorkspaceService.getCompleteFoldersByFilter($stateParams.filtre).then(function(res){
+  WorkspaceService.getCompleteFoldersByFilter($stateParams.filtre).then(function(res){
 
-      for(var i=0; i<res.data.length;i++){
-        var folder = res.data[i]
+    for(var i=0; i<res.data.length;i++){
+      var folder = res.data[i]
 
-        if(res.data[i].folder.startsWith(fullFolderName+'_')){
-          var childFolderName = folder.folder.slice(fullFolderName.length+1)
-          if(childFolderName == folder.name){
-            $scope.folders.push(folder)
-          }
+      if(res.data[i].folder.startsWith(fullFolderName+'_')){
+        var childFolderName = folder.folder.slice(fullFolderName.length+1)
+        if(childFolderName == folder.name){
+          $scope.folders.push(folder)
         }
       }
-      WorkspaceService.getDocumentsByFolderAndFilter(fullFolderName, $stateParams.filtre).then(function(result){
-        for(var i=0; i<result.data.length;i++){
-          $scope.documents.push(MimeTypeFactory.setIcons(result.data[i]));
-        }
-      })
-      $ionicLoading.hide()
-    }, function(err){
-      $ionicLoading.hide()
-      $scope.showAlertError()
-    });
-  }
+    }
+    WorkspaceService.getDocumentsByFolderAndFilter(fullFolderName, $stateParams.filtre).then(function(result){
+      for(var i=0; i<result.data.length;i++){
+        $scope.documents.push(MimeTypeFactory.setIcons(result.data[i]));
+      }
+    })
+    $ionicLoading.hide()
+  }, function(err){
+    $ionicLoading.hide()
+    $scope.showAlertError()
+  });
+}
 })
