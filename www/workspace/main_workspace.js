@@ -3,96 +3,40 @@ angular.module('ent.workspace',['ent.workspace_service','ent.workspace_content',
 .controller('MainWorkspaceCtrl', function($scope, $rootScope, WorkspaceService, $filter){
   // $rootScope.folder_icon = localStorage.getItem('skin')+"/../../img/icons/folder.png"
 
-  WorkspaceService.getCompleteFoldersByFilter('owner').then(function(res){
+  getFolders()
 
-
-    // $scope.tasks = [
-    //   {
-    //     name: 'first task 1',
-    //     tree: [
-    //       {
-    //         name: 'first task 1.1'
-    //       }
-    //     ]
-    //   },
-    //   {
-    //     name: 'first task 2'
-    //   }
-    // ];
+  function getFolders(){
     $scope.tasks = []
-    var hierarchy = []
-    var parentsNameArray = []
+    hierarchy = []
+    allFolders = []
 
-    var allFolders = []
+    WorkspaceService.getCompleteFoldersByFilter('owner').then(function(res){
+      //init: retrait de Trash et ajout des dossiers parents
+      for(var i=0; i<res.data.length;i++){
+        if(!res.data[i].folder.startsWith('Trash_')){
+          allFolders.push(res.data[i])
+        }
 
-    //init: retrait de Trash et ajout des dossiers parents
-    for(var i=0; i<res.data.length;i++){
-      if(!res.data[i].folder.startsWith('Trash_')){
-        allFolders.push(res.data[i])
+        if(res.data[i].name == res.data[i].folder){
+          hierarchy.push({folder: res.data[i], name: res.data[i].name, tree: []})
+          allFolders.splice(allFolders.indexOf(res.data[i]),1)
+        }
       }
 
-      // if(res.data[i].name == res.data[i].folder){
-      //   hierarchy.push({folder: res.data[i], name: res.data[i].name})
-      //   parentsNameArray.push(res.data[i].name)
-      //   allFolders.splice(i,1)
-      // }
-    }
-    console.log(allFolders);
-    var orderBy = $filter('orderBy');
-
-    hierarchy = orderBy(allFolders, folder)
-    console.log(hierarchy);
-
-    // for(var i=0; i<allFolders.length;i++){
-    //   var item = allFolders[i]
-    //   console.log(item);
-    //   var parentName = item.folder.slice(0, item.folder.indexOf(item.name))
-    //   if(parentName.endsWith('_')){
-    //     parentName = parentName.slice(0, parentName.length-1)
-    //   }
-    //   console.log('parentName:' + parentName);
-    //
-    //   if(parentsNameArray.indexOf(parentName) > -1){ //niveau 1
-    //     console.log(hierarchy[parentsNameArray.indexOf(parentName)]);
-    //     if(hierarchy[parentsNameArray.indexOf(parentName)].hasOwnProperty('tree')){
-    //       hierarchy[parentsNameArray.indexOf(parentName)].tree.push({folder: item, name: item.name})
-    //     } else {
-    //       hierarchy[parentsNameArray.indexOf(parentName)].tree = [{folder: item, name: item.name}]
-    //     }
-    //     allFolders.splice(i, 1)
-    //   } else {
-    //     //check les tree
-    //   }
-
-    // var depth =0;
-    // while (allFolders.length>0) {
-    //   // var rest = allFolders;
-    //   for(var i=0; i<allFolders.length;i++){
-    //     var item = allFolders[i]
-    //     console.log(item);
-    //     var parentName = item.folder.slice(0, item.folder.indexOf(item.name))
-    //     if(parentName.endsWith('_')){
-    //       parentName = parentName.slice(0, parentName.length-1)
-    //     }
-    //     console.log('parentName:' + parentName);
-    //
-    //     if(parentsNameArray.indexOf(parentName) > -1){ //niveau 1
-    //       console.log(hierarchy[parentsNameArray.indexOf(parentName)]);
-    //       if(hierarchy[parentsNameArray.indexOf(parentName)].hasOwnProperty('tree')){
-    //         hierarchy[parentsNameArray.indexOf(parentName)].tree.push({folder: item, name: item.name})
-    //       } else {
-    //         hierarchy[parentsNameArray.indexOf(parentName)].tree = [{folder: item, name: item.name}]
-    //       }
-    //       allFolders.splice(i, 1)
-    //     } else {
-    //       //check les tree
-    //     }
-    //   }
-    //   depth++;
-    // }
-    console.log(hierarchy);
-    $scope.tasks = hierarchy
-  })
+      while(allFolders.length != 0){
+        for(var i=0; i<hierarchy.length; i++){
+          for(j=0;j<allFolders.length;j++){
+            if(allFolders[j].folder.startsWith(hierarchy[i].folder.folder)){
+              recursiveAddFolder(hierarchy[i], allFolders[j])
+            }
+          }
+        }
+      }
+      console.log(allFolders);
+      console.log(hierarchy);
+      $scope.tasks = hierarchy
+    })
+  }
 
   $scope.$on('$ionTreeList:ItemClicked', function(event, item) {
     // process 'item'
@@ -105,3 +49,18 @@ angular.module('ent.workspace',['ent.workspace_service','ent.workspace_content',
   });
 
 })
+var hierarchy = []
+var allFolders = []
+var recursiveAddFolder = function(mainFolder, childFolder){
+  if(mainFolder.folder.folder+'_'+childFolder.name == childFolder.folder){
+    mainFolder.tree.push({folder: childFolder, name: childFolder.name, tree: []})
+    allFolders.splice(allFolders.indexOf(childFolder),1)
+    console.log(mainFolder);
+  } else {
+    if(mainFolder.tree.length>0){
+      for(var k=0; k< mainFolder.tree.length; k++){
+        recursiveAddFolder(mainFolder.tree[k], childFolder)
+      }
+    }
+  }
+}
