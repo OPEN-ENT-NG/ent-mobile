@@ -1,4 +1,4 @@
-angular.module('ent.workspace_service', [])
+angular.module('ent.workspace_service', ['ion-tree-list'])
 
 .service('WorkspaceService', function($http, domainENT){
 
