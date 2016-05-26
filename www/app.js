@@ -215,7 +215,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   })
 
   .state('app.workspace_tree', {
-    url: '/workspace/tree/',
+    url: '/workspace/tree/:action',
     views: {
       'menuContent': {
         templateUrl: 'workspace/tree-list-folders.html'

@@ -1,7 +1,8 @@
 angular.module('ent.workspace_move_file',['ent.workspace_service', 'ion-tree-list'])
 
-.controller('MoveDocCtrl', function($scope, $rootScope, WorkspaceService, $state, $ionicPopup, $ionicHistory){
+.controller('MoveDocCtrl', function($scope, $rootScope, WorkspaceService, $state, $ionicPopup, $ionicHistory, $stateParams){
 
+  var choosenFolder={}
   getFolders()
 
   function getFolders(){
@@ -14,7 +15,7 @@ angular.module('ent.workspace_move_file',['ent.workspace_service', 'ion-tree-lis
         }
 
         if(res.data[i].name == res.data[i].folder){
-          hierarchy.push({folder: res.data[i], name: res.data[i].name, tree: []})
+          hierarchy.push({folder: res.data[i], name: res.data[i].name, tree: [], checked: false})
           allFolders.splice(allFolders.indexOf(res.data[i]),1)
         }
       }
@@ -28,50 +29,83 @@ angular.module('ent.workspace_move_file',['ent.workspace_service', 'ion-tree-lis
           }
         }
       }
-      $scope.tasks = hierarchy;
+      $scope.tasks = [{
+        folder: {folder: 'owner', name: $rootScope.translationWorkspace["documents"]},
+        name: $rootScope.translationWorkspace["documents"],
+        tree: hierarchy,
+        checked: false
+      }]
     })
   }
 
   $scope.$on('$ionTreeList:ItemClicked', function(event, item) {
     // process 'item'
-    console.log(item.folder.folder);
-    if(item.folder.folder == $rootScope.doc.folder){
-      $scope.getAlertPopupNoTitle($rootScope.translationWorkspace["workspace.forbidden.move.folder.in.itself"])
-    } else {
-      $scope.getConfirmPopup($rootScope.translationWorkspace["move"], "Voulez-vous déplacer ce document dans le dossier "+item.folder.name+"?",$rootScope.translationWorkspace["cancel"],"OK").then(function(res){
-        if(res!=null){
-          WorkspaceService.moveDoc($rootScope.doc._id, item.folder.folder).then(function(res){
-            console.log(res.data);
-            $state.go('app.workspace',{nameWorkspaceFolder:'owner'})
-          }, function(err){
-            $scope.showAlertError()
-          })
-          $ionicHistory.goBack(-2);
-          $ionicHistory.clear()
-        }
-      })
-    }
+    choosenFolder = item
   })
-
-
 
   $scope.$on('$ionTreeList:LoadComplete', function(event, items) {
     // process 'items'
   });
 
-})
-var hierarchy = []
-var allFolders = []
+  $scope.selectFolder = function(){
+    switch ($stateParams.action) {
+      case 'move':
+        moveItem(choosenFolder)
+        break;
+        case 'copy':
+          copyItem(choosenFolder)
+          break;
+          default:
+            break;
+          }
+        }
 
-var recursiveAddFolder = function(mainFolder, childFolder){
-  if(mainFolder.folder.folder+'_'+childFolder.name == childFolder.folder){
-    mainFolder.tree.push({folder: childFolder, name: childFolder.name, tree: []})
-    allFolders.splice(allFolders.indexOf(childFolder),1)
-  } else {
-    if(mainFolder.tree.length>0){
-      for(var k=0; k< mainFolder.tree.length; k++){
-        recursiveAddFolder(mainFolder.tree[k], childFolder)
+        function moveItem(item){
+          if(item.folder.folder == $rootScope.doc.folder){
+            $scope.getAlertPopupNoTitle($rootScope.translationWorkspace["workspace.forbidden.move.folder.in.itself"])
+          } else {
+            $scope.getConfirmPopup($rootScope.translationWorkspace["move"], "Voulez-vous déplacer ce document dans le dossier "+item.folder.name+"?",$rootScope.translationWorkspace["cancel"],"OK").then(function(res){
+              if(res!=null){
+                WorkspaceService.moveDoc($rootScope.doc._id, item.folder.folder).then(function(res){
+                  $ionicHistory.goBack(-2);
+                }, function(err){
+                  $scope.showAlertError()
+                })
+              }
+            })
+          }
+        }
+
+        $scope.getTitle = function(){
+          return $rootScope.translationWorkspace["workspace."+$stateParams.action]
+        }
+
+        function copyItem(item){
+
+          $scope.getConfirmPopup($rootScope.translationWorkspace["workspace.copy"], "Voulez-vous copier ce document dans le dossier "+item.folder.name+"?",$rootScope.translationWorkspace["cancel"],"OK").then(function(res){
+            if(res!=null){
+              WorkspaceService.copyDoc($rootScope.doc._id, item.folder.folder).then(function(res){
+                $ionicHistory.goBack(-2);
+              }, function(err){
+                $scope.showAlertError()
+              })
+            }
+          })
+        }
+
+      })
+      var hierarchy = []
+      var allFolders = []
+
+      function recursiveAddFolder (mainFolder, childFolder){
+        if(mainFolder.folder.folder+'_'+childFolder.name == childFolder.folder){
+          mainFolder.tree.push({folder: childFolder, name: childFolder.name, tree: []})
+          allFolders.splice(allFolders.indexOf(childFolder),1)
+        } else {
+          if(mainFolder.tree.length>0){
+            for(var k=0; k< mainFolder.tree.length; k++){
+              recursiveAddFolder(mainFolder.tree[k], childFolder)
+            }
+          }
+        }
       }
-    }
-  }
-}
