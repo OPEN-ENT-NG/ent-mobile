@@ -65,7 +65,7 @@ angular.module('ent.workspace_service', ['ion-tree-list'])
 
   this.moveDoc = function(idDoc, folderName){
     folderName = folderName=='owner' ? '':'/'+folderName
-    return $http.put(domainENT+'/workspace/documents/move/'+idDoc+'/'+folderName)
+    return $http.put(domainENT+'/workspace/documents/move/'+idDoc+folderName)
   }
 
   this.copyDoc = function(idDoc, folderName){
