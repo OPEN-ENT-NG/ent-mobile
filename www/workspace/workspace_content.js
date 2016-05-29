@@ -1,6 +1,6 @@
 angular.module('ent.workspace_content',['ent.workspace_service'])
 
-.controller('WorkspaceFolderContentCtlr', function($scope, $rootScope, $stateParams, $state, WorkspaceService, $ionicLoading, MimeTypeFactory, $cordovaProgress){
+.controller('WorkspaceFolderContentCtlr', function($scope, $rootScope, $stateParams, $state, WorkspaceService, $ionicLoading, MimeTypeFactory, $cordovaProgress, $ionicPopup){
 
   var filter = getFilter($stateParams.nameWorkspaceFolder);
 
@@ -10,6 +10,38 @@ angular.module('ent.workspace_content',['ent.workspace_service'])
 
   $rootScope.isMyDocuments = function(){
     return $stateParams.nameWorkspaceFolder == "documents"
+  }
+
+  $rootScope.newFolder = function(){
+    $scope.newFolder={}
+    var myPopup = $ionicPopup.show({
+      template: '<input type="text" ng-model="newFolder.name">',
+      title: $rootScope.translationWorkspace["folder.new.title"],
+      subtitle: $rootScope.translationWorkspace["folder.new"],
+      scope: $scope,
+      buttons: [
+        { text: $rootScope.translationWorkspace["cancel"] },
+        {
+          text: '<b>OK</b>',
+          type: 'button-positive',
+          onTap: function(e) {
+            if (!$scope.newFolder.name) {
+              e.preventDefault();
+            } else {
+              return $scope.newFolder.name;
+            }
+          }
+        }
+      ]
+    });
+
+    myPopup.then(function(res) {
+      WorkspaceService.createFolder(res,'owner').then(function(result){
+        console.log(result.data);
+      }, function(error){
+        $scope.showAlertError(error)
+      })
+    });
   }
 
   $scope.gotInDepthFolder = function(folder){

@@ -33,12 +33,6 @@
         <input style="display:none;" type='file' onchange="angular.element(this).scope().addDocument(this)">
       </label>
     </li>
+    <button mfb-button icon="folder-open-2icon-" ng-click="newFolder()" label={{translationWorkspace["folder.new.title"]}}></button>
   </nav>
-  <!-- <div class="float-button" ng-click="newMail()" ng-show="">
-    <span class="height-fix">
-      <a class="content ">
-        <i class="new-01icon-"> </i>
-      </a>
-    </span>
-  </div> -->
 </ion-view>

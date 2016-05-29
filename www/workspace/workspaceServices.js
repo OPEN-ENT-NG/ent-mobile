@@ -73,6 +73,16 @@ angular.module('ent.workspace_service', ['ion-tree-list'])
     return $http.post(domainENT+'/workspace/documents/copy/'+idDoc+folderName)
   }
 
+  this.createFolder = function (folderName, path){
+    var configHeaders = {
+      headers: { 'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8" }
+    };
+    var data = "name="+folderName;
+    data = path!='owner' ? "name="+folderName+",path="+path: data;
+    console.log(data);
+    return $http.post(domainENT+'/workspace/folder',data, configHeaders)
+  }
+
   this.getTranslation = function(){
     return $http.get(domainENT+"/workspace/i18n");
   }
