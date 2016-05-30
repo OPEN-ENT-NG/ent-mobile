@@ -78,7 +78,7 @@ angular.module('ent.workspace_service', ['ion-tree-list'])
       headers: { 'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8" }
     };
     var data = "name="+folderName;
-    data = path!='owner' ? "name="+folderName+",path="+path: data;
+    data = path!='owner' ? "name="+folderName+"&path="+path: data;
     console.log(data);
     return $http.post(domainENT+'/workspace/folder',data, configHeaders)
   }
@@ -97,6 +97,37 @@ angular.module('ent.workspace_service', ['ion-tree-list'])
     var n = d.getTime();
     return n;
   }
+})
+
+.factory('CreateFolderPopUpFactory', function($rootScope, $ionicPopup){
+
+  function getPopup(scope) {
+    scope.newFolder={}
+    return $ionicPopup.show({
+      template: '<input type="text" ng-model="newFolder.name">',
+      title: $rootScope.translationWorkspace["folder.new.title"],
+      subtitle: $rootScope.translationWorkspace["folder.new"],
+      scope: scope,
+      buttons: [
+        { text: $rootScope.translationWorkspace["cancel"] },
+        {
+          text: '<b>OK</b>',
+          type: 'button-positive',
+          onTap: function(e) {
+            if (!scope.newFolder.name) {
+              e.preventDefault();
+            } else {
+              return scope.newFolder.name;
+            }
+          }
+        }
+      ]
+    })
+  }
+
+  return {
+    getPopup: getPopup
+  };
 })
 
 .factory("VersionsDocPopupFactory", function ($ionicPopup, $rootScope) {

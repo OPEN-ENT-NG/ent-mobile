@@ -1,15 +1,13 @@
 angular.module('ent.workspace_folder_depth',['ent.workspace_service'])
 
-.controller('WorkspaceFolderDepthCtlr', function($scope, $rootScope, $stateParams, $state, WorkspaceService, $ionicLoading, MimeTypeFactory, $cordovaProgress){
+.controller('WorkspaceFolderDepthCtlr', function($scope, $rootScope, $stateParams, $state, WorkspaceService, $ionicLoading, MimeTypeFactory, $cordovaProgress, CreateFolderPopUpFactory){
 
   var fullFolderName = $stateParams.nameFolder.length !=0 ? $stateParams.parentFolderName + '_' + $stateParams.nameFolder : $stateParams.parentFolderName;
 
   console.log('$stateParams.parentFolderName '+$stateParams.parentFolderName);
   console.log('$stateParams.nameFolder '+$stateParams.nameFolder);
+  getData();
 
-  $scope.init = function(){
-    getData();
-  }
 
   $scope.doRefresh = function(){
     getData()
@@ -55,6 +53,22 @@ angular.module('ent.workspace_folder_depth',['ent.workspace_service'])
     $cordovaProgress.hide()
     $scope.showAlertError()
   });
+
+  $scope.newFolder = function(){
+    console.log('new folder');
+    CreateFolderPopUpFactory.getPopup($scope).then(function(res) {
+      WorkspaceService.createFolder(res,fullFolderName).then(function(result){
+        console.log(result.data);
+        getData();
+      }, function(error){
+        $scope.showAlertError(error)
+      })
+    });
+  }
+
+  $scope.debug = function(){
+    console.log('debug');
+  }
 }
 
 

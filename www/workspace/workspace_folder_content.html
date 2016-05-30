@@ -1,4 +1,4 @@
-<ion-view view-title={{getTitle()}} ng-init=init() cache-view="false">
+<ion-view view-title={{getTitle()}} cache-view="false">
 
   <ion-content>
     <ion-refresher pulling-text="{{translationWorkspace[loading]}}" on-refresh="doRefresh()"></ion-refresher>
@@ -34,5 +34,7 @@
       </label>
     </li>
     <button mfb-button icon="folder-open-2icon-" ng-click="newFolder()" label={{translationWorkspace["folder.new.title"]}}></button>
+    <button mfb-button icon="folder-open-2icon-" ng-click="debug()" label=Debug></button>
+
   </nav>
 </ion-view>
