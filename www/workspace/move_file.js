@@ -1,6 +1,6 @@
 angular.module('ent.workspace_move_file',['ent.workspace_service', 'ion-tree-list'])
 
-.controller('MoveDocCtrl', function($scope, $rootScope, WorkspaceService, $state, $ionicPopup, $ionicHistory, $stateParams, $ionicPopup){
+.controller('MoveDocCtrl', function($scope, $rootScope, WorkspaceService, $state, $ionicPopup, $ionicHistory, $stateParams, CreateNewFolderPopUpFactory){
 
   var choosenFolder={}
   getFolders()
@@ -48,51 +48,20 @@ angular.module('ent.workspace_move_file',['ent.workspace_service', 'ion-tree-lis
   });
 
   $scope.newFolder = function(){
-    console.log('new folder');
-    $scope.newFolder={}
-    var myPopup = $ionicPopup.show({
-      template: '<input type="text" ng-model="newFolder.name">',
-      title: $rootScope.translationWorkspace["folder.new.title"],
-      subtitle: $rootScope.translationWorkspace["folder.new"],
-      scope: $scope,
-      buttons: [
-        { text: $rootScope.translationWorkspace["cancel"] },
-        {
-          text: '<b>OK</b>',
-          type: 'button-positive',
-          onTap: function(e) {
-            if (!$scope.newFolder.name) {
-              e.preventDefault();
-            } else {
-              return $scope.newFolder.name;
-            }
-          }
-        }
-      ]
-    });
-
-    myPopup.then(function(res) {
-      WorkspaceService.createFolder(res, $rootScope.doc.folder).then(function(result){
-        console.log(result.data);
-        getFolders()
-      }, function(error){
-        $scope.showAlertError(error)
-      })
+    CreateNewFolderPopUpFactory.getPopup($scope).then(function(res) {
+      if(res){
+        WorkspaceService.createFolder(res, choosenFolder.folder).then(function(result){
+          console.log(result.data);
+          getFolders()
+        }, function(error){
+          $rootScope.createFolderError(error)
+        })
+      }
     });
   }
 
-  $scope.selectFolder = function(){
-    switch ($stateParams.action) {
-      case 'move':
-      moveItem(choosenFolder)
-      break;
-      case 'copy':
-      copyItem(choosenFolder)
-      break;
-      default:
-      break;
-    }
-  }
+
+
 
   function moveItem(item){
     if(item.folder.folder == $rootScope.doc.folder){
@@ -115,7 +84,6 @@ angular.module('ent.workspace_move_file',['ent.workspace_service', 'ion-tree-lis
   }
 
   function copyItem(item){
-
     $scope.getConfirmPopup($rootScope.translationWorkspace["workspace.copy"], "Voulez-vous copier ce document dans le dossier "+item.folder.name+"?",$rootScope.translationWorkspace["cancel"],"OK").then(function(res){
       if(res!=null){
         WorkspaceService.copyDoc($rootScope.doc._id, item.folder.folder).then(function(res){
@@ -127,19 +95,32 @@ angular.module('ent.workspace_move_file',['ent.workspace_service', 'ion-tree-lis
     })
   }
 
-})
-var hierarchy = []
-var allFolders = []
+  $scope.selectFolder = function(){
+    switch ($stateParams.action) {
+      case 'move':
+        moveItem(choosenFolder)
+        break;
+        case 'copy':
+          copyItem(choosenFolder)
+          break;
+          default:
+            break;
+          }
+        }
 
-function recursiveAddFolder (mainFolder, childFolder){
-  if(mainFolder.folder.folder+'_'+childFolder.name == childFolder.folder){
-    mainFolder.tree.push({folder: childFolder, name: childFolder.name, tree: []})
-    allFolders.splice(allFolders.indexOf(childFolder),1)
-  } else {
-    if(mainFolder.tree.length>0){
-      for(var k=0; k< mainFolder.tree.length; k++){
-        recursiveAddFolder(mainFolder.tree[k], childFolder)
+      })
+      var hierarchy = []
+      var allFolders = []
+
+      function recursiveAddFolder (mainFolder, childFolder){
+        if(mainFolder.folder.folder+'_'+childFolder.name == childFolder.folder){
+          mainFolder.tree.push({folder: childFolder, name: childFolder.name, tree: []})
+          allFolders.splice(allFolders.indexOf(childFolder),1)
+        } else {
+          if(mainFolder.tree.length>0){
+            for(var k=0; k< mainFolder.tree.length; k++){
+              recursiveAddFolder(mainFolder.tree[k], childFolder)
+            }
+          }
+        }
       }
-    }
-  }
-}

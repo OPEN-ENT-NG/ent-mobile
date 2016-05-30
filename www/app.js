@@ -382,25 +382,27 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     var title = 'Erreur de connexion'
     var template = "Vous n'avez pas le droit d'accéder à ce contenu."
     if(error){
-      if(error.hasOwnProperty('status'))
-      switch (error.status) {
-        case 401:
-          title: "Oups !"
-          template = "Nous recontrons actuellement des problèmes. Veuillez réessayer dans quelques instants."
-          break;
-          default:
+      if(error.hasOwnProperty('status')){
+        switch (error.status) {
+          case 401:
+            title: "Oups !"
+            template = "Nous recontrons actuellement des problèmes. Veuillez réessayer dans quelques instants."
+            break
+            
+            default:
+            }
           }
+
+          var alertPopup = $ionicPopup.alert({
+            title: title,
+            template: template
+          })
+
+          alertPopup.then(function(res) {
+            $ionicHistory.goBack()
+          })
         }
-
-        var alertPopup = $ionicPopup.alert({
-          title: title,
-          template: template
-        });
-
-        alertPopup.then(function(res) {
-          $ionicHistory.goBack();
-        });
-      };
+      }
 
       $scope.logout = function(){
         localStorage.clear();

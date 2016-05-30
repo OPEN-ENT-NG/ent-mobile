@@ -1,6 +1,6 @@
-angular.module('ent.workspace_content',['ent.workspace_service'])
+angular.module('ent.workspace_content',['ent.workspace_service',])
 
-.controller('WorkspaceFolderContentCtlr', function($scope, $rootScope, $stateParams, $state, WorkspaceService, $ionicLoading, MimeTypeFactory, $cordovaProgress, $ionicPopup){
+.controller('WorkspaceFolderContentCtlr', function($scope, $rootScope, $stateParams, $state, WorkspaceService, $ionicLoading, MimeTypeFactory, $cordovaProgress, CreateNewFolderPopUpFactory, $ionicPopup){
 
   var filter = getFilter($stateParams.nameWorkspaceFolder);
 
@@ -12,35 +12,26 @@ angular.module('ent.workspace_content',['ent.workspace_service'])
     return $stateParams.nameWorkspaceFolder == "documents"
   }
 
-  $rootScope.newFolder = function(){
-    $scope.newFolder={}
-    var myPopup = $ionicPopup.show({
-      template: '<input type="text" ng-model="newFolder.name">',
-      title: $rootScope.translationWorkspace["folder.new.title"],
-      subtitle: $rootScope.translationWorkspace["folder.new"],
-      scope: $scope,
-      buttons: [
-        { text: $rootScope.translationWorkspace["cancel"] },
-        {
-          text: '<b>OK</b>',
-          type: 'button-positive',
-          onTap: function(e) {
-            if (!$scope.newFolder.name) {
-              e.preventDefault();
-            } else {
-              return $scope.newFolder.name;
-            }
-          }
-        }
-      ]
-    });
 
-    myPopup.then(function(res) {
-      WorkspaceService.createFolder(res,'owner').then(function(result){
-        console.log(result.data);
-      }, function(error){
-        $scope.showAlertError(error)
-      })
+
+
+  $scope.newFolder = function(){
+    CreateNewFolderPopUpFactory.getPopup($scope).then(function(res) {
+      if(res){
+        WorkspaceService.createFolder(res,'owner').then(function(result){
+          console.log(result.data);
+          getData()
+        }, function(error){
+          console.log(error);
+          $rootScope.createFolderError(error)
+          var title = 'Erreur de connexion'
+          var template = $rootScope.translationWorkspace[error.data.error]
+          return $ionicPopup.alert({
+            title: title,
+            template: template
+          })
+        })
+      }
     });
   }
 
@@ -61,7 +52,7 @@ angular.module('ent.workspace_content',['ent.workspace_service'])
     console.log(newDoc);
 
     if(newDoc.size > $rootScope.translationWorkspace["max.file.size"]){
-        $scope.getAlertPopupNoTitle($rootScope.translationWorkspace["file.too.large.limit"]+ $scope.getSizeFile(parseInt($rootScope.translationWorkspace["max.file.size"])))
+      $scope.getAlertPopupNoTitle($rootScope.translationWorkspace["file.too.large.limit"]+ $scope.getSizeFile(parseInt($rootScope.translationWorkspace["max.file.size"])))
     } else {
       $cordovaProgress.showSimpleWithLabelDetail(true, "Ajout en cours", newDoc.name);
 
@@ -122,6 +113,16 @@ angular.module('ent.workspace_content',['ent.workspace_service'])
     WorkspaceService.getFoldersByFilter(filter, filter=="owner").then(function(res){
       $scope.folders = res.data;
       console.log("folders: "+$scope.folders.length)
+    })
+  }
+
+  $rootScope.createFolderError = function(err) {
+    console.log(err);
+    var title = 'Erreur de connexion'
+    var template = $rootScope.translationWorkspace[error.data.error]
+    return $ionicPopup.alert({
+      title: title,
+      template: template
     })
   }
 })

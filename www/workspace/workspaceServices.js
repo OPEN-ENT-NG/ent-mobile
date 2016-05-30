@@ -78,7 +78,7 @@ angular.module('ent.workspace_service', ['ion-tree-list'])
       headers: { 'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8" }
     };
     var data = "name="+folderName;
-    data = path!='owner' ? "name="+folderName+",path="+path: data;
+    data = path!='owner' ? "name="+folderName+"&path="+path: data;
     console.log(data);
     return $http.post(domainENT+'/workspace/folder',data, configHeaders)
   }
@@ -97,6 +97,35 @@ angular.module('ent.workspace_service', ['ion-tree-list'])
     var n = d.getTime();
     return n;
   }
+})
+
+.factory("CreateNewFolderPopUpFactory", function($ionicPopup, $rootScope){
+  function getPopup(scope){
+    scope.createdFolder={}
+    return $ionicPopup.show({
+      template: '<input type="text" ng-model="createdFolder.name">',
+      title: $rootScope.translationWorkspace["folder.new.title"],
+      subtitle: $rootScope.translationWorkspace["folder.new"],
+      scope: scope,
+      buttons: [
+        { text: $rootScope.translationWorkspace["cancel"] },
+        {
+          text: '<b>OK</b>',
+          type: 'button-positive',
+          onTap: function(e) {
+            if (!scope.createdFolder.name) {
+              e.preventDefault();
+            } else {
+              return scope.createdFolder.name;
+            }
+          }
+        }
+      ]
+    });
+  }
+  return {
+    getPopup: getPopup
+  };
 })
 
 .factory("VersionsDocPopupFactory", function ($ionicPopup, $rootScope) {
@@ -129,84 +158,84 @@ angular.module('ent.workspace_service', ['ion-tree-list'])
       var dimensions='';
       switch (Object.keys(doc.thumbnails).length) {
         case 1:
-        dimensions="120x120"
-        break;
-        case 2:
-        dimensions="290x290"
-        break;
-        default:
-        break;
+          dimensions="120x120"
+          break;
+          case 2:
+            dimensions="290x290"
+            break;
+            default:
+              break;
+            }
+            doc.icon_image = "/workspace/document/"+doc._id+"?thumbnail="+dimensions;
+          } else {
+            doc.icon_image = localStorage.getItem('skin')+"/../../img/icons/"+getThumbnailByMimeType(doc.metadata["content-type"]);
+          }
+          return doc;
+        }
+
+        return {
+          getThumbnailByMimeType: getThumbnailByMimeType,
+          setIcons: setIcons
+        };
+      })
+
+      var mimeTypesArray = [{
+
+        "thumbnail": "doc-large.png",
+        // "thumbnail": "img/word.png",
+        "mimetypes": [
+          "application/msword",
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.template",
+          "application/vnd.ms-word.document.macroEnabled.12",
+          "application/vnd.ms-word.template.macroEnabled.12"
+        ]
+      },
+      {
+        "thumbnail": "xls-large.png",
+        // "thumbnail": "img/excel.png",
+        "mimetypes": [
+          "application/vnd.ms-excel",
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.template",
+          "application/vnd.ms-excel.sheet.macroEnabled.12",
+          "application/vnd.ms-excel.addin.macroEnabled.12",
+          "application/vnd.ms-excel.sheet.binary.macroEnabled.12"
+        ]
+      },
+      {
+        // "thumbnail": "img/word.png",
+        "thumbnail": "file-powerpointicon-",
+        "mimetypes": [
+          "application/vnd.ms-powerpoint",
+          "application/vnd.ms-powerpoint",
+          "application/vnd.ms-powerpoint",
+          "application/vnd.ms-powerpoint",
+          "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+          "application/vnd.openxmlformats-officedocument.presentationml.template",
+          "application/vnd.openxmlformats-officedocument.presentationml.slideshow",
+          "application/vnd.ms-powerpoint.addin.macroEnabled.12",
+          "application/vnd.ms-powerpoint.presentation.macroEnabled.12",
+          "application/vnd.ms-powerpoint.template.macroEnabled.12",
+          "application/vnd.ms-powerpoint.slideshow.macroEnabled.12"
+        ]
+      },
+      {
+        // "thumbnail": "img/pdf.png",
+        "thumbnail": "pdf-large.png",
+        "mimetypes": [
+          "application/pdf"
+        ]
+      },
+      {
+        "thumbnail": "audio-large.png",
+        // "thumbnail": "img/audio.png",
+        "mimetypes": [
+          "audio/mpeg",
+          "audio/x-ms-wma",
+          "audio/vnd.rn-realaudio",
+          "audio/x-wav",
+          "audio/mp3"
+        ]
       }
-      doc.icon_image = "/workspace/document/"+doc._id+"?thumbnail="+dimensions;
-    } else {
-      doc.icon_image = localStorage.getItem('skin')+"/../../img/icons/"+getThumbnailByMimeType(doc.metadata["content-type"]);
-    }
-    return doc;
-  }
-
-  return {
-    getThumbnailByMimeType: getThumbnailByMimeType,
-    setIcons: setIcons
-  };
-})
-
-var mimeTypesArray = [{
-
-  "thumbnail": "doc-large.png",
-  // "thumbnail": "img/word.png",
-  "mimetypes": [
-    "application/msword",
-    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-    "application/vnd.openxmlformats-officedocument.wordprocessingml.template",
-    "application/vnd.ms-word.document.macroEnabled.12",
-    "application/vnd.ms-word.template.macroEnabled.12"
-  ]
-},
-{
-  "thumbnail": "xls-large.png",
-  // "thumbnail": "img/excel.png",
-  "mimetypes": [
-    "application/vnd.ms-excel",
-    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    "application/vnd.openxmlformats-officedocument.spreadsheetml.template",
-    "application/vnd.ms-excel.sheet.macroEnabled.12",
-    "application/vnd.ms-excel.addin.macroEnabled.12",
-    "application/vnd.ms-excel.sheet.binary.macroEnabled.12"
-  ]
-},
-{
-  // "thumbnail": "img/word.png",
-  "thumbnail": "file-powerpointicon-",
-  "mimetypes": [
-    "application/vnd.ms-powerpoint",
-    "application/vnd.ms-powerpoint",
-    "application/vnd.ms-powerpoint",
-    "application/vnd.ms-powerpoint",
-    "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-    "application/vnd.openxmlformats-officedocument.presentationml.template",
-    "application/vnd.openxmlformats-officedocument.presentationml.slideshow",
-    "application/vnd.ms-powerpoint.addin.macroEnabled.12",
-    "application/vnd.ms-powerpoint.presentation.macroEnabled.12",
-    "application/vnd.ms-powerpoint.template.macroEnabled.12",
-    "application/vnd.ms-powerpoint.slideshow.macroEnabled.12"
-  ]
-},
-{
-  // "thumbnail": "img/pdf.png",
-  "thumbnail": "pdf-large.png",
-  "mimetypes": [
-    "application/pdf"
-  ]
-},
-{
-  "thumbnail": "audio-large.png",
-  // "thumbnail": "img/audio.png",
-  "mimetypes": [
-    "audio/mpeg",
-    "audio/x-ms-wma",
-    "audio/vnd.rn-realaudio",
-    "audio/x-wav",
-    "audio/mp3"
-  ]
-}
-]
+    ]
