@@ -13,8 +13,6 @@ angular.module('ent.workspace_content',['ent.workspace_service',])
   }
 
 
-
-
   $scope.newFolder = function(){
     CreateNewFolderPopUpFactory.getPopup($scope).then(function(res) {
       if(res){
@@ -24,12 +22,6 @@ angular.module('ent.workspace_content',['ent.workspace_service',])
         }, function(error){
           console.log(error);
           $rootScope.createFolderError(error)
-          var title = 'Erreur de connexion'
-          var template = $rootScope.translationWorkspace[error.data.error]
-          return $ionicPopup.alert({
-            title: title,
-            template: template
-          })
         })
       }
     });
@@ -116,8 +108,8 @@ angular.module('ent.workspace_content',['ent.workspace_service',])
     })
   }
 
-  $rootScope.createFolderError = function(err) {
-    console.log(err);
+  $rootScope.createFolderError = function(error) {
+    console.log(error);
     var title = 'Erreur de connexion'
     var template = $rootScope.translationWorkspace[error.data.error]
     return $ionicPopup.alert({
