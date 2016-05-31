@@ -1,6 +1,6 @@
-angular.module('ent.workspace_content',['ent.workspace_service'])
+angular.module('ent.workspace_content',['ent.workspace_service',])
 
-.controller('WorkspaceFolderContentCtlr', function($scope, $rootScope, $stateParams, $state, WorkspaceService, $ionicLoading, MimeTypeFactory, $cordovaProgress, CreateFolderPopUpFactory){
+.controller('WorkspaceFolderContentCtlr', function($scope, $rootScope, $stateParams, $state, WorkspaceService, $ionicLoading, MimeTypeFactory, $cordovaProgress, CreateNewFolderPopUpFactory, $ionicPopup){
 
   var filter = getFilter($stateParams.nameWorkspaceFolder);
   getData();
@@ -11,20 +11,17 @@ angular.module('ent.workspace_content',['ent.workspace_service'])
   }
 
   $scope.newFolder = function(){
-    CreateFolderPopUpFactory.getPopup($scope).then(function(res) {
+    CreateNewFolderPopUpFactory.getPopup($scope).then(function(res) {
       if(res){
         WorkspaceService.createFolder(res,'owner').then(function(result){
           console.log(result.data);
-          getData();
+          getData()
         }, function(error){
-          $scope.showAlertError(error)
+          console.log(error);
+          $rootScope.createFolderError(error)
         })
       }
     });
-  }
-
-  $scope.debug = function(){
-    console.log('debug content');
   }
 
   $scope.gotInDepthFolder = function(folder){
@@ -45,7 +42,7 @@ angular.module('ent.workspace_content',['ent.workspace_service'])
     console.log(newDoc);
 
     if(newDoc.size > $rootScope.translationWorkspace["max.file.size"]){
-        $scope.getAlertPopupNoTitle($rootScope.translationWorkspace["file.too.large.limit"]+ $scope.getSizeFile(parseInt($rootScope.translationWorkspace["max.file.size"])))
+      $scope.getAlertPopupNoTitle($rootScope.translationWorkspace["file.too.large.limit"]+ $scope.getSizeFile(parseInt($rootScope.translationWorkspace["max.file.size"])))
     } else {
       $cordovaProgress.showSimpleWithLabelDetail(true, "Ajout en cours", newDoc.name);
 
@@ -106,6 +103,16 @@ angular.module('ent.workspace_content',['ent.workspace_service'])
     WorkspaceService.getFoldersByFilter(filter, filter=="owner").then(function(res){
       $scope.folders = res.data;
       console.log("folders: "+$scope.folders.length)
+    })
+  }
+
+  $rootScope.createFolderError = function(error) {
+    console.log(error);
+    var title = 'Erreur de connexion'
+    var template = $rootScope.translationWorkspace[error.data.error]
+    return $ionicPopup.alert({
+      title: title,
+      template: template
     })
   }
 })

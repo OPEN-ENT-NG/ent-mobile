@@ -1,6 +1,6 @@
 angular.module('ent.workspace_move_file',['ent.workspace_service', 'ion-tree-list'])
 
-.controller('MoveDocCtrl', function($scope, $rootScope, WorkspaceService, $state, $ionicHistory, $stateParams, CreateFolderPopUpFactory){
+.controller('MoveDocCtrl', function($scope, $rootScope, WorkspaceService, $state, $ionicPopup, $ionicHistory, $stateParams, CreateNewFolderPopUpFactory){
 
   var choosenFolder={}
   getFolders()
@@ -48,17 +48,44 @@ angular.module('ent.workspace_move_file',['ent.workspace_service', 'ion-tree-lis
   });
 
   $scope.newFolder = function(){
-    console.log(choosenFolder);
-    CreateFolderPopUpFactory.getPopup($scope).then(function(res) {
+    CreateNewFolderPopUpFactory.getPopup($scope).then(function(res) {
       if(res){
-        WorkspaceService.createFolder(res, $rootScope.doc.folder).then(function(result){
+        WorkspaceService.createFolder(res, choosenFolder.folder).then(function(result){
           console.log(result.data);
           getFolders()
         }, function(error){
-          $scope.showAlertError(error)
+          $rootScope.createFolderError(error)
         })
       }
     });
+  }
+
+  function moveItem(item){
+    if(item.folder.folder == $rootScope.doc.folder){
+      $scope.getAlertPopupNoTitle($rootScope.translationWorkspace["workspace.forbidden.move.folder.in.itself"])
+    } else {
+      $scope.getConfirmPopup($rootScope.translationWorkspace["move"], "Voulez-vous déplacer ce document dans le dossier "+item.folder.name+"?",$rootScope.translationWorkspace["cancel"],"OK").then(function(res){
+        if(res!=null){
+          WorkspaceService.moveDoc($rootScope.doc._id, item.folder.folder).then(function(res){
+            $ionicHistory.goBack(-2);
+          }, function(err){
+            $scope.showAlertError()
+          })
+        }
+      })
+    }
+  }
+
+  function copyItem(item){
+    $scope.getConfirmPopup($rootScope.translationWorkspace["workspace.copy"], "Voulez-vous copier ce document dans le dossier "+item.folder.name+"?",$rootScope.translationWorkspace["cancel"],"OK").then(function(res){
+      if(res!=null){
+        WorkspaceService.copyDoc($rootScope.doc._id, item.folder.folder).then(function(res){
+          $ionicHistory.goBack(-2);
+        }, function(err){
+          $scope.showAlertError()
+        })
+      }
+    })
   }
 
   $scope.selectFolder = function(){
@@ -72,39 +99,6 @@ angular.module('ent.workspace_move_file',['ent.workspace_service', 'ion-tree-lis
           default:
             break;
           }
-        }
-
-        function moveItem(item){
-          if(item.folder.folder == $rootScope.doc.folder){
-            $scope.getAlertPopupNoTitle($rootScope.translationWorkspace["workspace.forbidden.move.folder.in.itself"])
-          } else {
-            $scope.getConfirmPopup($rootScope.translationWorkspace["move"], "Voulez-vous déplacer ce document dans le dossier "+item.folder.name+"?",$rootScope.translationWorkspace["cancel"],"OK").then(function(res){
-              if(res!=null){
-                WorkspaceService.moveDoc($rootScope.doc._id, item.folder.folder).then(function(res){
-                  $ionicHistory.goBack(-2);
-                }, function(err){
-                  $scope.showAlertError()
-                })
-              }
-            })
-          }
-        }
-
-        $scope.getTitle = function(){
-          return $rootScope.translationWorkspace["workspace."+$stateParams.action]
-        }
-
-        function copyItem(item){
-
-          $scope.getConfirmPopup($rootScope.translationWorkspace["workspace.copy"], "Voulez-vous copier ce document dans le dossier "+item.folder.name+"?",$rootScope.translationWorkspace["cancel"],"OK").then(function(res){
-            if(res!=null){
-              WorkspaceService.copyDoc($rootScope.doc._id, item.folder.folder).then(function(res){
-                $ionicHistory.goBack(-2);
-              }, function(err){
-                $scope.showAlertError()
-              })
-            }
-          })
         }
 
       })
