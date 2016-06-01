@@ -37,6 +37,18 @@ angular.module('ent.workspace_service', ['ion-tree-list'])
     return $http.put(domainENT+'/workspace/rename/document/'+id, {name: newName})
   }
 
+  this.renameFolder = function (id, newName){
+    return $http.put(domainENT+'/workspace/folder/rename/'+id, {name: newName})
+  }
+
+  this.renameItem = function (item, type, newName){
+    console.log(item);
+    var urlType = type =='folder' ? 'folder/rename/'+item._id : 'rename/document/'+item._id
+    console.log(urlType);
+    return $http.put(domainENT+'/workspace/'+urlType , {name: newName})
+  }
+
+
   this.trashDoc = function (id){
     return $http.put(domainENT+'/workspace/document/trash/'+id)
   }
@@ -86,6 +98,8 @@ angular.module('ent.workspace_service', ['ion-tree-list'])
     console.log(data);
     return $http.post(domainENT+'/workspace/folder',data, configHeaders)
   }
+
+
 
   this.deleteSelectedDocuments = function(arrayDocs){
     var promises = [];
@@ -172,6 +186,35 @@ angular.module('ent.workspace_service', ['ion-tree-list'])
   };
 })
 
+.factory("RenamePopUpFactory", function($ionicPopup, $rootScope){
+
+  function getPopup(scope, model){
+    scope.item = model
+    return $ionicPopup.show({
+      template: '<input type="text" ng-model="item.name">',
+      title: $rootScope.translationWorkspace["workspace.rename"],
+      scope: scope,
+      buttons: [
+        { text: $rootScope.translationWorkspace["cancel"] },
+        {
+          text: '<b>'+$rootScope.translationWorkspace["workspace.rename"]+'</b>',
+          type: 'button-positive',
+          onTap: function(e) {
+            if (!scope.item.name) {
+              e.preventDefault();
+            } else {
+              return scope.item.name;
+            }
+          }
+        }
+      ]
+    })
+  }
+  return {
+    getPopup: getPopup
+  };
+
+})
 .factory("VersionsDocPopupFactory", function ($ionicPopup, $rootScope) {
 
   function getPopup() {

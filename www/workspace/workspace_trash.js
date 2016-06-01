@@ -1,6 +1,6 @@
 angular.module('ent.workspace_trash',['ent.workspace_service'])
 
-.controller('WorkspaceTrashContentCtlr', function($scope, $rootScope, WorkspaceService, $ionicLoading, MimeTypeFactory){
+.controller('WorkspaceTrashContentCtlr', function($scope, $rootScope, WorkspaceService, $ionicLoading, MimeTypeFactory, $ionicHistory, $ionicPopup){
 
   getData();
 
@@ -39,6 +39,30 @@ angular.module('ent.workspace_trash',['ent.workspace_service'])
       $scope.showAlertError()
     })
   }
+
+  $scope.$ionicGoBack = function() {
+    if($scope.checkable){
+      $scope.checkable = false;
+      // _.each(getCheckedItems($scope.folders, $scope.documents), function(item){ item.checked = false;});
+    } else {
+      $ionicHistory.goBack();
+    }
+  };
+
+  var doCustomBack= function() {
+    if($scope.checkable){
+      $scope.checkable = false;
+      // initCheckedValue();
+      $scope.$apply();
+    } else {
+      $ionicHistory.goBack();
+    }
+  };
+
+  var deregisterHardBack= $ionicPlatform.registerBackButtonAction(doCustomBack, 101)
+  $scope.$on('$destroy', function() {
+    deregisterHardBack()
+  });
 
   function getFoldersTrash(){
     WorkspaceService.getCompleteFoldersByFilter('owner').then(function(result){

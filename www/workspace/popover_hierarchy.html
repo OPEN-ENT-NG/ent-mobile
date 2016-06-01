@@ -3,6 +3,10 @@
     <ion-list>
       <a class="item" ng-click="deleteSelectedItems()">{{translationWorkspace["workspace.delete"]}}</a>
 
+      <!-- Renommer -->
+      <a class="item" ng-click="renameItem()" ng-show="onlyOneFolder()">{{translationWorkspace["workspace.rename"]}}</a>
+
+
       <!-- <a class="item" ng-show=isInbox() ng-click=editMail('REPLY_ALL')>{{translationConversation["replyall"]}}</a> -->
 
       <!-- reply all -->

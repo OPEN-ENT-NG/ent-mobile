@@ -1,6 +1,6 @@
 angular.module('ent.workspace_folder_depth',['ent.workspace_service'])
 
-.controller('WorkspaceFolderDepthCtlr', function($scope, $rootScope, $stateParams, $state, WorkspaceService, $ionicLoading, MimeTypeFactory, $cordovaProgress, CreateNewFolderPopUpFactory, $ionicPopover){
+.controller('WorkspaceFolderDepthCtlr', function($scope, $rootScope, $stateParams, $state, WorkspaceService, $ionicLoading, MimeTypeFactory, $cordovaProgress, CreateNewFolderPopUpFactory, $ionicPopover,$ionicPlatform, $ionicHistory, RenamePopUpFactory){
 
   var fullFolderName = $stateParams.nameFolder.length !=0 ? $stateParams.parentFolderName + '_' + $stateParams.nameFolder : $stateParams.parentFolderName;
 
@@ -19,11 +19,11 @@ angular.module('ent.workspace_folder_depth',['ent.workspace_service'])
     return $stateParams.nameFolder.length !=0 ? $stateParams.nameFolder:$stateParams.parentFolderName;
   }
 
-  $rootScope.gotInDepthFolder = function(folder){
+  $scope.gotInDepthFolder = function(folder){
     $state.go('app.workspace_folder_depth', {filtre:$stateParams.filtre, parentFolderName: fullFolderName, nameFolder: folder.name})
   }
 
-  $rootScope.goToFile = function (doc) {
+  $scope.goToFile = function (doc) {
     doc.folder = $stateParams.nameFolder.length !=0 ? $stateParams.nameFolder:doc.folder
     $rootScope.doc = doc
     $state.go('app.workspace_file', {filtre:$stateParams.filtre})
@@ -41,6 +41,33 @@ angular.module('ent.workspace_folder_depth',['ent.workspace_service'])
       }
     });
   }
+
+  $scope.renameItem = function(){
+
+    if(getCheckedFolders($scope.folders).length>0 ){
+      item = getCheckedFolders($scope.folders)[0]
+      type = 'folder'
+    } else {
+      item = getCheckedDocuments($scope.documents)[0]
+      type = 'document'
+    }
+    console.log(item);
+    RenamePopUpFactory.getPopup($scope, item).then(function(resp){
+      console.log(resp);
+      if(resp){
+        WorkspaceService.renameItem(item, type, resp).then(function(response){
+          console.log(response)
+          $scope.closePopover()
+          $scope.checkable = false
+          getData()
+        }, function(err){
+          $ionicLoading.hide()
+          $scope.showAlertError()
+        })
+      }
+    })
+  }
+
 
   $scope.addDocument = function(ele){
 
@@ -68,6 +95,10 @@ angular.module('ent.workspace_folder_depth',['ent.workspace_service'])
     });
   }
 
+  $scope.onlyOneFolder = function(){
+    return getCheckedFolders($scope.folders).length ==1 && getCheckedDocuments($scope.documents).length ==0
+  }
+
   $scope.deleteSelectedItems = function(){
     var checkedItems = getCheckedItems($scope.folders, $scope.documents)
     $ionicLoading.show({
@@ -79,7 +110,7 @@ angular.module('ent.workspace_folder_depth',['ent.workspace_service'])
       WorkspaceService.deleteSelectedDocuments(checkedItems.documents).then(function(response){
         console.log(response);
         getData()
-        $rootScope.checkable = false
+        $scope.checkable = false
       })
     }, function(err){
       $ionicLoading.hide()
@@ -92,6 +123,31 @@ angular.module('ent.workspace_folder_depth',['ent.workspace_service'])
   }).then(function(popover) {
     $rootScope.popover = popover;
   });
+
+  $scope.$ionicGoBack = function() {
+    if($scope.checkable){
+      $scope.checkable = false;
+      // _.each(getCheckedItems($scope.folders, $scope.documents), function(item){ item.checked = false;});
+    } else {
+      $ionicHistory.goBack();
+    }
+  };
+
+  var doCustomBack= function() {
+    if($scope.checkable){
+      $scope.checkable = false;
+      // initCheckedValue();
+      $scope.$apply();
+    } else {
+      $ionicHistory.goBack();
+    }
+  };
+
+  var deregisterHardBack= $ionicPlatform.registerBackButtonAction(doCustomBack, 101)
+  $scope.$on('$destroy', function() {
+    deregisterHardBack()
+  });
+
 
   function getData(){
     $ionicLoading.show({

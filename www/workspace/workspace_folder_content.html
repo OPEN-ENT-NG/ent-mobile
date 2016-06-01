@@ -8,7 +8,7 @@
     <ion-refresher pulling-text="{{translationWorkspace[loading]}}" on-refresh="doRefresh()"></ion-refresher>
 
     <ion-list >
-      <ion-checkbox ng-repeat="folder in folders track by $index" ng-model="folder.checked" ng-show=checkable>
+      <ion-checkbox ng-repeat="folder in folders track by $index" ng-model="folder.checked" ng-show=checkable class="checkbox-list-item">
         <div ng-click="gotInDepthFolder(folder)" class="item item-text-wrap">
           <i class="folder-open-2icon- icon-file" ></i>
           <div class="info-file">
@@ -38,7 +38,7 @@
       <h3>{{doc.ownerName}}</h3>
     </ion-item>
 
-    <ion-checkbox ng-repeat="doc in documents track by $index" ng-model="doc.checked" ng-show=checkable>
+    <ion-checkbox ng-repeat="doc in documents track by $index" ng-model="doc.checked" ng-show=checkable class="checkbox-list-item">
       <div ng-click="goToFile(doc)" class="item item-text-wrap item-thumbnail-left" >
         <img ng-src={{getImageUrl(doc.icon_image)}}></img>
         <h2>{{doc.name}}</h2>

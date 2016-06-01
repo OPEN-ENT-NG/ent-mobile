@@ -1,9 +1,9 @@
 angular.module('ent.workspace_content',['ent.workspace_service',])
 
-.controller('WorkspaceFolderContentCtlr', function($scope, $rootScope, $stateParams, $state, WorkspaceService, $ionicLoading, MimeTypeFactory, $cordovaProgress, CreateNewFolderPopUpFactory, $ionicPopup, $cordovaVibration, $ionicHistory, $ionicPlatform, $ionicPopover){
+.controller('WorkspaceFolderContentCtlr', function($scope, $rootScope, $stateParams, $state, WorkspaceService, $ionicLoading, MimeTypeFactory, $cordovaProgress, CreateNewFolderPopUpFactory, $ionicPopup, $cordovaVibration, $ionicHistory, $ionicPlatform, $ionicPopover, RenamePopUpFactory){
 
   var filter = getFilter($stateParams.nameWorkspaceFolder)
-  $rootScope.checkable = false
+  $scope.checkable = false
   getData()
 
 
@@ -12,9 +12,9 @@ angular.module('ent.workspace_content',['ent.workspace_service',])
   }
 
   $rootScope.enableCheck = function (item) {
-    if(!$rootScope.checkable){
+    if(!$scope.checkable){
       $cordovaVibration.vibrate(100)     // Vibrate 100ms
-      $rootScope.checkable = true
+      $scope.checkable = true
       item.checked = true
     }
   }
@@ -76,7 +76,7 @@ angular.module('ent.workspace_content',['ent.workspace_service',])
   $scope.getTitle = function(){
     var checkedItems = getCheckedItems($scope.folders, $scope.documents)
     var count = checkedItems.folders.length + checkedItems.documents.length
-    return $rootScope.checkable ? count:$rootScope.translationWorkspace[$stateParams.nameWorkspaceFolder]
+    return $scope.checkable ? count:$rootScope.translationWorkspace[$stateParams.nameWorkspaceFolder]
   }
 
   $scope.gotInDepthFolder = function(folder){
@@ -102,13 +102,42 @@ angular.module('ent.workspace_content',['ent.workspace_service',])
       WorkspaceService.deleteSelectedDocuments(checkedItems.documents).then(function(response){
         console.log(response);
         getData()
-        $rootScope.checkable = false
-        // _.each($scope.rowData, function(item){ item.item.Hr = 25;});
+        $scope.checkable = false
       })
     }, function(err){
       $ionicLoading.hide()
       $scope.showAlertError()
     });
+  }
+
+  $scope.renameItem = function(){
+
+    if(getCheckedFolders($scope.folders).length>0 ){
+      item = getCheckedFolders($scope.folders)[0]
+      type = 'folder'
+    } else {
+      item = getCheckedDocuments($scope.documents)[0]
+      type = 'document'
+    }
+    console.log(item);
+    RenamePopUpFactory.getPopup($scope, item).then(function(resp){
+      console.log(resp);
+      if(resp){
+        WorkspaceService.renameItem(item, type, resp).then(function(response){
+          console.log(response)
+          $scope.closePopover()
+          $scope.checkable = false
+          getData()
+        }, function(err){
+          $ionicLoading.hide()
+          $scope.showAlertError()
+        })
+      }
+    })
+  }
+
+  $scope.onlyOneFolder = function(){
+    return getCheckedFolders($scope.folders).length ==1 && getCheckedDocuments($scope.documents).length ==0
   }
 
   $ionicPopover.fromTemplateUrl('workspace/popover_hierarchy.html', {
@@ -118,19 +147,18 @@ angular.module('ent.workspace_content',['ent.workspace_service',])
   });
 
 
-  $rootScope.$ionicGoBack = function() {
-    if($rootScope.checkable){
-      $rootScope.checkable = false;
-      // initCheckedValue();
+  $scope.$ionicGoBack = function() {
+    if($scope.checkable){
+      $scope.checkable = false;
+      _.each(getCheckedItems($scope.folders, $scope.documents), function(item){ item.checked = false;});
     } else {
       $ionicHistory.goBack();
     }
   };
 
   var doCustomBack= function() {
-    if($rootScope.checkable){
-      $rootScope.checkable = false;
-      // initCheckedValue();
+    if($scope.checkable){
+      $scope.checkable = false;
       $scope.$apply();
     } else {
       $ionicHistory.goBack();
@@ -186,23 +214,32 @@ angular.module('ent.workspace_content',['ent.workspace_service',])
 })
 
 function getCheckedItems(arrayFolders, arrayDocs){
+  return {
+    folders: getCheckedFolders(arrayFolders),
+    documents: getCheckedDocuments(arrayDocs)
+  }
+}
+
+function getCheckedFolders(arrayFolders){
   var checkedFolders =[]
   for(var i=0; i<arrayFolders.length; i++){
     if(arrayFolders[i].checked){
       checkedFolders.push(arrayFolders[i])
     }
   }
+  return checkedFolders
+}
+
+function getCheckedDocuments(arrayDocs){
   var checkedDocuments =[]
   for(var i=0; i<arrayDocs.length; i++){
     if(arrayDocs[i].checked){
       checkedDocuments.push(arrayDocs[i])
     }
   }
-  return {
-    folders: checkedFolders,
-    documents: checkedDocuments
-  }
+  return checkedDocuments
 }
+
 
 function getFilter(nameWorkspaceFolder){
   var filter ="";
