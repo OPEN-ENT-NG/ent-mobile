@@ -1,6 +1,6 @@
 angular.module('ent.workspace_folder_depth',['ent.workspace_service'])
 
-.controller('WorkspaceFolderDepthCtlr', function($scope, $rootScope, $stateParams, $state, WorkspaceService, $ionicLoading, MimeTypeFactory, $cordovaProgress, CreateNewFolderPopUpFactory){
+.controller('WorkspaceFolderDepthCtlr', function($scope, $rootScope, $stateParams, $state, WorkspaceService, $ionicLoading, MimeTypeFactory, $cordovaProgress, CreateNewFolderPopUpFactory, $ionicPopover){
 
   var fullFolderName = $stateParams.nameFolder.length !=0 ? $stateParams.parentFolderName + '_' + $stateParams.nameFolder : $stateParams.parentFolderName;
 
@@ -19,11 +19,11 @@ angular.module('ent.workspace_folder_depth',['ent.workspace_service'])
     return $stateParams.nameFolder.length !=0 ? $stateParams.nameFolder:$stateParams.parentFolderName;
   }
 
-  $scope.gotInDepthFolder = function(folder){
+  $rootScope.gotInDepthFolder = function(folder){
     $state.go('app.workspace_folder_depth', {filtre:$stateParams.filtre, parentFolderName: fullFolderName, nameFolder: folder.name})
   }
 
-  $scope.goToFile = function (doc) {
+  $rootScope.goToFile = function (doc) {
     doc.folder = $stateParams.nameFolder.length !=0 ? $stateParams.nameFolder:doc.folder
     $rootScope.doc = doc
     $state.go('app.workspace_file', {filtre:$stateParams.filtre})
@@ -67,6 +67,31 @@ angular.module('ent.workspace_folder_depth',['ent.workspace_service'])
       $scope.showAlertError()
     });
   }
+
+  $scope.deleteSelectedItems = function(){
+    var checkedItems = getCheckedItems($scope.folders, $scope.documents)
+    $ionicLoading.show({
+      template: '<ion-spinner icon="android"/>'
+    });
+    $scope.closePopover()
+    WorkspaceService.deleteSelectedFolders(checkedItems.folders).then(function(res){
+      console.log(res);
+      WorkspaceService.deleteSelectedDocuments(checkedItems.documents).then(function(response){
+        console.log(response);
+        getData()
+        $rootScope.checkable = false
+      })
+    }, function(err){
+      $ionicLoading.hide()
+      $scope.showAlertError()
+    });
+  }
+
+  $ionicPopover.fromTemplateUrl('workspace/popover_hierarchy.html', {
+    scope: $scope
+  }).then(function(popover) {
+    $rootScope.popover = popover;
+  });
 
   function getData(){
     $ionicLoading.show({

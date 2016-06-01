@@ -1,6 +1,6 @@
 angular.module('ent.workspace_service', ['ion-tree-list'])
 
-.service('WorkspaceService', function($http, domainENT){
+.service('WorkspaceService', function($http, domainENT, $q){
 
   var configHeaders = {
     headers: { 'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8" }
@@ -73,6 +73,10 @@ angular.module('ent.workspace_service', ['ion-tree-list'])
     return $http.post(domainENT+'/workspace/documents/copy/'+idDoc+folderName)
   }
 
+  this.trashFolder = function (id){
+    return $http.put(domainENT+'/workspace/folder/trash/'+id)
+  }
+
   this.createFolder = function (folderName, path){
     var configHeaders = {
       headers: { 'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8" }
@@ -81,6 +85,46 @@ angular.module('ent.workspace_service', ['ion-tree-list'])
     data = path!='owner' ? "name="+folderName+"&path="+path: data;
     console.log(data);
     return $http.post(domainENT+'/workspace/folder',data, configHeaders)
+  }
+
+  this.deleteSelectedDocuments = function(arrayDocs){
+    var promises = [];
+    var deferredCombinedItems = $q.defer();
+    var combinedItems = [];
+
+    angular.forEach(arrayDocs, function(item) {
+      var deferredItemList = $q.defer();
+      $http.put(domainENT+'/workspace/document/trash/'+item._id).then(function(resp) {
+        combinedItems = combinedItems.concat(resp.data);
+        deferredItemList.resolve();
+      });
+      promises.push(deferredItemList.promise);
+    });
+
+    $q.all(promises).then(function() {
+      deferredCombinedItems.resolve(combinedItems);
+    });
+    return deferredCombinedItems.promise;
+  }
+
+  this.deleteSelectedFolders = function(arrayFolders){
+    var promises = [];
+    var deferredCombinedItems = $q.defer();
+    var combinedItems = [];
+
+    angular.forEach(arrayFolders, function(item) {
+      var deferredItemList = $q.defer();
+      $http.put(domainENT+'/workspace/folder/trash/'+item._id).then(function(resp) {
+        combinedItems = combinedItems.concat(resp.data);
+        deferredItemList.resolve();
+      });
+      promises.push(deferredItemList.promise);
+    });
+
+    $q.all(promises).then(function() {
+      deferredCombinedItems.resolve(combinedItems);
+    });
+    return deferredCombinedItems.promise;
   }
 
   this.getTranslation = function(){

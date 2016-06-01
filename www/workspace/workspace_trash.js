@@ -1,6 +1,6 @@
 angular.module('ent.workspace_trash',['ent.workspace_service'])
 
-.controller('WorkspaceTrashContentCtlr', function($scope,WorkspaceService, $ionicLoading, MimeTypeFactory){
+.controller('WorkspaceTrashContentCtlr', function($scope, $rootScope, WorkspaceService, $ionicLoading, MimeTypeFactory){
 
   getData();
 
@@ -22,7 +22,7 @@ angular.module('ent.workspace_trash',['ent.workspace_service'])
     WorkspaceService.getTrashFilesContent().then(function(res) {
       $scope.documents=[]
       $scope.folders=[]
-      
+
       for(var i=0; i< res.data.length; i++){
         if(res.data[i].folder=="Trash" && !res.data[i].hasOwnProperty('old-folder')){
           $scope.documents.push(MimeTypeFactory.setIcons(res.data[i]))
