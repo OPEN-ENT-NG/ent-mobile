@@ -45,10 +45,6 @@
     {
       "locator": "https://github.com/tiltshiftfocus/cordova-plugin-cache.git",
       "id": "org.apache.cordova.plugin.cache"
-    },
-    {
-      "locator": "https://github.com/brodysoft/Cordova-SQLitePlugin.git",
-      "id": "cordova-sqlite-storage"
     }
   ],
   "cordovaPlatforms": [

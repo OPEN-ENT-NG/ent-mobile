@@ -1,7 +1,5 @@
 angular.module('ent.pronotes', ['ent.pronotes_service'])
 
-
-
   .controller('ListingUsersCtrl', function ($scope, $rootScope, $window, PronoteService, $ionicPlatform, $sce, $state, $ionicLoading) {
 
     PronoteService.getAllApps().then(function(resp){
