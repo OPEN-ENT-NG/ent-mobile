@@ -1,6 +1,6 @@
 angular.module('ent.workspace_file',['ent.workspace_service'])
 
-.controller('WorkspaceFileCtlr', function($scope, $rootScope, $ionicPopup, domainENT, WorkspaceService, $ionicLoading, $stateParams, $ionicHistory,  $ionicPopover,$state){
+.controller('WorkspaceFileCtlr', function($scope, $rootScope, $ionicPopup, domainENT, WorkspaceService, $ionicLoading, $stateParams, $ionicHistory,  $ionicPopover,$state, RenamePopUpFactory){
 
   console.log($rootScope.doc);
   $rootScope.doc.ownerPhoto = '/userbook/avatar/'+$rootScope.doc.owner
@@ -47,27 +47,7 @@ angular.module('ent.workspace_file',['ent.workspace_service'])
   }
 
   $scope.renameDoc = function (){
-    var myPopup = $ionicPopup.show({
-      template: '<input type="text" ng-model="doc.name">',
-      title: $rootScope.translationWorkspace["workspace.rename"],
-      scope: $scope,
-      buttons: [
-        { text: $rootScope.translationWorkspace["cancel"] },
-        {
-          text: '<b>'+$rootScope.translationWorkspace["workspace.rename"]+'</b>',
-          type: 'button-positive',
-          onTap: function(e) {
-            if (!$scope.doc.name) {
-              e.preventDefault();
-            } else {
-              return $scope.doc.name;
-            }
-          }
-        }
-      ]
-    });
-
-    myPopup.then(function(res) {
+  RenamePopUpFactory.getPopup($scope, $rootScope.doc).then(function(res) {
       console.log(res);
       if(res){
         $ionicLoading.show({
@@ -87,7 +67,7 @@ angular.module('ent.workspace_file',['ent.workspace_service'])
   $scope.trashDoc = function(doc){
     $scope.getConfirmPopup($rootScope.translationWorkspace["workspace.delete"], $rootScope.translationWorkspace["confirm.remove"], $rootScope.translationWorkspace["cancel"], $rootScope.translationWorkspace["confirm"]).then(function(res){
 
-      if(res!=null){
+      if(res){
         $ionicLoading.show({
           template: '<ion-spinner icon="android"/>'
         });
@@ -95,13 +75,20 @@ angular.module('ent.workspace_file',['ent.workspace_service'])
           $ionicLoading.hide();
           $ionicHistory.clearCache();
           $ionicHistory.goBack();
-          //back
         }, function(err){
           $ionicLoading.hide();
           $scope.showAlertError();
         });
       }
     })
+  }
+
+  $scope.moveDoc = function () {
+    $state.go('app.workspace_tree', {action:'move'})
+  }
+
+  $scope.copyDoc = function(){
+    $state.go('app.workspace_tree', {action:'copy'})
   }
 
   $scope.goVersion = function(){
@@ -136,22 +123,8 @@ angular.module('ent.workspace_file',['ent.workspace_service'])
   $ionicPopover.fromTemplateUrl('workspace/popover-file.html', {
     scope: $scope
   }).then(function(popover) {
-    $scope.popover = popover;
+    $rootScope.popover = popover;
   });
-
-  $scope.openPopover = function($event) {
-    $scope.popover.show($event);
-  };
-
-  $scope.closePopover = function() {
-    $scope.popover.hide();
-  };
-
-  //Cleanup the popover when we're done with it!
-  $scope.$on('$destroy', function() {
-    $scope.popover.remove();
-  })
-
 
   function updateDoc(doc){
     console.log($stateParams.filtre);

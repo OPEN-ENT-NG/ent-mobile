@@ -1,6 +1,6 @@
-angular.module('ent.workspace_service', [])
+angular.module('ent.workspace_service', ['ion-tree-list'])
 
-.service('WorkspaceService', function($http, domainENT){
+.service('WorkspaceService', function($http, domainENT, $q){
 
   var configHeaders = {
     headers: { 'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8" }
@@ -37,6 +37,18 @@ angular.module('ent.workspace_service', [])
     return $http.put(domainENT+'/workspace/rename/document/'+id, {name: newName})
   }
 
+  this.renameFolder = function (id, newName){
+    return $http.put(domainENT+'/workspace/folder/rename/'+id, {name: newName})
+  }
+
+  this.renameItem = function (item, type, newName){
+    console.log(item);
+    var urlType = type =='folder' ? 'folder/rename/'+item._id : 'rename/document/'+item._id
+    console.log(urlType);
+    return $http.put(domainENT+'/workspace/'+urlType , {name: newName})
+  }
+
+
   this.trashDoc = function (id){
     return $http.put(domainENT+'/workspace/document/trash/'+id)
   }
@@ -64,7 +76,70 @@ angular.module('ent.workspace_service', [])
   }
 
   this.moveDoc = function(idDoc, folderName){
-    return $http.put(domainENT+'/workspace/documents/move/'+idDoc+'/'+folderName)
+    folderName = folderName=='owner' ? '':'/'+folderName
+    return $http.put(domainENT+'/workspace/documents/move/'+idDoc+folderName)
+  }
+
+  this.copyDoc = function(idDoc, folderName){
+    folderName = folderName=='owner' ? '':'/'+folderName
+    return $http.post(domainENT+'/workspace/documents/copy/'+idDoc+folderName)
+  }
+
+  this.trashFolder = function (id){
+    return $http.put(domainENT+'/workspace/folder/trash/'+id)
+  }
+
+  this.createFolder = function (folderName, path){
+    var configHeaders = {
+      headers: { 'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8" }
+    };
+    var data = "name="+folderName;
+    data = path!='owner' ? "name="+folderName+"&path="+path: data;
+    console.log(data);
+    return $http.post(domainENT+'/workspace/folder',data, configHeaders)
+  }
+
+  this.deleteSelectedDocuments = function(arrayDocs, isMyDocuments){
+    var promises = [];
+    var deferredCombinedItems = $q.defer();
+    var combinedItems = [];
+
+    angular.forEach(arrayDocs, function(item) {
+      var request = isMyDocuments ? $http.put(domainENT+'/workspace/document/trash/'+item._id) : $http.delete(domainENT+'/workspace/document/'+item._id)
+      var deferredItemList = $q.defer();
+      request.then(function(resp) {
+        combinedItems = combinedItems.concat(resp.data);
+        deferredItemList.resolve();
+      });
+      promises.push(deferredItemList.promise);
+    });
+
+    $q.all(promises).then(function() {
+      deferredCombinedItems.resolve(combinedItems);
+    });
+    return deferredCombinedItems.promise;
+  }
+
+  this.deleteSelectedFolders = function(arrayFolders, isMyDocuments){
+    var promises = [];
+    var deferredCombinedItems = $q.defer();
+    var combinedItems = [];
+
+    angular.forEach(arrayFolders, function(item) {
+      var request = isMyDocuments ? $http.put(domainENT+'/workspace/folder/trash/'+item._id) : $http.delete(domainENT+'/workspace/folder/'+item._id)
+
+      var deferredItemList = $q.defer();
+      request.then(function(resp) {
+        combinedItems = combinedItems.concat(resp.data);
+        deferredItemList.resolve();
+      });
+      promises.push(deferredItemList.promise);
+    });
+
+    $q.all(promises).then(function() {
+      deferredCombinedItems.resolve(combinedItems);
+    });
+    return deferredCombinedItems.promise;
   }
 
   this.getTranslation = function(){
@@ -83,6 +158,64 @@ angular.module('ent.workspace_service', [])
   }
 })
 
+.factory("CreateNewFolderPopUpFactory", function($ionicPopup, $rootScope){
+  function getPopup(scope){
+    scope.createdFolder={}
+    return $ionicPopup.show({
+      template: '<input type="text" ng-model="createdFolder.name">',
+      title: $rootScope.translationWorkspace["folder.new.title"],
+      subtitle: $rootScope.translationWorkspace["folder.new"],
+      scope: scope,
+      buttons: [
+        { text: $rootScope.translationWorkspace["cancel"] },
+        {
+          text: '<b>OK</b>',
+          type: 'button-positive',
+          onTap: function(e) {
+            if (!scope.createdFolder.name) {
+              e.preventDefault();
+            } else {
+              return scope.createdFolder.name;
+            }
+          }
+        }
+      ]
+    });
+  }
+  return {
+    getPopup: getPopup
+  };
+})
+
+.factory("RenamePopUpFactory", function($ionicPopup, $rootScope){
+
+  function getPopup(scope, model){
+    scope.item = model
+    return $ionicPopup.show({
+      template: '<input type="text" ng-model="item.name">',
+      title: $rootScope.translationWorkspace["workspace.rename"],
+      scope: scope,
+      buttons: [
+        { text: $rootScope.translationWorkspace["cancel"] },
+        {
+          text: '<b>'+$rootScope.translationWorkspace["workspace.rename"]+'</b>',
+          type: 'button-positive',
+          onTap: function(e) {
+            if (!scope.item.name) {
+              e.preventDefault();
+            } else {
+              return scope.item.name;
+            }
+          }
+        }
+      ]
+    })
+  }
+  return {
+    getPopup: getPopup
+  };
+
+})
 .factory("VersionsDocPopupFactory", function ($ionicPopup, $rootScope) {
 
   function getPopup() {
@@ -113,84 +246,84 @@ angular.module('ent.workspace_service', [])
       var dimensions='';
       switch (Object.keys(doc.thumbnails).length) {
         case 1:
-        dimensions="120x120"
-        break;
-        case 2:
-        dimensions="290x290"
-        break;
-        default:
-        break;
+          dimensions="120x120"
+          break;
+          case 2:
+            dimensions="290x290"
+            break;
+            default:
+              break;
+            }
+            doc.icon_image = "/workspace/document/"+doc._id+"?thumbnail="+dimensions;
+          } else {
+            doc.icon_image = localStorage.getItem('skin')+"/../../img/icons/"+getThumbnailByMimeType(doc.metadata["content-type"]);
+          }
+          return doc;
+        }
+
+        return {
+          getThumbnailByMimeType: getThumbnailByMimeType,
+          setIcons: setIcons
+        };
+      })
+
+      var mimeTypesArray = [{
+
+        "thumbnail": "doc-large.png",
+        // "thumbnail": "img/word.png",
+        "mimetypes": [
+          "application/msword",
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.template",
+          "application/vnd.ms-word.document.macroEnabled.12",
+          "application/vnd.ms-word.template.macroEnabled.12"
+        ]
+      },
+      {
+        "thumbnail": "xls-large.png",
+        // "thumbnail": "img/excel.png",
+        "mimetypes": [
+          "application/vnd.ms-excel",
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.template",
+          "application/vnd.ms-excel.sheet.macroEnabled.12",
+          "application/vnd.ms-excel.addin.macroEnabled.12",
+          "application/vnd.ms-excel.sheet.binary.macroEnabled.12"
+        ]
+      },
+      {
+        // "thumbnail": "img/word.png",
+        "thumbnail": "file-powerpointicon-",
+        "mimetypes": [
+          "application/vnd.ms-powerpoint",
+          "application/vnd.ms-powerpoint",
+          "application/vnd.ms-powerpoint",
+          "application/vnd.ms-powerpoint",
+          "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+          "application/vnd.openxmlformats-officedocument.presentationml.template",
+          "application/vnd.openxmlformats-officedocument.presentationml.slideshow",
+          "application/vnd.ms-powerpoint.addin.macroEnabled.12",
+          "application/vnd.ms-powerpoint.presentation.macroEnabled.12",
+          "application/vnd.ms-powerpoint.template.macroEnabled.12",
+          "application/vnd.ms-powerpoint.slideshow.macroEnabled.12"
+        ]
+      },
+      {
+        // "thumbnail": "img/pdf.png",
+        "thumbnail": "pdf-large.png",
+        "mimetypes": [
+          "application/pdf"
+        ]
+      },
+      {
+        "thumbnail": "audio-large.png",
+        // "thumbnail": "img/audio.png",
+        "mimetypes": [
+          "audio/mpeg",
+          "audio/x-ms-wma",
+          "audio/vnd.rn-realaudio",
+          "audio/x-wav",
+          "audio/mp3"
+        ]
       }
-      doc.icon_image = "/workspace/document/"+doc._id+"?thumbnail="+dimensions;
-    } else {
-      doc.icon_image = localStorage.getItem('skin')+"/../../img/icons/"+getThumbnailByMimeType(doc.metadata["content-type"]);
-    }
-    return doc;
-  }
-
-  return {
-    getThumbnailByMimeType: getThumbnailByMimeType,
-    setIcons: setIcons
-  };
-})
-
-var mimeTypesArray = [{
-
-  "thumbnail": "doc-large.png",
-  // "thumbnail": "img/word.png",
-  "mimetypes": [
-    "application/msword",
-    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-    "application/vnd.openxmlformats-officedocument.wordprocessingml.template",
-    "application/vnd.ms-word.document.macroEnabled.12",
-    "application/vnd.ms-word.template.macroEnabled.12"
-  ]
-},
-{
-  "thumbnail": "xls-large.png",
-  // "thumbnail": "img/excel.png",
-  "mimetypes": [
-    "application/vnd.ms-excel",
-    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    "application/vnd.openxmlformats-officedocument.spreadsheetml.template",
-    "application/vnd.ms-excel.sheet.macroEnabled.12",
-    "application/vnd.ms-excel.addin.macroEnabled.12",
-    "application/vnd.ms-excel.sheet.binary.macroEnabled.12"
-  ]
-},
-{
-  // "thumbnail": "img/word.png",
-  "thumbnail": "file-powerpointicon-",
-  "mimetypes": [
-    "application/vnd.ms-powerpoint",
-    "application/vnd.ms-powerpoint",
-    "application/vnd.ms-powerpoint",
-    "application/vnd.ms-powerpoint",
-    "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-    "application/vnd.openxmlformats-officedocument.presentationml.template",
-    "application/vnd.openxmlformats-officedocument.presentationml.slideshow",
-    "application/vnd.ms-powerpoint.addin.macroEnabled.12",
-    "application/vnd.ms-powerpoint.presentation.macroEnabled.12",
-    "application/vnd.ms-powerpoint.template.macroEnabled.12",
-    "application/vnd.ms-powerpoint.slideshow.macroEnabled.12"
-  ]
-},
-{
-  // "thumbnail": "img/pdf.png",
-  "thumbnail": "pdf-large.png",
-  "mimetypes": [
-    "application/pdf"
-  ]
-},
-{
-  "thumbnail": "audio-large.png",
-  // "thumbnail": "img/audio.png",
-  "mimetypes": [
-    "audio/mpeg",
-    "audio/x-ms-wma",
-    "audio/vnd.rn-realaudio",
-    "audio/x-wav",
-    "audio/mp3"
-  ]
-}
-]
+    ]

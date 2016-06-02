@@ -269,21 +269,9 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
             $ionicPopover.fromTemplateUrl('messagerie/popover_messagerie_new.html', {
               scope: $scope
             }).then(function(popover) {
-              $scope.popover = popover;
+              $rootScope.popover = popover;
             });
 
-            $scope.openPopover = function($event) {
-              $scope.popover.show($event);
-            };
-
-            $scope.closePopover = function() {
-              $scope.popover.hide();
-            };
-
-            //Cleanup the popover when we're done with it!
-            $scope.$on('$destroy', function() {
-              $scope.popover.remove();
-            })
           })
           .directive('filterBox', function() {
             return {
