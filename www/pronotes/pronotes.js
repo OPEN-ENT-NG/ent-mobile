@@ -1,6 +1,8 @@
 angular.module('ent.pronotes', ['ent.pronotes_service'])
 
-  .controller('ListingUsersCtrl', function ($scope, $rootScope, $window, PronoteService ) {
+
+
+  .controller('ListingUsersCtrl', function ($scope, $rootScope, $window, PronoteService, $ionicPlatform, $sce, $state, $ionicLoading) {
 
     PronoteService.getAllApps().then(function(resp){
       $scope.pronotes = [];
@@ -15,11 +17,23 @@ angular.module('ent.pronotes', ['ent.pronotes_service'])
         }
     });
 
-    $scope.openPronote = function(link){
-      try {
-        window.open(link, '_system', 'location=no');
-      } catch (e) {
-        alert("Popup window blocked " + e.number);
+    if($state.current.name == "app.pronote"){
+      $ionicLoading.show({
+        template: '<ion-spinner icon="android"/>'
+      });
+      var iframe = document.querySelector( "#iframe" );
+      var iframeContent = iframe.contentDocument || iframe.contentWindow.document;
+      if (  iframeContent.readyState  == 'complete' ) {
+        iframe.onload = function(){
+            $ionicLoading.hide();
+        };
       }
     }
+
+    $scope.showPronote = function(link,namePronote){
+      $rootScope.pronoteName = namePronote;
+      $rootScope.link = $sce.trustAsResourceUrl(link);
+      $state.go("app.pronote");
+    }
+
   });

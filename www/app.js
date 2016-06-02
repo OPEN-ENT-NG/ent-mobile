@@ -146,11 +146,20 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     }
   })
 
-  .state('app.pronotes', {
-    url: '/pronotes',
+  .state('app.listPronotes', {
+    url: '/listPronotes',
     views: {
       'menuContent': {
-        templateUrl: 'pronotes/pronotes.html'
+        templateUrl: 'pronotes/listPronotes.html'
+      }
+    }
+  })
+
+  .state('app.pronote', {
+    url: '/pronote' ,
+    views: {
+      'menuContent': {
+        templateUrl: 'pronotes/pronote.html'
       }
     }
   })

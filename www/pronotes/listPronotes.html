@@ -1,16 +1,14 @@
-<ion-view view-title="Pronotes" ng-controller="ListingUsersCtrl">
+<ion-view view-title="Liste des Pronotes" ng-controller="ListingUsersCtrl">
 
   <ion-content>
 
     <ion-list>
       <div ng-repeat="pronote in pronotes">
-          <ion-item ng-click="openPronote(pronote.address)">
+          <ion-item ng-click="showPronote(pronote.address,pronote.name)">
             {{pronote.name}}
           </ion-item>
-        </h4>
       </div>
     </ion-list>
-
 
   </ion-content>
 
