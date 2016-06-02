@@ -142,6 +142,44 @@ angular.module('ent.workspace_service', ['ion-tree-list'])
     return deferredCombinedItems.promise;
   }
 
+  this.restoreSelectedDocuments = function(arrayDocs){
+    var promises = [];
+    var deferredCombinedItems = $q.defer();
+    var combinedItems = [];
+    angular.forEach(arrayDocs, function(item) {
+      var deferredItemList = $q.defer();
+      $http.put(domainENT+'/workspace/restore/document/'+item._id).then(function(resp) {
+        combinedItems = combinedItems.concat(resp.data);
+        deferredItemList.resolve();
+      });
+      promises.push(deferredItemList.promise);
+    });
+
+    $q.all(promises).then(function() {
+      deferredCombinedItems.resolve(combinedItems);
+    });
+    return deferredCombinedItems.promise;
+  }
+
+  this.restoreSelectedFolders = function(arrayFolders){
+    var promises = [];
+    var deferredCombinedItems = $q.defer();
+    var combinedItems = [];
+    angular.forEach(arrayFolders, function(item) {
+      var deferredItemList = $q.defer();
+      $http.put(domainENT+'/workspace/folder/restore/'+item._id).then(function(resp) {
+        combinedItems = combinedItems.concat(resp.data);
+        deferredItemList.resolve();
+      });
+      promises.push(deferredItemList.promise);
+    });
+
+    $q.all(promises).then(function() {
+      deferredCombinedItems.resolve(combinedItems);
+    });
+    return deferredCombinedItems.promise;
+  }
+
   this.getTranslation = function(){
     return $http.get(domainENT+"/workspace/i18n");
   }
