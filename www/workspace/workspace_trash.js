@@ -9,6 +9,10 @@ angular.module('ent.workspace_trash',['ent.workspace_service'])
     return false
   }
 
+  $scope.isTrash = function (){
+    return true
+  }
+
   $scope.doRefresh = function(){
     getData()
     $scope.$broadcast('scroll.refreshComplete')
@@ -44,6 +48,28 @@ angular.module('ent.workspace_trash',['ent.workspace_service'])
     });
   }
 
+  $scope.restoreSelectedItems = function(){
+    var checkedItems = getCheckedItems($scope.folders, $scope.documents)
+    $ionicLoading.show({
+      template: '<ion-spinner icon="android"/>'
+    });
+    $scope.closePopover()
+    WorkspaceService.restoreSelectedFolders(checkedItems.folders).then(function(res){
+      console.log(res);
+      WorkspaceService.restoreSelectedDocuments(checkedItems.documents).then(function(response){
+        console.log(response);
+        $rootScope.checkable = false
+        getData()
+      })
+      $ionicLoading.hide()
+
+    }, function(err){
+      $ionicLoading.hide()
+      $scope.showAlertError()
+    });
+  }
+
+
   $ionicPopover.fromTemplateUrl('workspace/popover_hierarchy.html', {
     scope: $scope
   }).then(function(popover) {
@@ -65,7 +91,7 @@ angular.module('ent.workspace_trash',['ent.workspace_service'])
   $scope.$on('$destroy', function() {
     deregisterHardBack();
   });
-  
+
   function getData(){
     $ionicLoading.show({
       template: '<ion-spinner icon="android"/>'

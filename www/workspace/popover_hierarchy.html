@@ -6,6 +6,9 @@
       <!-- Renommer -->
       <a class="item" ng-click="renameItem()" ng-show="onlyOneFolder()">{{translationWorkspace["workspace.rename"]}}</a>
 
+      <!-- Restaurer -->
+      <a class="item" ng-click="restoreSelectedItems()" ng-show="isTrash()">{{translationWorkspace["workspace.trash.restore"]}}</a>
+
 
       <!-- <a class="item" ng-show=isInbox() ng-click=editMail('REPLY_ALL')>{{translationConversation["replyall"]}}</a> -->
 
