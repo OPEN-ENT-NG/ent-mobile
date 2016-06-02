@@ -99,16 +99,15 @@ angular.module('ent.workspace_service', ['ion-tree-list'])
     return $http.post(domainENT+'/workspace/folder',data, configHeaders)
   }
 
-
-
-  this.deleteSelectedDocuments = function(arrayDocs){
+  this.deleteSelectedDocuments = function(arrayDocs, isMyDocuments){
     var promises = [];
     var deferredCombinedItems = $q.defer();
     var combinedItems = [];
 
     angular.forEach(arrayDocs, function(item) {
+      var request = isMyDocuments ? $http.put(domainENT+'/workspace/document/trash/'+item._id) : $http.delete(domainENT+'/workspace/document/'+item._id)
       var deferredItemList = $q.defer();
-      $http.put(domainENT+'/workspace/document/trash/'+item._id).then(function(resp) {
+      request.then(function(resp) {
         combinedItems = combinedItems.concat(resp.data);
         deferredItemList.resolve();
       });
@@ -121,14 +120,16 @@ angular.module('ent.workspace_service', ['ion-tree-list'])
     return deferredCombinedItems.promise;
   }
 
-  this.deleteSelectedFolders = function(arrayFolders){
+  this.deleteSelectedFolders = function(arrayFolders, isMyDocuments){
     var promises = [];
     var deferredCombinedItems = $q.defer();
     var combinedItems = [];
 
     angular.forEach(arrayFolders, function(item) {
+      var request = isMyDocuments ? $http.put(domainENT+'/workspace/folder/trash/'+item._id) : $http.delete(domainENT+'/workspace/folder/'+item._id)
+
       var deferredItemList = $q.defer();
-      $http.put(domainENT+'/workspace/folder/trash/'+item._id).then(function(resp) {
+      request.then(function(resp) {
         combinedItems = combinedItems.concat(resp.data);
         deferredItemList.resolve();
       });

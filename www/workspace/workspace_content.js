@@ -3,7 +3,7 @@ angular.module('ent.workspace_content',['ent.workspace_service',])
 .controller('WorkspaceFolderContentCtlr', function($scope, $rootScope, $stateParams, $state, WorkspaceService, $ionicLoading, MimeTypeFactory, $cordovaProgress, CreateNewFolderPopUpFactory, $ionicPopup, $cordovaVibration, $ionicHistory, $ionicPlatform, $ionicPopover, RenamePopUpFactory){
 
   var filter = getFilter($stateParams.nameWorkspaceFolder)
-  $scope.checkable = false
+  $rootScope.checkable = false
   getData()
 
 
@@ -12,11 +12,14 @@ angular.module('ent.workspace_content',['ent.workspace_service',])
   }
 
   $rootScope.enableCheck = function (item) {
-    if(!$scope.checkable){
+    console.log($rootScope.checkable);
+    if(!$rootScope.checkable){
       $cordovaVibration.vibrate(100)     // Vibrate 100ms
-      $scope.checkable = true
+      $rootScope.checkable = true
       item.checked = true
     }
+    console.log($rootScope.checkable);
+
   }
 
   $scope.newFolder = function(){
@@ -74,9 +77,11 @@ angular.module('ent.workspace_content',['ent.workspace_service',])
   }
 
   $scope.getTitle = function(){
-    var checkedItems = getCheckedItems($scope.folders, $scope.documents)
-    var count = checkedItems.folders.length + checkedItems.documents.length
-    return $scope.checkable ? count:$rootScope.translationWorkspace[$stateParams.nameWorkspaceFolder]
+    if($rootScope.checkable){
+      var checkedItems = getCheckedItems($scope.folders, $scope.documents)
+      var count = checkedItems.folders.length + checkedItems.documents.length
+    }
+    return $rootScope.checkable ? count:$rootScope.translationWorkspace[$stateParams.nameWorkspaceFolder]
   }
 
   $scope.gotInDepthFolder = function(folder){
@@ -97,12 +102,12 @@ angular.module('ent.workspace_content',['ent.workspace_service',])
       template: '<ion-spinner icon="android"/>'
     });
     $scope.closePopover()
-    WorkspaceService.deleteSelectedFolders(checkedItems.folders).then(function(res){
+    WorkspaceService.deleteSelectedFolders(checkedItems.folders, $rootScope.isMyDocuments()).then(function(res){
       console.log(res);
-      WorkspaceService.deleteSelectedDocuments(checkedItems.documents).then(function(response){
+      WorkspaceService.deleteSelectedDocuments(checkedItems.documents, $rootScope.isMyDocuments()).then(function(response){
         console.log(response);
         getData()
-        $scope.checkable = false
+        $rootScope.checkable = false
       })
     }, function(err){
       $ionicLoading.hide()
@@ -126,7 +131,7 @@ angular.module('ent.workspace_content',['ent.workspace_service',])
         WorkspaceService.renameItem(item, type, resp).then(function(response){
           console.log(response)
           $scope.closePopover()
-          $scope.checkable = false
+          $rootScope.checkable = false
           getData()
         }, function(err){
           $ionicLoading.hide()
@@ -146,20 +151,22 @@ angular.module('ent.workspace_content',['ent.workspace_service',])
     $rootScope.popover = popover;
   });
 
-
-  $scope.$ionicGoBack = function() {
-    if($scope.checkable){
-      $scope.checkable = false;
-      _.each(getCheckedItems($scope.folders, $scope.documents), function(item){ item.checked = false;});
+  $rootScope.$ionicGoBack = function() {
+    if($rootScope.checkable){
+      $rootScope.checkable = false;
+      setUnchecked($scope.folders)
+      setUnchecked($scope.documents)
     } else {
       $ionicHistory.goBack();
     }
   };
 
   var doCustomBack= function() {
-    if($scope.checkable){
-      $scope.checkable = false;
-      $scope.$apply();
+    if($rootScope.checkable){
+      $rootScope.checkable = false;
+      setUnchecked($scope.folders)
+      setUnchecked($scope.documents)
+      $rootScope.$apply();
     } else {
       $ionicHistory.goBack();
     }
@@ -169,6 +176,7 @@ angular.module('ent.workspace_content',['ent.workspace_service',])
   $scope.$on('$destroy', function() {
     deregisterHardBack();
   });
+
 
   function getData(){
     $ionicLoading.show({
@@ -212,49 +220,3 @@ angular.module('ent.workspace_content',['ent.workspace_service',])
     })
   }
 })
-
-function getCheckedItems(arrayFolders, arrayDocs){
-  return {
-    folders: getCheckedFolders(arrayFolders),
-    documents: getCheckedDocuments(arrayDocs)
-  }
-}
-
-function getCheckedFolders(arrayFolders){
-  var checkedFolders =[]
-  for(var i=0; i<arrayFolders.length; i++){
-    if(arrayFolders[i].checked){
-      checkedFolders.push(arrayFolders[i])
-    }
-  }
-  return checkedFolders
-}
-
-function getCheckedDocuments(arrayDocs){
-  var checkedDocuments =[]
-  for(var i=0; i<arrayDocs.length; i++){
-    if(arrayDocs[i].checked){
-      checkedDocuments.push(arrayDocs[i])
-    }
-  }
-  return checkedDocuments
-}
-
-
-function getFilter(nameWorkspaceFolder){
-  var filter ="";
-
-  switch(nameWorkspaceFolder){
-    case "documents":
-      filter="owner";
-      break;
-      case "trash":
-        filter="owner";
-        break;
-        default:
-          filter = nameWorkspaceFolder;
-          break;
-        }
-
-        return filter;
-      }

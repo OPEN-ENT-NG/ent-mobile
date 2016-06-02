@@ -58,7 +58,7 @@ angular.module('ent.workspace_folder_depth',['ent.workspace_service'])
         WorkspaceService.renameItem(item, type, resp).then(function(response){
           console.log(response)
           $scope.closePopover()
-          $scope.checkable = false
+          $rootScope.checkable = false
           getData()
         }, function(err){
           $ionicLoading.hide()
@@ -105,12 +105,12 @@ angular.module('ent.workspace_folder_depth',['ent.workspace_service'])
       template: '<ion-spinner icon="android"/>'
     });
     $scope.closePopover()
-    WorkspaceService.deleteSelectedFolders(checkedItems.folders).then(function(res){
+    WorkspaceService.deleteSelectedFolders(checkedItems.folders, $rootScope.isMyDocuments()).then(function(res){
       console.log(res);
       WorkspaceService.deleteSelectedDocuments(checkedItems.documents).then(function(response){
         console.log(response);
         getData()
-        $scope.checkable = false
+        $rootScope.checkable = false
       })
     }, function(err){
       $ionicLoading.hide()
@@ -124,30 +124,21 @@ angular.module('ent.workspace_folder_depth',['ent.workspace_service'])
     $rootScope.popover = popover;
   });
 
-  $scope.$ionicGoBack = function() {
-    if($scope.checkable){
-      $scope.checkable = false;
-      // _.each(getCheckedItems($scope.folders, $scope.documents), function(item){ item.checked = false;});
-    } else {
-      $ionicHistory.goBack();
-    }
-  };
-
   var doCustomBack= function() {
-    if($scope.checkable){
-      $scope.checkable = false;
-      // initCheckedValue();
-      $scope.$apply();
+    if($rootScope.checkable){
+      $rootScope.checkable = false;
+      setUnchecked($scope.folders)
+      setUnchecked($scope.documents)
+      $rootScope.$apply();
     } else {
       $ionicHistory.goBack();
     }
   };
 
-  var deregisterHardBack= $ionicPlatform.registerBackButtonAction(doCustomBack, 101)
+  var deregisterHardBack= $ionicPlatform.registerBackButtonAction(doCustomBack, 101);
   $scope.$on('$destroy', function() {
-    deregisterHardBack()
+    deregisterHardBack();
   });
-
 
   function getData(){
     $ionicLoading.show({
