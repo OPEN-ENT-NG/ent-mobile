@@ -292,9 +292,10 @@ angular.module('ent.workspace_service', ['ion-tree-list'])
             default:
               break;
             }
-            doc.icon_image = "/workspace/document/"+doc._id+"?thumbnail="+dimensions;
+            doc.icon_image = "/workspace/document/"+doc._id+"?thumbnail="+dimensions
+            doc.image = "/workspace/document/"+doc._id
           } else {
-            doc.icon_image = localStorage.getItem('skin')+"/../../img/icons/"+getThumbnailByMimeType(doc.metadata["content-type"]);
+            doc.icon_image = localStorage.getItem('skin')+"/../../img/icons/"+getThumbnailByMimeType(doc.metadata["content-type"])
           }
           return doc;
         }

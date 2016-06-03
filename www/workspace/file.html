@@ -12,7 +12,7 @@
 
       <ion-card-content class="item">
         <div class="cardCenter">
-          <img class="file-image" ng-src="{{getImageUrl(doc.icon_image)}}" >
+          <img class="file-image" ng-src="{{getImageUrl( doc.image ? doc.image:doc.icon_image)}}" >
         </div>
 
         <div class="comment"  ng-show="post.comments.length != 0">
