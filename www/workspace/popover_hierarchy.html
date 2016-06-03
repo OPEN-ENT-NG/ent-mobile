@@ -1,6 +1,7 @@
 <ion-popover-view class="fit">
   <ion-content>
     <ion-list>
+      <!-- supprimer -->
       <a class="item" ng-click="deleteSelectedItems()">{{translationWorkspace["workspace.delete"]}}</a>
 
       <!-- Renommer -->
@@ -8,6 +9,9 @@
 
       <!-- Restaurer -->
       <a class="item" ng-click="restoreSelectedItems()" ng-show="isTrash()">{{translationWorkspace["workspace.trash.restore"]}}</a>
+
+      <!-- Restaurer -->
+      <a class="item" ng-click="copySelectedItems()" ng-show="isMyDocuments()">{{translationWorkspace["workspace.copy"]}}</a>
 
 
       <!-- <a class="item" ng-show=isInbox() ng-click=editMail('REPLY_ALL')>{{translationConversation["replyall"]}}</a> -->

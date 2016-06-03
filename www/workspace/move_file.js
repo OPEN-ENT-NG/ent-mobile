@@ -79,11 +79,17 @@ angular.module('ent.workspace_move_file',['ent.workspace_service', 'ion-tree-lis
   function copyItem(item){
     $scope.getConfirmPopup($rootScope.translationWorkspace["workspace.copy"], "Voulez-vous copier ce document dans le dossier "+item.folder.name+"?",$rootScope.translationWorkspace["cancel"],"OK").then(function(res){
       if(res!=null){
-        WorkspaceService.copyDoc($rootScope.doc._id, item.folder.folder).then(function(res){
+        WorkspaceService.copyFolder($rootScope.folder, item.folder.folder).then(function(res){ //tmp
           $ionicHistory.goBack(-2);
         }, function(err){
           $scope.showAlertError()
         })
+        //
+        // WorkspaceService.copyDoc($rootScope.doc._id, item.folder.folder).then(function(res){
+        //   $ionicHistory.goBack(-2);
+        // }, function(err){
+        //   $scope.showAlertError()
+        // })
       }
     })
   }

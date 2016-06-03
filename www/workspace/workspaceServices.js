@@ -90,13 +90,17 @@ angular.module('ent.workspace_service', ['ion-tree-list'])
   }
 
   this.createFolder = function (folderName, path){
-    var configHeaders = {
-      headers: { 'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8" }
-    };
     var data = "name="+folderName;
     data = path!='owner' ? "name="+folderName+"&path="+path: data;
     console.log(data);
     return $http.post(domainENT+'/workspace/folder',data, configHeaders)
+  }
+
+  this.copyFolder = function (folder, path){
+    var data = "name="+folder.name;
+    data = path!='owner' ? "name="+folder.name+"&path="+path: data;
+    console.log(data);
+    return $http.put(domainENT+'/workspace/folder/copy/'+folder._id, data, configHeaders)
   }
 
   this.deleteSelectedDocuments = function(arrayDocs, isMyDocuments){

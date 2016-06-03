@@ -141,6 +141,12 @@ angular.module('ent.workspace_content',['ent.workspace_service',])
     })
   }
 
+  $scope.copySelectedItems = function() {
+    console.log(getCheckedFolders($scope.folders)[0]);
+    $rootScope.folder = getCheckedFolders($scope.folders)[0]
+    $state.go('app.workspace_tree', {action:'copy'})
+  }
+
   $scope.onlyOneFolder = function(){
     return getCheckedFolders($scope.folders).length ==1 && getCheckedDocuments($scope.documents).length ==0
   }
