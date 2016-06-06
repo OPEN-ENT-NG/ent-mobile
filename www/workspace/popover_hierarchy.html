@@ -13,6 +13,9 @@
       <!-- Copier dans l'arborescence -->
       <a class="item" ng-click="copySelectedItems()" ng-show="!isTrash()">{{getCopyExpression()}}</a>
 
+      <!-- Restaurer -->
+      <a class="item" ng-click="moveSelectedItems()" ng-show="isMyDocuments()">{{translationWorkspace["workspace.move"]}}</a>
+
 
       <!-- <a class="item" ng-show=isInbox() ng-click=editMail('REPLY_ALL')>{{translationConversation["replyall"]}}</a> -->
 

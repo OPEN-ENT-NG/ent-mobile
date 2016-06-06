@@ -80,6 +80,51 @@ angular.module('ent.workspace_service', ['ion-tree-list'])
     return $http.put(domainENT+'/workspace/documents/move/'+idDoc+folderName)
   }
 
+  this.moveSelectedDocs = function(arrayDocs, folderName){
+    var promises = []
+    var deferredCombinedItems = $q.defer()
+    var combinedItems = []
+    folderName = folderName=='owner' ? '':'/'+folderName
+
+    angular.forEach(arrayDocs, function(item) {
+      var deferredItemList = $q.defer();
+      $http.post(domainENT+'/workspace/documents/move/'+item._id+folderName).then(function(resp) {
+        combinedItems = combinedItems.concat(resp.data);
+        deferredItemList.resolve();
+      });
+      promises.push(deferredItemList.promise);
+    });
+
+    $q.all(promises).then(function() {
+      deferredCombinedItems.resolve(combinedItems);
+    });
+    return deferredCombinedItems.promise;
+  }
+
+  this.moveSelectedFolders = function(arrayFolders, folderName){
+    var promises = []
+    var deferredCombinedItems = $q.defer()
+    var combinedItems = []
+    if(folderName=='owner'){
+      folderName=''
+    }
+
+    angular.forEach(arrayDocs, function(item) {
+      var deferredItemList = $q.defer();
+      $http.put(domainENT+'/workspace/folders/move/'+item._id,"path="+folderName, configHeaders).then(function(resp) {
+        combinedItems = combinedItems.concat(resp.data);
+        deferredItemList.resolve();
+      });
+      promises.push(deferredItemList.promise);
+    });
+
+    $q.all(promises).then(function() {
+      deferredCombinedItems.resolve(combinedItems);
+    });
+    return deferredCombinedItems.promise;
+  }
+
+
   this.copyDoc = function(idDoc, folderName){
     folderName = folderName=='owner' ? '':'/'+folderName
     return $http.post(domainENT+'/workspace/documents/copy/'+idDoc+folderName)
@@ -135,7 +180,6 @@ angular.module('ent.workspace_service', ['ion-tree-list'])
 
     angular.forEach(arrayDocs, function(item) {
       var deferredItemList = $q.defer();
-      console.log(domainENT+'/workspace/documents/copy/'+item._id+folderName);
       $http.post(domainENT+'/workspace/documents/copy/'+item._id+folderName).then(function(resp) {
         combinedItems = combinedItems.concat(resp.data);
         deferredItemList.resolve();

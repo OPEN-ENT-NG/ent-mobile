@@ -157,6 +157,14 @@ angular.module('ent.workspace_content',['ent.workspace_service',])
     $state.go('app.workspace_tree', {action:'copy'})
   }
 
+  $scope.moveSelectedItems = function() {
+    $scope.closePopover()
+    $rootScope.checkable = false
+    MovingItemsFactory.setMovingDocs(getCheckedDocuments($scope.documents))
+    MovingItemsFactory.setMovingFolders(getCheckedFolders($scope.folders))
+    $state.go('app.workspace_tree', {action:'move'})
+  }
+
   $scope.onlyOneFolder = function(){
     if($rootScope.checkable){
       return getCheckedFolders($scope.folders).length ==1 && getCheckedDocuments($scope.documents).length ==0

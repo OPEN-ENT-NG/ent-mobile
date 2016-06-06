@@ -84,6 +84,8 @@ angular.module('ent.workspace_file',['ent.workspace_service'])
   }
 
   $scope.moveDoc = function () {
+    MovingItemsFactory.setMovingDocs([$rootScope.doc])
+    MovingItemsFactory.setMovingFolders([])
     $state.go('app.workspace_tree', {action:'move'})
   }
 

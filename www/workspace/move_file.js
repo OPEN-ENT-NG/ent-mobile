@@ -67,12 +67,14 @@ angular.module('ent.workspace_move_file',['ent.workspace_service', 'ion-tree-lis
     if(item.folder.folder == $rootScope.doc.folder){
       $scope.getAlertPopupNoTitle($rootScope.translationWorkspace["workspace.forbidden.move.folder.in.itself"])
     } else {
-      $scope.getConfirmPopup($rootScope.translationWorkspace["move"], "Voulez-vous déplacer ce document dans le dossier "+item.folder.name+"?",$rootScope.translationWorkspace["cancel"],"OK").then(function(res){
-        if(res!=null){
-          WorkspaceService.moveDoc($rootScope.doc._id, item.folder.folder).then(function(res){
-            $ionicHistory.goBack(-2);
-          }, function(err){
-            $scope.showAlertError()
+      $scope.getConfirmPopup($rootScope.translationWorkspace["move"], "Voulez-vous déplacer ce document dans le dossier "+item.folder.name+"?",$rootScope.translationWorkspace["cancel"],"OK").then(function(response){
+        if(response!=null){
+          WorkspaceService.moveSelectedFolders(foldersToMove, item.folder.folder).then(function(res){
+            WorkspaceService.moveSelectedDocs(docsToMove, item.folder.folder).then(function(response){
+              $ionicHistory.goBack();
+            }, function(err){
+              $scope.showAlertError()
+            })
           })
         }
       })

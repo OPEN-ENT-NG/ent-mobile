@@ -20,6 +20,15 @@ angular.module('ent.workspace_folder_depth',['ent.workspace_service'])
     $state.go('app.workspace_tree', {action:'copy'})
   }
 
+  $scope.moveSelectedItems = function() {
+    $scope.closePopover()
+    $rootScope.checkable = false
+    MovingItemsFactory.setMovingDocs(getCheckedDocuments($scope.documents))
+    MovingItemsFactory.setMovingFolders(getCheckedFolders($scope.folders))
+    $state.go('app.workspace_tree', {action:'move'})
+  }
+
+
   $scope.getTitle = function(){
     return $stateParams.nameFolder.length !=0 ? $stateParams.nameFolder:$stateParams.parentFolderName;
   }
