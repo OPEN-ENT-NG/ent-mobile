@@ -1,6 +1,6 @@
 angular.module('ent.workspace_file',['ent.workspace_service'])
 
-.controller('WorkspaceFileCtlr', function($scope, $rootScope, $ionicPopup, domainENT, WorkspaceService, $ionicLoading, $stateParams, $ionicHistory,  $ionicPopover,$state, RenamePopUpFactory){
+.controller('WorkspaceFileCtlr', function($scope, $rootScope, $ionicPopup, domainENT, WorkspaceService, $ionicLoading, $stateParams, $ionicHistory,  $ionicPopover,$state, RenamePopUpFactory, MovingItemsFactory){
 
   console.log($rootScope.doc);
   $rootScope.doc.ownerPhoto = '/userbook/avatar/'+$rootScope.doc.owner
@@ -88,6 +88,8 @@ angular.module('ent.workspace_file',['ent.workspace_service'])
   }
 
   $scope.copyDoc = function(){
+    MovingItemsFactory.setMovingDocs([$rootScope.doc])
+    MovingItemsFactory.setMovingFolders([])
     $state.go('app.workspace_tree', {action:'copy'})
   }
 

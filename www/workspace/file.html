@@ -61,7 +61,7 @@
     <button mfb-button icon="ion-trash-a" ng-click="trashDoc()" label={{translationWorkspace["workspace.delete"]}}></button>
     <button mfb-button icon="ion-edit" ng-click="renameDoc()" label={{translationWorkspace["workspace.rename"]}}></button>
     <button mfb-button icon="moveicon-" ng-click="moveDoc()" label={{translationWorkspace["workspace.move"]}}></button>
-    <button mfb-button icon="fa fa-clone" ng-click="copyDoc()" label={{translationWorkspace["workspace.copy"]}}></button>
+    <button mfb-button icon="fa fa-clone" ng-click="copyDoc()" label={{getCopyExpression()}}></button>
 
   </nav>
 

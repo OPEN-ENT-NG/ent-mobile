@@ -6,7 +6,6 @@ angular.module('ent.workspace_folder_depth',['ent.workspace_service'])
 
   getData();
 
-
   $scope.doRefresh = function(){
     getData()
     $scope.$broadcast('scroll.refreshComplete')

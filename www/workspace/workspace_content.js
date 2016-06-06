@@ -11,6 +11,14 @@ angular.module('ent.workspace_content',['ent.workspace_service',])
     return $stateParams.nameWorkspaceFolder == "documents"
   }
 
+  $rootScope.getCopyExpression = function(){
+    if($rootScope.isMyDocuments()){
+      return $rootScope.translationWorkspace["workspace.copy"]
+    } else {
+      return $rootScope.translationWorkspace["workspace.move.racktodocs"]
+    }
+  }
+
   $rootScope.enableCheck = function (item) {
     console.log($rootScope.checkable);
     if(!$rootScope.checkable){
