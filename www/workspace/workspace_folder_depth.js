@@ -1,11 +1,9 @@
 angular.module('ent.workspace_folder_depth',['ent.workspace_service'])
 
-.controller('WorkspaceFolderDepthCtlr', function($scope, $rootScope, $stateParams, $state, WorkspaceService, $ionicLoading, MimeTypeFactory, $cordovaProgress, CreateNewFolderPopUpFactory, $ionicPopover,$ionicPlatform, $ionicHistory, RenamePopUpFactory){
+.controller('WorkspaceFolderDepthCtlr', function($scope, $rootScope, $stateParams, $state, WorkspaceService, $ionicLoading, MimeTypeFactory, $cordovaProgress, CreateNewFolderPopUpFactory, $ionicPopover,$ionicPlatform, $ionicHistory, RenamePopUpFactory, MovingItemsFactory){
 
   var fullFolderName = $stateParams.nameFolder.length !=0 ? $stateParams.parentFolderName + '_' + $stateParams.nameFolder : $stateParams.parentFolderName;
 
-  console.log('$stateParams.parentFolderName '+$stateParams.parentFolderName);
-  console.log('$stateParams.nameFolder '+$stateParams.nameFolder);
   getData();
 
 
@@ -13,6 +11,14 @@ angular.module('ent.workspace_folder_depth',['ent.workspace_service'])
     getData()
     $scope.$broadcast('scroll.refreshComplete')
     $scope.$apply()
+  }
+
+  $scope.copySelectedItems = function() {
+    $scope.closePopover()
+    $rootScope.checkable = false
+    MovingItemsFactory.setMovingDocs(getCheckedDocuments($scope.documents))
+    MovingItemsFactory.setMovingFolders(getCheckedFolders($scope.folders))
+    $state.go('app.workspace_tree', {action:'copy'})
   }
 
   $scope.getTitle = function(){
@@ -68,7 +74,6 @@ angular.module('ent.workspace_folder_depth',['ent.workspace_service'])
     })
   }
 
-
   $scope.addDocument = function(ele){
 
     var newDoc = ele.files[0];
@@ -96,7 +101,9 @@ angular.module('ent.workspace_folder_depth',['ent.workspace_service'])
   }
 
   $scope.onlyOneFolder = function(){
-    return getCheckedFolders($scope.folders).length ==1 && getCheckedDocuments($scope.documents).length ==0
+    if($rootScope.checkable){
+      return getCheckedFolders($scope.folders).length ==1 && getCheckedDocuments($scope.documents).length ==0
+    }
   }
 
   $scope.deleteSelectedItems = function(){

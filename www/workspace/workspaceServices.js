@@ -103,6 +103,52 @@ angular.module('ent.workspace_service', ['ion-tree-list'])
     return $http.put(domainENT+'/workspace/folder/copy/'+folder._id, data, configHeaders)
   }
 
+  this.copySelectedFolders = function(arrayFolders, path){
+    var promises = [];
+    var deferredCombinedItems = $q.defer();
+    var combinedItems = [];
+
+    angular.forEach(arrayFolders, function(item) {
+      var data = "name="+item.name;
+      data = path!='owner' ? "name="+item.name+"&path="+path: data;
+      console.log(data);
+      var deferredItemList = $q.defer();
+      $http.put(domainENT+'/workspace/folder/copy/'+item._id, data, configHeaders).then(function(resp) {
+        combinedItems = combinedItems.concat(resp.data);
+        deferredItemList.resolve();
+      });
+      promises.push(deferredItemList.promise);
+    });
+
+    $q.all(promises).then(function() {
+      deferredCombinedItems.resolve(combinedItems);
+    });
+    return deferredCombinedItems.promise;
+  }
+
+  this.copySelectedDocs = function(arrayDocs, folderName){
+    console.log(arrayDocs)
+    var promises = []
+    var deferredCombinedItems = $q.defer()
+    var combinedItems = []
+    folderName = folderName == 'owner' ? '' : '/'+folderName
+
+    angular.forEach(arrayDocs, function(item) {
+      var deferredItemList = $q.defer();
+      console.log(domainENT+'/workspace/documents/copy/'+item._id+folderName);
+      $http.post(domainENT+'/workspace/documents/copy/'+item._id+folderName).then(function(resp) {
+        combinedItems = combinedItems.concat(resp.data);
+        deferredItemList.resolve();
+      });
+      promises.push(deferredItemList.promise);
+    });
+
+    $q.all(promises).then(function() {
+      deferredCombinedItems.resolve(combinedItems);
+    });
+    return deferredCombinedItems.promise;
+  }
+
   this.deleteSelectedDocuments = function(arrayDocs, isMyDocuments){
     var promises = [];
     var deferredCombinedItems = $q.defer();
@@ -269,6 +315,27 @@ angular.module('ent.workspace_service', ['ion-tree-list'])
   return {
     getPopup: getPopup
   };
+})
+
+.factory("MovingItemsFactory", function(){
+    var foldersToMove = []
+    var docsToMove = []
+
+    return {
+           getMovingFolders: function () {
+               return foldersToMove;
+           },
+           getMovingDocs: function () {
+               return docsToMove;
+           },
+           setMovingFolders: function (movingFolders) {
+               foldersToMove = movingFolders;
+           },
+           setMovingDocs: function (movingDocs) {
+               docsToMove = movingDocs;
+           }
+       };
+
 })
 
 .factory("MimeTypeFactory", function(){

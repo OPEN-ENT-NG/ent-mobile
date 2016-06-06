@@ -1,6 +1,6 @@
 angular.module('ent.workspace_trash',['ent.workspace_service'])
 
-.controller('WorkspaceTrashContentCtlr', function($scope, $rootScope, WorkspaceService, $ionicLoading, MimeTypeFactory, $ionicHistory, $ionicPopup, $ionicLoading, $ionicPopover, $ionicPlatform){
+.controller('WorkspaceTrashContentCtlr', function($scope, $rootScope, WorkspaceService, $ionicLoading, MimeTypeFactory, $ionicHistory, $ionicPopup, $ionicPopover, $ionicPlatform){
 
   getData()
   $rootScope.checkable = false

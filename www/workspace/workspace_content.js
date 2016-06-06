@@ -1,6 +1,6 @@
 angular.module('ent.workspace_content',['ent.workspace_service',])
 
-.controller('WorkspaceFolderContentCtlr', function($scope, $rootScope, $stateParams, $state, WorkspaceService, $ionicLoading, MimeTypeFactory, $cordovaProgress, CreateNewFolderPopUpFactory, $ionicPopup, $cordovaVibration, $ionicHistory, $ionicPlatform, $ionicPopover, RenamePopUpFactory){
+.controller('WorkspaceFolderContentCtlr', function($scope, $rootScope, $stateParams, $state, WorkspaceService, $ionicLoading, MimeTypeFactory, $cordovaProgress, CreateNewFolderPopUpFactory, $ionicPopup, $cordovaVibration, $ionicHistory, $ionicPlatform, $ionicPopover, RenamePopUpFactory, MovingItemsFactory){
 
   var filter = getFilter($stateParams.nameWorkspaceFolder)
   $rootScope.checkable = false
@@ -142,13 +142,17 @@ angular.module('ent.workspace_content',['ent.workspace_service',])
   }
 
   $scope.copySelectedItems = function() {
-    console.log(getCheckedFolders($scope.folders)[0]);
-    $rootScope.folder = getCheckedFolders($scope.folders)[0]
+    $scope.closePopover()
+    $rootScope.checkable = false
+    MovingItemsFactory.setMovingDocs(getCheckedDocuments($scope.documents))
+    MovingItemsFactory.setMovingFolders(getCheckedFolders($scope.folders))
     $state.go('app.workspace_tree', {action:'copy'})
   }
 
   $scope.onlyOneFolder = function(){
-    return getCheckedFolders($scope.folders).length ==1 && getCheckedDocuments($scope.documents).length ==0
+    if($rootScope.checkable){
+      return getCheckedFolders($scope.folders).length ==1 && getCheckedDocuments($scope.documents).length ==0
+    }
   }
 
   $ionicPopover.fromTemplateUrl('workspace/popover_hierarchy.html', {

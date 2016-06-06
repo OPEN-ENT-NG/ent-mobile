@@ -39,21 +39,19 @@ function setUnchecked (array){
   return array
 }
 
-
 function getFilter(nameWorkspaceFolder){
   var filter ="";
-
   switch(nameWorkspaceFolder){
     case "documents":
-    filter="owner";
-    break;
-    case "trash":
-    filter="owner";
-    break;
-    default:
-    filter = nameWorkspaceFolder;
-    break;
-  }
+      filter="owner";
+      break;
+      case "trash":
+        filter="owner";
+        break;
+        default:
+          filter = nameWorkspaceFolder;
+          break;
+        }
 
-  return filter;
-}
+        return filter;
+      }

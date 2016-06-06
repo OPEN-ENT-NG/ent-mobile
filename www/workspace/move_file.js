@@ -1,9 +1,12 @@
 angular.module('ent.workspace_move_file',['ent.workspace_service', 'ion-tree-list'])
 
-.controller('MoveDocCtrl', function($scope, $rootScope, WorkspaceService, $state, $ionicPopup, $ionicHistory, $stateParams, CreateNewFolderPopUpFactory){
+.controller('MoveDocCtrl', function($scope, $rootScope, WorkspaceService, $state, $ionicPopup, $ionicHistory, $stateParams, CreateNewFolderPopUpFactory, MovingItemsFactory){
 
   var choosenFolder={}
   getFolders()
+
+  var foldersToMove = MovingItemsFactory.getMovingFolders()
+  var docsToMove = MovingItemsFactory.getMovingDocs()
 
   function getFolders(){
     hierarchy = []
@@ -77,21 +80,23 @@ angular.module('ent.workspace_move_file',['ent.workspace_service', 'ion-tree-lis
   }
 
   function copyItem(item){
-    $scope.getConfirmPopup($rootScope.translationWorkspace["workspace.copy"], "Voulez-vous copier ce document dans le dossier "+item.folder.name+"?",$rootScope.translationWorkspace["cancel"],"OK").then(function(res){
-      if(res!=null){
-        WorkspaceService.copyFolder($rootScope.folder, item.folder.folder).then(function(res){ //tmp
-          $ionicHistory.goBack(-2);
-        }, function(err){
-          $scope.showAlertError()
+    $scope.getConfirmPopup($rootScope.translationWorkspace["workspace.copy"], "Voulez-vous copier ce document dans le dossier "+item.folder.name+"?",$rootScope.translationWorkspace["cancel"],"OK").then(function(response){
+      if(response!=null){
+        WorkspaceService.copySelectedFolders(foldersToMove, item.folder.folder).then(function(res){ //tmp
+          console.log(res);
+          WorkspaceService.copySelectedDocs(docsToMove, item.folder.folder).then(function(result) {
+            console.log(result);
+            $ionicHistory.goBack();
+          }, function(err){
+            $scope.showAlertError()
+          })
         })
-        //
-        // WorkspaceService.copyDoc($rootScope.doc._id, item.folder.folder).then(function(res){
-        //   $ionicHistory.goBack(-2);
-        // }, function(err){
-        //   $scope.showAlertError()
-        // })
       }
     })
+  }
+
+  $scope.getTitle = function () {
+    return $rootScope.translationWorkspace["workspace."+$stateParams.action]
   }
 
   $scope.selectFolder = function(){

@@ -1,5 +1,5 @@
 angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute','ent.actualites','ent.blog','ent.blog-list','ent.auth',
-'ent.messagerie','ent.workspace','ent.user','ent.pronotes','angularMoment','ent.test', 'ng-mfb'])
+'ent.messagerie','ent.workspace','ent.user','ent.pronotes','angularMoment','ent.test', 'ng-mfb', 'ui.router'])
 
 // .value("domainENT", "https://ent.picardie.fr")
 // .value("domainENT", "https://preprod-leo.entcore.org")
@@ -170,6 +170,12 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
       'menuContent': {
         controller: 'WorkspaceFolderContentCtlr',
         templateUrl: 'workspace/workspace_folder_content.html'
+        // resolve: {
+        //   foldersData : function(WorkspaceFoldersFactory){
+        //     var FolderData = WorkspaceFoldersFactory.getFolders(nameWorkspaceFolder)
+        //     return FolderData.$promise
+        //   }
+        // }
       }
     }
   })
@@ -228,7 +234,8 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     url: '/test',
     views: {
       'menuContent': {
-        templateUrl: 'test/input_file.html'
+        templateUrl: 'test/input_file.html',
+        controller: 'FoldersCtrl'
       }
     }
   })
