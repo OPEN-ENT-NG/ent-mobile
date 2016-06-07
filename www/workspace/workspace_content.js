@@ -1,6 +1,6 @@
 angular.module('ent.workspace_content',['ent.workspace_service',])
 
-.controller('WorkspaceFolderContentCtlr', function($scope, $rootScope, $stateParams, $state, WorkspaceService, $ionicLoading, MimeTypeFactory, $cordovaProgress, CreateNewFolderPopUpFactory, $ionicPopup, $cordovaVibration, $ionicHistory, $ionicPlatform, $ionicPopover, RenamePopUpFactory){
+.controller('WorkspaceFolderContentCtlr', function($scope, $rootScope, $stateParams, $state, WorkspaceService, $ionicLoading, MimeTypeFactory, $cordovaProgress, CreateNewFolderPopUpFactory, $ionicPopup, $cordovaVibration, $ionicHistory, $ionicPlatform, $ionicPopover, RenamePopUpFactory, MovingItemsFactory){
 
   var filter = getFilter($stateParams.nameWorkspaceFolder)
   $rootScope.checkable = false
@@ -11,15 +11,40 @@ angular.module('ent.workspace_content',['ent.workspace_service',])
     return $stateParams.nameWorkspaceFolder == "documents"
   }
 
+  $rootScope.isShared = function(){
+    return $stateParams.nameWorkspaceFolder == "shared"
+  }
+
+  /*
+  * if given group is the selected group, deselect it
+  * else, select the given group
+  */
+  $rootScope.toggleComments = function(folder) {
+    if ($rootScope.areCommentsShown(folder)) {
+      $rootScope.shownComments = null;
+    } else {
+      $rootScope.shownComments = folder;
+    }
+  };
+
+  $rootScope.areCommentsShown = function(folder) {
+    return $rootScope.shownComments === folder;
+  };
+
+  $rootScope.getCopyExpression = function(){
+    if($rootScope.isMyDocuments()){
+      return $rootScope.translationWorkspace["workspace.copy"]
+    } else {
+      return $rootScope.translationWorkspace["workspace.move.racktodocs"]
+    }
+  }
+
   $rootScope.enableCheck = function (item) {
-    console.log($rootScope.checkable);
     if(!$rootScope.checkable){
       $cordovaVibration.vibrate(100)     // Vibrate 100ms
       $rootScope.checkable = true
       item.checked = true
     }
-    console.log($rootScope.checkable);
-
   }
 
   $scope.newFolder = function(){
@@ -141,8 +166,26 @@ angular.module('ent.workspace_content',['ent.workspace_service',])
     })
   }
 
+  $scope.copySelectedItems = function() {
+    $scope.closePopover()
+    $rootScope.checkable = false
+    MovingItemsFactory.setMovingDocs(getCheckedDocuments($scope.documents))
+    MovingItemsFactory.setMovingFolders(getCheckedFolders($scope.folders))
+    $state.go('app.workspace_tree', {action:'copy'})
+  }
+
+  $scope.moveSelectedItems = function() {
+    $scope.closePopover()
+    $rootScope.checkable = false
+    MovingItemsFactory.setMovingDocs(getCheckedDocuments($scope.documents))
+    MovingItemsFactory.setMovingFolders(getCheckedFolders($scope.folders))
+    $state.go('app.workspace_tree', {action:'move'})
+  }
+
   $scope.onlyOneFolder = function(){
-    return getCheckedFolders($scope.folders).length ==1 && getCheckedDocuments($scope.documents).length ==0
+    if($rootScope.checkable){
+      return getCheckedFolders($scope.folders).length ==1 && getCheckedDocuments($scope.documents).length ==0
+    }
   }
 
   $ionicPopover.fromTemplateUrl('workspace/popover_hierarchy.html', {

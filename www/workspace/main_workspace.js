@@ -1,8 +1,5 @@
 angular.module('ent.workspace',['ent.workspace_service','ent.workspace_content', 'ent.workspace_trash','ent.workspace_folder_depth', 'ent.workspace_file', 'ent.workspace_move_file'])
 
-.controller('MainWorkspaceCtrl', function(){
-})
-
 function getCheckedItems(arrayFolders, arrayDocs){
   return {
     folders: getCheckedFolders(arrayFolders),
@@ -39,21 +36,19 @@ function setUnchecked (array){
   return array
 }
 
-
 function getFilter(nameWorkspaceFolder){
   var filter ="";
-
   switch(nameWorkspaceFolder){
     case "documents":
-    filter="owner";
-    break;
-    case "trash":
-    filter="owner";
-    break;
-    default:
-    filter = nameWorkspaceFolder;
-    break;
-  }
+      filter="owner";
+      break;
+      case "trash":
+        filter="owner";
+        break;
+        default:
+          filter = nameWorkspaceFolder;
+          break;
+        }
 
-  return filter;
-}
+        return filter;
+      }

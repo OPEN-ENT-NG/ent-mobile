@@ -13,9 +13,6 @@ angular.module('ent.workspace_service', ['ion-tree-list'])
   this.getDocumentsByFilter = function(filter,hierarchical){
     return $http.get(domainENT+"/workspace/documents?filter="+parametersUrl(filter,hierarchical))
   }
-  this.getCompleteDocumentsByFilter = function(filter,hierarchical){
-    return $http.get(domainENT+"/workspace/documents?filter="+parametersUrl(filter,hierarchical))
-  }
 
   this.getDocumentsByFolderAndFilter = function(folderName,filter){
     return $http.get(domainENT+'/workspace/documents/'+folderName+'?filter='+filter+'&hierarchical=true&_='+getTimeInMillis())
@@ -80,6 +77,51 @@ angular.module('ent.workspace_service', ['ion-tree-list'])
     return $http.put(domainENT+'/workspace/documents/move/'+idDoc+folderName)
   }
 
+  this.moveSelectedDocs = function(arrayDocs, folderName){
+    var promises = []
+    var deferredCombinedItems = $q.defer()
+    var combinedItems = []
+    folderName = folderName=='owner' ? '':'/'+folderName
+
+    angular.forEach(arrayDocs, function(item) {
+      var deferredItemList = $q.defer();
+      $http.put(domainENT+'/workspace/documents/move/'+item._id+folderName).then(function(resp) {
+        combinedItems = combinedItems.concat(resp.data);
+        deferredItemList.resolve();
+      });
+      promises.push(deferredItemList.promise);
+    });
+
+    $q.all(promises).then(function() {
+      deferredCombinedItems.resolve(combinedItems);
+    });
+    return deferredCombinedItems.promise;
+  }
+
+  this.moveSelectedFolders = function(arrayFolders, folderName){
+    var promises = []
+    var deferredCombinedItems = $q.defer()
+    var combinedItems = []
+    if(folderName=='owner'){
+      folderName=''
+    }
+
+    angular.forEach(arrayFolders, function(item) {
+      var deferredItemList = $q.defer();
+      $http.put(domainENT+'/workspace/folder/move/'+item._id,"path="+folderName, configHeaders).then(function(resp) {
+        combinedItems = combinedItems.concat(resp.data);
+        deferredItemList.resolve();
+      });
+      promises.push(deferredItemList.promise);
+    });
+
+    $q.all(promises).then(function() {
+      deferredCombinedItems.resolve(combinedItems);
+    });
+    return deferredCombinedItems.promise;
+  }
+
+
   this.copyDoc = function(idDoc, folderName){
     folderName = folderName=='owner' ? '':'/'+folderName
     return $http.post(domainENT+'/workspace/documents/copy/'+idDoc+folderName)
@@ -90,13 +132,62 @@ angular.module('ent.workspace_service', ['ion-tree-list'])
   }
 
   this.createFolder = function (folderName, path){
-    var configHeaders = {
-      headers: { 'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8" }
-    };
     var data = "name="+folderName;
     data = path!='owner' ? "name="+folderName+"&path="+path: data;
     console.log(data);
     return $http.post(domainENT+'/workspace/folder',data, configHeaders)
+  }
+
+  this.copyFolder = function (folder, path){
+    var data = "name="+folder.name;
+    data = path!='owner' ? "name="+folder.name+"&path="+path: data;
+    console.log(data);
+    return $http.put(domainENT+'/workspace/folder/copy/'+folder._id, data, configHeaders)
+  }
+
+  this.copySelectedFolders = function(arrayFolders, path){
+    var promises = [];
+    var deferredCombinedItems = $q.defer();
+    var combinedItems = [];
+
+    angular.forEach(arrayFolders, function(item) {
+      var data = "name="+item.name;
+      data = path!='owner' ? "name="+item.name+"&path="+path: data;
+      console.log(data);
+      var deferredItemList = $q.defer();
+      $http.put(domainENT+'/workspace/folder/copy/'+item._id, data, configHeaders).then(function(resp) {
+        combinedItems = combinedItems.concat(resp.data);
+        deferredItemList.resolve();
+      });
+      promises.push(deferredItemList.promise);
+    });
+
+    $q.all(promises).then(function() {
+      deferredCombinedItems.resolve(combinedItems);
+    });
+    return deferredCombinedItems.promise;
+  }
+
+  this.copySelectedDocs = function(arrayDocs, folderName){
+    console.log(arrayDocs)
+    var promises = []
+    var deferredCombinedItems = $q.defer()
+    var combinedItems = []
+    folderName = folderName == 'owner' ? '' : '/'+folderName
+
+    angular.forEach(arrayDocs, function(item) {
+      var deferredItemList = $q.defer();
+      $http.post(domainENT+'/workspace/documents/copy/'+item._id+folderName).then(function(resp) {
+        combinedItems = combinedItems.concat(resp.data);
+        deferredItemList.resolve();
+      });
+      promises.push(deferredItemList.promise);
+    });
+
+    $q.all(promises).then(function() {
+      deferredCombinedItems.resolve(combinedItems);
+    });
+    return deferredCombinedItems.promise;
   }
 
   this.deleteSelectedDocuments = function(arrayDocs, isMyDocuments){
@@ -267,6 +358,27 @@ angular.module('ent.workspace_service', ['ion-tree-list'])
   };
 })
 
+.factory("MovingItemsFactory", function(){
+    var foldersToMove = []
+    var docsToMove = []
+
+    return {
+           getMovingFolders: function () {
+               return foldersToMove;
+           },
+           getMovingDocs: function () {
+               return docsToMove;
+           },
+           setMovingFolders: function (movingFolders) {
+               foldersToMove = movingFolders;
+           },
+           setMovingDocs: function (movingDocs) {
+               docsToMove = movingDocs;
+           }
+       };
+
+})
+
 .factory("MimeTypeFactory", function(){
 
   function getThumbnailByMimeType(mimeType){
@@ -292,9 +404,10 @@ angular.module('ent.workspace_service', ['ion-tree-list'])
             default:
               break;
             }
-            doc.icon_image = "/workspace/document/"+doc._id+"?thumbnail="+dimensions;
+            doc.icon_image = "/workspace/document/"+doc._id+"?thumbnail="+dimensions
+            doc.image = "/workspace/document/"+doc._id
           } else {
-            doc.icon_image = localStorage.getItem('skin')+"/../../img/icons/"+getThumbnailByMimeType(doc.metadata["content-type"]);
+            doc.icon_image = localStorage.getItem('skin')+"/../../img/icons/"+getThumbnailByMimeType(doc.metadata["content-type"])
           }
           return doc;
         }

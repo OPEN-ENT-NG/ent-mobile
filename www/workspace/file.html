@@ -12,7 +12,7 @@
 
       <ion-card-content class="item">
         <div class="cardCenter">
-          <img class="file-image" ng-src="{{getImageUrl(doc.icon_image)}}" >
+          <img class="file-image" ng-src="{{getImageUrl( doc.image ? doc.image:doc.icon_image)}}" >
         </div>
 
         <div class="comment"  ng-show="post.comments.length != 0">
@@ -27,52 +27,34 @@
 
       </ion-card-content>
 
-      <div class="item">
-        <a class="subdued" ng-click='commentDoc()'>
-          <i class="ion-chatbox comment-button"></i>
-          {{translationWorkspace["workspace.comment"]}}
-        </a>
+        <div class="item tabs tabs-secondary tabs-icon-left">
 
-      </div>
+          <a class="tab-item" ng-click='downloadDoc()'>
+            <i class="icon downloadicon-"></i>
+          </a>
+
+          <a class="tab-item" ng-click='commentDoc()'>
+            <i class="icon ion-chatbox"></i>
+            {{translationWorkspace["workspace.comment"]}}
+          </a>
+
+          <a class="tab-item" href="#">
+            <i class="icon share-1icon-"></i>
+            {{translationWorkspace["workspace.share"]}}
+
+          </a>
+        </div>
     </div>
-  </ion-content>
-
-  <!-- <ul class="mfb-component--br mfb-zooming" data-mfb-toggle="click" data-mfb-state="">'
-    <li class="mfb-component__wrap" style="display: inline;">
-      <a ng-click="clicked()" ng-mouseenter="hovered()" ng-mouseleave="hovered()" ng-attr-data-mfb-label="{{label}}" class="mfb-component__button--main">
-       <i class="mfb-component__main-icon--resting ion-plus-round"></i>
-       <i class="mfb-component__main-icon--active "></i>
-      </a>
-      <ul class="mfb-component__list" ng-transclude>
-        <button mfb-button icon="downloadicon-" ng-click="downloadDoc()" template-url="ng-mfb-button-no-label.tpl.html"></button>
-        <button mfb-button icon="ion-trash-a" ng-click="trashDoc()" label={{translationWorkspace["workspace.delete"]}}></button>
-        <button mfb-button icon="ion-edit" ng-click="renameDoc()" label={{translationWorkspace["workspace.rename"]}}></button>
-        <button mfb-button icon="fa fa-clone" ng-click="copyDoc()" label={{translationWorkspace["workspace.copy"]}}></button>
-
-      </ul>
-  </li>
-  </ul> -->
+  </div>
+</ion-content>
 
 
+<nav mfb-menu position="br" effect="zoomin" active-icon="ion-plus-round" resting-icon="ion-plus-round" toggling-method="click" templateUrl="ng-mfb-menu-horizontal.tpl.html">
+  <!-- <button mfb-button icon="fa fa-code-fork " ng-click="versions()" label={{translationWorkspace["workspace.versions.list"]}}></button> -->
+  <button mfb-button icon="ion-trash-a" ng-click="trashDoc()" label={{translationWorkspace["workspace.delete"]}}></button>
+  <button mfb-button icon="ion-edit" ng-click="renameDoc()" label={{translationWorkspace["workspace.rename"]}}></button>
+  <button mfb-button icon="moveicon-" ng-click="moveDoc()" label={{translationWorkspace["workspace.move"]}}></button>
+  <button mfb-button icon="fa fa-clone" ng-click="copyDoc()" label={{getCopyExpression()}}></button>
 
-  <nav mfb-menu position="br" effect="zoomin" active-icon="ion-plus-round" resting-icon="ion-plus-round" toggling-method="click" templateUrl="ng-mfb-menu-horizontal.tpl.html">
-    <!-- <button mfb-button icon="downloadicon-" ng-click="downloadDoc()" template-url="ng-mfb-button-no-label.tpl.html"></button> -->
-    <!-- <button mfb-button icon="fa fa-code-fork " ng-click="versions()" label={{translationWorkspace["workspace.versions.list"]}}></button> -->
-    <button mfb-button icon="ion-trash-a" ng-click="trashDoc()" label={{translationWorkspace["workspace.delete"]}}></button>
-    <button mfb-button icon="ion-edit" ng-click="renameDoc()" label={{translationWorkspace["workspace.rename"]}}></button>
-    <button mfb-button icon="moveicon-" ng-click="moveDoc()" label={{translationWorkspace["workspace.move"]}}></button>
-    <button mfb-button icon="fa fa-clone" ng-click="copyDoc()" label={{translationWorkspace["workspace.copy"]}}></button>
-
-  </nav>
-
-  <!-- <nav mfb-menu position="br" effect="zoomin" active-icon="ion-plus-round" resting-icon="ion-plus-round" toggling-method="click">
-    <button mfb-button icon="downloadicon-" ng-click="downloadDoc()" template-url="ng-mfb-button-no-label.tpl.html"></button> -->
-    <!-- <button mfb-button icon="fa fa-code-fork " ng-click="versions()" label={{translationWorkspace["workspace.versions.list"]}}></button> -->
-    <!-- <button mfb-button icon="ion-trash-a" ng-click="trashDoc()" label={{translationWorkspace["workspace.delete"]}}></button>
-    <button mfb-button icon="ion-edit" ng-click="renameDoc()" label={{translationWorkspace["workspace.rename"]}}></button> -->
-    <!-- <button mfb-button icon="fa fa-arrows-alt" ng-click="moveDoc()" label={{translationWorkspace["workspace.move"]}}></button> -->
-    <!-- <button mfb-button icon="fa fa-clone" ng-click="copyDoc()" label={{translationWorkspace["workspace.copy"]}}></button> -->
-
-  <!-- </nav> -->
-
+</nav>
 </ion-view>

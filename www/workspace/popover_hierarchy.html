@@ -1,7 +1,8 @@
 <ion-popover-view class="fit">
   <ion-content>
     <ion-list>
-      <a class="item" ng-click="deleteSelectedItems()">{{translationWorkspace["workspace.delete"]}}</a>
+      <!-- supprimer -->
+      <a class="item" ng-click="deleteSelectedItems()" ng-show=!isShared()>{{translationWorkspace["workspace.delete"]}}</a>
 
       <!-- Renommer -->
       <a class="item" ng-click="renameItem()" ng-show="onlyOneFolder()">{{translationWorkspace["workspace.rename"]}}</a>
@@ -9,20 +10,11 @@
       <!-- Restaurer -->
       <a class="item" ng-click="restoreSelectedItems()" ng-show="isTrash()">{{translationWorkspace["workspace.trash.restore"]}}</a>
 
+      <!-- Copier dans l'arborescence -->
+      <a class="item item-text-wrap" ng-click="copySelectedItems()" ng-show="!isTrash()">{{getCopyExpression()}}</a>
 
-      <!-- <a class="item" ng-show=isInbox() ng-click=editMail('REPLY_ALL')>{{translationConversation["replyall"]}}</a> -->
-
-      <!-- reply all -->
-      <!-- <a class="item" ng-show="!isDraft()"  ng-click=editMail('FORWARD')>{{translationConversation["transfer"]}}</a> -->
-
-      <!-- déplacer -->
-      <!-- <a class="item"  ng-hide="isTrash()" ng-click=moveMessage(mail.id)>{{translationConversation["move.inside.folder"]}}</a> -->
-
-      <!-- supprimer -->
-      <!-- <a class="item"  ng-hide="isTrash()" ng-click=trash(mail.id)>{{translationConversation["delete"]}}</a> -->
-
-      <!-- restaurer -->
-      <!-- <a class="item" ng-show="isTrash()" ng-click="restoreMessage(mail.id)">{{translationConversation["restore"]}}</a> -->
+      <!-- Déplacer -->
+      <a class="item" ng-click="moveSelectedItems()" ng-show="isMyDocuments()">{{translationWorkspace["workspace.move"]}}</a>
 
     </ion-list>
   </ion-content>
