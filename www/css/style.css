@@ -5,6 +5,15 @@ ion-popover-view.fit {
 ion-popover-view.fit ion-content {
   position: relative !important;
 }
+.center-image-item i {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.margin-text-item {
+  margin-left: 10%;
+}
 
 .htmlEntContent *{
     max-width:100%;

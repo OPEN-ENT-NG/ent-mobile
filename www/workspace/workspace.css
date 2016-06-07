@@ -167,3 +167,14 @@
   padding-top: 0;
   padding-bottom: 0;
 }
+
+.numberCircle {
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    padding: 8px;
+
+    background: #FF8500;
+    color: white;
+    text-align: center;
+}

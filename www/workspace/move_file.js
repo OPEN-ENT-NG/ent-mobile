@@ -64,21 +64,17 @@ angular.module('ent.workspace_move_file',['ent.workspace_service', 'ion-tree-lis
   }
 
   function moveItem(item){
-    // if(item.folder.folder == $rootScope.doc.folder){
-    //   $scope.getAlertPopupNoTitle($rootScope.translationWorkspace["workspace.forbidden.move.folder.in.itself"])
-    // } else {
-      $scope.getConfirmPopup($rootScope.translationWorkspace["move"], "Voulez-vous déplacer ce document dans le dossier "+item.folder.name+"?",$rootScope.translationWorkspace["cancel"],"OK").then(function(response){
-        if(response!=null){
-          WorkspaceService.moveSelectedFolders(foldersToMove, item.folder.folder).then(function(res){
-            WorkspaceService.moveSelectedDocs(docsToMove, item.folder.folder).then(function(response){
-              $ionicHistory.goBack();
-            }, function(err){
-              $scope.showAlertError()
-            })
+    $scope.getConfirmPopup($rootScope.translationWorkspace["move"], "Voulez-vous déplacer ce document dans le dossier "+item.folder.name+"?",$rootScope.translationWorkspace["cancel"],"OK").then(function(response){
+      if(response!=null){
+        WorkspaceService.moveSelectedFolders(foldersToMove, item.folder.folder).then(function(res){
+          WorkspaceService.moveSelectedDocs(docsToMove, item.folder.folder).then(function(response){
+            $ionicHistory.goBack();
+          }, function(err){
+            $scope.showAlertError()
           })
-        }
-      })
-    // }
+        })
+      }
+    })
   }
 
   function copyItem(item){
@@ -104,29 +100,29 @@ angular.module('ent.workspace_move_file',['ent.workspace_service', 'ion-tree-lis
   $scope.selectFolder = function(){
     switch ($stateParams.action) {
       case 'move':
-        moveItem(choosenFolder)
-        break;
-        case 'copy':
-          copyItem(choosenFolder)
-          break;
-          default:
-            break;
-          }
-        }
+      moveItem(choosenFolder)
+      break;
+      case 'copy':
+      copyItem(choosenFolder)
+      break;
+      default:
+      break;
+    }
+  }
 
-      })
-      var hierarchy = []
-      var allFolders = []
+})
+var hierarchy = []
+var allFolders = []
 
-      function recursiveAddFolder (mainFolder, childFolder){
-        if(mainFolder.folder.folder+'_'+childFolder.name == childFolder.folder){
-          mainFolder.tree.push({folder: childFolder, name: childFolder.name, tree: []})
-          allFolders.splice(allFolders.indexOf(childFolder),1)
-        } else {
-          if(mainFolder.tree.length>0){
-            for(var k=0; k< mainFolder.tree.length; k++){
-              recursiveAddFolder(mainFolder.tree[k], childFolder)
-            }
-          }
-        }
+function recursiveAddFolder (mainFolder, childFolder){
+  if(mainFolder.folder.folder+'_'+childFolder.name == childFolder.folder){
+    mainFolder.tree.push({folder: childFolder, name: childFolder.name, tree: []})
+    allFolders.splice(allFolders.indexOf(childFolder),1)
+  } else {
+    if(mainFolder.tree.length>0){
+      for(var k=0; k< mainFolder.tree.length; k++){
+        recursiveAddFolder(mainFolder.tree[k], childFolder)
       }
+    }
+  }
+}

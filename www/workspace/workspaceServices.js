@@ -13,9 +13,6 @@ angular.module('ent.workspace_service', ['ion-tree-list'])
   this.getDocumentsByFilter = function(filter,hierarchical){
     return $http.get(domainENT+"/workspace/documents?filter="+parametersUrl(filter,hierarchical))
   }
-  this.getCompleteDocumentsByFilter = function(filter,hierarchical){
-    return $http.get(domainENT+"/workspace/documents?filter="+parametersUrl(filter,hierarchical))
-  }
 
   this.getDocumentsByFolderAndFilter = function(folderName,filter){
     return $http.get(domainENT+'/workspace/documents/'+folderName+'?filter='+filter+'&hierarchical=true&_='+getTimeInMillis())

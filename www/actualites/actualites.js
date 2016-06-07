@@ -2,8 +2,6 @@ angular.module('ent.actualites', ['ent.actualites_service'])
 
 .controller('ActualitesCtrl', function ($scope, $state, $rootScope, ActualitesService,$ionicLoading) {
 
-
-
   getActualites();
 
   $scope.getCountComments = function(info, commentsAreShown){

@@ -11,6 +11,22 @@ angular.module('ent.workspace_content',['ent.workspace_service',])
     return $stateParams.nameWorkspaceFolder == "documents"
   }
 
+  /*
+  * if given group is the selected group, deselect it
+  * else, select the given group
+  */
+  $rootScope.toggleComments = function(folder) {
+    if ($rootScope.areCommentsShown(folder)) {
+      $rootScope.shownComments = null;
+    } else {
+      $rootScope.shownComments = folder;
+    }
+  };
+
+  $rootScope.areCommentsShown = function(folder) {
+    return $rootScope.shownComments === folder;
+  };
+
   $rootScope.getCopyExpression = function(){
     if($rootScope.isMyDocuments()){
       return $rootScope.translationWorkspace["workspace.copy"]
