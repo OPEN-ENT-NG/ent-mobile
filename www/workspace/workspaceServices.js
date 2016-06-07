@@ -88,7 +88,7 @@ angular.module('ent.workspace_service', ['ion-tree-list'])
 
     angular.forEach(arrayDocs, function(item) {
       var deferredItemList = $q.defer();
-      $http.post(domainENT+'/workspace/documents/move/'+item._id+folderName).then(function(resp) {
+      $http.put(domainENT+'/workspace/documents/move/'+item._id+folderName).then(function(resp) {
         combinedItems = combinedItems.concat(resp.data);
         deferredItemList.resolve();
       });
@@ -109,9 +109,9 @@ angular.module('ent.workspace_service', ['ion-tree-list'])
       folderName=''
     }
 
-    angular.forEach(arrayDocs, function(item) {
+    angular.forEach(arrayFolders, function(item) {
       var deferredItemList = $q.defer();
-      $http.put(domainENT+'/workspace/folders/move/'+item._id,"path="+folderName, configHeaders).then(function(resp) {
+      $http.put(domainENT+'/workspace/folder/move/'+item._id,"path="+folderName, configHeaders).then(function(resp) {
         combinedItems = combinedItems.concat(resp.data);
         deferredItemList.resolve();
       });

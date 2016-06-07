@@ -20,14 +20,11 @@ angular.module('ent.workspace_content',['ent.workspace_service',])
   }
 
   $rootScope.enableCheck = function (item) {
-    console.log($rootScope.checkable);
     if(!$rootScope.checkable){
       $cordovaVibration.vibrate(100)     // Vibrate 100ms
       $rootScope.checkable = true
       item.checked = true
     }
-    console.log($rootScope.checkable);
-
   }
 
   $scope.newFolder = function(){

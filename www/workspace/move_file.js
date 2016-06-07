@@ -64,9 +64,9 @@ angular.module('ent.workspace_move_file',['ent.workspace_service', 'ion-tree-lis
   }
 
   function moveItem(item){
-    if(item.folder.folder == $rootScope.doc.folder){
-      $scope.getAlertPopupNoTitle($rootScope.translationWorkspace["workspace.forbidden.move.folder.in.itself"])
-    } else {
+    // if(item.folder.folder == $rootScope.doc.folder){
+    //   $scope.getAlertPopupNoTitle($rootScope.translationWorkspace["workspace.forbidden.move.folder.in.itself"])
+    // } else {
       $scope.getConfirmPopup($rootScope.translationWorkspace["move"], "Voulez-vous déplacer ce document dans le dossier "+item.folder.name+"?",$rootScope.translationWorkspace["cancel"],"OK").then(function(response){
         if(response!=null){
           WorkspaceService.moveSelectedFolders(foldersToMove, item.folder.folder).then(function(res){
@@ -78,7 +78,7 @@ angular.module('ent.workspace_move_file',['ent.workspace_service', 'ion-tree-lis
           })
         }
       })
-    }
+    // }
   }
 
   function copyItem(item){
