@@ -2,7 +2,7 @@
   <ion-content>
     <ion-list>
       <!-- supprimer -->
-      <a class="item" ng-click="deleteSelectedItems()">{{translationWorkspace["workspace.delete"]}}</a>
+      <a class="item" ng-click="deleteSelectedItems()" ng-show=!isShared()>{{translationWorkspace["workspace.delete"]}}</a>
 
       <!-- Renommer -->
       <a class="item" ng-click="renameItem()" ng-show="onlyOneFolder()">{{translationWorkspace["workspace.rename"]}}</a>

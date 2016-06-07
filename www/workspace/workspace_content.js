@@ -11,6 +11,10 @@ angular.module('ent.workspace_content',['ent.workspace_service',])
     return $stateParams.nameWorkspaceFolder == "documents"
   }
 
+  $rootScope.isShared = function(){
+    return $stateParams.nameWorkspaceFolder == "shared"
+  }
+
   /*
   * if given group is the selected group, deselect it
   * else, select the given group
