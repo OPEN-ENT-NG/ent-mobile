@@ -251,7 +251,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
 
   .state('login', {
     url: '/login',
-    templateUrl: 'authentification/login-credentials.html',
+    // templateUrl: 'authentification/login-credentials.html',
     controller: 'LoginCtrl'
   });
 

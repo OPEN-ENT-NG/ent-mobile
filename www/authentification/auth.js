@@ -8,12 +8,11 @@ angular.module('ent.auth', ['ent.user'])
     // navigator.splashscreen.show();
 
     if(localStorage.getItem('login')){
-      navigator.splashscreen.hide();
       $state.go("app.actualites");
+      navigator.splashscreen.hide();
+
     } else {
       login();
-
-
     }
   }
 
@@ -39,6 +38,8 @@ angular.module('ent.auth', ['ent.user'])
   }
 
   function login(){
+    navigator.splashscreen.show();
+
     var ref = window.open(domainENT+'/auth/oauth2/auth?response_type=code&state=blip&scope=userinfo&client_id=appmobile&redirect_uri='+domainENT,'_self','location=no','toolbar=no', 'clearcache=yes', 'clearsessioncache=yes');
     ref.addEventListener('loadstart', function(event) {
       var url = event.url;
