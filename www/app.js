@@ -59,7 +59,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   })
 
   if (!ionic.Platform.isIOS()) {
-    $ionicConfigProvider.scrolling.jsScrolling(false);
+    $ionicConfigProvider.scrolling.jsScrolling(false)
   }
 
   $stateProvider
@@ -112,7 +112,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     views: {
       'menuContent': {
         templateUrl: 'blogs/blog-list.html',
-        controller: "BlogListCtrl"
+        controller: 'BlogListCtrl'
       }
     }
   })
@@ -135,7 +135,6 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
       }
     }
   })
-
 
   .state('app.threads', {
     url: '/threads',
@@ -253,12 +252,11 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     url: '/login',
     // templateUrl: 'authentification/login-credentials.html',
     controller: 'LoginCtrl'
-  });
+  })
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/login');
+  $urlRouterProvider.otherwise('/login')
   // $urlRouterProvider.otherwise('/app/workspace/documents');
-
 })
 
 .controller('AppCtrl', function ($scope, $rootScope, $sce, $state, $cordovaInAppBrowser, $ionicSideMenuDelegate, $cordovaFileTransfer,$cordovaProgress, $cordovaFileOpener2, domainENT, $ionicHistory, SkinFactory, $ionicPopup, ActualitesService, MessagerieServices,PronoteService, BlogsService, WorkspaceService, $filter){
@@ -305,11 +303,9 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
 
   $scope.downloadFile = function (filename, urlFile, fileMIMEType, module){
     // Save location
-    var url = $sce.trustAsResourceUrl(urlFile);
-    var targetPath = window.FS.root.nativeURL+"ENT/"+module+"/" + filename; //revoir selon la platforme
-    console.log(targetPath);
-
-    $cordovaProgress.showSimpleWithLabelDetail(true, "Téléchargement en cours", filename);
+    var url = $sce.trustAsResourceUrl(urlFile)
+    var targetPath = window.FS.root.nativeURL + 'ENT/' + module + '/' + filename
+    $cordovaProgress.showSimpleWithLabelDetail(true, 'Téléchargement en cours', filename)
     $cordovaFileTransfer.download(url, targetPath, {}, true).then(function (result) {
       $cordovaProgress.hide();
       $scope.openLocalFile(targetPath, fileMIMEType);
@@ -327,41 +323,41 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
       targetPath,
       fileMIMEType,
       {
-        error : function(){
-          $scope.showAlertError(error);
+        error : function () {
+          $scope.showAlertError(error)
         },
-        success : function(){ }
+        success : function (){ }
       }
-    );
+    )
   }
 
-  $scope.getImageUrl= function(path){
-    if(path){
-      return domainENT+path;
+  $scope.getImageUrl = function (path) {
+    if (path) {
+      return domainENT + path
     }
   }
 
-  $scope.setCorrectImage = function(path, defaultImage){
-    var result;
-    if(path != null && path.length > 0){
-      result = path;
+  $scope.setCorrectImage = function (path, defaultImage) {
+    var result
+    if (path != null && path.length > 0) {
+      result = path
     } else {
-      if(!localStorage.getItem('skin')){
+      if (!localStorage.getItem('skin')) {
         SkinFactory.getSkin().then(function(res) {
-          localStorage.setItem('skin', res.data.skin);
-          console.log(localStorage.getItem('skin'));
-          result = localStorage.getItem('skin')+defaultImage;
+          localStorage.setItem('skin', res.data.skin)
+          console.log(localStorage.getItem('skin'))
+          result = localStorage.getItem('skin')+defaultImage
         });
       } else {
-        result = localStorage.getItem('skin')+defaultImage;
+        result = localStorage.getItem('skin')+defaultImage
       }
     }
-    return result;
+    return result
   }
 
-  var getDateAsMoment = function(date){
-    var momentDate;
-    if(moment.isMoment(date)) {
+  var getDateAsMoment = function (date) {
+    var momentDate
+    if (moment.isMoment(date)) {
       momentDate = date;
     } else if (date.$date) {
       momentDate = moment(date.$date);
@@ -392,19 +388,115 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     return $filter('bytes')(size);
   }
 
+
+
+  $scope.logout = function(){
+    localStorage.clear();
+    $ionicHistory.clearHistory()
+    $ionicHistory.clearCache();
+    navigator.splashscreen.show();
+    $state.go("login");
+    window.cookies.clear(function() {
+      console.log('Cookies cleared!');
+    });
+
+    // var success = function(status) {
+    //   console.log('Message: ' + status);
+    // }
+    //
+    // var error = function(status) {
+    //   console.log('Error: ' + status);
+    // }
+    //
+    // window.cache.clear( success, error );
+    // window.cache.cleartemp(); //
+    // ionic.Platform.exitApp(); // stops the app
+    location.reload();
+  }
+
+  function getTranslationActualites(){
+    ActualitesService.getTranslation().then(function(resp){
+      $rootScope.translationActus = resp.data
+    }, function(err){
+      $scope.showAlertError(err)
+    });
+  }
+
+  function getTranslationConversation() {
+    MessagerieServices.getTranslation().then(function(resp) {
+      $rootScope.translationConversation = resp.data
+    }), function(err) {
+      $scope.showAlertError(err)
+    };
+  }
+
+  function getTraductionBlogs(){
+    BlogsService.getTraduction().then(function(resp){
+      $rootScope.translationBlog = resp.data;
+      $rootScope.translationBlog['filters.drafts'] = $rootScope.translationBlog['filters.drafts'].substring(0,$rootScope.translationBlog['filters.drafts'].indexOf('(')-1);
+      $rootScope.translationBlog['filters.submitted'] = $rootScope.translationBlog['filters.submitted'].substring(0,$rootScope.translationBlog['filters.submitted'].indexOf('(')-1);
+    }), function(err){
+      $scope.showAlertError(err)
+    }
+  }
+
+  function getTraductionWorkspace(){
+    WorkspaceService.getTranslation().then(function(resp) {
+      $rootScope.translationWorkspace = resp.data;
+    }), function (err){
+      $scope.showAlertError(err)
+    }
+  }
+
+  $scope.getConfirmPopup = function(title, template, cancelText, okText) {
+    return $ionicPopup.confirm({
+      title: title,
+      template: template,
+      cancelText: cancelText,
+      okText: okText
+    })
+  }
+
+  $scope.getAlertPopup = function(title, template) {
+    return $ionicPopup.alert({
+      title: title,
+      template: template,
+      okText: 'OK'
+    })
+  }
+
+  $scope.getAlertPopupNoTitle = function(template) {
+    return $ionicPopup.alert({
+      template: template,
+      cssClass: 'dismiss-title', // Hide title
+      okText: 'OK'
+    })
+  }
+
+  $scope.openPopover = function($event) {
+    $rootScope.popover.show($event);
+  };
+
+  $scope.closePopover = function() {
+    $rootScope.popover.hide();
+  };
+
+  //Cleanup the popover when we're done with it!
+  $scope.$on('$destroy', function() {
+    $rootScope.popover.remove();
+  })
   // An alert dialog
-  $scope.showAlertError = function(error) {
-    console.log(error);
+  $scope.showAlertError = function (error) {
+    console.log(error)
     var title = 'Erreur de connexion'
-    var template = "Vous n'avez pas le droit d'accéder à ce contenu."
-    if(error){
-      if(error.hasOwnProperty('status')){
+    var template = 'Nous recontrons actuellement des problèmes. Veuillez réessayer dans quelques instants.'
+    if (error) {
+      if (error.hasOwnProperty('status')) {
         switch (error.status) {
           case 401:
-            title: "Oups !"
-            template = "Nous recontrons actuellement des problèmes. Veuillez réessayer dans quelques instants."
+            title = 'Oups !'
+            template = "Vous n'avez pas le droit d'accéder à ce contenu."
             break
-
             default:
             }
           }
@@ -419,104 +511,6 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
           })
         }
       }
-
-      $scope.logout = function(){
-        localStorage.clear();
-        $ionicHistory.clearHistory()
-        $ionicHistory.clearCache();
-        navigator.splashscreen.show();
-        $state.go("login");
-        window.cookies.clear(function() {
-          console.log('Cookies cleared!');
-        });
-
-        // var success = function(status) {
-        //   console.log('Message: ' + status);
-        // }
-        //
-        // var error = function(status) {
-        //   console.log('Error: ' + status);
-        // }
-        //
-        // window.cache.clear( success, error );
-        // window.cache.cleartemp(); //
-        // ionic.Platform.exitApp(); // stops the app
-        location.reload();
-      }
-
-      function getTranslationActualites(){
-        ActualitesService.getTranslation().then(function(resp){
-          $rootScope.translationActus = resp.data;
-        }, function(err){
-          $scope.showAlertError(err);
-        });
-      }
-
-      function getTranslationConversation(){
-        MessagerieServices.getTranslation().then(function(resp) {
-          $rootScope.translationConversation = resp.data;
-        }), function(err){
-          alert('ERR:'+ err);
-        };
-      }
-
-      function getTraductionBlogs(){
-        BlogsService.getTraduction().then(function(resp){
-          $rootScope.translationBlog = resp.data;
-
-          $rootScope.translationBlog["filters.drafts"] = $rootScope.translationBlog["filters.drafts"].substring(0,$rootScope.translationBlog["filters.drafts"].indexOf('(')-1);
-          $rootScope.translationBlog["filters.submitted"] = $rootScope.translationBlog["filters.submitted"].substring(0,$rootScope.translationBlog["filters.submitted"].indexOf('(')-1);
-
-        }), function(err){
-          alert('ERR:'+ err);
-        }
-      }
-
-      function getTraductionWorkspace(){
-        WorkspaceService.getTranslation().then(function(resp) {
-          $rootScope.translationWorkspace = resp.data;
-        }), function(err){
-          alert('ERR:'+ err);
-        };
-      }
-
-      $scope.getConfirmPopup = function(title, template, cancelText, okText) {
-        return $ionicPopup.confirm({
-          title: title,
-          template: template,
-          cancelText: cancelText,
-          okText: okText
-        })
-      }
-
-      $scope.getAlertPopup = function(title, template) {
-        return $ionicPopup.alert({
-          title: title,
-          template: template,
-          okText: 'OK'
-        })
-      }
-
-      $scope.getAlertPopupNoTitle = function(template) {
-        return $ionicPopup.alert({
-          template: template,
-          cssClass: 'dismiss-title', // Hide title
-          okText: 'OK'
-        })
-      }
-
-      $scope.openPopover = function($event) {
-        $rootScope.popover.show($event);
-      };
-
-      $scope.closePopover = function() {
-        $rootScope.popover.hide();
-      };
-
-      //Cleanup the popover when we're done with it!
-      $scope.$on('$destroy', function() {
-        $rootScope.popover.remove();
-      })
 
     })
     .directive('appVersion', function () {
@@ -546,27 +540,26 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
             }, 600);
           });
 
-          $elm.bind('touchend', function(evt) {
+          $elm.bind('touchend', function (evt) {
             // Prevent the onLongPress event from firing
             $scope.longPress = false;
             // If there is an on-touch-end function attached to this element, apply it
             if ($attrs.onTouchEnd) {
-              $scope.$apply(function() {
+              $scope.$apply(function () {
                 $scope.$eval($attrs.onTouchEnd)
               });
             }
-          });
+          })
         }
       };
     })
 
-    .filter('bytes', function() {
+    .filter('bytes', function () {
       return function(bytes, precision) {
-        if (isNaN(parseFloat(bytes)) || !isFinite(bytes)) return '-';
-        if (typeof precision === 'undefined') precision = 1;
-        var units = ['bytes', 'kB', 'MB', 'GB', 'TB', 'PB'],
-        number = Math.floor(Math.log(bytes) / Math.log(1024));
-        return (bytes / Math.pow(1024, Math.floor(number))).toFixed(precision) +  ' ' + units[number];
+        if (isNaN(parseFloat(bytes)) || !isFinite(bytes)) return '-'
+        if (typeof precision === 'undefined') precision = 1
+        var units = ['bytes', 'kB', 'MB', 'GB', 'TB', 'PB'], number = Math.floor(Math.log(bytes) / Math.log(1024))
+        return (bytes / Math.pow(1024, Math.floor(number))).toFixed(precision) +  ' ' + units[number]
       }
     });
 
@@ -583,7 +576,6 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
       }
       return null;
     }
-
 
     function fail() {
       console.log("failed to get filesystem");
@@ -605,7 +597,6 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
       var root = window.FS.root;
 
       var createDir = function(dir){
-        console.log("create dir " + dir);
         root.getDirectory(dir, {
           create : true,
           exclusive : false
@@ -624,7 +615,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
       };
 
       var failCB = function(){
-        console.log("failed to create dir " + dir);
+        console.log('failed to create dir ' + dir);
       };
 
       createDir(dirs.pop());
