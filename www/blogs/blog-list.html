@@ -4,14 +4,19 @@
     <ion-refresher pulling-text="Actualiser" on-refresh="doRefreshBlogs()">
     </ion-refresher>
 
-    <ion-list>
-      <a ng-repeat="blog in blogs track by $index" class="item item-thumbnail-left item-text-wrap" ng-click="goToBlog(blog)">
-        <img ng-src="{{getImageUrl(blog.thumbnail)}}"/>
-        <h2>{{blog.title}}</h2>
-        <h3>{{ blog.description }}</h3>
-        <h4>{{translationBlog["blog.by"]}} {{ blog.author.username }}</h4>
-      </a>
-    </ion-list>
+    <div ng-if="blogs.length>0">
+      <ion-list>
+        <a ng-repeat="blog in blogs track by $index" class="item item-thumbnail-left item-text-wrap" ng-click="goToBlog(blog)">
+          <img ng-src="{{getImageUrl(blog.thumbnail)}}"/>
+          <h2>{{blog.title}}</h2>
+          <h3>{{ blog.description }}</h3>
+          <h4>{{translationBlog["blog.by"]}} {{ blog.author.username }}</h4>
+        </a>
+      </ion-list>
+    </div>
 
+    <div ng-if="blogs.length==0" class="empty-content">
+      Pas de blogs disponibles
+    </div>
   </ion-content>
 </ion-view>

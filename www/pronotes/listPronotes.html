@@ -1,14 +1,19 @@
 <ion-view view-title="Liste des Pronotes" ng-controller="ListingUsersCtrl">
 
   <ion-content>
-
-    <ion-list>
-      <div ng-repeat="pronote in pronotes">
+    <div ng-if="pronotes.length>0">
+      <ion-list>
+        <div ng-repeat="pronote in pronotes">
           <ion-item ng-click="showPronote(pronote.address,pronote.name)">
             {{pronote.name}}
           </ion-item>
-      </div>
-    </ion-list>
+        </div>
+      </ion-list>
+    </div>
+
+    <div ng-if="pronotes.length==0" class="empty-content">
+      Pas de compte Pronote disponible
+    </div>
 
   </ion-content>
 

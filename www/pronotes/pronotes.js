@@ -3,9 +3,9 @@ angular.module('ent.pronotes', ['ent.pronotes_service'])
 
 
   .controller('ListingUsersCtrl', function ($scope, $rootScope, $window, PronoteService, $ionicPlatform, $sce, $state, $ionicLoading) {
+    $scope.pronotes = [];
 
     PronoteService.getAllApps().then(function(resp){
-      $scope.pronotes = [];
       if(resp != null)
         for(var i=0  ; i < resp.data.apps.length ; i++){
           if(resp.data.apps[i].name.indexOf("Pronote") > -1){

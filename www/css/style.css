@@ -11,12 +11,19 @@ ion-popover-view.fit ion-content {
   transform: translateY(-50%);
 }
 
+.empty-content{
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+  text-align: center;
+}
+
 .margin-text-item {
   margin-left: 10%;
 }
 
 .htmlEntContent *{
-    max-width:100%;
+  max-width:100%;
 }
 
 .platform-android ion-popover-view.fit {
@@ -126,29 +133,29 @@ ion-popover-view.fit ion-content {
   .fileupload-example-5 {
     position: relative;
     overflow: hidden;
-}
+  }
 
-.fileupload-example-5 input {
+  .fileupload-example-5 input {
     position: absolute;
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
     opacity: 0.001
-}
+  }
 
-.cardCenter {
-  text-align: center;
-}
+  .cardCenter {
+    text-align: center;
+  }
 
-.comment h3{
-  font-weight: bold;
-}
+  .comment h3{
+    font-weight: bold;
+  }
 
-.comment p {
-  color: black;
-}
+  .comment p {
+    color: black;
+  }
 
-.dismiss-title .popup-head {
-  display: none;
-}
+  .dismiss-title .popup-head {
+    display: none;
+  }

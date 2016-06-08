@@ -7,46 +7,46 @@
   <ion-content>
     <ion-refresher pulling-text="{{translationWorkspace[loading]}}" on-refresh="doRefresh()"></ion-refresher>
 
-    <ion-list >
-      <ion-checkbox ng-repeat="folder in folders track by $index" ng-model="folder.checked" ng-show=checkable class="checkbox-list-item">
-        <div ng-click="gotInDepthFolder(folder)" class="item item-text-wrap center-image-item" style="display: flex;">
-          <i class="folder-open-2icon- icon-file" ></i>
-          <div class="info-file margin-text-item">
-            <h2>{{folder.name}}</h2>
-            <h3>{{folder.ownerName}}</h3>
-          </div>
-        </div>
-      </ion-checkbox>
+    <div ng-if="folders.length>0 || documents.length>0">
 
-      <ion-item ng-repeat="folder in folders track by $index" class="item item-text-wrap center-image-item" on-long-press="enableCheck(folder)" ng-hide=checkable >
-        <div style="display: flex;">
-          <div ng-click="gotInDepthFolder(folder)" style="width: 90%;">
+      <ion-list >
+        <ion-checkbox ng-repeat="folder in folders track by $index" ng-model="folder.checked" ng-show=checkable class="checkbox-list-item">
+          <div ng-click="gotInDepthFolder(folder)" class="item item-text-wrap center-image-item" style="display: flex;">
             <i class="folder-open-2icon- icon-file" ></i>
             <div class="info-file margin-text-item">
               <h2>{{folder.name}}</h2>
               <h3>{{folder.ownerName}}</h3>
             </div>
           </div>
-          <!-- <div ng-click="toggleComments(folder)" ng-class="{active: areCommentsShown(folder)}" class="subdued numberCircle" ng-show="folder.comments.length>0">
+        </ion-checkbox>
+
+        <ion-item ng-repeat="folder in folders track by $index" class="item item-text-wrap center-image-item" on-long-press="enableCheck(folder)" ng-hide=checkable >
+          <div style="display: flex;">
+            <div ng-click="gotInDepthFolder(folder)" style="width: 90%;">
+              <i class="folder-open-2icon- icon-file" ></i>
+              <div class="info-file margin-text-item">
+                <h2>{{folder.name}}</h2>
+                <h3>{{folder.ownerName}}</h3>
+              </div>
+            </div>
+            <!-- <div ng-click="toggleComments(folder)" ng-class="{active: areCommentsShown(folder)}" class="subdued numberCircle" ng-show="folder.comments.length>0">
             {{folder.comments.length }}
           </div> -->
         </div>
         <!-- <ion-list>
-          <ion-item class="item-accordion item-text-wrap"  ng-repeat="comment in folder.comments track by $index" ng-show="areCommentsShown(folder)" >
-            <h3>{{comment.authorName}}, {{formatDateLocale(comment.posted)}}</h3>
-            <p>{{comment.comment}}</p>
-          </ion-item>
-        </ion-list>
-        <div class="item tabs tabs-secondary tabs-icon-left">
-          <a class="tab-item" ng-click=''>
-            <i class="icon ion-chatbox"></i>
-            {{translationWorkspace["workspace.comment"]}}
-          </a>
-        </div> -->
+        <ion-item class="item-accordion item-text-wrap"  ng-repeat="comment in folder.comments track by $index" ng-show="areCommentsShown(folder)" >
+        <h3>{{comment.authorName}}, {{formatDateLocale(comment.posted)}}</h3>
+        <p>{{comment.comment}}</p>
+      </ion-item>
+    </ion-list>
+    <div class="item tabs tabs-secondary tabs-icon-left">
+    <a class="tab-item" ng-click=''>
+    <i class="icon ion-chatbox"></i>
+    {{translationWorkspace["workspace.comment"]}}
+  </a>
+</div> -->
 
-      </div>
-    </div>
-  </ion-item>
+</ion-item>
 </ion-list>
 
 <div class="item item-divider" ng-show="folders.length>0 && documents.length>0"></div>
@@ -67,6 +67,11 @@
     </div>
   </ion-checkbox>
 </ion-list>
+</div>
+
+<div ng-if="folders.length==0 && documents.length==0" class="empty-content">
+    Ce dossier est actuellement vide
+</div>
 
 </ion-content>
 
