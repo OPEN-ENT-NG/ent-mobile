@@ -4,6 +4,11 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
 // .value("domainENT", "https://ent.picardie.fr")
 // .value("domainENT", "https://preprod-leo.entcore.org")
 .value("domainENT", "https://recette-leo.entcore.org")
+.value("listMenu", [{'name':'Actualites','icon':'newspapericon-', 'href':'#/app/actualites'},
+                    {'name':'Messagerie','icon':'mailicon-', 'href':'#/app/messagerie'},
+                    {'name':'Blog','icon':'bullhornicon-', 'href':'#/app/blog-list'},
+                    {'name':'Espace documentaire','icon':'foldericon-', 'href':'#/app/workspace'},
+                    {'name':'Pronotes','icon':'pronote-1icon-', 'href':'#/app/listPronotes'}])
 
 .run(function($ionicPlatform, $ionicLoading, $rootScope,$cordovaGlobalization, amMoment) {
 
@@ -259,10 +264,11 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   // $urlRouterProvider.otherwise('/app/workspace/documents');
 })
 
-.controller('AppCtrl', function ($scope, $rootScope, $sce, $state, $cordovaInAppBrowser, $ionicSideMenuDelegate, $cordovaFileTransfer,$cordovaProgress, $cordovaFileOpener2, domainENT, $ionicHistory, SkinFactory, $ionicPopup, ActualitesService, MessagerieServices,PronoteService, BlogsService, WorkspaceService, $filter){
+.controller('AppCtrl', function ($scope, $rootScope, $sce, $state, $cordovaInAppBrowser, $ionicSideMenuDelegate, $cordovaFileTransfer,$cordovaProgress, $cordovaFileOpener2, domainENT, listMenu, $ionicHistory, SkinFactory, $ionicPopup, ActualitesService, MessagerieServices,PronoteService, BlogsService, WorkspaceService, $filter){
 
   $rootScope.filterThreads = [];
 
+  $rootScope.listMenu = listMenu;
 
   SkinFactory.getSkin().then(function(res) {
     localStorage.setItem('skin', res.data.skin);
