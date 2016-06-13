@@ -81,21 +81,8 @@ angular.module('ent.message_detail', ['ent.message_services'])
   $ionicPopover.fromTemplateUrl('messagerie/popover_messagerie_detail.html', {
     scope: $scope
   }).then(function(popover) {
-    $scope.popover = popover;
+    $rootScope.popover = popover;
   });
-
-  $scope.openPopover = function($event) {
-    $scope.popover.show($event);
-  };
-
-  $scope.closePopover = function() {
-    $scope.popover.hide();
-  };
-
-  //Cleanup the popover when we're done with it!
-  $scope.$on('$destroy', function() {
-    $scope.popover.remove();
-  })
 
   function goToNewMail(){
     $rootScope.historyMail = $scope.mail;

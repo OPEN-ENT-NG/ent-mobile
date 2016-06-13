@@ -1,23 +1,21 @@
 angular.module('ent.auth', ['ent.user'])
-.controller('LoginCtrl', function($scope, $http, $cordovaInAppBrowser, $state, domainENT, SkinFactory, $ionicLoading) {
+.controller('LoginCtrl', function ($scope, $http, $cordovaInAppBrowser, $state, domainENT, SkinFactory, $ionicLoading) {
 
-
-  document.addEventListener("deviceready", onDeviceReady, false);
+  document.addEventListener('deviceready', onDeviceReady, false);
 
   function onDeviceReady() {
     // navigator.splashscreen.show();
 
     if(localStorage.getItem('login')){
-      navigator.splashscreen.hide();
       $state.go("app.actualites");
+      navigator.splashscreen.hide();
+
     } else {
       login();
-
-
     }
   }
 
-  $scope.doLogin= function(){
+  $scope.doLogin = function () {
     // $ionicLoading.show({
     //   template: '<i class="spinnericon- "></i>'
     // });
@@ -32,27 +30,24 @@ angular.module('ent.auth', ['ent.user'])
     // }, function errorCallback(response) {
     //   alert('Erreur '+response.status+' '+response.data.error)
     // })
-    login();
-    $state.go("app.actualites");
-
-
+    login()
+    $state.go('app.actualites')
   }
 
-  function login(){
-    var ref = window.open(domainENT+'/auth/oauth2/auth?response_type=code&state=blip&scope=userinfo&client_id=appmobile&redirect_uri='+domainENT,'_self','location=no','toolbar=no', 'clearcache=yes', 'clearsessioncache=yes');
-    ref.addEventListener('loadstart', function(event) {
-      var url = event.url;
+  function login () {
+    navigator.splashscreen.show()
 
-      if(url.startsWith(domainENT+"/timeline/timeline")) {
+    var ref = window.open(domainENT + '/auth/oauth2/auth?response_type=code&state=blip&scope=userinfo&client_id=appmobile&redirect_uri=' + domainENT, '_self','location=no','toolbar=no', 'clearcache=yes', 'clearsessioncache=yes')
+    ref.addEventListener('loadstart', function (event) {
+      var url = event.url
 
+      if (url.startsWith(domainENT + '/timeline/timeline')) {
         // localStorage.setItem('code', url.substring(url.indexOf("code=")+5, url.lastIndexOf("&")));
-        ref.close();
-        console.log("hide splashscreen");
-        navigator.splashscreen.hide();
-        $state.go("app.actualites");
+        ref.close()
+        navigator.splashscreen.hide()
+        $state.go('app.actualites')
       }
-    });
-
+    })
   }
   //
   // function getToken(){

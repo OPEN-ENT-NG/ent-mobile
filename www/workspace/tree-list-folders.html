@@ -1,0 +1,23 @@
+<ion-view view-title={{getTitle()}} ng-controller="MoveDocCtrl">
+
+  <ion-content>
+    <ion-tree-list items="tasks" collapsed="false" template-url='workspace/template_hierarchy_folders.html'></ion-tree-list>
+  </ion-content>
+
+  <div class="float-button-ok" ng-click="selectFolder()">
+    <span class="height-fix">
+      <a class="content">
+        <i class="okicon-"> </i>
+      </a>
+    </span>
+  </div>
+
+  <div class="float-button-newFolder" ng-click="newFolder()">
+    <span class="height-fix">
+      <a class="content">
+        <i class="folder-open-2icon-"> </i>
+      </a>
+    </span>
+  </div>
+
+</ion-view>
