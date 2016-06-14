@@ -20,7 +20,7 @@
           </div>
         </ion-checkbox>
 
-        <ion-item ng-repeat="folder in folders track by $index" class="item item-text-wrap center-image-item" on-long-press="enableCheck(folder)" ng-hide=checkable >
+        <ion-item ng-repeat="folder in folders track by $index" class="item item-text-wrap center-image-item" on-hold="enableCheck(folder)" ng-hide=checkable >
           <div style="display: flex;">
             <div ng-click="gotInDepthFolder(folder)" style="width: 90%;">
               <i class="folder-open-2icon- icon-file" ></i>
@@ -53,7 +53,7 @@
 
 <ion-list>
 
-  <ion-item ng-repeat="doc in documents track by $index" class="item item-text-wrap item-thumbnail-left " ng-click="goToFile(doc)"  on-long-press="enableCheck(doc)" ng-hide=checkable >
+  <ion-item ng-repeat="doc in documents track by $index" class="item item-text-wrap item-thumbnail-left " ng-click="goToFile(doc)"  on-hold="enableCheck(doc)" ng-hide=checkable >
     <img ng-src={{getImageUrl(doc.icon_image)}}></img>
     <h2>{{doc.name}}</h2>
     <h3>{{doc.ownerName}}</h3>

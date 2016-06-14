@@ -7,7 +7,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
 .value("listMenu", [{'name':'Actualites','icon':'newspapericon-', 'href':'#/app/actualites'},
                     {'name':'Messagerie','icon':'mailicon-', 'href':'#/app/messagerie'},
                     {'name':'Blog','icon':'bullhornicon-', 'href':'#/app/blog-list'},
-                    {'name':'Espace documentaire','icon':'foldericon-', 'href':'#/app/workspace'},
+                    {'name':'Documents','icon':'foldericon-', 'href':'#/app/workspace'},
                     {'name':'Pronotes','icon':'pronote-1icon-', 'href':'#/app/listPronotes'}])
 
 .run(function($ionicPlatform, $ionicLoading, $rootScope,$cordovaGlobalization, amMoment) {
@@ -504,125 +504,126 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
             template = "Vous n'avez pas le droit d'accéder à ce contenu."
             break
             default:
-            }
-          }
-
-          var alertPopup = $ionicPopup.alert({
-            title: title,
-            template: template
-          })
-
-          alertPopup.then(function(res) {
-            $ionicHistory.goBack()
-          })
         }
       }
 
-    })
-    .directive('appVersion', function () {
-      return function(scope, elm, attrs) {
-        cordova.getAppVersion(function (version) {
-          elm.text(version);
-        });
-      };
-    })
-    .directive('onLongPress', function($timeout) {
-      return {
-        restrict: 'A',
-        link: function($scope, $elm, $attrs) {
-          $elm.bind('touchstart', function(evt) {
-            // Locally scoped variable that will keep track of the long press
-            $scope.longPress = true;
+      var alertPopup = $ionicPopup.alert({
+        title: title,
+        template: template
+      })
 
-            // We'll set a timeout for 600 ms for a long press
-            $timeout(function() {
-              if ($scope.longPress) {
-                // If the touchend event hasn't fired,
-                // apply the function given in on the element's on-long-press attribute
-                $scope.$apply(function() {
-                  $scope.$eval($attrs.onLongPress)
-                });
-              }
-            }, 600);
-          });
+      alertPopup.then(function(res) {
+        $ionicHistory.goBack()
+      })
+    }
+  }
+})
 
-          $elm.bind('touchend', function (evt) {
-            // Prevent the onLongPress event from firing
-            $scope.longPress = false;
-            // If there is an on-touch-end function attached to this element, apply it
-            if ($attrs.onTouchEnd) {
-              $scope.$apply(function () {
-                $scope.$eval($attrs.onTouchEnd)
-              });
-            }
-          })
-        }
-      };
-    })
-
-    .filter('bytes', function () {
-      return function(bytes, precision) {
-        if (isNaN(parseFloat(bytes)) || !isFinite(bytes)) return '-'
-        if (typeof precision === 'undefined') precision = 1
-        var units = ['bytes', 'kB', 'MB', 'GB', 'TB', 'PB'], number = Math.floor(Math.log(bytes) / Math.log(1024))
-        return (bytes / Math.pow(1024, Math.floor(number))).toFixed(precision) +  ' ' + units[number]
-      }
+.directive('appVersion', function () {
+  return function(scope, elm, attrs) {
+    cordova.getAppVersion(function (version) {
+      elm.text(version);
     });
+  };
+})
 
+.directive('onLongPress', function($timeout) {
+  return {
+    restrict: 'A',
+    link: function($scope, $elm, $attrs) {
+      $elm.bind('touchstart', function(evt) {
+        // Locally scoped variable that will keep track of the long press
+        $scope.longPress = true;
 
-    function setProfileImage (regularPath, userId){
-      return (regularPath != null && regularPath.length > 0 && regularPath != "no-avatar.jpg") ? regularPath:"/userbook/avatar/"+userId;
-    }
+        // We'll set a timeout for 600 ms for a long press
+        $timeout(function() {
+          if ($scope.longPress) {
+            // If the touchend event hasn't fired,
+            // apply the function given in on the element's on-long-press attribute
+            $scope.$apply(function() {
+              $scope.$eval($attrs.onLongPress)
+            });
+          }
+        }, 800);
+      });
 
-    function findElementById(arraytosearch, valuetosearch) {
-      for (var i = 0; i < arraytosearch.length; i++) {
-        if (arraytosearch[i].id == valuetosearch) {
-          return arraytosearch[i];
+      $elm.bind('touchend', function (evt) {
+        // Prevent the onLongPress event from firing
+        $scope.longPress = false;
+        // If there is an on-touch-end function attached to this element, apply it
+        if ($attrs.onTouchEnd) {
+          $scope.$apply(function () {
+            $scope.$eval($attrs.onTouchEnd)
+          });
         }
-      }
-      return null;
+      })
     }
+  };
+})
 
-    function fail() {
-      console.log("failed to get filesystem");
+.filter('bytes', function () {
+  return function(bytes, precision) {
+    if (isNaN(parseFloat(bytes)) || !isFinite(bytes)) return '-'
+    if (typeof precision === 'undefined') precision = 1
+    var units = ['bytes', 'kB', 'MB', 'GB', 'TB', 'PB'], number = Math.floor(Math.log(bytes) / Math.log(1024))
+    return (bytes / Math.pow(1024, Math.floor(number))).toFixed(precision) +  ' ' + units[number]
+  }
+});
+
+
+function setProfileImage (regularPath, userId){
+  return (regularPath != null && regularPath.length > 0 && regularPath != "no-avatar.jpg") ? regularPath:"/userbook/avatar/"+userId;
+}
+
+function findElementById(arraytosearch, valuetosearch) {
+  for (var i = 0; i < arraytosearch.length; i++) {
+    if (arraytosearch[i].id == valuetosearch) {
+      return arraytosearch[i];
     }
+  }
+  return null;
+}
 
-    function gotFS(fileSystem) {
-      window.FS = fileSystem;
+function fail() {
+  console.log("failed to get filesystem");
+}
 
-      var printDirPath = function(entry){
-        console.log("Dir path - " + entry.fullPath);
-      }
+function gotFS(fileSystem) {
+  window.FS = fileSystem;
 
-      createDirectory("ENT/conversation", printDirPath);
-      createDirectory("ENT/workspace", printDirPath);
-    }
+  var printDirPath = function(entry){
+    console.log("Dir path - " + entry.fullPath);
+  }
 
-    function createDirectory(path, success){
-      var dirs = path.split("/").reverse();
-      var root = window.FS.root;
+  createDirectory("ENT/conversation", printDirPath);
+  createDirectory("ENT/workspace", printDirPath);
+}
 
-      var createDir = function(dir){
-        root.getDirectory(dir, {
-          create : true,
-          exclusive : false
-        }, successCB, failCB);
-      };
+function createDirectory(path, success){
+  var dirs = path.split("/").reverse();
+  var root = window.FS.root;
 
-      var successCB = function(entry){
-        console.log("dir created " + entry.fullPath);
-        root = entry;
-        if(dirs.length > 0){
-          createDir(dirs.pop());
-        }else{
-          console.log("all dir created");
-          success(entry);
-        }
-      };
+  var createDir = function(dir){
+    root.getDirectory(dir, {
+      create : true,
+      exclusive : false
+    }, successCB, failCB);
+  };
 
-      var failCB = function(){
-        console.log('failed to create dir ' + dir);
-      };
-
+  var successCB = function(entry){
+    console.log("dir created " + entry.fullPath);
+    root = entry;
+    if(dirs.length > 0){
       createDir(dirs.pop());
+    }else{
+      console.log("all dir created");
+      success(entry);
     }
+  };
+
+  var failCB = function(){
+    console.log('failed to create dir ' + dir);
+  };
+
+  createDir(dirs.pop());
+}

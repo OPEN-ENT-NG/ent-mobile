@@ -14,7 +14,7 @@
       Pas de message
     </div>
 
-    <div ng-if="extraFolders.length>0 || messages.length>0" class="empty-content">
+    <div ng-if="extraFolders.length>0 || messages.length>0">
       <ion-list>
         <ion-item ng-repeat="extraFolder in extraFolders" href="#/app/messagerie/{{extraFolder.name}}/{{extraFolder.id}}">
           <i class="folder-open-2icon-"></i>
@@ -24,23 +24,23 @@
 
       <div class="item item-divider" ng-show=extraFolders.length!=0 ></div>
       <ion-list>
-        <ion-item ng-repeat="message in messages track by $index" ng-click="doAction($index)" on-long-press="enableCheckMessages($index)">
+        <ion-item ng-repeat="message in messages track by $index" ng-click="doAction($index)" on-hold="enableCheckMessages($index)">
 
           <div ng-if="!message.unread" class="message">
             <input type="checkbox" ng-model="message.checked" ng-checked = "message.checked" ng-show=checkable style="vertical-align: -webkit-baseline-middle;">
 
             <div  class="item-text-wrap" style="float: right; width: 90%;" ng-if=checkable>
               <span class="right">{{formatDateLocale(message.date)}}</span>
-              <h2>{{getRealName(message.from, message.displayNames)}}</h2>
+              {{getRealName(message.from, message.displayNames)}}
               <i class="attachicon-" ng-show="message.attachments.length != 0"></i>
-              <h2>{{message.subject}}</h2>
+              <h3>{{message.subject}}</h3>
             </div>
 
             <div class="item-text-wrap" style="float: right; width: 100%;" ng-if=!checkable>
               <span class="right">{{formatDateLocale(message.date)}}</span>
-              <h2>{{getRealName(message.from, message.displayNames)}}</h2>
+              {{getRealName(message.from, message.displayNames)}}
               <i class="attachicon-" ng-show="message.attachments.length != 0"></i>
-              <h2>{{message.subject}}</h2>
+              <h3>{{message.subject}}</h3>
             </div>
           </div>
 
@@ -48,16 +48,16 @@
             <input type="checkbox" ng-model="message.checked" ng-checked = "message.checked" ng-show=checkable>
             <div  class="item-text-wrap" style="float: right; width: 90%;" ng-if=checkable>
               <span class="right">{{formatDateLocale(message.date)}}</span>
-              <h2>{{getRealName(message.from, message.displayNames)}}</h2>
+              {{getRealName(message.from, message.displayNames)}}
               <i class="attachicon-" ng-show="message.attachments.length != 0"></i>
-              <h2>{{message.subject}}</h2>
+              <h3>{{message.subject}}</h3>
             </div>
 
             <div class="item-text-wrap" style="float: right; width: 100%;" ng-if=!checkable>
               <span class="right">{{formatDateLocale(message.date)}}</span>
-              <h2>{{getRealName(message.from, message.displayNames)}}</h2>
+              {{getRealName(message.from, message.displayNames)}}
               <i class="attachicon-" ng-show="message.attachments.length != 0"></i>
-              <h2>{{message.subject}}</h2>
+              <h3>{{message.subject}}</h3>
             </div>
 
           </div>
