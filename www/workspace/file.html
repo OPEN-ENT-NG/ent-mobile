@@ -1,52 +1,54 @@
 <ion-view view-title={{doc.folder}} >
 
-  <ion-content class="true">
-    <div class="card">
+  <ion-content class="true" scroll="false">
+    <ion-scroll class="scroll" direction="y" has-bouncing="true" >
+      <div class="card">
 
-      <div class="item item-avatar item-text-wrap">
-        <img ng-src="{{getImageUrl(doc.ownerPhoto)}}">
-        <h2>{{doc.name}}</h2>
-        <h3>{{doc.ownerName}}</h3>
-        <p>{{doc.modified ? formatDateLocale(doc.modified) : formatDateLocale(doc.created)}}</p>
+        <div class="item item-avatar item-text-wrap">
+          <img ng-src="{{getImageUrl(doc.ownerPhoto)}}">
+          <h2>{{doc.name}}</h2>
+          <h3>{{doc.ownerName}}</h3>
+          <p>{{doc.modified ? formatDateLocale(doc.modified) : formatDateLocale(doc.created)}}</p>
+        </div>
+
+        <ion-card-content class="item">
+          <div class="cardCenter">
+            <img class="file-image" ng-src="{{getImageUrl( doc.image ? doc.image:doc.icon_image)}}" >
+          </div>
+
+          <div class="comment"  ng-show="post.comments.length != 0">
+            <p  ng-click="toggleComments(doc)" ng-class="{active: areCommentsShown(doc)}" class="subdued">
+              {{getCountComments(doc)}}
+            </p>
+            <ion-item class="item-accordion item-text-wrap"  ng-repeat="comment in doc.comments track by $index"  ng-show="areCommentsShown(doc)">
+              <h3>{{comment.authorName}}, {{formatDateLocale(comment.posted)}}</h3>
+              <p>{{comment.comment}}</p>
+            </ion-item>
+          </div>
+
+        </ion-card-content>
+
+          <div class="item tabs tabs-secondary tabs-icon-left">
+
+            <a class="tab-item" ng-click='downloadDoc()'>
+              <i class="icon downloadicon-"></i>
+            </a>
+
+            <a class="tab-item" ng-click='commentDoc()'>
+              <i class="icon ion-chatbox"></i>
+              {{translationWorkspace["workspace.comment"]}}
+            </a>
+
+            <a class="tab-item" href="#">
+              <i class="icon share-1icon-"></i>
+              {{translationWorkspace["workspace.share"]}}
+
+            </a>
+          </div>
+        </div>
       </div>
-
-      <ion-card-content class="item">
-        <div class="cardCenter">
-          <img class="file-image" ng-src="{{getImageUrl( doc.image ? doc.image:doc.icon_image)}}" >
-        </div>
-
-        <div class="comment"  ng-show="post.comments.length != 0">
-          <p  ng-click="toggleComments(doc)" ng-class="{active: areCommentsShown(doc)}" class="subdued">
-            {{getCountComments(doc)}}
-          </p>
-          <ion-item class="item-accordion item-text-wrap"  ng-repeat="comment in doc.comments track by $index"  ng-show="areCommentsShown(doc)">
-            <h3>{{comment.authorName}}, {{formatDateLocale(comment.posted)}}</h3>
-            <p>{{comment.comment}}</p>
-          </ion-item>
-        </div>
-
-      </ion-card-content>
-
-        <div class="item tabs tabs-secondary tabs-icon-left">
-
-          <a class="tab-item" ng-click='downloadDoc()'>
-            <i class="icon downloadicon-"></i>
-          </a>
-
-          <a class="tab-item" ng-click='commentDoc()'>
-            <i class="icon ion-chatbox"></i>
-            {{translationWorkspace["workspace.comment"]}}
-          </a>
-
-          <a class="tab-item" href="#">
-            <i class="icon share-1icon-"></i>
-            {{translationWorkspace["workspace.share"]}}
-
-          </a>
-        </div>
-    </div>
-  </div>
-</ion-content>
+    </ion-scroll>
+  </ion-content>
 
 
 <nav mfb-menu position="br" effect="zoomin" active-icon="ion-plus-round" resting-icon="ion-plus-round" toggling-method="click" templateUrl="ng-mfb-menu-horizontal.tpl.html">

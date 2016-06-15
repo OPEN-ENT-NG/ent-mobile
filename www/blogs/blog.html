@@ -1,39 +1,42 @@
 <ion-view view-title={{nameBlog}}>
 
-  <ion-content>
-    <ion-refresher pulling-text="Actualiser" on-refresh="doRefreshPosts()">
-    </ion-refresher>
+  <ion-content scroll="false">
+    <ion-scroll class="scroll" direction="y" has-bouncing="true" >
+      <ion-refresher pulling-text="Actualiser" on-refresh="doRefreshPosts()">
+      </ion-refresher>
 
-    <div ng-if=posts.length>0>
-      <ion-list>
-        <ion-item ng-repeat="post in filteredPosts=(posts | orderBy: 'modified.$date' : true) track by $index" class="card">
-          <div class="item item-avatar item-text-wrap">
-            <img ng-src="{{getImageUrl(post.author.photo)}}"/>
+      <div ng-if=posts.length>0>
+        <ion-list>
+          <ion-item ng-repeat="post in filteredPosts=(posts | orderBy: 'modified.$date' : true) track by $index" class="card">
+            <div class="item item-avatar item-text-wrap">
+              <img ng-src="{{getImageUrl(post.author.photo)}}"/>
 
-            <h2>{{post.title}}</h2>
+              <h2>{{post.title}}</h2>
 
-            <h3>{{translationBlog["blog.by"]}} {{post.author.username}}</h3>
-            <p>{{formatDateLocale(post.modified.$date)}}</p>
-          </div>
-
-          <ion-card-content class="item actucard">
-
-            <div class="item-text-wrap htmlEntContent" ng-bind-html=renderHtml(post.content)></div>
-
-            <div class="comment"  ng-show="post.comments.length != 0">
-              <p  ng-click="toggleComments(post)" ng-class="{active: areCommentsShown(post)}" class="subdued">
-                {{getCountComments(post)}}
-              </p>
-              <ion-item class="item-accordion"  ng-repeat="comment in post.comments track by $index"  ng-show="areCommentsShown(post)">
-                <h3>{{comment.author.username}}, {{comment.modified.$date ? formatDateLocale(comment.modified.$date):formatDateLocale(comment.created.$date)}}</h3>
-                <p>{{comment.comment}}</p>
-              </ion-item>
+              <h3>{{translationBlog["blog.by"]}} {{post.author.username}}</h3>
+              <p>{{formatDateLocale(post.modified.$date)}}</p>
             </div>
-          </ion-card-content>
 
-        </ion-item>
-      </ion-list>
-    </div>
+            <ion-card-content class="item actucard">
+
+              <div class="item-text-wrap htmlEntContent" ng-bind-html=renderHtml(post.content)></div>
+
+              <div class="comment"  ng-show="post.comments.length != 0">
+                <p  ng-click="toggleComments(post)" ng-class="{active: areCommentsShown(post)}" class="subdued">
+                  {{getCountComments(post)}}
+                </p>
+                <ion-item class="item-accordion"  ng-repeat="comment in post.comments track by $index"  ng-show="areCommentsShown(post)">
+                  <h3>{{comment.author.username}}, {{comment.modified.$date ? formatDateLocale(comment.modified.$date):formatDateLocale(comment.created.$date)}}</h3>
+                  <p>{{comment.comment}}</p>
+                </ion-item>
+              </div>
+            </ion-card-content>
+
+          </ion-item>
+        </ion-list>
+      </div>
+
+    </ion-scroll>
 
     <div ng-if="posts.length==0" class="empty-content">
       Pas de posts disponibles

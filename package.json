@@ -28,12 +28,16 @@
     "ionic-plugin-keyboard",
     "cordova-plugin-file-transfer",
     "cordova-plugin-file",
-    "https://github.com/pwlin/cordova-plugin-file-opener2.git",
-    "https://github.com/pbernasconi/cordova-progressIndicator.git",
+    "cordova-plugin-compat",
     {
-      "locator": "https://github.com/apache/cordova-plugin-inappbrowser",
-      "id": "cordova-plugin-inappbrowser"
+      "locator": "https://github.com/pwlin/cordova-plugin-file-opener2.git",
+      "id": "cordova-plugin-file-opener2"
     },
+    {
+      "locator": "https://github.com/pbernasconi/cordova-progressIndicator.git",
+      "id": "org.pbernasconi.progressindicator"
+    },
+    "cordova-plugin-inappbrowser",
     "cordova-plugin-app-version",
     {
       "locator": "https://github.com/bez4pieci/Phonegap-Cookies-Plugin.git",
@@ -41,14 +45,26 @@
     },
     "cordova-plugin-vibration",
     "cordova-plugin-globalization",
-    "org.apache.cordova.file-transfer",
+    "cordova-plugin-appavailability",
+    "com.lampa.startapp",
+    "cordova-sqlite-storage",
     {
-      "locator": "https://github.com/tiltshiftfocus/cordova-plugin-cache.git",
-      "id": "org.apache.cordova.plugin.cache"
+      "locator": "https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin.git",
+      "id": "cordova-plugin-x-toast"
     }
   ],
   "cordovaPlatforms": [
     "android",
-    "ios"
+    "ios",
+    {
+      "platform": "android",
+      "version": "",
+      "locator": "android"
+    },
+    {
+      "platform": "ios",
+      "version": "",
+      "locator": "ios"
+    }
   ]
 }

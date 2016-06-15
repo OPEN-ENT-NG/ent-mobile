@@ -5,6 +5,31 @@ ion-popover-view.fit {
 ion-popover-view.fit ion-content {
   position: relative !important;
 }
+
+.scroll{
+  height: 100% !important;
+}
+
+.custom-newspaper{
+  color : #4bafd5;
+}
+
+.custom-folder{
+  color : #e13a3a;
+}
+
+.custom-pronote{
+  color : #763294;
+}
+
+.custom-mail{
+  color : #ecbe30;
+}
+
+.custom-bullhorn{
+  color : #ff8500;
+}
+
 .center-image-item i {
   position: absolute;
   top: 50%;
@@ -12,7 +37,8 @@ ion-popover-view.fit ion-content {
 }
 
 .empty-content{
-  position: relative;
+  position: absolute;
+  width: 100%;
   top: 50%;
   transform: translateY(-50%);
   text-align: center;

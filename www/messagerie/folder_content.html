@@ -6,15 +6,11 @@
     <button class="button button-icon button-clear ion-refresh buttonActionBar" ng-if=canShowRestore() ng-click="restoreMessages()"></button>
   </ion-nav-buttons>
 
-  <ion-content>
-    <ion-refresher pulling-text="{{translationConversation[updating]}}" on-refresh="doRefreshMessages()">
-    </ion-refresher>
+  <ion-content scroll="false">
+    <ion-scroll ng-if="extraFolders.length>0 || messages.length>0" class="scroll" direction="y" has-bouncing="true" >
+      <ion-refresher pulling-text="{{translationConversation[updating]}}" on-refresh="doRefreshMessages()">
+      </ion-refresher>
 
-    <div ng-if="extraFolders.length==0 && messages.length==0" class="empty-content">
-      Pas de message
-    </div>
-
-    <div ng-if="extraFolders.length>0 || messages.length>0">
       <ion-list>
         <ion-item ng-repeat="extraFolder in extraFolders" href="#/app/messagerie/{{extraFolder.name}}/{{extraFolder.id}}">
           <i class="folder-open-2icon-"></i>
@@ -68,6 +64,9 @@
 
         </ion-item>
       </ion-list>
+    </ion-scroll>
+    <div ng-if="extraFolders.length==0 && messages.length==0" class="empty-content">
+      Pas de message
     </div>
   </ion-content>
   <div class="float-button" ng-click="newMail()">

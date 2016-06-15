@@ -1,21 +1,24 @@
 <ion-view view-title={{translationConversation["user.folders"]}}  ng-controller="MessagerieFoldersCtrl">
 
-  <ion-content>
-    <ion-refresher pulling-text={{translationConversation["updating"]}} on-refresh="doRefreshFolders()">
-    </ion-refresher>
+  <ion-content scroll="false">
+    <ion-scroll class="scroll" direction="y" has-bouncing="true" >
+      
+      <ion-refresher pulling-text={{translationConversation["updating"]}} on-refresh="doRefreshFolders()">
+      </ion-refresher>
 
-    <ion-list>
-      <div ng-repeat="folder in folders track by $index">
-        <ion-item ng-show=folder.name.length!=0 ng-click="goToFolder(folder)"  class="item-text-wrap center-image-item">
-          <i class="folder-open-2icon-"></i>
-          <div class="margin-text-item">
-            {{getNameFolder(folder.name)}} <span ng-show="folder.count>0">({{folder.count}})</span>
-          </div>
-        </ion-item>
-        <div class="item item-divider" ng-hide=folder.name.length!=0></div>
-      </div>
-    </ion-list>
+      <ion-list>
+        <div ng-repeat="folder in folders track by $index">
+          <ion-item ng-show=folder.name.length!=0 ng-click="goToFolder(folder)"  class="item-text-wrap center-image-item">
+            <i class="folder-open-2icon-"></i>
+            <div class="margin-text-item">
+              {{getNameFolder(folder.name)}} <span ng-show="folder.count>0">({{folder.count}})</span>
+            </div>
+          </ion-item>
+          <div class="item item-divider" ng-hide=folder.name.length!=0></div>
+        </div>
+      </ion-list>
 
+    </ion-scroll>
   </ion-content>
   <div class="float-button" ng-click="newMail()">
     <span class="height-fix">

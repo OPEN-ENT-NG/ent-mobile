@@ -4,13 +4,8 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
 // .value("domainENT", "https://ent.picardie.fr")
 // .value("domainENT", "https://preprod-leo.entcore.org")
 .value("domainENT", "https://recette-leo.entcore.org")
-.value("listMenu", [{'name':'Actualites','icon':'newspapericon-', 'href':'#/app/actualites'},
-                    {'name':'Messagerie','icon':'mailicon-', 'href':'#/app/messagerie'},
-                    {'name':'Blog','icon':'bullhornicon-', 'href':'#/app/blog-list'},
-                    {'name':'Documents','icon':'foldericon-', 'href':'#/app/workspace'},
-                    {'name':'Pronotes','icon':'pronote-1icon-', 'href':'#/app/listPronotes'}])
 
-.run(function($ionicPlatform, $ionicLoading, $rootScope,$cordovaGlobalization, amMoment) {
+.run(function($ionicPlatform, $ionicLoading, $rootScope,$cordovaGlobalization, amMoment, $ionicSideMenuDelegate, $rootScope) {
 
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -264,11 +259,15 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   // $urlRouterProvider.otherwise('/app/workspace/documents');
 })
 
-.controller('AppCtrl', function ($scope, $rootScope, $sce, $state, $cordovaInAppBrowser, $ionicSideMenuDelegate, $cordovaFileTransfer,$cordovaProgress, $cordovaFileOpener2, domainENT, listMenu, $ionicHistory, SkinFactory, $ionicPopup, ActualitesService, MessagerieServices,PronoteService, BlogsService, WorkspaceService, $filter){
+.controller('AppCtrl', function ($scope, $rootScope, $sce, $state, $ionicPlatform, $cordovaToast, $cordovaInAppBrowser, $ionicSideMenuDelegate, $cordovaFileTransfer,$cordovaProgress, $cordovaFileOpener2, domainENT, $ionicHistory, SkinFactory, $ionicPopup, ActualitesService, MessagerieServices,PronoteService, BlogsService, WorkspaceService, $filter){
 
   $rootScope.filterThreads = [];
 
-  $rootScope.listMenu = listMenu;
+  $rootScope.listMenu =  [{'name':'Actualites','icon':'custom-newspaper newspapericon-', 'href':'#/app/actualites'},
+                          {'name':'Messagerie','icon':'custom-mail mailicon-', 'href':'#/app/messagerie'},
+                          {'name':'Blog','icon':'custom-bullhorn bullhornicon-', 'href':'#/app/blog-list'},
+                          {'name':'Documents','icon':'custom-folder foldericon-', 'href':'#/app/workspace'},
+                          {'name':'Pronotes','icon':'custom-pronote pronote-1icon-', 'href':'#/app/listPronotes'}];
 
   SkinFactory.getSkin().then(function(res) {
     localStorage.setItem('skin', res.data.skin);
@@ -292,6 +291,23 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
       });
     }
   });
+
+  $ionicPlatform.registerBackButtonAction( function (e){
+    if($rootScope.backOnce){
+      navigator.app.exitApp();
+    }else if($ionicSideMenuDelegate.isOpenLeft()){
+      $ionicSideMenuDelegate.toggleLeft();
+    } else if($ionicHistory.backView()){
+      $ionicHistory.goBack();
+    } else {
+      $rootScope.backOnce = true ;
+      // TOAST NE FONCTIONE PAS A FAIRE
+      $cordovaToast.show('Cliquez une autre fois pour quitter', 'short', 'bottom' )
+      setTimeout(function(){
+        $rootScope.backOnce = false ;
+      },1000);
+    }
+  }, 1000);
 
   $scope.renderHtml = function (text){
     if(text != null){

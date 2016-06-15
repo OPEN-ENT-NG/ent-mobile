@@ -7,45 +7,47 @@
 
   </ion-nav-buttons>
 
-  <ion-content>
+  <ion-content scroll="false">
+    <ion-scroll class="scroll" direction="y" has-bouncing="true" >
 
-    <div class="item">
-      <h2>{{mail.subject}}</h2>
-    </div>
-
-    <div class="item-text-wrap">
-      <div class="header-mail item">
-        <h2>{{translationConversation["transfer.from"]}} {{mail.from[0].displayName}}</h2>
-
-        <h2>
-          <span>{{translationConversation["transfer.to"]}}</span>
-          <span ng-repeat="personTo in mail.to track by personTo.entId">{{personTo.displayName}}<br/></span>
-        </h2>
-
-        <h2 ng-show="mail.cc.length != 0">
-          <span>{{translationConversation["transfer.cc"]}}</span>
-          <span ng-repeat="personCc in mail.cc track by personCc.entId" >{{personCc.displayName}}<br/></span>
-        </h2>
-
-        <h2 >
-          <span>{{translationConversation["transfer.date"]}}</span>
-          <span >{{mail.date | date: fulldate}}<br/></span>
-        </h2>
+      <div class="item">
+        <h2>{{mail.subject}}</h2>
       </div>
 
-      <div class="item-text-wrap item corpsMessage htmlEntContent" ng-bind-html= "renderHtml(mail.body)" ng-show=mail.body overflow-scroll="true"></div>
+      <div class="item-text-wrap">
+        <div class="header-mail item">
+          <h2>{{translationConversation["transfer.from"]}} {{mail.from[0].displayName}}</h2>
 
-      <div class="item borderBottomItemDismissed borderTopItemDismissed" ng-show=mail.attachments.length!=0>
-        <ion-list>
-          <div ng-repeat="attachment in mail.attachments track by $index">
-            <div class="ajoutPJ item-text-wrap">
-              <i class="downloadicon-"  ng-click="downloadAttachment(attachment.id)"></i>
-              <p>{{attachment.filename}} ({{getSizeFile(attachment.size)}})</p>
+          <h2>
+            <span>{{translationConversation["transfer.to"]}}</span>
+            <span ng-repeat="personTo in mail.to track by personTo.entId">{{personTo.displayName}}<br/></span>
+          </h2>
+
+          <h2 ng-show="mail.cc.length != 0">
+            <span>{{translationConversation["transfer.cc"]}}</span>
+            <span ng-repeat="personCc in mail.cc track by personCc.entId" >{{personCc.displayName}}<br/></span>
+          </h2>
+
+          <h2 >
+            <span>{{translationConversation["transfer.date"]}}</span>
+            <span >{{mail.date | date: fulldate}}<br/></span>
+          </h2>
+        </div>
+
+        <div class="item-text-wrap item corpsMessage htmlEntContent" ng-bind-html= "renderHtml(mail.body)" ng-show=mail.body overflow-scroll="true"></div>
+
+        <div class="item borderBottomItemDismissed borderTopItemDismissed" ng-show=mail.attachments.length!=0>
+          <ion-list>
+            <div ng-repeat="attachment in mail.attachments track by $index">
+              <div class="ajoutPJ item-text-wrap">
+                <i class="downloadicon-"  ng-click="downloadAttachment(attachment.id)"></i>
+                <p>{{attachment.filename}} ({{getSizeFile(attachment.size)}})</p>
+              </div>
             </div>
-          </div>
-        </ion-list>
-      </div>
+          </ion-list>
+        </div>
 
-    </div>
+      </div>
+    </ion-scroll>
   </ion-content>
 </ion-view>
