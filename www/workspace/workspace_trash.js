@@ -87,7 +87,7 @@ angular.module('ent.workspace_trash',['ent.workspace_service'])
     }
   };
 
-  var deregisterHardBack= $ionicPlatform.registerBackButtonAction(doCustomBack, 101);
+  var deregisterHardBack= $ionicPlatform.registerBackButtonAction(doCustomBack, 1001);
   $scope.$on('$destroy', function() {
     deregisterHardBack();
   });

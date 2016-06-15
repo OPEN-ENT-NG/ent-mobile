@@ -124,7 +124,7 @@ angular.module('ent.message_folder', ['ent.message_services'])
     }
   };
 
-  var deregisterHardBack= $ionicPlatform.registerBackButtonAction(doCustomBack, 101);
+  var deregisterHardBack= $ionicPlatform.registerBackButtonAction(doCustomBack, 1001);
   $scope.$on('$destroy', function() {
     deregisterHardBack();
   });
