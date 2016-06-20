@@ -1,0 +1,64 @@
+<ion-view view-title="{{nbItems}} à partager" ng-controller="ShareItemController" >
+
+  <ion-nav-title>
+  </ion-nav-title>
+
+  <ion-content>
+    <ion-scroll direction="y" style="width:100%;height:100%" has-bouncing="true">
+      <ion-list>
+        <ion-item ng-repeat="contactGroup in contactsGroup" >
+          <div ng-if="true">
+            <div class="checkbox-list-item" style="padding:3%" ng-click=" showToggle = ! showToggle">
+              <i ng-show="consult||contrib||gerer||comment"class="shareicon-" style="display:inline-block;vertical-align: middle;color:blue"></i>
+              <div  style="display:inline-block;vertical-align: middle">
+                <h2>{{contactGroup.displayName}}</h2>
+              </div>
+            </div>
+            <table ng-show="showToggle" style="width:100%;margin-top:4%;">
+              <tr>
+                <td align="center">
+                  <h3 ng-style="consult ? {color:'green'}:{color:'#cecece'}">Consulter</h3>
+                  <label class="toggle">
+                     <input type="checkbox" ng-model="consult" ng-checked="contrib ? (consult=true): gerer ? (consult=true) : comment ? (consult=true):consult" >
+                     <div class="track">
+                       <div class="handle"></div>
+                     </div>
+                  </label>
+                </td>
+                <td align="center">
+                  <h3 ng-style="contrib ? {color:'green'}:{color:'#cecece'}">Contribuer</h3>
+                  <label class="toggle">
+                     <input type="checkbox" ng-model="contrib" ng-checked="consult ? (gerer ? (contrib=true):contrib) : (contrib=false)">
+                     <div class="track">
+                       <div class="handle"></div>
+                     </div>
+                  </label>
+                </td>
+                <td align="center">
+                  <h3 ng-style="gerer ? {color:'green'}:{color:'#cecece'}">Gérer</h3>
+                  <label class="toggle">
+                     <input type="checkbox" ng-model="gerer" ng-checked="consult ? gerer : (gerer=false)">
+                     <div class="track">
+                       <div class="handle"></div>
+                     </div>
+                  </label>
+                </td>
+                <td align="center">
+                  <h3 ng-style="comment ? {color:'green'}:{color:'#cecece'}">Commenter</h3>
+                  <label class="toggle">
+                     <input type="checkbox" ng-model="comment" ng-checked="consult ? comment : (comment=false)">
+                     <div class="track">
+                       <div class="handle"></div>
+                     </div>
+                  </label>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </ion-item>
+      </ion-list>
+    </ion-scroll>
+    <div class="item item-divider"><h2 style="vertical-align: middle">GROUPES</h2></div>
+  </ion-content>
+
+</ion-view>

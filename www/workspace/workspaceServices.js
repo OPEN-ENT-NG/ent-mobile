@@ -26,6 +26,10 @@ angular.module('ent.workspace_service', ['ion-tree-list'])
     return $http.get(domainENT+'/workspace/folders/list?filter=' + filter + '&_='+getTimeInMillis())
   }
 
+  this.getSharingItemDatas = function(idItem) {
+      return $http.get(domainENT+'workspace/share/json/'+idItem);
+  }
+
   this.commentDocById = function (id, comment){
     return $http.post(domainENT+'/workspace/document/'+id+'/comment', "comment="+ comment, configHeaders)
   }

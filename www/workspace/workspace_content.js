@@ -15,6 +15,24 @@ angular.module('ent.workspace_content',['ent.workspace_service',])
     return $stateParams.nameWorkspaceFolder == "shared"
   }
 
+  $rootScope.isIHaveRight = function(){
+    $rootScope.newFolderss = $scope.folders;
+    if($stateParams.nameWorkspaceFolder == "documents"){
+      return true;
+    } else if($stateParams.nameWorkspaceFolder == "shared"){
+      if($scope.folders != null){
+        var folders = getCheckedFolders($scope.folders);
+        for(var i = 0 ; i < folders.length ; i++){
+          for(var j = 0 ; j < folders[i].shared.length ; j++){
+          }
+        }
+      }
+      return true ;
+    } else {
+      return false ;
+    }
+  }
+
   /*
   * if given group is the selected group, deselect it
   * else, select the given group
@@ -180,6 +198,24 @@ angular.module('ent.workspace_content',['ent.workspace_service',])
     MovingItemsFactory.setMovingDocs(getCheckedDocuments($scope.documents))
     MovingItemsFactory.setMovingFolders(getCheckedFolders($scope.folders))
     $state.go('app.workspace_tree', {action:'move'})
+  }
+
+  $scope.shareSelectedItems = function(){
+    var checkedItems = getCheckedItems($scope.folders, $scope.documents);
+    var ids = [] ;
+    for(var i = 0 ; i < checkedItems.folders.length ; i++){
+      ids.push(checkedItems.folders[i]._id);
+    }
+    for(var i = 0 ; i < checkedItems.documents.length ; i++){
+      console.log(checkedItems.documents[i]);
+      ids.push(checkedItems.documents[i]._id);
+    }
+    console.log(ids);
+    $scope.closePopover()
+    $rootScope.checkable = false
+    MovingItemsFactory.setMovingDocs(getCheckedDocuments($scope.documents))
+    MovingItemsFactory.setMovingFolders(getCheckedFolders($scope.folders))
+    $state.go('app.workspace_share', {idItems:ids})
   }
 
   $scope.onlyOneFolder = function(){
