@@ -40,7 +40,7 @@ angular.module('ent.share_item',['ent.workspace_service','ent.message_services']
   function getSharingItemDatas(){
     console.log(idItems);
     for(var i = 0 ; i < idItems.length ; i++){
-      WorkspaceService.getSharingItemDatas(idItems[i]).then(function(resp){
+      WorkspaceService.getSharingItemDatas(idItems).then(function(resp){
         console.log(resp);
       },function(err){
         console.log(err);

@@ -6,12 +6,12 @@
   <ion-content>
     <ion-scroll direction="y" style="width:100%;height:100%" has-bouncing="true">
       <ion-list>
-        <ion-item ng-repeat="contactGroup in contactsGroup" >
+        <ion-item-group>GROUPES</ion-item-group>
+        <ion-item ng-repeat="contactGroup in contactsGroup" class="item-text-wrap" >
           <div ng-if="true">
-            <div class="checkbox-list-item" style="padding:3%" ng-click=" showToggle = ! showToggle">
-              <i ng-show="consult||contrib||gerer||comment"class="shareicon-" style="display:inline-block;vertical-align: middle;color:blue"></i>
-              <div  style="display:inline-block;vertical-align: middle">
-                <h2>{{contactGroup.displayName}}</h2>
+            <div class="checkbox-list-item" style="padding:1%" ng-click=" showToggle = ! showToggle">
+              <div  style="display:inline-block;vertical-align: middle" >
+                <h2 ng-style="(consult||contrib||gerer||comment) ? {color:'blue'}:{color:'black'}">{{contactGroup.displayName}}</h2>
               </div>
             </div>
             <table ng-show="showToggle" style="width:100%;margin-top:4%;">
