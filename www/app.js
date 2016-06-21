@@ -267,7 +267,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
                           {'name':'Messagerie','icon':'custom-mail mailicon-', 'href':'#/app/messagerie'},
                           {'name':'Blog','icon':'custom-bullhorn bullhornicon-', 'href':'#/app/blog-list'},
                           {'name':'Documents','icon':'custom-folder foldericon-', 'href':'#/app/workspace'},
-                          {'name':'Pronotes','icon':'custom-pronote pronote-1icon-', 'href':'#/app/listPronotes'}];
+                          {'name':'Pronote','icon':'custom-pronote pronote-1icon-', 'href':'#/app/listPronotes'}];
 
   SkinFactory.getSkin().then(function(res) {
     localStorage.setItem('skin', res.data.skin);
@@ -289,23 +289,21 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
       } , function(err){
         $scope.showAlertError(err)
       });
+    } else if(ratio==0){
+      $scope.closeApp = false ;
     }
   });
 
   $ionicPlatform.registerBackButtonAction( function (e){
-    if($rootScope.backOnce){
+    if($scope.closeApp){
       navigator.app.exitApp();
     }else if($ionicSideMenuDelegate.isOpenLeft()){
       $ionicSideMenuDelegate.toggleLeft();
     } else if($ionicHistory.backView()){
       $ionicHistory.goBack();
-    } else {
-      $rootScope.backOnce = true ;
-      // TOAST NE FONCTIONE PAS A FAIRE
-      $cordovaToast.show('Cliquez une autre fois pour quitter', 'short', 'bottom' )
-      setTimeout(function(){
-        $rootScope.backOnce = false ;
-      },1000);
+    } else if(!$ionicSideMenuDelegate.isOpenLeft()) {
+      $ionicSideMenuDelegate.toggleLeft();
+      $scope.closeApp = true ;
     }
   }, 1000);
 

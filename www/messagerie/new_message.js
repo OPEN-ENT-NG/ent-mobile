@@ -80,8 +80,19 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
             }
 
             $scope.deleteFromDestinataireCc = function(destinataire){
-              var index = $scope.email.deleteFromDestinataireCc.indexOf(destinataire);
+              console.log(destinataire);
+              var index = $scope.email.destinatairesCc.indexOf(destinataire);
               $scope.email.destinatairesCc.splice(index, 1);
+            }
+
+            $scope.verifiedEmailDestinataire = function(destCc,destinataire){
+              if(destCc && $scope.email.destinatairesCc.indexOf(destinataire)== -1){
+                return true;
+              }else if(!destCc && $scope.email.destinatairesTo.indexOf(destinataire)== -1){
+                return true;
+              }else{
+                return false;
+              }
             }
 
             $scope.sendMail = function(){

@@ -5,7 +5,7 @@
       <ion-refresher pulling-text="Actualiser" on-refresh="doRefreshPosts()">
       </ion-refresher>
 
-      <div ng-if=posts.length>0>
+      <div ng-if=posts.length>
         <ion-list>
           <ion-item ng-repeat="post in filteredPosts=(posts | orderBy: 'modified.$date' : true) track by $index" class="card">
             <div class="item item-avatar item-text-wrap">

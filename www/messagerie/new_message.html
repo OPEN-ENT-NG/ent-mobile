@@ -21,7 +21,7 @@
       </ion-list>
       <filter-box filtertext="searchTo" placeholder={{translationConversation["transfer.to"]}}></filter-box>
       <ion-list >
-        <ion-item ng-show=searchTo.value.length!=0 ng-repeat="contact in contacts | filter: {displayName: searchTo.value} | limitTo: 5" ng-click="addContactTo(searchTo, contact)">
+        <ion-item ng-show=searchTo.value.length!=0 ng-repeat="contact in contacts | filter: {displayName: searchTo.value} | limitTo: 5" ng-click="addContactTo(searchTo, contact)" ng-if="verifiedEmailDestinataire(false,contact)">
           <h3><font color="#008B8B">{{contact.displayName}}</font></h3>
         </ion-item>
       </ion-list>
@@ -38,7 +38,7 @@
       </ion-list>
       <filter-box filtertext="searchCc" placeholder={{translationConversation["transfer.cc"]}}></filter-box>
       <ion-list >
-        <ion-item ng-show=searchCc.value.length!=0 ng-repeat="contact in contacts | filter: {displayName: searchCc.value} | limitTo: 5" ng-click="addContactCc(searchCc, contact)">
+        <ion-item ng-show=searchCc.value.length!=0 ng-repeat="contact in contacts | filter: {displayName: searchCc.value} | limitTo: 5" ng-click="addContactCc(searchCc, contact)" ng-if="verifiedEmailDestinataire(true,contact)">
           <h3><font color="#008B8B">{{contact.displayName}}</font></h3>
         </ion-item>
       </ion-list>
