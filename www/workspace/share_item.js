@@ -1,13 +1,15 @@
 angular.module('ent.share_item',['ent.workspace_service','ent.message_services'])
 
-.controller('ShareItemController', function($scope, $rootScope, $stateParams, $state, WorkspaceService, MessagerieServices, $ionicLoading){
+.controller('ShareItemController', function($scope, $rootScope, $stateParams, $state,$ionicPosition, $ionicScrollDelegate, WorkspaceService, MessagerieServices, $ionicLoading){
   // MESSAEGERIE SERVICE UTILISER LURL DES CONTACT VISIBLE POUR TESTER LES PARTAGES
   //   this.getContactsService = function(){
     //   return $http.get(domainENT+"/conversation/visible");
     // }
   var idItems = $stateParams.idItems;
+  $scope.headerList = "Partagé avec :" ;
   getContacts();
   getSharingItemDatas();
+
   function getContacts () {
     $ionicLoading.show({
       template: '<ion-spinner icon="android"/>'
@@ -41,10 +43,31 @@ angular.module('ent.share_item',['ent.workspace_service','ent.message_services']
     console.log(idItems);
     for(var i = 0 ; i < idItems.length ; i++){
       WorkspaceService.getSharingItemDatas(idItems).then(function(resp){
-        console.log(resp);
+        // DO SOMETHING
       },function(err){
         console.log(err);
       })
     }
   }
+
+  $scope.openFilters = function(){
+    $scope.hasFilters = !$scope.hasFilters;
+  }
+
+  var posAntTop = 10000000 ;
+  $scope.onScroll = function(){
+    var positionGroupe = $ionicPosition.position(angular.element(document.getElementById("group")));
+    console.log(positionGroupe.height);
+    if(positionGroupe.top + positionGroupe.height > 0){
+      if(posAntTop < 0){
+        $scope.$apply(function(){ $scope.headerList = "Contacts par groupe";});
+      }
+    }else{
+      if(posAntTop > 0){
+        $scope.$apply(function(){ $scope.headerList = "Contacts";});
+      }
+    }
+    posAntTop = positionGroupe.top + positionGroupe.height ;
+  }
+
 })
