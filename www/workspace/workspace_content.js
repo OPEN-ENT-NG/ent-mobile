@@ -15,21 +15,37 @@ angular.module('ent.workspace_content',['ent.workspace_service',])
     return $stateParams.nameWorkspaceFolder == "shared"
   }
 
-  $rootScope.isIHaveRight = function(){
-    $rootScope.newFolderss = $scope.folders;
-    if($stateParams.nameWorkspaceFolder == "documents"){
-      return true;
-    } else if($stateParams.nameWorkspaceFolder == "shared"){
-      if($scope.folders != null){
-        var folders = getCheckedFolders($scope.folders);
-        for(var i = 0 ; i < folders.length ; i++){
-          for(var j = 0 ; j < folders[i].shared.length ; j++){
+  $rootScope.isIHaveRightToShare = function(){
+    if($scope.folders && $scope.documents){
+      if(getCheckedFolders($scope.folders).length + getCheckedDocuments($scope.documents).length == 1){
+        if($stateParams.nameWorkspaceFolder == "documents"){
+          return true;
+        } else if($stateParams.nameWorkspaceFolder == "shared"){
+          var docChecked = getCheckedDocuments($scope.documents);
+          var foldChecked = getCheckedFolders($scope.folders);
+          if(docChecked.length==1){
+            var sharing = docChecked[0].shared ;
+            for(var i = 0 ; i < sharing.length ; i++){
+              if(sharing[i].userId == $rootScope.myUser.id){
+                if(sharing[i]['org-entcore-workspace-service-WorkspaceService|shareJson']){
+                  return true ;
+                }
+              }
+            }
+          } else if(foldChecked.length==1) {
+            var sharing = foldChecked[0].shared ;
+            for(var i = 0 ; i < sharing.length ; i++){
+              if(sharing[i].userId == $rootScope.myUser.id){
+                if(sharing[i]['org-entcore-workspace-service-WorkspaceService|shareJson']){
+                  return true ;
+                }
+              }
+            }
           }
         }
+      } else {
+        return false ;
       }
-      return true ;
-    } else {
-      return false ;
     }
   }
 
@@ -79,7 +95,6 @@ angular.module('ent.workspace_content',['ent.workspace_service',])
     });
   }
 
-
   $scope.addDocument = function(ele){
     var newDoc = ele.files[0];
     // mfbMenu.close();
@@ -103,6 +118,7 @@ angular.module('ent.workspace_content',['ent.workspace_service',])
           for(var i=0; i<result.data.length;i++){
             $scope.documents.push(MimeTypeFactory.setIcons(result.data[i]));
           }
+          console.log($scope.documents);
           console.log("files: "+$scope.documents.length);
         })
         $cordovaProgress.hide()
@@ -213,8 +229,6 @@ angular.module('ent.workspace_content',['ent.workspace_service',])
     console.log(ids);
     $scope.closePopover()
     $rootScope.checkable = false
-    MovingItemsFactory.setMovingDocs(getCheckedDocuments($scope.documents))
-    MovingItemsFactory.setMovingFolders(getCheckedFolders($scope.folders))
     $state.go('app.workspace_share', {idItems:ids})
   }
 

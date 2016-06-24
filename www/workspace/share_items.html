@@ -1,95 +1,102 @@
-<ion-view view-title="{{nbItems}} à partager" ng-controller="ShareItemController" >
+<ion-view view-title="Partager" ng-controller="ShareItemController" >
 
   <ion-nav-buttons side="left" >
       <label class="item-input-wrapper textbox-search search-custom-header-label" ng-if="hasFilters">
           <i class="icon ion-ios7-search placeholder-icon"></i>
-          <input type="search" placeholder="Rechercher" class="input-search-header-custom">
+          <input placeholder="Rechercher.." ng-model="searchTo" ng-change="setFilterText(searchTo)" class="input-search-header-custom">
       </label>
   </ion-nav-buttons>
   <ion-nav-title ng-show="!hasFilters">
-      Partage des documents
+      Partager
   </ion-nav-title>
   <ion-nav-buttons side="right">
-      <a data-tap-disabled="true" class=" button button-icon icon positive" ng-click="openFilters()" ng-class="{'ion-search':!hasFilters,'ion-close-circled':hasFilters}"></a>
+      <a data-tap-disabled="true" class=" button button-icon icon positive" ng-click="openFilters(hasFilters)" ng-class="{'ion-search':!hasFilters,'ion-close-circled':hasFilters}"></a>
   </ion-nav-buttons>
 
   <ion-header-bar class="bar bar-subheader">
-    <ion-item id="sep_selected" class="item-text-wrap item-borderless" >
-        <h2><font color="#0069a1">{{headerList}}</font></h2>
-    </ion-item>
+      <div id="sep_selected" class="item-text-wrap item-borderless" >
+          <h4><b><font color="#0069a1">{{headerList}}</font></b></h4>
+      </div>
   </ion-header-bar>
 
   <ion-content class="has-header">
-    <ion-scroll on-scroll="onScroll()" direction="y" style="width:100%;height:100%" has-bouncing="true">
+    <ion-scroll on-scroll="onScroll()" direction="y" style="width:100%;height:100%" has-bouncing="true" >
       <ion-list>
-        <ion-item ng-repeat="contact in contactsSelected | limitTo: 50" class="item-text-wrap" ng-class="{'item-borderless':$index==0}" >
-          <div class="checkbox-list-item" style="padding:1%" ng-click=" showToggle = ! showToggle">
-            <div  style="display:inline-block;vertical-align: middle" >
-              <h2 ng-style="(consult||contrib||gerer||comment) ? {color:'blue'}:{color:'black'}">{{contact.displayName}}</h2>
+        <ion-item ng-repeat="contact in contactShared | filter:searchTo" class="item-text-wrap" ng-class="{'item-borderless':$index==0}" >
+          <span class="symbol" style="display:inline-block;vertical-align: middle">
+            <i class="icon custom-icon-arrow" ng-class="contact.isSharingOpen ? 'ion-arrow-down-b' : 'ion-arrow-right-b'"></i>
+          </span>
+          <div class="checkbox-list-item" style="width:90%;padding:1%;display:inline-block;vertical-align: middle" ng-click="openSharing(contact.id)">
+            <div>
+              <h2>{{contact.name}}</h2>
               <h3><font color="#cecece">{{contact.profile}}</font></h3>
             </div>
           </div>
+          <table ng-show="contact.isSharingOpen" style="width:100%;margin-top:4%;">
+            <tr>
+              <td align="center">
+                <h3 ng-style="contact.read ? {color:'green'}:{color:'#cecece'}">Consulter</h3>
+                <label class="toggle">
+                   <input type="checkbox" ng-model="contact.read" ng-click="modifyCheckValues(contact, 'read')" >
+                   <div class="track">
+                     <div class="handle"></div>
+                   </div>
+                </label>
+              </td>
+              <td align="center">
+                <h3 ng-style="contact.contrib ? {color:'green'}:{color:'#cecece'}">Contribuer</h3>
+                <label class="toggle">
+                   <input type="checkbox" ng-model="contact.contrib" ng-click="modifyCheckValues(contact, 'contrib')">
+                   <div class="track">
+                     <div class="handle"></div>
+                   </div>
+                </label>
+              </td>
+              <td align="center">
+                <h3 ng-style="contact.manager ? {color:'green'}:{color:'#cecece'}">Gérer</h3>
+                <label class="toggle">
+                   <input type="checkbox" ng-model="contact.manager" ng-click="modifyCheckValues(contact, 'manager')">
+                   <div class="track">
+                     <div class="handle"></div>
+                   </div>
+                </label>
+              </td>
+              <td align="center">
+                <h3 ng-style="contact.comment ? {color:'green'}:{color:'#cecece'}">Commenter</h3>
+                <label class="toggle">
+                   <input type="checkbox" ng-model="contact.comment" ng-click="modifyCheckValues(contact, 'comment')">
+                   <div class="track">
+                     <div class="handle"></div>
+                   </div>
+                </label>
+              </td>
+            </tr>
+          </table>
         </ion-item>
       </ion-list>
-      <ion-item id="sep_selected" class="item-text-wrap" >
-        <h2><font color="#0069a1">Contacts par groupe</font></h2>
-      </ion-item>
-      <ion-list>
-        <ion-item ng-repeat="contactGroup in contactsGroup | limitTo: 50" class="item-text-wrap" >
-          <div ng-if="true">
-            <div class="checkbox-list-item" style="padding:1%" ng-click=" showToggle = ! showToggle">
-              <div  style="display:inline-block;vertical-align: middle" >
-                <h2 ng-style="(consult||contrib||gerer||comment) ? {color:'blue'}:{color:'black'}">{{contactGroup.displayName}}</h2>
-              </div>
+      <div id="contact_group" class="item-text-wrap" style="margin-left:1.5%; padding-top:3%;" ng-click="showContactGroup = !showContactGroup">
+        <span class="symbol" style="display:inline-block;vertical-align: middle">
+          <i class="icon custom-icon-arrow" style="display:inline-block;vertical-align: middle" ng-class="showContactGroup ? 'ion-arrow-down-b' : 'ion-arrow-right-b' "></i>
+        </span>
+        <h4 style="display:inline-block;vertical-align: middle"><b><font color="#0069a1">Contacts par groupe</font></b><font color ="#cecece"> ({{contactsGroupResult.length}})</font></h4>
+      </div>
+      <ion-list ng-show="showContactGroup">
+        <ion-item ng-repeat="contactGroup in contactsGroup | filter:searchTo | orderBy:'displayName' | limitTo: 30 as contactsGroupResult" class="item-text-wrap" ng-class="{'item-borderless':$index==0}" ng-click="moveToShare($index,contactGroup,true)">
+          <div class="checkbox-list-item" style="padding:1%">
+            <div  style="display:inline-block;vertical-align: middle" >
+              <h2 ng-style="(consult||contrib||gerer||comment) ? {color:'blue'}:{color:'black'}">{{contactGroup.displayName}}</h2>
             </div>
-            <table ng-show="showToggle" style="width:100%;margin-top:4%;">
-              <tr>
-                <td align="center">
-                  <h3 ng-style="consult ? {color:'green'}:{color:'#cecece'}">Consulter</h3>
-                  <label class="toggle">
-                     <input type="checkbox" ng-model="consult" ng-checked="contrib ? (consult=true): gerer ? (consult=true) : comment ? (consult=true):consult" >
-                     <div class="track">
-                       <div class="handle"></div>
-                     </div>
-                  </label>
-                </td>
-                <td align="center">
-                  <h3 ng-style="contrib ? {color:'green'}:{color:'#cecece'}">Contribuer</h3>
-                  <label class="toggle">
-                     <input type="checkbox" ng-model="contrib" ng-checked="consult ? (gerer ? (contrib=true):contrib) : (contrib=false)">
-                     <div class="track">
-                       <div class="handle"></div>
-                     </div>
-                  </label>
-                </td>
-                <td align="center">
-                  <h3 ng-style="gerer ? {color:'green'}:{color:'#cecece'}">Gérer</h3>
-                  <label class="toggle">
-                     <input type="checkbox" ng-model="gerer" ng-checked="consult ? gerer : (gerer=false)">
-                     <div class="track">
-                       <div class="handle"></div>
-                     </div>
-                  </label>
-                </td>
-                <td align="center">
-                  <h3 ng-style="comment ? {color:'green'}:{color:'#cecece'}">Commenter</h3>
-                  <label class="toggle">
-                     <input type="checkbox" ng-model="comment" ng-checked="consult ? comment : (comment=false)">
-                     <div class="track">
-                       <div class="handle"></div>
-                     </div>
-                  </label>
-                </td>
-              </tr>
-            </table>
           </div>
         </ion-item>
       </ion-list>
-      <ion-item id="group" class="item-text-wrap" >
-        <h2><font color="#0069a1">Contacts</font></h2>
-      </ion-item>
-      <ion-list>
-        <ion-item ng-repeat="contact in contactsSolo | limitTo: 50" class="item-text-wrap" ng-class="{'item-borderless':$index==0}" >
+      <div id="contact_solo" class="item-text-wrap" style="margin-left:1.5%;padding-top:3%;" ng-click="showContactSolo = !showContactSolo">
+        <span class="symbol" style="display:inline-block;vertical-align: middle">
+          <i class="icon custom-icon-arrow" style="display:inline-block;vertical-align: middle" ng-class="showContactSolo ? 'ion-arrow-down-b' : 'ion-arrow-right-b'"></i>
+        </span>
+        <h4 style="display:inline-block;vertical-align: middle"><b><font color="#0069a1">Contacts</font></b><font color ="#cecece"> ({{contactsSoloResult.length}})</font></h4>
+      </div>
+      <ion-list ng-show="showContactSolo">
+        <ion-item ng-repeat="contact in contactsSolo | filter:searchTo | orderBy:'displayName' | limitTo: 50 as contactsSoloResult" class="item-text-wrap" ng-class="{'item-borderless':$index==0}" ng-click="moveToShare($index,contact,false)" >
           <div class="checkbox-list-item" style="padding:1%" ng-click=" showToggle = ! showToggle">
             <div  style="display:inline-block;vertical-align: middle" >
               <h2 ng-style="(consult||contrib||gerer||comment) ? {color:'blue'}:{color:'black'}">{{contact.displayName}}</h2>

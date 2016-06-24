@@ -233,7 +233,6 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     url: '/workspace/share/:idItems',
     views: {
       'menuContent': {
-        controller: 'ShareItemController',
         templateUrl: 'workspace/share_items.html'
       }
     }
@@ -526,6 +525,16 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
           elm.text(version);
         });
       };
+    })
+    .directive('elementOnLoad', function () {
+      return {
+        restrict: 'A',
+        link: function(scope,element,attrs){
+          element.bind('load', function(){
+            console.log("");
+          });
+        }
+      }
     })
     .directive('onLongPress', function($timeout) {
       return {
