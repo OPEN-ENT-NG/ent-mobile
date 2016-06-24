@@ -13,6 +13,8 @@ angular.module('ent.share_item',['ent.workspace_service','ent.message_services']
     //   return $http.get(domainENT+"/conversation/visible");
     // }
   $scope.contactShared = [];
+  $scope.showContactSolo = true ;
+  $scope.showContactGroup = true ;
   $scope.hasFilters = true ;
   var idItems = $stateParams.idItems;
   var allActions = [];
@@ -223,7 +225,7 @@ angular.module('ent.share_item',['ent.workspace_service','ent.message_services']
 
   function complementHeaderList(){
     var headerList = "Partagé avec "+$scope.contactShared.length;
-    if($scope.contactShared.length!=0){
+    if($scope.contactShared.length>1){
       headerList = headerList+" personnes";
     }else{
       headerList = headerList+" personne";
@@ -281,10 +283,8 @@ angular.module('ent.share_item',['ent.workspace_service','ent.message_services']
   }
 
   $scope.openFilters = function(){
-    if($scope.hasFilters){
       $scope.searchTo = '';
-    }
-    $scope.hasFilters = !$scope.hasFilters;
+      document.getElementById("searchId").value = '' ;
   }
 
   $scope.onScroll = function(){
