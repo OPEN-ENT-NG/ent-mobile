@@ -3,14 +3,14 @@
   <ion-nav-buttons side="left" >
       <label class="item-input-wrapper textbox-search search-custom-header-label" ng-if="hasFilters">
           <i class="icon ion-ios7-search placeholder-icon"></i>
-          <input placeholder="Rechercher.." ng-model="searchTo" ng-change="setFilterText(searchTo)" class="input-search-header-custom">
+          <input id="searchId" placeholder="Rechercher.." ng-model="searchTo" ng-change="setFilterText(searchTo)" class="input-search-header-custom">
       </label>
   </ion-nav-buttons>
   <ion-nav-title ng-show="!hasFilters">
       Partager
   </ion-nav-title>
   <ion-nav-buttons side="right">
-      <a data-tap-disabled="true" class=" button button-icon icon positive" ng-click="openFilters(hasFilters)" ng-class="{'ion-search':!hasFilters,'ion-close-circled':hasFilters}"></a>
+      <a data-tap-disabled="true" class=" button button-icon icon positive" ng-click="openFilters()" ng-class="{'ion-search':!hasFilters,'ion-close-circled':hasFilters}"></a>
   </ion-nav-buttons>
 
   <ion-header-bar class="bar bar-subheader">
@@ -78,13 +78,13 @@
         <span class="symbol" style="display:inline-block;vertical-align: middle">
           <i class="icon custom-icon-arrow" style="display:inline-block;vertical-align: middle" ng-class="showContactGroup ? 'ion-arrow-down-b' : 'ion-arrow-right-b' "></i>
         </span>
-        <h4 style="display:inline-block;vertical-align: middle"><b><font color="#0069a1">Contacts par groupe</font></b><font color ="#cecece"> ({{contactsGroupResult.length}})</font></h4>
+        <h4 style="display:inline-block;vertical-align: middle"><b><font color="#0069a1">Contacts par groupe</font></b><font color ="#cecece" ng-show="searchTo.length>1"> ({{contactsGroupResult.length}})</font><font color ="#cecece" ng-show="searchTo.length<2 || !searchTo"> (0)</font></h4>
       </div>
-      <ion-list ng-show="showContactGroup">
+      <ion-list ng-show="showContactGroup && searchTo.length > 1">
         <ion-item ng-repeat="contactGroup in contactsGroup | filter:searchTo | orderBy:'displayName' | limitTo: 30 as contactsGroupResult" class="item-text-wrap" ng-class="{'item-borderless':$index==0}" ng-click="moveToShare($index,contactGroup,true)">
           <div class="checkbox-list-item" style="padding:1%">
             <div  style="display:inline-block;vertical-align: middle" >
-              <h2 ng-style="(consult||contrib||gerer||comment) ? {color:'blue'}:{color:'black'}">{{contactGroup.displayName}}</h2>
+              <h2>{{contactGroup.displayName}}</h2>
             </div>
           </div>
         </ion-item>
@@ -93,13 +93,13 @@
         <span class="symbol" style="display:inline-block;vertical-align: middle">
           <i class="icon custom-icon-arrow" style="display:inline-block;vertical-align: middle" ng-class="showContactSolo ? 'ion-arrow-down-b' : 'ion-arrow-right-b'"></i>
         </span>
-        <h4 style="display:inline-block;vertical-align: middle"><b><font color="#0069a1">Contacts</font></b><font color ="#cecece"> ({{contactsSoloResult.length}})</font></h4>
+        <h4 style="display:inline-block;vertical-align: middle"><b><font color="#0069a1">Contacts</font></b><font color ="#cecece" ng-show="searchTo.length>1"> ({{contactsSoloResult.length}})</font><font color ="#cecece" ng-show="searchTo.length<2 || !searchTo"> (0)</font></h4>
       </div>
-      <ion-list ng-show="showContactSolo">
+      <ion-list ng-show="showContactSolo && searchTo.length > 1">
         <ion-item ng-repeat="contact in contactsSolo | filter:searchTo | orderBy:'displayName' | limitTo: 50 as contactsSoloResult" class="item-text-wrap" ng-class="{'item-borderless':$index==0}" ng-click="moveToShare($index,contact,false)" >
-          <div class="checkbox-list-item" style="padding:1%" ng-click=" showToggle = ! showToggle">
+          <div class="checkbox-list-item" style="padding:1%">
             <div  style="display:inline-block;vertical-align: middle" >
-              <h2 ng-style="(consult||contrib||gerer||comment) ? {color:'blue'}:{color:'black'}">{{contact.displayName}}</h2>
+              <h2>{{contact.displayName}}</h2>
               <h3><font color="#cecece">{{contact.profile}}</font></h3>
             </div>
           </div>

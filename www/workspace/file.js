@@ -10,6 +10,10 @@ angular.module('ent.workspace_file',['ent.workspace_service'])
     $scope.downloadFile($rootScope.doc.name, docUrl,$rootScope.doc.metadata['content-type'], "workspace");
   }
 
+  $scope.goShare = function(){
+    $state.go('app.workspace_share', {idItems:$rootScope.doc._id})
+  }
+
   $scope.commentDoc = function (){
     $scope.data = {};
     var myPopup = $ionicPopup.show({
