@@ -13,12 +13,11 @@ angular.module('ent.share_item',['ent.workspace_service','ent.message_services']
     //   return $http.get(domainENT+"/conversation/visible");
     // }
   $scope.contactShared = [];
-<<<<<<< HEAD
-=======
+
   $scope.showContactSolo = true ;
   $scope.showContactGroup = true ;
   $scope.hasFilters = true ;
->>>>>>> workspace
+
   var idItems = $stateParams.idItems;
   var allActions = [];
   var isGettedContacts = false ;
