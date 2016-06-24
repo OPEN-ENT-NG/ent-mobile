@@ -1,5 +1,5 @@
 angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute','ent.actualites','ent.blog','ent.blog-list','ent.auth',
-'ent.messagerie','ent.workspace','ent.user','ent.pronotes','angularMoment','ent.test', 'ng-mfb', 'ui.router'])
+'ent.messagerie','ent.workspace','ent.user','ent.pronotes', 'angularMoment','ent.test', 'ng-mfb', 'ui.router'])
 
 // .value("domainENT", "https://ent.picardie.fr")
 // .value("domainENT", "https://preprod-leo.entcore.org")
@@ -233,6 +233,15 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     views: {
       'menuContent': {
         templateUrl: 'workspace/tree-list-folders.html'
+      }
+    }
+  })
+
+  .state('app.workspace_share', {
+    url: '/workspace/share/:idItems',
+    views: {
+      'menuContent': {
+        templateUrl: 'workspace/share_items.html'
       }
     }
   })
@@ -560,7 +569,6 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
           }
         }, 800);
       });
-
       $elm.bind('touchend', function (evt) {
         // Prevent the onLongPress event from firing
         $scope.longPress = false;

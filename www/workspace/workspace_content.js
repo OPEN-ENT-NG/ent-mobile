@@ -15,6 +15,40 @@ angular.module('ent.workspace_content',['ent.workspace_service',])
     return $stateParams.nameWorkspaceFolder == "shared"
   }
 
+  $rootScope.isIHaveRightToShare = function(){
+    if($scope.folders && $scope.documents){
+      if(getCheckedFolders($scope.folders).length + getCheckedDocuments($scope.documents).length == 1){
+        if($stateParams.nameWorkspaceFolder == "documents"){
+          return true;
+        } else if($stateParams.nameWorkspaceFolder == "shared"){
+          var docChecked = getCheckedDocuments($scope.documents);
+          var foldChecked = getCheckedFolders($scope.folders);
+          if(docChecked.length==1){
+            var sharing = docChecked[0].shared ;
+            for(var i = 0 ; i < sharing.length ; i++){
+              if(sharing[i].userId == $rootScope.myUser.id){
+                if(sharing[i]['org-entcore-workspace-service-WorkspaceService|shareJson']){
+                  return true ;
+                }
+              }
+            }
+          } else if(foldChecked.length==1) {
+            var sharing = foldChecked[0].shared ;
+            for(var i = 0 ; i < sharing.length ; i++){
+              if(sharing[i].userId == $rootScope.myUser.id){
+                if(sharing[i]['org-entcore-workspace-service-WorkspaceService|shareJson']){
+                  return true ;
+                }
+              }
+            }
+          }
+        }
+      } else {
+        return false ;
+      }
+    }
+  }
+
   /*
   * if given group is the selected group, deselect it
   * else, select the given group
@@ -61,7 +95,6 @@ angular.module('ent.workspace_content',['ent.workspace_service',])
     });
   }
 
-
   $scope.addDocument = function(ele){
     var newDoc = ele.files[0];
     // mfbMenu.close();
@@ -85,6 +118,7 @@ angular.module('ent.workspace_content',['ent.workspace_service',])
           for(var i=0; i<result.data.length;i++){
             $scope.documents.push(MimeTypeFactory.setIcons(result.data[i]));
           }
+          console.log($scope.documents);
           console.log("files: "+$scope.documents.length);
         })
         $cordovaProgress.hide()
@@ -180,6 +214,22 @@ angular.module('ent.workspace_content',['ent.workspace_service',])
     MovingItemsFactory.setMovingDocs(getCheckedDocuments($scope.documents))
     MovingItemsFactory.setMovingFolders(getCheckedFolders($scope.folders))
     $state.go('app.workspace_tree', {action:'move'})
+  }
+
+  $scope.shareSelectedItems = function(){
+    var checkedItems = getCheckedItems($scope.folders, $scope.documents);
+    var ids = [] ;
+    for(var i = 0 ; i < checkedItems.folders.length ; i++){
+      ids.push(checkedItems.folders[i]._id);
+    }
+    for(var i = 0 ; i < checkedItems.documents.length ; i++){
+      console.log(checkedItems.documents[i]);
+      ids.push(checkedItems.documents[i]._id);
+    }
+    console.log(ids);
+    $scope.closePopover()
+    $rootScope.checkable = false
+    $state.go('app.workspace_share', {idItems:ids})
   }
 
   $scope.onlyOneFolder = function(){

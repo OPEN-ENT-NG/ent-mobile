@@ -6,6 +6,20 @@ angular.module('ent.workspace_service', ['ion-tree-list'])
     headers: { 'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8" }
   };
 
+  var transformRequestForActions = function(dataObj){
+    var str = [];
+    for(var field in dataObj){
+      if(field === 'actions' && dataObj[field]){
+        for(var i = 0 ; i < dataObj[field].length ; i++){
+          str.push("actions=" + encodeURIComponent(dataObj[field][i]));
+        }
+      } else {
+        str.push(encodeURIComponent(field)+"="+encodeURIComponent(dataObj[field]));
+      }
+    }
+    return str.join("&");
+  }
+
   this.getFoldersByFilter = function(filter, hierarchical){
     return $http.get(domainENT+"/workspace/folders/list?filter="+parametersUrl(filter,hierarchical))
   }
@@ -24,6 +38,25 @@ angular.module('ent.workspace_service', ['ion-tree-list'])
 
   this.getCompleteFoldersByFilter = function(filter) {
     return $http.get(domainENT+'/workspace/folders/list?filter=' + filter + '&_='+getTimeInMillis())
+  }
+
+  this.getSharingItemDatas = function(idItem) {
+      return $http.get(domainENT+'/workspace/share/json/'+idItem);
+  }
+
+  this.updateSharingActions = function (idItem, sharingDatas, isRemove){
+    console.log(idItem);
+    console.log(sharingDatas);
+    var str = '' ;
+    if(!isRemove){
+      str = 'json' ;
+    }else{
+      str = 'remove' ;
+    }
+    return $http.put(domainENT+'/workspace/share/'+str+'/'+idItem, sharingDatas, {
+      transformRequest: transformRequestForActions,
+      headers: {'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8"}
+    });
   }
 
   this.commentDocById = function (id, comment){

@@ -134,6 +134,13 @@ ion-popover-view.fit ion-content {
   border-radius: 2px;
 }
 
+.bar-header {
+    border: 0px !important;
+    border-bottom-color: transparent !important;
+    background-image: none !important;
+    border-bottom: none !important;
+}
+
 .item1 {
   border-color: #ddd;
   background-color: #fff;
