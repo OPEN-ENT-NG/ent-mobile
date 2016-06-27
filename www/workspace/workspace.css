@@ -1,5 +1,5 @@
 .custom-icon-arrow{
-  color: #0069a1
+  color: #66B5DF
 }
 
 .icon-blue {
@@ -33,18 +33,19 @@
 
 .search-custom-header-label{
   background-color: rgba(76, 175, 80, 0);
-  border-bottom-width:1%;
-  box-sizing: border-box;
   border: none;
   border-bottom: 2px solid white;
+  padding-bottom: 1% ;
 }
 
-/*.border-bottom-white{
-  border-bottom-width:1%;
-  border-bottom-color: white;
-  border-bottom-style: solid;
-  vertical-align: middle;
-}*/
+.toggle-blue input:checked + .track {
+    background-color:#66B5DF;
+    border-color:#66B5DF;
+}
+
+.white-icon-ion-close-round{
+  color : white ;
+}
 
 .input-search-header-custom{
   color : #ffffff ;
@@ -52,13 +53,13 @@
   border: none;
 }
 
-*::-webkit-input-placeholder {
+.input-search-header-custom::-webkit-input-placeholder {
   color: white !important;
 }
-*:-moz-placeholder {
+.input-search-header-custom::-moz-placeholder {
   color: white !important;
 }
-*:-ms-input-placeholder { /* IE10+ */
+.input-search-header-custom::-ms-input-placeholder { /* IE10+ */
   color: white !important;
 }
 
