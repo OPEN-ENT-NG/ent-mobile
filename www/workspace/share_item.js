@@ -303,8 +303,12 @@ angular.module('ent.share_item',['ent.workspace_service','ent.message_services']
   };
 
   var doCustomBack= function() {
-    if($scope.searchTo.length!= null && $scope.searchTo.length>0){
-      $scope.closeFilters();
+    if($scope.searchTo != null){
+      if($scope.searchTo.length>0){
+        $scope.closeFilters();
+      } else {
+        $ionicHistory.goBack();
+      }
     } else {
       $ionicHistory.goBack();
     }
