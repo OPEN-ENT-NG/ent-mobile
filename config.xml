@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget id="com.entmobile.recette.leo" version="4.0.3" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-  <name>ENT mobile 22062016</name>
+<widget id="com.entmobile.recette.leo" version="4.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+  <name>ENT mobile 27062016</name>
   <description>
         ENT mobile: An Ionic project
     </description>
