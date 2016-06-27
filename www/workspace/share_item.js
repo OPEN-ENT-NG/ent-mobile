@@ -8,10 +8,6 @@ var actionsName = {
 angular.module('ent.share_item',['ent.workspace_service','ent.message_services'])
 
 .controller('ShareItemController', function($scope, $rootScope, $stateParams, $state,$ionicPosition, $ionicScrollDelegate, WorkspaceService, MessagerieServices, $ionicLoading){
-  // MESSAEGERIE SERVICE UTILISER LURL DES CONTACT VISIBLE POUR TESTER LES PARTAGES
-  //   this.getContactsService = function(){
-    //   return $http.get(domainENT+"/conversation/visible");
-    // }
   $scope.contactShared = [];
 
   $scope.showContactSolo = true ;
@@ -30,31 +26,25 @@ angular.module('ent.share_item',['ent.workspace_service','ent.message_services']
     $ionicLoading.show({
       template: '<ion-spinner icon="android"/>'
     });
-    $scope.contactsGroup = [];
-    $scope.contactsSolo = [];
+    $scope.contacts = [];
     MessagerieServices.getContactsService().then(function(resp){
       for(var i = 0; i< resp.data.groups.length; i++){
-        $scope.contactsGroup.push({
+        $scope.contacts.push({
           _id:  resp.data.groups[i].id,
           displayName:  resp.data.groups[i].name,
-          groupDisplayName:  resp.data.groups[i].groupDisplayName,
-          profile:  resp.data.groups[i].status
+          profile:  "Groupe"
         });
       }
       for(var i = 0; i<  resp.data.users.length; i++){
         if(resp.data.users[i].id != $rootScope.myUser.id){
-          $scope.contactsSolo.push({
+          $scope.contacts.push({
             _id:  resp.data.users[i].id,
             displayName:  resp.data.users[i].displayName,
-            groupDisplayName:  resp.data.users[i].groupDisplayName,
-            profile:  resp.data.users[i].status
+            profile:  resp.data.users[i].profile
           });
         }
       };
       getSharingItemDatas();
-      setTimeout(function () {
-        $ionicLoading.hide();
-      }, 2000);
     }, function(err){
         $scope.showAlertError();
     })
@@ -83,6 +73,7 @@ angular.module('ent.share_item',['ent.workspace_service','ent.message_services']
         }
       }
       complementHeaderList();
+      $ionicLoading.hide();
     },function(err){
       console.log(err);
     })
@@ -102,34 +93,22 @@ angular.module('ent.share_item',['ent.workspace_service','ent.message_services']
     });
   }
 
-  function removeContactSharedFromGroupOrUser(id, isGroup){
+  function removeContactSharedFromGroupOrUser(id){
     var index = -1 ;
-    if(isGroup){
-      for(var i = 0 ; i < $scope.contactsGroup.length ; i++){
-        if(id == $scope.contactsGroup[i]._id){
-          index = i;
-          break;
-        }
+    for(var i = 0 ; i < $scope.contacts.length ; i++){
+      if(id == $scope.contacts[i]._id){
+        index = i;
+        break;
       }
-      console.log(index);
-      $scope.contactsGroup.splice(index,1);
-    } else{
-      for(var i = 0 ; i < $scope.contactsSolo.length ; i++){
-        if(id == $scope.contactsSolo[i]._id){
-          index = i;
-          break;
-        }
-      }
-      console.log(index);
-      $scope.contactsSolo.splice(index,1);
     }
+    $scope.contacts.splice(index,1);
   }
 
   function addContactShared(dataContact, actions,isGroup){
     var contactShared = {} ;
     var rights = actionsToRights(actions);
 
-    removeContactSharedFromGroupOrUser(dataContact.id,isGroup);
+    removeContactSharedFromGroupOrUser(dataContact.id);
 
     contactShared.id = dataContact.id;
     if(!isGroup){
@@ -237,15 +216,10 @@ angular.module('ent.share_item',['ent.workspace_service','ent.message_services']
 
   $scope.moveToShare = function(index, contact, isGroup){
       var contactShared = {} ;
+      $scope.contacts.splice(index,1);
       contactShared.id = contact._id;
       contactShared.name = contact.displayName ;
-      if(!isGroup){
-        $scope.contactsSolo.splice(index,1);
-        contactShared.profile = contact.profile ;
-      }else{
-        $scope.contactsGroup.splice(index,1);
-        contactShared.profile = "Groupe" ;
-      }
+      contactShared.profile = contact.profile ;
       contactShared.read = true ;
       contactShared.contrib = false ;
       contactShared.comment = false ;
@@ -254,7 +228,7 @@ angular.module('ent.share_item',['ent.workspace_service','ent.message_services']
       contactShared.isGroup = isGroup ;
       $scope.contactShared.push(contactShared);
       $scope.openSharing(contactShared.id);
-
+      $scope.closeFilters();
   }
 
   $scope.openSharing = function(contactId){
@@ -284,26 +258,19 @@ angular.module('ent.share_item',['ent.workspace_service','ent.message_services']
     }
   }
 
-  $scope.openFilters = function(){
+  $scope.closeFilters = function(){
       $scope.searchTo = '';
+      complementHeaderList();
       document.getElementById("searchId").value = '' ;
   }
 
-  $scope.onScroll = function(){
-    var positionGroupe = $ionicPosition.position(angular.element(document.getElementById("contact_group")));
-    var positionSolo = $ionicPosition.position(angular.element(document.getElementById("contact_solo")));
-    if( (positionSolo.top + positionSolo.height > 0) && (positionGroupe.top + positionGroupe.height > 0) ){
-      $scope.$apply(function(){ complementHeaderList();});
-    }else if( (positionGroupe.top + positionGroupe.height < 0) && (positionSolo.top + positionSolo.height > 0) ){
-        $scope.$apply(function(){ $scope.headerList = "Contacts par groupe";});
-    }else{
-        $scope.$apply(function(){ $scope.headerList = "Contacts";});
-    }
-  }
-
   $scope.setFilterText = function(text){
-    console.log(text);
     $scope.searchTo = text;
+    if(text.length > 0){
+      $scope.headerList = "Contacts" ;
+    }else{
+      complementHeaderList();
+    }
   }
 
   $scope.modifyCheckValues = function(contactShared, right){

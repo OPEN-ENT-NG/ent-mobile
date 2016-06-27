@@ -11,7 +11,21 @@ angular.module('ent.workspace_file',['ent.workspace_service'])
   }
 
   $scope.goShare = function(){
-    $state.go('app.workspace_share', {idItems:$rootScope.doc._id})
+    var goState = false ;
+    if($rootScope.doc.owner == $rootScope.myUser.userId){
+      goState = true ;
+    }else{
+      for(var i = 0 ; i < $rootScope.doc.shared.length ; i++){
+        if($rootScope.doc.shared[i].userId == $rootScope.myUser.userId){
+          if($rootScope.doc.shared[i]['org-entcore-workspace-service-WorkspaceService|shareJson']){
+            goState = true ;
+          }
+        }
+      }
+    }
+    if(goState){
+      $state.go('app.workspace_share', {idItems:$rootScope.doc._id})
+    }
   }
 
   $scope.commentDoc = function (){
