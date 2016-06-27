@@ -7,7 +7,7 @@ var actionsName = {
 
 angular.module('ent.share_item',['ent.workspace_service','ent.message_services'])
 
-.controller('ShareItemController', function($scope, $rootScope, $stateParams, $state,$ionicPosition, $ionicScrollDelegate, WorkspaceService, MessagerieServices, $ionicLoading){
+.controller('ShareItemController', function($scope, $rootScope, $stateParams,$ionicPlatform, $ionicHistory, $state,$ionicPosition, $ionicScrollDelegate, WorkspaceService, MessagerieServices, $ionicLoading){
   $scope.contactShared = [];
 
   $scope.showContactSolo = true ;
@@ -297,6 +297,23 @@ angular.module('ent.share_item',['ent.workspace_service','ent.message_services']
       }
     }
   }
+
+  $rootScope.$ionicGoBack = function() {
+    doCustomBack();
+  };
+
+  var doCustomBack= function() {
+    if($scope.searchTo.length!= null && $scope.searchTo.length>0){
+      $scope.closeFilters();
+    } else {
+      $ionicHistory.goBack();
+    }
+  };
+
+  var deregisterHardBack= $ionicPlatform.registerBackButtonAction(doCustomBack, 1001);
+  $scope.$on('$destroy', function() {
+    deregisterHardBack();
+  });
 
   $scope.$on("$ionicView.beforeLeave", function(event, data){
    // handle event
