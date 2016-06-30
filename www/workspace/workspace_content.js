@@ -58,6 +58,21 @@ angular.module('ent.workspace_content',['ent.workspace_service',])
     }
   }
 
+  $rootScope.isIHaveRightToRename = function(){
+    if($scope.folders){
+      var foldChecked = getCheckedFolders($scope.folders);
+      for(var i = 0 ; i < foldChecked.length ; i++ ){
+        for(var j = 0 ; j < foldChecked[i].shared.length ; j++){
+          if(foldChecked[i].shared[j].userId == $rootScope.myUser.id){
+            if(foldChecked[i].shared[j]['org-entcore-workspace-service-WorkspaceService|updateDocument']){
+              return true ;
+            }
+          }
+        }
+      }
+    }
+  }
+
 
   /*
   * if given group is the selected group, deselect it
