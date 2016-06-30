@@ -74,7 +74,7 @@
         </ion-item>
       </ion-list>
       <ion-list style="height:100%" ng-if="searchTo.length > 0">
-        <ion-item collection-repeat="contact in contacts | filter:{displayName : searchTo} | orderBy:'displayName'" class="item-text-wrap" ng-class="{'item-borderless':$index==0}" ng-click="moveToShare($index,contact,false)" >
+        <ion-item collection-repeat="contact in contacts | filter:{displayName : searchTo} | orderBy:'displayName'" class="item-text-wrap" ng-class="{'item-borderless':$index==0}" ng-click="moveToShare($index,contact)" >
             <h2>{{contact.displayName}}</h2>
             <h3><font color="#cecece">{{contact.profile}}</font></h3>
         </ion-item>

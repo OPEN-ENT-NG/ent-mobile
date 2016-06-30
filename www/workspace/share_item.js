@@ -27,7 +27,8 @@ angular.module('ent.share_item',['ent.workspace_service','ent.message_services']
         $scope.contacts.push({
           _id:  resp.data.groups[i].id,
           displayName:  resp.data.groups[i].name,
-          profile:  "Groupe"
+          profile:  "Groupe",
+          isGroup: true
         });
       }
       for(var i = 0; i<  resp.data.users.length; i++){
@@ -35,7 +36,8 @@ angular.module('ent.share_item',['ent.workspace_service','ent.message_services']
           $scope.contacts.push({
             _id:  resp.data.users[i].id,
             displayName:  resp.data.users[i].displayName,
-            profile:  resp.data.users[i].profile
+            profile:  resp.data.users[i].profile,
+            isGroup: false
           });
         }
       };
@@ -251,7 +253,7 @@ angular.module('ent.share_item',['ent.workspace_service','ent.message_services']
     $scope.headerList = headerList ;
   }
 
-  $scope.moveToShare = function(index, contact, isGroup){
+  $scope.moveToShare = function(index, contact){
       var contactShared = {} ;
       $scope.contacts.splice(index,1);
       contactShared.id = contact._id;
@@ -262,7 +264,7 @@ angular.module('ent.share_item',['ent.workspace_service','ent.message_services']
       contactShared.comment = false ;
       contactShared.manager = false ;
       contactShared.isSharingOpen = false ;
-      contactShared.isGroup = isGroup ;
+      contactShared.isGroup = contact.isGroup ;
       $scope.contactShared.push(contactShared);
       $scope.openSharing(contactShared.id);
       $scope.closeFilters();
