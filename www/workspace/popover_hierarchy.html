@@ -11,7 +11,7 @@
       <a class="item" ng-click="restoreSelectedItems()" ng-show="isTrash()">{{translationWorkspace["workspace.trash.restore"]}}</a>
 
       <!-- Copier dans l'arborescence -->
-      <a class="item item-text-wrap" ng-click="copySelectedItems()" ng-show="!isTrash()">{{getCopyExpression()}}</a>
+      <a class="item item-text-wrap" ng-click="copySelectedItems()" ng-show="!isTrash() && isDocuments()">{{getCopyExpression()}}</a>
 
       <!-- Déplacer -->
       <a class="item" ng-click="moveSelectedItems()" ng-show="isMyDocuments()">{{translationWorkspace["workspace.move"]}}</a>

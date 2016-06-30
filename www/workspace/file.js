@@ -2,6 +2,10 @@ angular.module('ent.workspace_file',['ent.workspace_service'])
 
 .controller('WorkspaceFileCtlr', function($scope, $rootScope, $ionicPopup, domainENT, WorkspaceService, $ionicLoading, $stateParams, $ionicHistory,  $ionicPopover,$state, RenamePopUpFactory, MovingItemsFactory){
 
+  var myUserRights = [] ;
+  var isOwner = false ;
+  getShareRights();
+
   console.log($rootScope.doc);
   $rootScope.doc.ownerPhoto = '/userbook/avatar/'+$rootScope.doc.owner
 
@@ -11,63 +15,56 @@ angular.module('ent.workspace_file',['ent.workspace_service'])
   }
 
   $scope.goShare = function(){
-    var goState = false ;
-    if($rootScope.doc.owner == $rootScope.myUser.userId){
-      goState = true ;
-    }else{
-      for(var i = 0 ; i < $rootScope.doc.shared.length ; i++){
-        if($rootScope.doc.shared[i].userId == $rootScope.myUser.userId){
-          if($rootScope.doc.shared[i]['org-entcore-workspace-service-WorkspaceService|shareJson']){
-            goState = true ;
-          }
-        }
-      }
-    }
-    if(goState){
+    if($scope.isRightToShare()){
       $state.go('app.workspace_share', {idItems:$rootScope.doc._id})
     }
   }
 
   $scope.commentDoc = function (){
+
     $scope.data = {};
-    var myPopup = $ionicPopup.show({
-      template: '<input type="text" ng-model="data.comment">',
-      title: $rootScope.translationWorkspace["workspace.comment"],
-      scope: $scope,
-      buttons: [
-        { text: $rootScope.translationWorkspace["cancel"] },
-        {
-          text: '<b>'+$rootScope.translationWorkspace["workspace.comment"]+'</b>',
-          type: 'button-positive',
-          onTap: function(e) {
-            if (!$scope.data.comment) {
-              e.preventDefault();
-            } else {
-              return $scope.data.comment;
+
+    if($scope.isRightToComment()){
+
+      var myPopup = $ionicPopup.show({
+        template: '<input type="text" ng-model="data.comment">',
+        title: $rootScope.translationWorkspace["workspace.comment"],
+        scope: $scope,
+        buttons: [
+          { text: $rootScope.translationWorkspace["cancel"] },
+          {
+            text: '<b>'+$rootScope.translationWorkspace["workspace.comment"]+'</b>',
+            type: 'button-positive',
+            onTap: function(e) {
+              if (!$scope.data.comment) {
+                e.preventDefault();
+              } else {
+                return $scope.data.comment;
+              }
             }
           }
-        }
-      ]
-    });
+        ]
+      });
 
-    myPopup.then(function(res) {
-      if(res){
-        $ionicLoading.show({
-          template: '<ion-spinner icon="android"/>'
-        });
-        WorkspaceService.commentDocById($rootScope.doc._id, res).then(function(result){
-          updateDoc($rootScope.doc)
-          $ionicLoading.hide()
-        }, function(err){
-          $ionicLoading.hide()
-          $scope.showAlertError()
-        });
-      }
-    })
+      myPopup.then(function(res) {
+        if(res){
+          $ionicLoading.show({
+            template: '<ion-spinner icon="android"/>'
+          });
+          WorkspaceService.commentDocById($rootScope.doc._id, res).then(function(result){
+            updateDoc($rootScope.doc)
+            $ionicLoading.hide()
+          }, function(err){
+            $ionicLoading.hide()
+            $scope.showAlertError()
+          });
+        }
+      })
+    }
   }
 
   $scope.renameDoc = function (){
-  RenamePopUpFactory.getPopup($scope, $rootScope.doc).then(function(res) {
+    RenamePopUpFactory.getPopup($scope, $rootScope.doc).then(function(res) {
       console.log(res);
       if(res){
         $ionicLoading.show({
@@ -144,6 +141,75 @@ angular.module('ent.workspace_file',['ent.workspace_service'])
     return $scope.shownComments === doc;
   };
 
+  $scope.isRightToUpdate = function(){
+    if(isOwner){
+      return true ;
+    }else{
+      for(var i = 0 ; i < myUserRights.length ; i++){
+        if(myUserRights[i]['org-entcore-workspace-service-WorkspaceService|updateDocument']){
+          return true ;
+        }
+      }
+    }
+    return false ;
+  }
+
+  $scope.isRightToDelete = function(){
+    if(isOwner){
+      return true ;
+    }else{
+      for(var i = 0 ; i < myUserRights.length ; i++){
+        if(myUserRights[i]['org-entcore-workspace-service-WorkspaceService|moveTrash']){
+          return true ;
+        }
+      }
+    }
+    return false ;
+  }
+
+  $scope.isRightToMove = function(){
+    var isRight = false ;
+    if(isOwner){
+      return true ;
+    }else{
+      for(var i = 0 ; i < myUserRights.length ; i++){
+        if(myUserRights[i]['org-entcore-workspace-service-WorkspaceService|moveDocuments']){
+          return true ;
+        }
+      }
+    }
+    return false ;
+  }
+
+  $scope.isRightToShare = function(){
+    var isRight = false ;
+    if(isOwner){
+      return true ;
+    }else{
+      for(var i = 0 ; i < myUserRights.length ; i++){
+        if(myUserRights[i]['org-entcore-workspace-service-WorkspaceService|shareJson']){
+          return true ;
+        }
+      }
+    }
+    return false ;
+  }
+
+  $scope.isRightToComment = function(){
+    var isRight = false ;
+    if(isOwner){
+      return true ;
+    }else{
+      for(var i = 0 ; i < myUserRights.length ; i++){
+        if(myUserRights[i]['org-entcore-workspace-service-WorkspaceService|commentDocument']
+            || myUserRights[i]['org-entcore-workspace-service-WorkspaceService|commentFolder']){
+          return true ;
+        }
+      }
+    }
+    return false ;
+  }
+
   $ionicPopover.fromTemplateUrl('workspace/popover-file.html', {
     scope: $scope
   }).then(function(popover) {
@@ -160,4 +226,18 @@ angular.module('ent.workspace_file',['ent.workspace_service'])
       }
     })
   }
+
+  function getShareRights(){
+    if($rootScope.doc.owner == $rootScope.myUser.userId){
+      isOwner = true ;
+    }else{
+      for(var i = 0 ; i < $rootScope.doc.shared.length ; i++){
+        if($rootScope.doc.shared[i].userId == $rootScope.myUser.userId){
+          myUserRights.push($rootScope.doc.shared[i]);
+          break;
+        }
+      }
+    }
+  }
+
 })

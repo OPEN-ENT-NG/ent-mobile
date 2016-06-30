@@ -9,13 +9,10 @@ angular.module('ent.share_item',['ent.workspace_service','ent.message_services']
 
 .controller('ShareItemController', function($scope, $rootScope, $stateParams, $state,$ionicPosition, $ionicScrollDelegate, WorkspaceService, MessagerieServices, $ionicLoading){
   $scope.contactShared = [];
-  $scope.showContactSolo = true ;
-  $scope.showContactGroup = true ;
-  $scope.hasFilters = true ;
-  var idItems = $stateParams.idItems;
+  $scope.contactSharedNotView = [] ;
+  var idItems = $stateParams.idItems.split(',');
+  var isSimpleItem = idItems.length == 1 ? true : false ;
   var allActions = [];
-  var isGettedContacts = false ;
-  var isGettedSharings = false ;
 
   complementHeaderList();
   getContacts();
@@ -50,31 +47,37 @@ angular.module('ent.share_item',['ent.workspace_service','ent.message_services']
 
   function getSharingItemDatas(){
     $scope.contactShared = [];
-    WorkspaceService.getSharingItemDatas(idItems).then(function(resp){
-      var data = resp.data ;
-      allActions = data.actions;
-      if(data.groups.checked.length!=0){
-        for(var i = 0 ; i < data.groups.visibles.length ; i++ ){
-          var actions = data.groups.checked[data.groups.visibles[i].id];
-          if(actions){
-            addContactShared(data.groups.visibles[i],actions,true);
+    var indexItem = 0 ;
+    for(var i = 0 ; i < idItems.length ; i++){
+      WorkspaceService.getSharingItemDatas(idItems[i]).then(function(resp){
+        var data = resp.data ;
+        allActions = data.actions;
+        if(data.groups.checked.length!=0){
+          for(var i = 0 ; i < data.groups.visibles.length ; i++ ){
+            var actions = data.groups.checked[data.groups.visibles[i].id];
+            if(actions){
+              addContactShared(data.groups.visibles[i],actions,true);
+            }
           }
         }
-      }
-      if(data.users.checked.length!=0){
-        for(var i = 0 ; i < data.users.visibles.length ; i++ ){
-          var actions = data.users.checked[data.users.visibles[i].id];
-          if(actions){
-            console.log(actions);
-            addContactShared(data.users.visibles[i],actions,false);
+        if(data.users.checked.length!=0){
+          for(var i = 0 ; i < data.users.visibles.length ; i++ ){
+            var actions = data.users.checked[data.users.visibles[i].id];
+            if(actions){
+              addContactShared(data.users.visibles[i],actions,false);
+            }
           }
         }
-      }
-      complementHeaderList();
-      $ionicLoading.hide();
-    },function(err){
-      console.log(err);
-    })
+        if(indexItem == idItems.length - 1){
+          witchContactShow();
+        }
+        indexItem++;
+        complementHeaderList();
+        $ionicLoading.hide();
+      },function(err){
+        console.log(err);
+      })
+    }
   }
 
   function updateSharingItemDatas(idItem, sharingDatas, isRemove){
@@ -89,6 +92,44 @@ angular.module('ent.share_item',['ent.workspace_service','ent.message_services']
       $scope.showAlertError(err);
       $ionicLoading.hide();
     });
+  }
+
+  function witchContactShow(){
+    var contactShared = [] ;
+    if(!isSimpleItem){
+      for(var i = 0 ; i < $scope.contactSharedNotView.length ; i++){
+        var count = 0 ;
+        for(var j = 0 ; j < $scope.contactSharedNotView.length ; j++){
+          if($scope.contactSharedNotView[i].id == $scope.contactSharedNotView[j].id){
+            if($scope.contactSharedNotView[i].read == $scope.contactSharedNotView[j].read
+                && $scope.contactSharedNotView[i].contrib == $scope.contactSharedNotView[j].contrib
+                && $scope.contactSharedNotView[i].manager == $scope.contactSharedNotView[j].manager
+                && $scope.contactSharedNotView[i].comment == $scope.contactSharedNotView[j].comment){
+              count++;
+            }
+          }
+        }
+        if(count == idItems.length){
+          var isInside = false ;
+          for(var j = 0 ; j < contactShared.length ; j++){
+            if(contactShared[j].id == $scope.contactSharedNotView[i].id){
+              isInside = true ;
+              break;
+            }
+          }
+          if(!isInside){
+            contactShared.push($scope.contactSharedNotView[i]);
+            removeContactSharedFromGroupOrUser($scope.contactSharedNotView[i].id);
+          }
+        }
+      }
+    } else {
+      for(var i = 0 ; i < $scope.contactSharedNotView.length ; i++){
+        contactShared.push($scope.contactSharedNotView[i]);
+        removeContactSharedFromGroupOrUser($scope.contactSharedNotView[i].id);
+      }
+    }
+    $scope.contactShared = contactShared ;
   }
 
   function removeContactSharedFromGroupOrUser(id){
@@ -106,7 +147,6 @@ angular.module('ent.share_item',['ent.workspace_service','ent.message_services']
     var contactShared = {} ;
     var rights = actionsToRights(actions);
 
-    removeContactSharedFromGroupOrUser(dataContact.id);
 
     contactShared.id = dataContact.id;
     if(!isGroup){
@@ -122,7 +162,7 @@ angular.module('ent.share_item',['ent.workspace_service','ent.message_services']
     contactShared.manager = getChecked($rootScope.translationWorkspace['workspace.manager'],rights);
     contactShared.isSharingOpen = false ;
     contactShared.isGroup = isGroup ;
-    $scope.contactShared.push(contactShared);
+    $scope.contactSharedNotView.push(contactShared);
   }
 
   function rightsToActions(read,contrib,manager,comment){
@@ -296,50 +336,43 @@ angular.module('ent.share_item',['ent.workspace_service','ent.message_services']
     }
   }
 
+  function sendSharing(actions,contactShared, isRemove){
+    var sharingDatas = [];
+    sharingDatas['actions'] = actions ;
+    if(contactShared.isGroup){
+      sharingDatas['groupId'] = contactShared.id;
+    }else{
+      sharingDatas['userId'] = contactShared.id;
+    }
+    for(var j = 0 ; j < idItems.length ; j++){
+      updateSharingItemDatas(idItems[j], sharingDatas, isRemove);
+    }
+  }
+
   $scope.$on("$ionicView.beforeLeave", function(event, data){
-   // handle event
-   for(var i = 0 ; i < $scope.contactShared.length ; i++){
 
-     var contactShared = $scope.contactShared[i]
-     var actionsDatas = rightsToActions(contactShared.read,contactShared.contrib,contactShared.manager,contactShared.comment);
-     var actionsDatasToUpdate = actionsDatas.newsActions;
-     var actionsDatasToDelete = actionsDatas.actionsToDelete;
-     var removeSharing = actionsDatas.removeSharing;
+     for(var i = 0 ; i < $scope.contactShared.length ; i++){
 
-     if(!removeSharing){
+       var contactShared = $scope.contactShared[i]
+       var actionsDatas = rightsToActions(contactShared.read,contactShared.contrib,contactShared.manager,contactShared.comment);
+       var actionsDatasToUpdate = actionsDatas.newsActions;
+       var actionsDatasToDelete = actionsDatas.actionsToDelete;
+       var removeSharing = actionsDatas.removeSharing;
 
-       if(actionsDatasToUpdate){
-         var sharingDatasToUpdate = [];
-         sharingDatasToUpdate['actions'] = actionsDatasToUpdate ;
-         if(contactShared.isGroup){
-           sharingDatasToUpdate['groupId'] = $scope.contactShared[i].id;
-         }else{
-           sharingDatasToUpdate['userId'] = $scope.contactShared[i].id;
+       if(!removeSharing){
+         if(actionsDatasToUpdate){
+           if(actionsDatasToUpdate.length > 0){
+             sendSharing(actionsDatasToUpdate,contactShared,false)
+           }
          }
-         updateSharingItemDatas(data.stateParams.idItems, sharingDatasToUpdate, false);
-       }
-
-       if(actionsDatasToDelete){
-         var sharingDatasToDelete = [];
-         sharingDatasToDelete['actions'] = actionsDatasToDelete ;
-         if(contactShared.isGroup){
-           sharingDatasToDelete['groupId'] = $scope.contactShared[i].id;
-         }else{
-           sharingDatasToDelete['userId'] = $scope.contactShared[i].id;
+         if(actionsDatasToDelete){
+           if(actionsDatasToDelete.length > 0){
+             sendSharing(actionsDatasToDelete,contactShared,true);
+           }
          }
-         updateSharingItemDatas(data.stateParams.idItems, sharingDatasToDelete, true);
+       } else {
+         sendSharing([],contactShared,true);
        }
-
-     } else {
-       var sharingDatasToDelete = [];
-       sharingDatasToDelete['actions'] = [] ;
-       if(contactShared.isGroup){
-         sharingDatasToDelete['groupId'] = $scope.contactShared[i].id;
-       }else{
-         sharingDatasToDelete['userId'] = $scope.contactShared[i].id;
-       }
-       updateSharingItemDatas(data.stateParams.idItems, sharingDatasToDelete, true);
      }
-   }
-  });
-})
+    });
+  })

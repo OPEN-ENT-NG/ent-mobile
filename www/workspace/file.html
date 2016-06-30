@@ -33,27 +33,31 @@
             <i class="icon downloadicon-"></i>
           </a>
 
-          <a class="tab-item" ng-click='commentDoc()'>
-            <i class="icon ion-chatbox"></i>
-            {{translationWorkspace["workspace.comment"]}}
+          <a class="tab-item" ng-click="commentDoc()">
+            <div ng-style="isRightToComment() ? {opacity:1}:{opacity:0.5}">
+              <i class="icon ion-chatbox"></i>
+              {{translationWorkspace["workspace.comment"]}}
+            </div>
           </a>
 
           <a class="tab-item" ng-click="goShare()">
-            <i class="icon share-1icon-"></i>
-            {{translationWorkspace["workspace.share"]}}
-
+            <div ng-style="isRightToShare() ? {opacity:1}:{opacity:0.5}">
+              <i class="icon share-1icon-"></i>
+              {{translationWorkspace["workspace.share"]}}
+            </div>
           </a>
+
         </div>
     </div>
   </div>
 </ion-content>
 
 
-<nav mfb-menu position="br" effect="zoomin" active-icon="ion-plus-round" resting-icon="ion-plus-round" toggling-method="click" templateUrl="ng-mfb-menu-horizontal.tpl.html">
+<nav mfb-menu style="margin-bottom:20%" position="br" effect="zoomin" active-icon="ion-plus-round" resting-icon="ion-plus-round" toggling-method="click" templateUrl="ng-mfb-menu-horizontal.tpl.html">
   <!-- <button mfb-button icon="fa fa-code-fork " ng-click="versions()" label={{translationWorkspace["workspace.versions.list"]}}></button> -->
-  <button mfb-button icon="ion-trash-a" ng-click="trashDoc()" label={{translationWorkspace["workspace.delete"]}}></button>
-  <button mfb-button icon="ion-edit" ng-click="renameDoc()" label={{translationWorkspace["workspace.rename"]}}></button>
-  <button mfb-button icon="moveicon-" ng-click="moveDoc()" label={{translationWorkspace["workspace.move"]}}></button>
+  <button ng-if="isRightsToDelete()" mfb-button icon="ion-trash-a" ng-click="trashDoc()" label={{translationWorkspace["workspace.delete"]}}></button>
+  <button ng-if="isRightsToUpdate()" mfb-button icon="ion-edit" ng-click="renameDoc()" label={{translationWorkspace["workspace.rename"]}}></button>
+  <button ng-if="isRightsToMove()" mfb-button icon="moveicon-" ng-click="moveDoc()" label={{translationWorkspace["workspace.move"]}}></button>
   <button mfb-button icon="fa fa-clone" ng-click="copyDoc()" label={{getCopyExpression()}}></button>
 
 </nav>
