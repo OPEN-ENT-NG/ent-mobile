@@ -335,7 +335,6 @@ angular.module('ent.share_item',['ent.workspace_service','ent.message_services']
     }
   }
 
-<<<<<<< HEAD
   $rootScope.$ionicGoBack = function() {
     doCustomBack();
   };
@@ -356,7 +355,7 @@ angular.module('ent.share_item',['ent.workspace_service','ent.message_services']
   $scope.$on('$destroy', function() {
     deregisterHardBack();
   });
-=======
+
   function sendSharing(actions,contactShared, isRemove){
     var sharingDatas = [];
     sharingDatas['actions'] = actions ;
@@ -369,7 +368,6 @@ angular.module('ent.share_item',['ent.workspace_service','ent.message_services']
       updateSharingItemDatas(idItems[j], sharingDatas, isRemove);
     }
   }
->>>>>>> workspace
 
   $scope.$on("$ionicView.beforeLeave", function(event, data){
 
