@@ -238,7 +238,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   })
 
   .state('app.workspace_share', {
-    url: '/workspace/share/:idItems',
+    url: '/workspace/share/:idItems/:idOwner',
     views: {
       'menuContent': {
         templateUrl: 'workspace/share_items.html'
