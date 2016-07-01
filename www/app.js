@@ -308,9 +308,9 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
       navigator.app.exitApp();
     }else if($ionicSideMenuDelegate.isOpenLeft()){
       $ionicSideMenuDelegate.toggleLeft();
-    } else if($ionicHistory.backView()){
+    }else if($ionicHistory.backView() && $ionicHistory.currentView().backViewId!='ion1'){
       $ionicHistory.goBack();
-    } else if(!$ionicSideMenuDelegate.isOpenLeft()) {
+    }else if(!$ionicSideMenuDelegate.isOpenLeft()) {
       $ionicSideMenuDelegate.toggleLeft();
       $scope.closeApp = true ;
     }

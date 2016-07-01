@@ -171,13 +171,10 @@ angular.module('ent.share_item',['ent.workspace_service','ent.message_services']
     var actionsToDelete = [];
     var removeSharing = false ;
     if(read){
-      console.log("READ");
       newsActions = newsActions.concat(allActions[actionsName['read']].name);
       if(contrib){
-        console.log("CONTRIB");
         newsActions = newsActions.concat(allActions[actionsName['contrib']].name);
         if(manager){
-          console.log("MANAGER");
           newsActions = newsActions.concat(allActions[actionsName['manager']].name);
         }else{
           actionsToDelete = actionsToDelete.concat(allActions[actionsName['manager']].name);
@@ -187,7 +184,6 @@ angular.module('ent.share_item',['ent.workspace_service','ent.message_services']
         actionsToDelete = actionsToDelete.concat(allActions[actionsName['manager']].name);
       }
       if(comment){
-        console.log("COMMENT");
         newsActions = newsActions.concat(allActions[actionsName['comment']].name);
       }else{
         actionsToDelete = actionsToDelete.concat(allActions[actionsName['comment']].name);
@@ -268,6 +264,7 @@ angular.module('ent.share_item',['ent.workspace_service','ent.message_services']
       $scope.contactShared.push(contactShared);
       $scope.openSharing(contactShared.id);
       $scope.closeFilters();
+      $ionicScrollDelegate.scrollTop(true);
   }
 
   $scope.openSharing = function(contactId){
