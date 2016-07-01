@@ -5,7 +5,7 @@
       <a class="item" ng-click="deleteSelectedItems()" ng-show=!isShared()>{{translationWorkspace["workspace.delete"]}}</a>
 
       <!-- Renommer -->
-      <a class="item" ng-click="renameItem()" ng-show="onlyOneFolder() && isIHaveRightToRename()">{{translationWorkspace["workspace.rename"]}}</a>
+      <a class="item" ng-click="renameItem()" ng-show="onlyOneFolder()">{{translationWorkspace["workspace.rename"]}}</a>
 
       <!-- Restaurer -->
       <a class="item" ng-click="restoreSelectedItems()" ng-show="isTrash()">{{translationWorkspace["workspace.trash.restore"]}}</a>
