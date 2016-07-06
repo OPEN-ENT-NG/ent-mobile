@@ -16,6 +16,7 @@
               <h2>{{folder.name}}</h2>
               <h3>{{folder.ownerName}}</h3>
             </div>
+            <i style="opacity:0.7;float:right;" class="ion-android-share icon-share-custom" ng-show="folder.shared != null && folder.shared.length > 0 && isMyDocuments()"></i>
           </div>
         </ion-checkbox>
 
@@ -28,6 +29,7 @@
                 <h3>{{folder.ownerName}}</h3>
               </div>
             </div>
+            <i style="opacity:0.7" class="ion-android-share icon-share-custom" ng-show="folder.shared != null && folder.shared.length > 0 && isMyDocuments()"></i>
             <!-- <div ng-click="toggleComments(folder)" ng-class="{active: areCommentsShown(folder)}" class="subdued numberCircle" ng-show="folder.comments.length>0">
             {{folder.comments.length }}
           </div> -->
@@ -56,6 +58,7 @@
           <img ng-src={{getImageUrl(doc.icon_image)}}></img>
           <h2>{{doc.name}}</h2>
           <h3>{{doc.ownerName}}</h3>
+          <i style="opacity:0.7" class="ion-android-share icon-share-custom" ng-show="doc.shared != null && doc.shared.length > 0 && isMyDocuments()"></i>
         </ion-item>
 
         <ion-checkbox ng-repeat="doc in documents track by $index" ng-model="doc.checked" ng-show=checkable class="checkbox-list-item">
@@ -63,6 +66,7 @@
             <img ng-src={{getImageUrl(doc.icon_image)}}></img>
             <h2>{{doc.name}}</h2>
             <h3>{{doc.ownerName}}</h3>
+            <i style="opacity:0.7" class="ion-android-share icon-share-custom" ng-show="doc.shared != null && doc.shared.length > 0 && isMyDocuments()"></i>
           </div>
         </ion-checkbox>
       </ion-list>

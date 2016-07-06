@@ -199,9 +199,14 @@
   height: 100%;
 }
 
+.icon-share-custom{
+  color:#cecece;
+}
+
 .checkbox-list-item{
   padding-top: 0;
   padding-bottom: 0;
+  width:100%;
 }
 
 .numberCircle {
