@@ -23,6 +23,27 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
         navigator.splashscreen.hide();
       }, 3000 - 1000);
     }
+
+    cordova.plugins.diagnostic.requestRuntimePermissions(function(status){
+      console.log(status);
+      switch(status){
+          case cordova.plugins.diagnostic.permissionStatus.NOT_REQUESTED:
+              console.log("Permission not requested");
+              break;
+          case cordova.plugins.diagnostic.permissionStatus.DENIED:
+              console.log("Permission denied");
+              break;
+          case cordova.plugins.diagnostic.permissionStatus.GRANTED:
+              console.log("Permission granted always");
+              break;
+          case cordova.plugins.diagnostic.permissionStatus.GRANTED_WHEN_IN_USE:
+              console.log("Permission granted only when in use");
+              break;
+      }
+    }, function(error){
+        console.error(error);
+    }, cordova.plugins.diagnostic.runtimePermissionGroups.STORAGE);
+
     $cordovaGlobalization.getPreferredLanguage().then(function(result) {
       localStorage.setItem('preferredLanguage', result.value);
       amMoment.changeLocale(result.value);
@@ -334,7 +355,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     // Save location
     var url = $sce.trustAsResourceUrl(urlFile)
     var targetPath = window.FS.root.nativeURL + 'ENT/' + module + '/' + filename
-    $cordovaProgress.showSimpleWithLabelDetail(true, 'Téléchargement en cours', filename)
+    $cordovaProgress.showSimpleWithLabelDetail(true, 'Téléchargement en cours (Bouton retour pour quitter)', filename)
     $cordovaFileTransfer.download(url, targetPath, {}, true).then(function (result) {
       $cordovaProgress.hide();
       $scope.openLocalFile(targetPath, fileMIMEType);
@@ -517,6 +538,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   // An alert dialog
   $scope.showAlertError = function (error) {
     console.log(error)
+    var isPermissions = false ;
     var title = 'Erreur de connexion'
     var template = 'Nous recontrons actuellement des problèmes. Veuillez réessayer dans quelques instants.'
     if (error) {
@@ -529,6 +551,16 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
             default:
         }
       }
+      if(error.hasOwnProperty('http_status')){
+          switch (error.http_status) {
+            case 200:
+              isPermissions = true ;
+              title = 'Oups !'
+              template = "Vous n'avez pas validé les permission de stockage"
+              break;
+            default:
+          }
+      }
 
       var alertPopup = $ionicPopup.alert({
         title: title,
@@ -536,7 +568,32 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
       })
 
       alertPopup.then(function(res) {
-        $ionicHistory.goBack()
+        console.log(res);
+        console.log(isPermissions);
+        if(isPermissions){
+          console.log(cordova.plugins.diagnostic);
+          cordova.plugins.diagnostic.requestRuntimePermissions(function(status){
+            console.log(status);
+            switch(status){
+                case cordova.plugins.diagnostic.permissionStatus.NOT_REQUESTED:
+                    console.log("Permission not requested");
+                    break;
+                case cordova.plugins.diagnostic.permissionStatus.DENIED:
+                    console.log("Permission denied");
+                    break;
+                case cordova.plugins.diagnostic.permissionStatus.GRANTED:
+                    console.log("Permission granted always");
+                    break;
+                case cordova.plugins.diagnostic.permissionStatus.GRANTED_WHEN_IN_USE:
+                    console.log("Permission granted only when in use");
+                    break;
+            }
+        }, function(error){
+            console.error(error);
+        }, cordova.plugins.diagnostic.runtimePermissionGroups.STORAGE);
+        }else{
+          $ionicHistory.goBack()
+        }
       })
     }
   }

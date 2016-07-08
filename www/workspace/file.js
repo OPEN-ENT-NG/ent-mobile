@@ -11,6 +11,12 @@ angular.module('ent.workspace_file',['ent.workspace_service'])
 
   $scope.downloadDoc = function(){
     var docUrl = domainENT+"/workspace/document/"+$rootScope.doc._id;
+    console.log(cordova.plugins.diagnostic);
+    cordova.plugins.diagnostic.getPermissionsAuthorizationStatus(function(statuses){
+      console.log(statuses);
+    },function(error){
+      console.log(error);
+    },cordova.plugins.diagnostic.runtimePermissionGroups.STORAGE);
     $scope.downloadFile($rootScope.doc.name, docUrl,$rootScope.doc.metadata['content-type'], "workspace");
   }
 
