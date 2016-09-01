@@ -11,14 +11,14 @@
       <ion-list >
         <ion-checkbox ng-repeat="folder in folders track by $index" ng-model="folder.checked" ng-show=checkable class="item item-text-wrap">
           <div style="display: flex;" class="center-image-item">
-            <div ng-click="gotInDepthFolder(folder)" style="width: 90%;">
+            <div ng-click="gotInDepthFolder(folder)" style="width: 90%">
               <i class="folder-open-2icon- icon-file" ></i>
               <div class="info-file margin-text-item">
                 <h2>{{folder.name}}</h2>
                 <h3>{{folder.ownerName}}</h3>
               </div>
             </div>
-            <i class="share-1icon- icon-share-custom" ng-show="folder.shared != null && folder.shared.length > 0 && isMyDocuments()"></i>
+            <span class="share-1icon- icon-share-custom" style="padding-top:2%" ng-show="folder.shared != null && folder.shared.length > 0 && isMyDocuments()"></span>
           </div>
         </ion-checkbox>
 
@@ -31,7 +31,7 @@
                 <h3>{{folder.ownerName}}</h3>
               </div>
             </div>
-            <i class="share-1icon- icon-share-custom" ng-show="folder.shared != null && folder.shared.length > 0 && isMyDocuments()"></i>
+            <span class="share-1icon- icon-share-custom" style="padding-top:2%"  ng-show="folder.shared != null && folder.shared.length > 0 && isMyDocuments()"></span>
             <!-- <div ng-click="toggleComments(folder)" ng-class="{active: areCommentsShown(folder)}" class="subdued numberCircle" ng-show="folder.comments.length>0">
             {{folder.comments.length }}
           </div> -->
