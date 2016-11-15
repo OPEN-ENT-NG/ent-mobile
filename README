@@ -1,3 +1,16 @@
+# À propos de l'application ENT-MOBILE
+
+* Licence : [AGPL v3](http://www.gnu.org/licenses/agpl.txt) - Copyright Conseil Régional Nord Pas de Calais - Picardie
+
+* Développeur(s) : ATOS
+
+* Financeur(s) : Région Nord Pas de Calais-Picardie
+
+* Description : Application mobile multi-plateforme pour l'OPEN ENT NG
+
+# Documentation technique
+
+
 PREREQUIS: Installer Node.js 4 puis cordova et ionic : npm install -g cordova ionic
 
 On va ensuite récupérer les plugins ainsi que les platformes nécéssaires au bon fonctionnement
