@@ -294,7 +294,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   $rootScope.filterThreads = [];
 
   $rootScope.listMenu =  [{'name':'Actualites','icon':'custom-newspaper newspapericon-', 'href':'#/app/actualites'},
-                          {'name':'Messagerie','icon':'custom-mail mailicon-', 'href':'#/app/messagerie'},
+                          {'name':'Messagerie','icon':'custom-mail mailicon-', 'href':'#/app/messagerie/inbox/INBOX'},
                           {'name':'Blog','icon':'custom-bullhorn bullhornicon-', 'href':'#/app/blog-list'},
                           {'name':'Documents','icon':'custom-folder foldericon-', 'href':'#/app/workspace'},
                           {'name':'Pronote','icon':'custom-pronote pronote-1icon-', 'href':'#/app/listPronotes'}];
@@ -326,7 +326,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
 
   $ionicPlatform.registerBackButtonAction( function (e){
     if($scope.closeApp){
-      navigator.app.exitApp();
+      //navigator.app.exitApp();
     }else if($ionicSideMenuDelegate.isOpenLeft()){
       $ionicSideMenuDelegate.toggleLeft();
     }else if($ionicHistory.backView() && $ionicHistory.currentView().backViewId!='ion1'){
