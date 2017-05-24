@@ -289,7 +289,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   // $urlRouterProvider.otherwise('/app/workspace/documents');
 })
 
-.controller('AppCtrl', function ($scope, $rootScope, $sce, $state, $ionicPlatform, $cordovaToast, $cordovaInAppBrowser, $ionicSideMenuDelegate, $cordovaFileTransfer,$cordovaProgress, $cordovaFileOpener2, domainENT, $ionicHistory, SkinFactory, $ionicPopup, ActualitesService, MessagerieServices,PronoteService, BlogsService, WorkspaceService, $filter){
+.controller('AppCtrl', function ($scope, $rootScope, $sce, $state, $ionicPlatform, $cordovaToast, $cordovaInAppBrowser, $ionicSideMenuDelegate, $cordovaFileTransfer, $cordovaFileOpener2, domainENT, $ionicHistory, SkinFactory, $ionicPopup, ActualitesService, MessagerieServices,PronoteService, BlogsService, WorkspaceService, $filter){
 
   $rootScope.filterThreads = [];
 
@@ -355,13 +355,16 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     // Save location
     var url = $sce.trustAsResourceUrl(urlFile)
     var targetPath = window.FS.root.nativeURL + 'ENT/' + module + '/' + filename
-    $cordovaProgress.showSimpleWithLabelDetail(true, 'Téléchargement en cours (Bouton retour pour quitter)', filename)
+    //$cordovaProgress.showSimpleWithLabelDetail(true, 'Téléchargement en cours (Bouton retour pour quitter)', filename)
+    SpinnerDialog.show(null, 'Téléchargement en cours (Bouton retour pour quitter)', true);
     $cordovaFileTransfer.download(url, targetPath, {}, true).then(function (result) {
-      $cordovaProgress.hide();
+    SpinnerDialog.hide();
+    //$cordovaProgress.hide();
       $scope.openLocalFile(targetPath, fileMIMEType);
 
     }, function (error) {
-      $cordovaProgress.hide();
+    SpinnerDialog.hide();
+      //$cordovaProgress.hide();
       $scope.showAlertError(error);
     }, function (progress) {
     });

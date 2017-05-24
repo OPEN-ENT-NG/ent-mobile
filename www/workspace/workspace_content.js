@@ -1,6 +1,6 @@
 angular.module('ent.workspace_content',['ent.workspace_service',])
 
-.controller('WorkspaceFolderContentCtlr', function($scope, $rootScope, $stateParams, $state, WorkspaceService, $ionicLoading, MimeTypeFactory, $cordovaProgress, CreateNewFolderPopUpFactory, $ionicPopup, $cordovaVibration, $ionicHistory, $ionicPlatform, $ionicPopover, RenamePopUpFactory, MovingItemsFactory){
+.controller('WorkspaceFolderContentCtlr', function($scope, $rootScope, $stateParams, $state, WorkspaceService, $ionicLoading, MimeTypeFactory, CreateNewFolderPopUpFactory, $ionicPopup, $cordovaVibration, $ionicHistory, $ionicPlatform, $ionicPopover, RenamePopUpFactory, MovingItemsFactory){
 
   var filter = getFilter($stateParams.nameWorkspaceFolder)
   $rootScope.checkable = false
@@ -112,7 +112,7 @@ angular.module('ent.workspace_content',['ent.workspace_service',])
     if(newDoc.size > $rootScope.translationWorkspace["max.file.size"]){
       $scope.getAlertPopupNoTitle($rootScope.translationWorkspace["file.too.large.limit"]+ $scope.getSizeFile(parseInt($rootScope.translationWorkspace["max.file.size"])))
     } else {
-      $cordovaProgress.showSimpleWithLabelDetail(true, "Ajout en cours", newDoc.name);
+      SpinnerDialog.show(null, 'Ajout en cours', true);
 
       var formData = new FormData()
       formData.append('file', newDoc)
@@ -130,9 +130,9 @@ angular.module('ent.workspace_content',['ent.workspace_service',])
           console.log($scope.documents);
           console.log("files: "+$scope.documents.length);
         })
-        $cordovaProgress.hide()
+        SpinnerDialog.hide();
       }, function(err){
-        $cordovaProgress.hide()
+        SpinnerDialog.hide();
         $scope.showAlertError()
       });
     }
