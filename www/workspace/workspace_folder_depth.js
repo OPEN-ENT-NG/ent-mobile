@@ -1,6 +1,6 @@
 angular.module('ent.workspace_folder_depth',['ent.workspace_service'])
 
-.controller('WorkspaceFolderDepthCtlr', function($scope, $rootScope, $stateParams, $state, WorkspaceService, $ionicLoading, MimeTypeFactory, $cordovaProgress, CreateNewFolderPopUpFactory, $ionicPopover,$ionicPlatform, $ionicHistory, RenamePopUpFactory, MovingItemsFactory){
+.controller('WorkspaceFolderDepthCtlr', function($scope, $rootScope, $stateParams, $state, WorkspaceService, $ionicLoading, MimeTypeFactory, CreateNewFolderPopUpFactory, $ionicPopover,$ionicPlatform, $ionicHistory, RenamePopUpFactory, MovingItemsFactory){
 
   var fullFolderName = $stateParams.nameFolder.length !=0 ? $stateParams.parentFolderName + '_' + $stateParams.nameFolder : $stateParams.parentFolderName;
 
@@ -86,7 +86,7 @@ angular.module('ent.workspace_folder_depth',['ent.workspace_service'])
 
     var newDoc = ele.files[0];
     console.log(newDoc);
-    $cordovaProgress.showSimpleWithLabelDetail(true, "Ajout de document en cours", newDoc.name);
+    SpinnerDialog.show(null, 'Ajout de document en cours', true);
 
     var formData = new FormData()
     formData.append('file', newDoc)
@@ -101,9 +101,9 @@ angular.module('ent.workspace_folder_depth',['ent.workspace_service'])
           }
         })
       })
-      $cordovaProgress.hide()
+      SpinnerDialog.hide();
     }, function(err){
-      $cordovaProgress.hide()
+      SpinnerDialog.hide();
       $scope.showAlertError()
     });
   }

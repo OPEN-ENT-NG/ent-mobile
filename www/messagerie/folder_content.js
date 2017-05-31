@@ -15,6 +15,10 @@ angular.module('ent.message_folder', ['ent.message_services'])
     });
   }
 
+  $scope.goThreads = function(){
+    $state.go("app.messagerie");
+  };
+
   $scope.canShowRestore = function(){
     return $stateParams.nameFolder == "trash" && $scope.checkable;
   }

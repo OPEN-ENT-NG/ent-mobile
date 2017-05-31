@@ -289,12 +289,12 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   // $urlRouterProvider.otherwise('/app/workspace/documents');
 })
 
-.controller('AppCtrl', function ($scope, $rootScope, $sce, $state, $ionicPlatform, $cordovaToast, $cordovaInAppBrowser, $ionicSideMenuDelegate, $cordovaFileTransfer,$cordovaProgress, $cordovaFileOpener2, domainENT, $ionicHistory, SkinFactory, $ionicPopup, ActualitesService, MessagerieServices,PronoteService, BlogsService, WorkspaceService, $filter){
+.controller('AppCtrl', function ($scope, $rootScope, $sce, $state, $ionicPlatform, $cordovaToast, $cordovaInAppBrowser, $ionicSideMenuDelegate, $cordovaFileTransfer, $cordovaFileOpener2, domainENT, $ionicHistory, SkinFactory, $ionicPopup, ActualitesService, MessagerieServices,PronoteService, BlogsService, WorkspaceService, $filter){
 
   $rootScope.filterThreads = [];
 
   $rootScope.listMenu =  [{'name':'Actualites','icon':'custom-newspaper newspapericon-', 'href':'#/app/actualites'},
-                          {'name':'Messagerie','icon':'custom-mail mailicon-', 'href':'#/app/messagerie'},
+                          {'name':'Messagerie','icon':'custom-mail mailicon-', 'href':'#/app/messagerie/inbox/INBOX'},
                           {'name':'Blog','icon':'custom-bullhorn bullhornicon-', 'href':'#/app/blog-list'},
                           {'name':'Documents','icon':'custom-folder foldericon-', 'href':'#/app/workspace'},
                           {'name':'Pronote','icon':'custom-pronote pronote-1icon-', 'href':'#/app/listPronotes'}];
@@ -326,7 +326,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
 
   $ionicPlatform.registerBackButtonAction( function (e){
     if($scope.closeApp){
-      navigator.app.exitApp();
+      //navigator.app.exitApp();
     }else if($ionicSideMenuDelegate.isOpenLeft()){
       $ionicSideMenuDelegate.toggleLeft();
     }else if($ionicHistory.backView() && $ionicHistory.currentView().backViewId!='ion1'){
@@ -355,13 +355,16 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     // Save location
     var url = $sce.trustAsResourceUrl(urlFile)
     var targetPath = window.FS.root.nativeURL + 'ENT/' + module + '/' + filename
-    $cordovaProgress.showSimpleWithLabelDetail(true, 'Téléchargement en cours (Bouton retour pour quitter)', filename)
+    //$cordovaProgress.showSimpleWithLabelDetail(true, 'Téléchargement en cours (Bouton retour pour quitter)', filename)
+    SpinnerDialog.show(null, 'Téléchargement en cours (Bouton retour pour quitter)', true);
     $cordovaFileTransfer.download(url, targetPath, {}, true).then(function (result) {
-      $cordovaProgress.hide();
+    SpinnerDialog.hide();
+    //$cordovaProgress.hide();
       $scope.openLocalFile(targetPath, fileMIMEType);
 
     }, function (error) {
-      $cordovaProgress.hide();
+    SpinnerDialog.hide();
+      //$cordovaProgress.hide();
       $scope.showAlertError(error);
     }, function (progress) {
     });
