@@ -412,7 +412,7 @@ angular.module('ent.workspace_service', ['ion-tree-list'])
 
 })
 
-.factory("MimeTypeFactory", function(){
+.factory("MimeTypeFactory", function($rootScope){
 
   function getThumbnailByMimeType(mimeType){
     var thumbnail = "unknown-large.png";
@@ -425,35 +425,39 @@ angular.module('ent.workspace_service', ['ion-tree-list'])
   }
 
   function setIcons(doc){
+    var test;
     if(doc.hasOwnProperty('thumbnails')){
       var dimensions='';
       switch (Object.keys(doc.thumbnails).length) {
         case 1:
           dimensions="120x120"
           break;
-          case 2:
+        case 2:
             dimensions="290x290"
             break;
             default:
               break;
-            }
-            doc.icon_image = "/workspace/document/"+doc._id+"?thumbnail="+dimensions
-            doc.image = "/workspace/document/"+doc._id
-          } else {
-            doc.icon_image = localStorage.getItem('skin')+"/../../img/icons/"+getThumbnailByMimeType(doc.metadata["content-type"])
-          }
-          return doc;
-        }
+      }
+      doc.icon_image = "/workspace/document/"+doc._id+"?thumbnail="+dimensions
+      doc.image = "/workspace/document/"+doc._id
+      test = "false";
+    } else {
+            test = "true";
+            doc.icon_image = "img/"+getThumbnailByMimeType(doc.metadata["content-type"])
+    }
+    doc.test = test;
+    return doc;
+  }
 
         return {
           getThumbnailByMimeType: getThumbnailByMimeType,
-          setIcons: setIcons
+          setIcons: setIcons,
         };
       })
 
       var mimeTypesArray = [{
 
-        "thumbnail": "doc-large.png",
+        "thumbnail": "word.png",
         // "thumbnail": "img/word.png",
         "mimetypes": [
           "application/msword",
@@ -464,7 +468,7 @@ angular.module('ent.workspace_service', ['ion-tree-list'])
         ]
       },
       {
-        "thumbnail": "xls-large.png",
+        "thumbnail": "excel.png",
         // "thumbnail": "img/excel.png",
         "mimetypes": [
           "application/vnd.ms-excel",
@@ -477,7 +481,7 @@ angular.module('ent.workspace_service', ['ion-tree-list'])
       },
       {
         // "thumbnail": "img/word.png",
-        "thumbnail": "file-powerpointicon-",
+        "thumbnail": "powerpoint.png",
         "mimetypes": [
           "application/vnd.ms-powerpoint",
           "application/vnd.ms-powerpoint",
@@ -494,13 +498,13 @@ angular.module('ent.workspace_service', ['ion-tree-list'])
       },
       {
         // "thumbnail": "img/pdf.png",
-        "thumbnail": "pdf-large.png",
+        "thumbnail": "pdf.png",
         "mimetypes": [
           "application/pdf"
         ]
       },
       {
-        "thumbnail": "audio-large.png",
+        "thumbnail": "audio.png",
         // "thumbnail": "img/audio.png",
         "mimetypes": [
           "audio/mpeg",

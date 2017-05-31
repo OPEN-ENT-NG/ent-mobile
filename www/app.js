@@ -387,6 +387,12 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     }
   }
 
+  $scope.getThumbnailUrl = function (path) {
+    if (path) {
+      return path
+    }
+  }
+
   $scope.setCorrectImage = function (path, defaultImage) {
     var result
     if (path != null && path.length > 0) {
