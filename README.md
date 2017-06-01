@@ -10,18 +10,6 @@
 
 # Documentation technique
 
-
-PREREQUIS: Installer <b>Node.js 4</b> 
-           puis <b>cordova </b>
-           et <b>ionic</b> : ```npm install -g cordova ionic```
-
-On va ensuite récupérer les plugins ainsi que les platformes nécéssaires au bon fonctionnement
-de l'application: cordova prepare
-
-Pour lancer l'application, ```ionic run android``` ou ```ionic run ios``` selon le mobile branché.
-
-Pour plus d'informations, consulter https://github.com/driftyco/ionic-cli.
-
 **Installation**
 
 code : [https://github.com/OPEN-ENT-NG/ent-mobile](https://github.com/OPEN-ENT-NG/ent-mobile)
