@@ -23,14 +23,6 @@ Pour plus d'informations, consulter https://github.com/driftyco/ionic-cli.
 
 code : [https://github.com/OPEN-ENT-NG/ent-mobile](https://github.com/OPEN-ENT-NG/ent-mobile)
 
-<strike>
-Installer Node.js 4
-puis cordova, ionic, bower : npm install -g cordova ionic bower
-
-On va ensuite récupérer les plugins ainsi que les platformes nécéssaires au bon fonctionnement de l'application : cordova prepare
-Pour lancer l'application : ionic run android (ou ios selon le mobile branché).
-</strike>
-
 ## Developments tools
  - java sdk 1.7
  - node js : 6.10.0
@@ -107,12 +99,6 @@ cordova.system.library.1=com.android.support:support-v4:<strong>23.+</strong>
 cordova.system.library.2=com.android.support:appcompat-v7:<strong>23.+</strong>
 cordova.system.library.3=com.android.support:support-v4:<strong>23.+</strong>
 </pre>
-<strike>
-- build
-```
-ionic run android
-```
-</strike>
 - creer une apk :
 ```
 ionic build
