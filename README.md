@@ -51,8 +51,8 @@ Pour lancer l'application : ionic run android (ou ios selon le mobile branché).
 - installer gradle & ajouter le binaire gradle dans le path
 - installer android studios 2.3
 - lancer le telchargement du sdk
-![](uploads/2017-05-10_16h17_59-1494425739255.png)
-![](uploads/2017-05-10_16h20_06-1494425775568.png)
+![](.docs/img1.png)
+![](.docs/img2.png)
 
 Ecraser le répertoire "tools" du SDK avec la version 25.2.3 (tools_r25.2.3-windows.zip).
 
