@@ -1,9 +1,9 @@
-angular.module('ent.workspace_service', ['ion-tree-list'])
+angular.module('ent.workspace_service', ['ion-tree-list', 'ngCookies'])
 
-.service('WorkspaceService', function($http, domainENT, $q){
+.service('WorkspaceService', function($http, domainENT, $q, $cookies){
 
   var configHeaders = {
-    headers: { 'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8" }
+    headers: { 'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8", 'Authorization': $http.defaults.headers.common['Authorization'] }
   };
 
   var transformRequestForActions = function(dataObj){
@@ -42,6 +42,7 @@ angular.module('ent.workspace_service', ['ion-tree-list'])
 
   this.getSharingItemDatas = function(idItem) {
       return $http.get(domainENT+'/workspace/share/json/'+idItem);
+//      return $http.get(domainENT+'/workspace/share/json/'+idItem, {headers : {'XSRF-TOKEN' : $cookies.get('XSRF-TOKEN')}});
   }
 
   this.updateSharingActions = function (idItem, sharingDatas, isRemove){
@@ -55,7 +56,7 @@ angular.module('ent.workspace_service', ['ion-tree-list'])
     }
     return $http.put(domainENT+'/workspace/share/'+str+'/'+idItem, sharingDatas, {
       transformRequest: transformRequestForActions,
-      headers: {'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8"}
+      headers: {'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8", 'Authorization': $http.defaults.headers.common['Authorization'] }
     });
   }
 
@@ -90,7 +91,7 @@ angular.module('ent.workspace_service', ['ion-tree-list'])
   this.putNewVersion = function (id, newVersion){
     return $http.put(domainENT+'/workspace/document/'+id+'?thumbnail=120x120&thumbnail=290x290', newVersion, {
       transformRequest: angular.identity,
-      headers: {'Content-Type': undefined}
+      headers: {'Content-Type': undefined, 'Authorization': $http.defaults.headers.common['Authorization'] }
     });
   }
 
@@ -101,7 +102,7 @@ angular.module('ent.workspace_service', ['ion-tree-list'])
   this.uploadDoc = function(doc){
     return $http.post(domainENT+'/workspace/document?thumbnail=120x120&thumbnail=290x290&quality=0.8', doc, {
       transformRequest: angular.identity,
-      headers: {'Content-Type': undefined}
+      headers: {'Content-Type': undefined, 'Authorization': $http.defaults.headers.common['Authorization'] }
     });
   }
 

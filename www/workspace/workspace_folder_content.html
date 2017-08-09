@@ -57,8 +57,8 @@
       <ion-list>
 
         <ion-item ng-repeat="doc in documents track by $index" class="item item-text-wrap item-thumbnail-left " ng-click="goToFile(doc)"  on-hold="enableCheck(doc)" ng-hide=checkable >
-          <img ng-if="doc.test ==='true'" ng-src={{getThumbnailUrl(doc.icon_image)}}></img>
-          <img ng-if="doc.test ==='false'" ng-src={{getImageUrl(doc.icon_image)}}></img>
+          <img ng-if="doc.test ==='true'" http-src={{getThumbnailUrl(doc.icon_image)}}></img>
+          <img ng-if="doc.test ==='false'" http-src={{getImageUrl(doc.icon_image)}}></img>
           <h2>{{doc.name}}</h2>
           <h3>{{doc.ownerName}}</h3>
           <i class="share-1icon- icon-share-custom" ng-show="doc.shared != null && doc.shared.length > 0 && isMyDocuments()"></i>
@@ -66,7 +66,7 @@
 
         <ion-checkbox ng-repeat="doc in documents track by $index" ng-model="doc.checked" ng-show=checkable class="checkbox-list-item">
           <div ng-click="goToFile(doc)" class="item item-text-wrap item-thumbnail-left" >
-            <img ng-src={{getImageUrl(doc.icon_image)}}></img>
+            <img http-src={{getImageUrl(doc.icon_image)}}></img>
             <h2>{{doc.name}}</h2>
             <h3>{{doc.ownerName}}</h3>
             <i class="share-1icon- icon-share-custom" ng-show="doc.shared != null && doc.shared.length > 0 && isMyDocuments()"></i>

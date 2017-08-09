@@ -1,4 +1,4 @@
-angular.module('ent.auth', ['ent.user'])
+angular.module('ent.oauth', ['ent.user'])
 .controller('LoginCtrl', function ($scope, $http, $cordovaInAppBrowser, $state, domainENT, SkinFactory, $ionicLoading) {
 
   document.addEventListener('deviceready', onDeviceReady, false);

@@ -3,14 +3,14 @@ angular.module('ent.message_services', [])
 .service('MessagerieServices', function($http, $q, domainENT){
 
   var configHeaders = {
-    headers: { 'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8" }
+    headers: { 'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8", 'Authorization': $http.defaults.headers.common['Authorization'] }
   };
 
 
   this.postAttachment = function(messageId, attachment){
     return $http.post(domainENT+"/conversation/message/"+ messageId +"/attachment",  attachment, {
       transformRequest: angular.identity,
-      headers: {'Content-Type': undefined}
+      headers: {'Content-Type': undefined, 'Authorization': $http.defaults.headers.common['Authorization'] }
     });
   }
 

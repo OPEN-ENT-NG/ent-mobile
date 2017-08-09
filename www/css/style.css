@@ -26,6 +26,11 @@ ion-popover-view.fit ion-content {
   color : #ecbe30;
 }
 
+.wrong-auth{
+  color : red;
+  text-align:center;
+}
+
 .custom-bullhorn{
   color : #ff8500;
 }
@@ -42,6 +47,10 @@ ion-popover-view.fit ion-content {
   top: 50%;
   transform: translateY(-50%);
   text-align: center;
+}
+
+.margin-login {
+  margin-top:10px !important;
 }
 
 .margin-text-item {

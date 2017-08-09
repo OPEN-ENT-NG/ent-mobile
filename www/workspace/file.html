@@ -5,7 +5,7 @@
       <div class="card">
 
         <div class="item item-avatar item-text-wrap">
-          <img ng-src="{{getImageUrl(doc.ownerPhoto)}}">
+          <img http-src="{{getImageUrl(doc.ownerPhoto)}}">
           <h2>{{doc.name}}</h2>
           <h3>{{doc.ownerName}}</h3>
           <p>{{doc.modified ? formatDateLocale(doc.modified) : formatDateLocale(doc.created)}}</p>
@@ -13,8 +13,8 @@
 
         <ion-card-content class="item">
           <div class="cardCenter">
-            <img ng-if="doc.test ==='true'" class="file-image" ng-src="{{getThumbnailUrl( doc.image ? doc.image:doc.icon_image)}}" >
-            <img ng-if="doc.test ==='false'" class="file-image" ng-src"{{getImageUrl( doc.image ? doc.image:doc.icon_image)}}">
+            <img ng-if="doc.test ==='true'" class="file-image" http-src="{{getThumbnailUrl( doc.image ? doc.image:doc.icon_image)}}" >
+            <img ng-if="doc.test ==='false'" class="file-image" http-src="{{getImageUrl( doc.image ? doc.image:doc.icon_image)}}">
           </div>
 
           <div class="comment"  ng-show="post.comments.length != 0">

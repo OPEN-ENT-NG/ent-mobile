@@ -1,9 +1,6 @@
-angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute','ent.actualites','ent.blog','ent.blog-list','ent.auth',
-'ent.messagerie','ent.workspace','ent.user','ent.pronotes', 'angularMoment','ent.test', 'ng-mfb', 'ui.router'])
+angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute','ent.actualites','ent.blog','ent.blog-list','ent.oauth2',
+'ent.messagerie','ent.workspace','ent.user','ent.pronotes', 'angularMoment','ent.test', 'ng-mfb', 'ui.router', 'angular.img'])
 
-// .value("domainENT", "https://ent.picardie.fr")
-// .value("domainENT", "https://preprod-leo.entcore.org")
-.value("domainENT", "https://recette-leo.entcore.org")
 
 .run(function($ionicPlatform, $ionicLoading, $rootScope,$cordovaGlobalization, amMoment, $ionicSideMenuDelegate, $rootScope) {
 
@@ -58,6 +55,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
 })
 
 .config(function($stateProvider, $urlRouterProvider, $routeProvider, $ionicConfigProvider,  $httpProvider) {
+  $httpProvider.defaults.withCredentials = true;
   $httpProvider.interceptors.push(function($rootScope) {
     return {
       request: function(config) {
@@ -280,7 +278,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
 
   .state('login', {
     url: '/login',
-    // templateUrl: 'authentification/login-credentials.html',
+    templateUrl: 'authentification/login-credentials.html',
     controller: 'LoginCtrl'
   })
 
@@ -450,10 +448,10 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
 
 
   $scope.logout = function(){
-    localStorage.clear();
+    localStorage. clear();
     $ionicHistory.clearHistory()
     $ionicHistory.clearCache();
-    navigator.splashscreen.show();
+    //navigator.splashscreen.show();
     $state.go("login");
     window.cookies.clear(function() {
       console.log('Cookies cleared!');
