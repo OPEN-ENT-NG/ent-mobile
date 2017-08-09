@@ -8,6 +8,9 @@
     "font-awesome": "fontawesome#~4.4.0",
     "angular-moment": "~0.10.3",
     "moment": "~2.11.2",
-    "ng-material-floating-button": "ng-mfb#~0.6.2"
+    "ng-material-floating-button": "ng-mfb#~0.6.2",
+    "ngCordova": "^0.1.27-alpha",
+    "ng-cordova-oauth": "^0.3.0",
+    "angular-img-http-src": "^1.0.1"
   }
 }
