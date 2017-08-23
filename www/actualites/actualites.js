@@ -82,14 +82,14 @@ angular.module('ent.actualites', ['ent.actualites_service'])
             modified: resp.data[i].modified,
             thread_id: resp.data[i].thread_id,
             username: resp.data[i].username,
-            thread_icon: $scope.setCorrectImage(resp.data[i].thread_icon,"/../../img/illustrations/actualites-default.png"),
+            thread_icon: $scope.setCorrectImage(resp.data[i].thread_icon,"/../../../img/illustrations/actualites-default.png"),
             comments: angular.fromJson(resp.data[i].comments)
           });
 
           var thread = {
             thread_id:  resp.data[i].thread_id,
             title: resp.data[i].thread_title,
-            thread_icon: $scope.setCorrectImage(resp.data[i].thread_icon, "/../../img/illustrations/actualites-default.png")
+            thread_icon: $scope.setCorrectImage(resp.data[i].thread_icon, "/../../../img/illustrations/actualites-default.png")
           }
           if(threadIds.indexOf(thread.thread_id)==-1){
             $scope.threads.push(thread);

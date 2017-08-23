@@ -11,7 +11,7 @@ angular.module('ent.oauth2', [])
     return $http({
       method: "post",
       url: domainENT+"/auth/oauth2/token",
-      data: "grant_type=password&username="+username+"&password="+password+"&client_id="+OAuth2Params.clientId+"&client_secret="+OAuth2Params.secret+"&scope=userbook userinfo directory workspace conversation document file"
+      data: "grant_type=password&username="+username+"&password="+password+"&client_id="+OAuth2Params.clientId+"&client_secret="+OAuth2Params.secret+"&scope=userbook userinfo directory workspace conversation document blog actualites avatar"
     }).then(function(result){
        $http.defaults.headers.common['Authorization'] = 'Bearer ' + result.data.access_token;
       return result;

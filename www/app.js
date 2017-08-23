@@ -287,7 +287,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   // $urlRouterProvider.otherwise('/app/workspace/documents');
 })
 
-.controller('AppCtrl', function ($scope, $rootScope, $sce, $state, $ionicPlatform, $cordovaToast, $cordovaInAppBrowser, $ionicSideMenuDelegate, $cordovaFileTransfer, $cordovaFileOpener2, domainENT, $ionicHistory, SkinFactory, $ionicPopup, ActualitesService, MessagerieServices,PronoteService, BlogsService, WorkspaceService, $filter){
+.controller('AppCtrl', function ($scope, $rootScope, $sce, $state, $ionicPlatform, $cordovaToast, $cordovaInAppBrowser, $ionicSideMenuDelegate, $cordovaFileTransfer, $cordovaFileOpener2, domainENT, $ionicHistory, SkinFactory, $ionicPopup, ActualitesService, MessagerieServices,PronoteService, BlogsService, WorkspaceService, $filter, $http){
 
   $rootScope.filterThreads = [];
 
@@ -298,7 +298,8 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
                           {'name':'Pronote','icon':'custom-pronote pronote-1icon-', 'href':'#/app/listPronotes'}];
 
   SkinFactory.getSkin().then(function(res) {
-    localStorage.setItem('skin', res.data.skin);
+    localStorage.setItem('skin', '/assets/themes/leo/skins/default/');
+    //localStorage.setItem('skin', res.data.skin);
   } , function(err){
     $scope.showAlertError(err);
   });
@@ -355,7 +356,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     var targetPath = window.FS.root.nativeURL + 'ENT/' + module + '/' + filename
     //$cordovaProgress.showSimpleWithLabelDetail(true, 'Téléchargement en cours (Bouton retour pour quitter)', filename)
     SpinnerDialog.show(null, 'Téléchargement en cours (Bouton retour pour quitter)', true);
-    $cordovaFileTransfer.download(url, targetPath, {}, true).then(function (result) {
+    $cordovaFileTransfer.download(url, targetPath, {'Authorization':$http.defaults.headers.common['Authorization']}, true).then(function (result) {
     SpinnerDialog.hide();
     //$cordovaProgress.hide();
       $scope.openLocalFile(targetPath, fileMIMEType);
@@ -399,9 +400,10 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     if (path != null && path.length > 0) {
       result = path
     } else {
-      if (!localStorage.getItem('skin')) {
+      if (!localStorage.getItem('skin') || localStorage.getItem('skin') == 'undefined' ) {
         SkinFactory.getSkin().then(function(res) {
-          localStorage.setItem('skin', res.data.skin)
+    localStorage.setItem('skin', '/assets/themes/leo/skins/default/');
+//          localStorage.setItem('skin', res.data.skin)
           console.log(localStorage.getItem('skin'))
           result = localStorage.getItem('skin')+defaultImage
         });
