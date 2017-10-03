@@ -356,21 +356,26 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     var targetPath = window.FS.root.nativeURL + 'ENT/' + module + '/' + filename
     //$cordovaProgress.showSimpleWithLabelDetail(true, 'Téléchargement en cours (Bouton retour pour quitter)', filename)
     SpinnerDialog.show(null, 'Téléchargement en cours (Bouton retour pour quitter)', true);
-    $cordovaFileTransfer.download(url, targetPath, {'Authorization':$http.defaults.headers.common['Authorization']}, true).then(function (result) {
+
+    var options = {
+                    headers: {
+                          'Authorization':$http.defaults.headers.common['Authorization']
+                    }
+                  };
+
+    $cordovaFileTransfer.download(url, targetPath, options, true).then(function (result) {
     SpinnerDialog.hide();
-    //$cordovaProgress.hide();
       $scope.openLocalFile(targetPath, fileMIMEType);
 
     }, function (error) {
     SpinnerDialog.hide();
-      //$cordovaProgress.hide();
       $scope.showAlertError(error);
     }, function (progress) {
     });
   }
 
-  $scope.openLocalFile = function (targetPath, fileMIMEType){
 
+  $scope.openLocalFile = function (targetPath, fileMIMEType){
     $cordovaFileOpener2.open(
       targetPath,
       fileMIMEType,
@@ -378,7 +383,8 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
         error : function () {
           $scope.showAlertError(error)
         },
-        success : function (){ }
+        success : function (){
+        }
       }
     )
   }
