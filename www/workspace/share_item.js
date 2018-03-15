@@ -7,7 +7,9 @@ var actionsName = {
 
 angular.module('ent.share_item',['ent.workspace_service','ent.message_services'])
 
-.controller('ShareItemController', function($scope, $rootScope, $stateParams,$ionicPlatform, $ionicHistory, $state,$ionicPosition, $ionicScrollDelegate, WorkspaceService, MessagerieServices, $ionicLoading){
+.controller('ShareItemController', function($scope, $rootScope, $stateParams,$ionicPlatform, $ionicHistory,
+                                            $state,$ionicPosition, $ionicScrollDelegate, WorkspaceService,
+                                            MessagerieServices, TranslationService, $ionicLoading){
   $scope.contactShared = [];
   $scope.contactSharedNotView = [] ;
   var idItems = $stateParams.idItems.split(',');
@@ -19,7 +21,7 @@ angular.module('ent.share_item',['ent.workspace_service','ent.message_services']
 
   function getContacts () {
     $ionicLoading.show({
-      template: '<ion-spinner icon="android"/>'
+      template: '<ion-spinner/>'
     });
     $scope.contacts = [];
     MessagerieServices.getContactsService().then(function(resp){
@@ -36,11 +38,11 @@ angular.module('ent.share_item',['ent.workspace_service','ent.message_services']
           $scope.contacts.push({
             _id:  resp.data.users[i].id,
             displayName:  resp.data.users[i].displayName,
-            profile:  resp.data.users[i].profile,
+            profile:  TranslationService.getTraduction(resp.data.users[i].profile),
             isGroup: false
           });
         }
-      };
+      }
       getSharingItemDatas();
     }, function(err){
         $scope.showAlertError();
@@ -83,7 +85,7 @@ angular.module('ent.share_item',['ent.workspace_service','ent.message_services']
 
   function updateSharingItemDatas(idItem, sharingDatas, isRemove){
     $ionicLoading.show({
-      template: '<ion-spinner icon="android"/>'
+      template: '<ion-spinner/>'
     });
     WorkspaceService.updateSharingActions(idItem, sharingDatas, isRemove).then(function(resp){
       console.log('success');
