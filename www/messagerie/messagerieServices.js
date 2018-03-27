@@ -32,10 +32,10 @@ angular.module('ent.message_services', [])
     var promises = [];
     var deferredCombinedItems = $q.defer();
     var combinedItems = [];
-    angular.forEach(folders, function(folderId) {
+    angular.forEach(folders, function(folderId, folderIndex) {
       var deferredItemList = $q.defer();
       $http.get(domainENT+"/conversation/count/"+folderId+"?unread=true").then(function(resp) {
-        combinedItems = combinedItems.concat(resp.data);
+        combinedItems[folderIndex] = resp.data;
         deferredItemList.resolve();
       });
       promises.push(deferredItemList.promise);
