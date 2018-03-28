@@ -7,7 +7,9 @@
 
       <div ng-if=posts.length>
         <ion-list>
-          <ion-item ng-repeat="post in filteredPosts=(posts | orderBy: 'modified.$date' : true) track by $index" class="card">
+          <ion-item ng-repeat="post in filteredPosts=(posts | orderBy: 'modified.$date' : true) track by $index"
+                    class="card"
+                    ng-click="getPostContent(post)">
             <div class="item item-avatar item-text-wrap">
               <img http-src="{{getImageUrl(post.author.photo)}}"/>
 
@@ -17,7 +19,7 @@
               <p>{{formatDateLocale(post.modified.$date)}}</p>
             </div>
 
-            <ion-card-content class="item actucard">
+            <ion-card-content ng-if="post.content != undefined" class="item actucard">
 
               <div class="item-text-wrap htmlEntContent" ng-bind-html=renderHtml(post.content)></div>
 

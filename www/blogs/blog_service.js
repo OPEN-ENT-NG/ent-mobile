@@ -9,6 +9,14 @@ angular.module('ent.blog_service', [])
     return $http.get(domainENT+"/blog/post/list/all/"+id+"?state=PUBLISHED");
   }
 
+  this.getPostContentById = function(idBlog, idPost){
+    return $http.get(domainENT + "/blog/post/" + idBlog + "/" + idPost + "?state=PUBLISHED");
+  }
+
+  this.getPostCommentsById = function (idBlog, idPost) {
+    return $http.get(domainENT + "/blog/comments/" + idBlog + "/" + idPost);
+  }
+
   this.getAuthors = function (idBlog, posts){
     var promisesAuthors = [];
     var deferredCombinedItemsAuthors = $q.defer();
@@ -27,37 +35,6 @@ angular.module('ent.blog_service', [])
       deferredCombinedItemsAuthors.resolve(combinedItemsAuthors);
     });
     return deferredCombinedItemsAuthors.promise;
-  }
-
-  this.getComments = function(idBlog, posts){
-    var promisesComments = [];
-    var deferredCombinedItemsComments = $q.defer();
-    var combinedItemsComments = [];
-
-    angular.forEach(posts, function(item) {
-      var deferredItemListComments = $q.defer();
-      $http.get(domainENT+"/blog/comments/"+idBlog+"/"+item._id).then(function(resp) {
-        combinedItemsComments = combinedItemsComments.concat(resp.data);
-        deferredItemListComments.resolve();
-      });
-      promisesComments.push(deferredItemListComments.promise);
-    });
-
-    $q.all(promisesComments).then( function() {
-      deferredCombinedItemsComments.resolve(combinedItemsComments);
-    });
-    return deferredCombinedItemsComments.promise;
-  }
-
-  this.getCommentNumberByPost = function(idBlog, posts){
-    var commentsNumberByPost = [];
-
-    angular.forEach(posts, function(item) {
-      $http.get(domainENT+"/blog/comments/"+idBlog+"/"+item._id).then(function(resp) {
-        commentsNumberByPost.push(resp.data.length);
-      });
-    });
-    return commentsNumberByPost;
   }
 
   this.getTraduction = function(){
