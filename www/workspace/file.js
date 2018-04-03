@@ -14,10 +14,10 @@ angular.module('ent.workspace_file',['ent.workspace_service'])
     console.log(cordova.plugins.diagnostic);
     cordova.plugins.diagnostic.getPermissionsAuthorizationStatus(function(statuses){
       console.log(statuses);
+      $scope.downloadFile($rootScope.doc.name, docUrl, $rootScope.doc.metadata['content-type'], "workspace");
     },function(error){
       console.log(error);
     },cordova.plugins.diagnostic.runtimePermissionGroups.STORAGE);
-    $scope.downloadFile($rootScope.doc.name, docUrl,$rootScope.doc.metadata['content-type'], "workspace");
   }
 
   $scope.goShare = function(){

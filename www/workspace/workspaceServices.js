@@ -2,9 +2,10 @@ angular.module('ent.workspace_service', ['ion-tree-list', 'ngCookies'])
 
 .service('WorkspaceService', function($http, domainENT, $q, $cookies){
 
-  var configHeaders = {
-    headers: { 'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8", 'Authorization': $http.defaults.headers.common['Authorization'] }
-  };
+  // var configHeaders = {
+  //   headers: { 'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8",
+  //     'Authorization': $http.defaults.headers.common['Authorization'] }
+  // };
 
   var transformRequestForActions = function(dataObj){
     var str = [];
@@ -55,13 +56,12 @@ angular.module('ent.workspace_service', ['ion-tree-list', 'ngCookies'])
       str = 'remove' ;
     }
     return $http.put(domainENT+'/workspace/share/'+str+'/'+idItem, sharingDatas, {
-      transformRequest: transformRequestForActions,
-      headers: {'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8", 'Authorization': $http.defaults.headers.common['Authorization'] }
+      transformRequest: transformRequestForActions
     });
   }
 
   this.commentDocById = function (id, comment){
-    return $http.post(domainENT+'/workspace/document/'+id+'/comment', "comment="+ comment, configHeaders)
+    return $http.post(domainENT+'/workspace/document/'+id+'/comment', "comment="+ comment)
   }
 
   this.renameDoc = function (id, newName){
@@ -91,7 +91,7 @@ angular.module('ent.workspace_service', ['ion-tree-list', 'ngCookies'])
   this.putNewVersion = function (id, newVersion){
     return $http.put(domainENT+'/workspace/document/'+id+'?thumbnail=120x120&thumbnail=290x290', newVersion, {
       transformRequest: angular.identity,
-      headers: {'Content-Type': undefined, 'Authorization': $http.defaults.headers.common['Authorization'] }
+      headers: {'Content-Type': undefined}
     });
   }
 
@@ -102,7 +102,7 @@ angular.module('ent.workspace_service', ['ion-tree-list', 'ngCookies'])
   this.uploadDoc = function(doc){
     return $http.post(domainENT+'/workspace/document?thumbnail=120x120&thumbnail=290x290&quality=0.8', doc, {
       transformRequest: angular.identity,
-      headers: {'Content-Type': undefined, 'Authorization': $http.defaults.headers.common['Authorization'] }
+      headers: {'Content-Type': undefined}
     });
   }
 
@@ -142,7 +142,7 @@ angular.module('ent.workspace_service', ['ion-tree-list', 'ngCookies'])
 
     angular.forEach(arrayFolders, function(item) {
       var deferredItemList = $q.defer();
-      $http.put(domainENT+'/workspace/folder/move/'+item._id,"path="+folderName, configHeaders).then(function(resp) {
+      $http.put(domainENT+'/workspace/folder/move/'+item._id,"path="+folderName).then(function(resp) {
         combinedItems = combinedItems.concat(resp.data);
         deferredItemList.resolve();
       });
@@ -169,14 +169,14 @@ angular.module('ent.workspace_service', ['ion-tree-list', 'ngCookies'])
     var data = "name="+folderName;
     data = path!='owner' ? "name="+folderName+"&path="+path: data;
     console.log(data);
-    return $http.post(domainENT+'/workspace/folder',data, configHeaders)
+    return $http.post(domainENT+'/workspace/folder',data)
   }
 
   this.copyFolder = function (folder, path){
     var data = "name="+folder.name;
     data = path!='owner' ? "name="+folder.name+"&path="+path: data;
     console.log(data);
-    return $http.put(domainENT+'/workspace/folder/copy/'+folder._id, data, configHeaders)
+    return $http.put(domainENT+'/workspace/folder/copy/'+folder._id, data)
   }
 
   this.copySelectedFolders = function(arrayFolders, path){
@@ -189,7 +189,7 @@ angular.module('ent.workspace_service', ['ion-tree-list', 'ngCookies'])
       data = path!='owner' ? "name="+item.name+"&path="+path: data;
       console.log(data);
       var deferredItemList = $q.defer();
-      $http.put(domainENT+'/workspace/folder/copy/'+item._id, data, configHeaders).then(function(resp) {
+      $http.put(domainENT+'/workspace/folder/copy/'+item._id, data).then(function(resp) {
         combinedItems = combinedItems.concat(resp.data);
         deferredItemList.resolve();
       });
