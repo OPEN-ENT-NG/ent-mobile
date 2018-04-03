@@ -298,7 +298,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
                           {'name':'Pronote','icon':'custom-pronote pronote-1icon-', 'href':'#/app/listPronotes'}];
 
   SkinFactory.getSkin().then(function(res) {
-    localStorage.setItem('skin', '/assets/themes/leo/skins/default/');
+    localStorage.setItem('skin', '/assets/themes/paris/skins/default/');
     //localStorage.setItem('skin', res.data.skin);
   } , function(err){
     $scope.showAlertError(err);
@@ -353,7 +353,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   $scope.downloadFile = function (filename, urlFile, fileMIMEType, module){
     // Save location
     var url = $sce.trustAsResourceUrl(urlFile)
-    var targetPath = window.FS.root.nativeURL + 'ENT/' + module + '/' + filename
+    var targetPath = cordova.file.externalRootDirectory + '/Pictures/ENT/' + filename;
     //$cordovaProgress.showSimpleWithLabelDetail(true, 'Téléchargement en cours (Bouton retour pour quitter)', filename)
     SpinnerDialog.show(null, 'Téléchargement en cours (Bouton retour pour quitter)', true);
 
@@ -408,7 +408,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     } else {
       if (!localStorage.getItem('skin') || localStorage.getItem('skin') == 'undefined' ) {
         SkinFactory.getSkin().then(function(res) {
-    localStorage.setItem('skin', '/assets/themes/leo/skins/default/');
+          localStorage.setItem('skin', '/assets/themes/paris/skins/default/');
 //          localStorage.setItem('skin', res.data.skin)
           console.log(localStorage.getItem('skin'))
           result = localStorage.getItem('skin')+defaultImage
