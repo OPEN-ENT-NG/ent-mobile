@@ -6,6 +6,16 @@ angular.module('ent.message_folder', ['ent.message_services'])
   console.log( $stateParams.nameFolder );
   getMessagesAndFolders();
 
+  $rootScope.getRealName = function (id, displayNames){
+    var returnName = "Inconnu";
+    for(var i = 0; i< displayNames.length; i++){
+      if(id == displayNames[i][0]){
+        returnName = displayNames[i][1];
+      }
+    }
+    return returnName;
+  }
+
   $scope.restoreMessages = function(){
     MessagerieServices.restoreSelectedMessages(getSelectedMessages()).then(function(){
       getMessagesAndFolders()

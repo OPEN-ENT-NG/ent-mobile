@@ -6,16 +6,6 @@ angular.module('ent.messagerie', ['ent.message_services', 'ent.message_folder', 
   getContacts();
   getFolders();
 
-  $rootScope.getRealName = function (id, displayNames){
-    var returnName = "Inconnu";
-    for(var i = 0; i< displayNames.length; i++){
-      if(id == displayNames[i][0]){
-        returnName = displayNames[i][1];
-      }
-    }
-    return returnName;
-  }
-
   $rootScope.getNameFolder = function(nameFolder){
     var nonPersonnalFolders = ["inbox", "outbox", "draft", "trash"];
     return nonPersonnalFolders.indexOf(nameFolder) != -1 ? $rootScope.translationConversation[nameFolder]:nameFolder;
