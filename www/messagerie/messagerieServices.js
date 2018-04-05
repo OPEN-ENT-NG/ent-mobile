@@ -34,7 +34,10 @@ angular.module('ent.message_services', [])
     var combinedItems = [];
     angular.forEach(folders, function(folderId, folderIndex) {
       var deferredItemList = $q.defer();
-      $http.get(domainENT+"/conversation/count/"+folderId+"?unread=true").then(function(resp) {
+      var toRequest = domainENT+"/conversation/count/"+folderId+"?unread=true";
+      if (folderId != "INBOX" && folderId != "OUTBOX" && folderId != "DRAFT" && folderId != "THRASH")
+        toRequest += "&restrain";
+        $http.get(toRequest).then(function(resp) {
         combinedItems[folderIndex] = resp.data;
         deferredItemList.resolve();
       });
