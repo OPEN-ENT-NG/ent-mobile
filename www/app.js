@@ -122,7 +122,8 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     url: '/new_message',
     views: {
       'menuContent': {
-        templateUrl: 'messagerie/new_message.html'
+        templateUrl: 'messagerie/new_message.html',
+        controller: 'NewMessageCtrl'
       }
     }
   })

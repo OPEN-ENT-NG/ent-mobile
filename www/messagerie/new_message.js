@@ -2,23 +2,25 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
 
 .controller('NewMessageCtrl', function($scope, $rootScope, $ionicPopover, $state, $ionicHistory, MessagerieServices,$ionicLoading,$ionicPopup,domainENT, $filter,AlertMessagePopupFactory){
 
-  $scope.email = {
-    destinatairesTo: [],
-    destinatairesCc: [],
-    sujet: '',
-    corps : '',
-    newMessage: '',
-    attachments: [],
-    id: 0
-  };
-  console.log("$rootScope.historyMail");
-  console.log($rootScope.historyMail);
+  $scope.$on('$ionicView.beforeEnter', function(){
+    console.log("Entering new messqge ctrler");
+    $scope.email = {
+      destinatairesTo: [],
+      destinatairesCc: [],
+      sujet: '',
+      corps : '',
+      newMessage: '',
+      attachments: [],
+      id: 0
+    };
+    console.log("$rootScope.historyMail");
+    console.log($rootScope.historyMail);
 
-  switch($rootScope.historyMail.action){
-    case "REPLY_ONE":
-      console.log("switch reply one");
-      sendReplyOne();
-      break;
+    switch($rootScope.historyMail.action){
+      case "REPLY_ONE":
+        console.log("switch reply one");
+        sendReplyOne();
+        break;
 
       case "REPLY_ALL":
         console.log("switch reply_all");
@@ -30,34 +32,36 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
         $scope.email.attachments = [];
         break;
 
-        case "FORWARD":
-          console.log("switch forward");
-          $scope.email.destinatairesTo = [];
-          $scope.email.destinatairesCc = [];
-          $scope.email.sujet = $rootScope.translationConversation["reply.fw"]+$rootScope.historyMail.subject;
-          $scope.email.corps= headerReponse()+$rootScope.historyMail.body;
-          $scope.email.id = $rootScope.historyMail.id;
-          $scope.email.attachments = $rootScope.historyMail.attachments;
-          break;
+      case "FORWARD":
+        console.log("switch forward");
+        $scope.email.destinatairesTo = [];
+        $scope.email.destinatairesCc = [];
+        $scope.email.sujet = $rootScope.translationConversation["reply.fw"]+$rootScope.historyMail.subject;
+        $scope.email.corps= headerReponse()+$rootScope.historyMail.body;
+        $scope.email.id = $rootScope.historyMail.id;
+        $scope.email.attachments = $rootScope.historyMail.attachments;
+        break;
 
-          case "DRAFT":
-            console.log("switch draft");
-            $scope.email.destinatairesTo = $rootScope.historyMail.to;
-            $scope.email.destinatairesCc = $rootScope.historyMail.cc;
-            $scope.email.sujet = $rootScope.historyMail.subject;
-            $scope.email.newMessage= $rootScope.historyMail.body.replace(/\<br\/\>/g, "\n");
-            $scope.email.id = $rootScope.historyMail.id;
-            $scope.email.attachments = $rootScope.historyMail.attachments;
-            break;
+      case "DRAFT":
+        console.log("switch draft");
+        $scope.email.destinatairesTo = $rootScope.historyMail.to;
+        $scope.email.destinatairesCc = $rootScope.historyMail.cc;
+        $scope.email.sujet = $rootScope.historyMail.subject;
+        $scope.email.newMessage= $rootScope.historyMail.body.replace(/\<br\/\>/g, "\n");
+        $scope.email.id = $rootScope.historyMail.id;
+        $scope.email.attachments = $rootScope.historyMail.attachments;
+        break;
 
-            //draft
-            default:
-              console.log("new message");
-              saveNewDraft();
-              break;
-            }
-            removeMyself();
-            console.log($scope.email);
+      //draft
+      default:
+        console.log("new message");
+        saveNewDraft();
+        break;
+    }
+    removeMyself();
+    console.log($scope.email);
+  });
+
 
             $scope.addContactTo = function(search, contact){
               $scope.email.destinatairesTo.push(contact);
