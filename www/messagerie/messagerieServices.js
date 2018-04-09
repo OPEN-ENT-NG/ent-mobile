@@ -150,10 +150,14 @@ angular.module('ent.message_services', [])
     return $http.post(domainENT+'/conversation/send?id='+mailData.id,mailData, configHeaders );
   }
 
+  this.sendReplyOne = function(mailData){
+    return $http.post(domainENT+'/conversation/send?In-Reply-To='+mailData.id,mailData, configHeaders );
+
+  }
+
   this.getTranslation = function(){
     return $http.get(domainENT+'/conversation/i18n');
   }
-
 
   this.getNonPersonalFolders = function(){
     return [

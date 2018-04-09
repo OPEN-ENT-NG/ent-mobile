@@ -17,12 +17,7 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
   switch($rootScope.historyMail.action){
     case "REPLY_ONE":
       console.log("switch reply one");
-      $scope.email.destinatairesTo = $rootScope.historyMail.from;
-      $scope.email.destinatairesCc = [];
-      $scope.email.sujet = $rootScope.translationConversation["reply.re"]+$rootScope.historyMail.subject;
-      $scope.email.corps= headerReponse()+$rootScope.historyMail.body;
-      $scope.email.id = $rootScope.historyMail.id;
-      $scope.email.attachments = [];
+      sendReplyOne();
       break;
 
       case "REPLY_ALL":
@@ -97,18 +92,30 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
 
             $scope.sendMail = function(){
 
-              if($scope.email.destinatairesTo.length >0){
+              if($scope.email.destinatairesTo.length >0) {
                 $ionicLoading.show({
                   template: '<ion-spinner icon="android"/>'
                 });
-                MessagerieServices.sendMail(getMailData()).then(function(resp){
-                  console.log("Success");
-                  $ionicLoading.hide();
-                  $state.go("app.messagerie");
-                }, function(err){
-                  console.log(err);
-                  $scope.showAlertError();
-                });
+                if ($rootScope.historyMail.action == "REPLY_ONE")
+                {
+                  MessagerieServices.sendReplyOne(getMailData()).then(function (resp) {
+                    console.log("Reply One Success");
+                    $ionicLoading.hide();
+                    $state.go("app.messagerie");
+                  }, function (err) {
+                    console.log(err);
+                    $scope.showAlertError();
+                  });
+                } else {
+                  MessagerieServices.sendMail(getMailData()).then(function (resp) {
+                    console.log("Message Success");
+                    $ionicLoading.hide();
+                    $state.go("app.messagerie");
+                  }, function (err) {
+                    console.log(err);
+                    $scope.showAlertError();
+                  });
+                }
               } else {
                 var alertPopup = $ionicPopup.alert({
                   template: 'Impossible d\'envoyer le message',
@@ -124,6 +131,7 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
             $scope.saveAsDraft = function(){
               saveWithId($scope.email.id)
             }
+
             $scope.addAttachment = function(ele){
               $ionicLoading.show({
                 template: '<ion-spinner icon="android"/>'
@@ -195,12 +203,26 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
 
             function saveNewDraft(){
               MessagerieServices.saveNewDraft(getMailData()).then(function(resp){
+                console.log("response :");
                 console.log(resp);
+                console.log($scope.email.id);
                 $scope.email.id = resp.data.id;
                 console.log($scope.email);
               }, function(err){
                 $scope.showAlertError();
               });
+            }
+
+            function sendReplyOne(){
+                $scope.email.id = $rootScope.historyMail.id;
+                $scope.email.destinatairesTo = $rootScope.historyMail.from;
+                $scope.email.destinatairesCc = [];
+                $scope.email.sujet = $rootScope.translationConversation["reply.re"]+$rootScope.historyMail.subject;
+                $scope.email.corps= headerReponse()+$rootScope.historyMail.body;
+                $scope.email.attachments = [];
+                console.log("after sendreplyone");
+                console.log($scope.email);
+
             }
 
             function getMailData(){
@@ -212,17 +234,16 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
                 cc : getIdArray($scope.email.destinatairesCc),
                 from : $rootScope.myUser.id
               };
+              console.log("mail from getMailData");
               console.log(newMail);
               return newMail;
             }
 
             function getIdArray(array){
-              var newArray = [];
-              for(var i=0; i < array.length; i++){
-                newArray.push(array[i]._id);
+                return array.map(function (obj) {
+                  return obj._id || obj.id;
+                })
               }
-              return newArray;
-            }
 
             function addAllContactsTo (contactArray){
               for(var i =0; i<contactArray.length; i++){
@@ -237,7 +258,7 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
 
             function headerReponse(){
               var from = $rootScope.historyMail.from[0].displayName;
-              var date = $filter('date')($rootScope.historyMail.date, 'medium');
+              var date = $filter('date')($rootScope.historyMail.date, 'dd/MM/yyyy H:mm');
               var subject = $rootScope.historyMail.subject;
 
               var to="";

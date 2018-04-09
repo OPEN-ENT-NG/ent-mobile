@@ -13,6 +13,7 @@ angular.module('ent.messagerie', ['ent.message_services', 'ent.message_folder', 
 
   $rootScope.newMail = function(){
     $rootScope.historyMail = "";
+    console.log("in view");
     $state.go("app.new_message");
   }
 

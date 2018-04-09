@@ -52,6 +52,12 @@ angular.module('ent.message_folder', ['ent.message_services'])
     })
   }
 
+  $rootScope.newMail = function(){
+    $rootScope.historyMail = "";
+    console.log("in content");
+    $state.go("app.new_message");
+  }
+
   $scope.enableCheckMessages = function (index) {
     if(!$scope.checkable){
       $cordovaVibration.vibrate(100);     // Vibrate 100ms
