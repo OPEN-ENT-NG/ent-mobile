@@ -208,7 +208,7 @@ angular.module('ent.message_services', [])
       subTitle: $rootScope.translationConversation["destination.folder"],
       scope: scope,
       buttons: [
-        { text: 'Annuler' },
+        { text: $rootScope.translationConversation["cancel"] },
         {
           text: '<b>Ok</b>',
           type: 'bar-positive',
@@ -232,7 +232,8 @@ angular.module('ent.message_services', [])
   function getPopup() {
     return $ionicPopup.confirm({
       title: $rootScope.translationConversation["delete"],
-      template: 'Êtes-vous sûr(e) de vouloir supprimer ce(s) message(s) ?'
+      template: 'Êtes-vous sûr(e) de vouloir supprimer ce(s) message(s) ?',
+      cancelText: $rootScope.translationConversation["cancel"]
     })
   }
   return {
