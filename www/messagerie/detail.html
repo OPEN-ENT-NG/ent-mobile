@@ -2,7 +2,7 @@
   <ion-nav-title>{{checkable ? getCountOfCheckedMessages(): getNameFolder(nameFolder)}}</ion-nav-title>
   <ion-nav-buttons side="right">
 
-    <button class="button button-icon button-clear ion-reply" ng-if=isInbox()  ng-click="editMail('REPLY_ONE', mail)"></button>
+    <button class="button button-icon button-clear ion-reply" ng-if=isInbox()  ng-click="editMail('REPLY_ONE')"></button>
     <button class="button button-icon button-clear ion-android-more-vertical buttonActionBar" ng-click=openPopover($event)></button>
 
   </ion-nav-buttons>

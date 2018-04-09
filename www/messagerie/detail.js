@@ -72,15 +72,11 @@ angular.module('ent.message_detail', ['ent.message_services'])
     $ionicLoading.hide();
   }
 
-  $scope.editMail = function(action, mail){
+  $scope.editMail = function(action){
     console.log("edit");
-    mail.action = action;
-    $rootScope.historyMail = mail;
-    console.log(mail);
-
-    console.log($rootScope.historyMail);
+    $scope.mail.action = action;
+    $rootScope.historyMail = $scope.mail;
     $state.go('app.new_message');
-    //goToNewMail();
   }
 
   $ionicPopover.fromTemplateUrl('messagerie/popover_messagerie_detail.html', {
