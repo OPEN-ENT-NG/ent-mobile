@@ -40,6 +40,7 @@ angular.module('ent.blog', ['ent.blog_service'])
 
     $scope.getPostContent = function(post){
       if(post.content !== undefined) {
+        post.content = undefined;
         return;
       }
       $ionicLoading.show({
