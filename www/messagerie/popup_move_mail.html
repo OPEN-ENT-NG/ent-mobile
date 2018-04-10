@@ -1,3 +1,7 @@
 <ion-list>
-  <ion-radio ng-repeat="folder in folders" ng-model="choice" ng-value="folder" ng-change="selectFolder(folder)">{{folder.name}}</ion-radio>
+  <ion-radio ng-repeat="folder in folders"
+             ng-model="choice"
+             ng-value="folder"
+             ng-click="selectFolder(folder)"
+             >{{folder.name}}</ion-radio>
 </ion-list>

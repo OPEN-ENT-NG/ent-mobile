@@ -192,6 +192,7 @@ angular.module('ent.message_services', [])
 .factory("MoveMessagesPopupFactory", function ($ionicPopup, MessagerieServices, $rootScope) {
 
   function getPopup(scope) {
+    scope.choice = '';
     MessagerieServices.getCustomFolders().then(function (resp) {
       scope.folders = resp.data;
     }, function(err){
@@ -200,7 +201,10 @@ angular.module('ent.message_services', [])
 
     scope.selectFolder = function(message){
       scope.choice = message.id;
-    }
+      console.log("in select folder");
+      console.log(scope.choice);
+    };
+
     return $ionicPopup.show({
 
       templateUrl: 'messagerie/popup_move_mail.html',
