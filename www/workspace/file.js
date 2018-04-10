@@ -228,6 +228,7 @@ angular.module('ent.workspace_file',['ent.workspace_service'])
       for(var i=0; i< res.data.length; i++){
         if(res.data[i]._id == doc._id){
           $rootScope.doc = res.data[i]
+          $rootScope.doc.test = doc.test;
         }
       }
     })
