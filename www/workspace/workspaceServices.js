@@ -22,7 +22,7 @@ angular.module('ent.workspace_service', ['ion-tree-list', 'ngCookies'])
   }
 
   this.getFoldersByFilter = function(filter, hierarchical){
-    return $http.get(domainENT+"/workspace/folders/list?filter="+parametersUrl(filter,hierarchical))
+    return $http.get(domainENT+"/workspace/folders/list?filter="+parametersUrl(filter, hierarchical))
   }
 
   this.getDocumentsByFilter = function(filter,hierarchical){
@@ -167,7 +167,7 @@ angular.module('ent.workspace_service', ['ion-tree-list', 'ngCookies'])
 
   this.createFolder = function (folderName, path){
     var data = "name="+folderName;
-    data = path!='owner' ? "name="+folderName+"&path="+path: data;
+    data = path!='owner' ? "name="+folderName+"&path="+path.folder : data;
     console.log(data);
     return $http.post(domainENT+'/workspace/folder',data)
   }

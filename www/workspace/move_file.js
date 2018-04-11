@@ -49,10 +49,21 @@ angular.module('ent.workspace_move_file', ['ent.workspace_service', 'ion-tree-li
       // process 'items'
     });
 
+    function isEmpty(obj) {
+      if (obj == null) return true;
+      if (obj.length > 0)    return false;
+      if (obj.length === 0)  return true;
+      if (typeof obj !== "object") return true;
+      for (var key in obj) {
+        if (hasOwnProperty.call(obj, key)) return false;
+      }
+      return true;
+    }
+
     $scope.newFolder = function () {
       CreateNewFolderPopUpFactory.getPopup($scope).then(function (res) {
         if (res) {
-          WorkspaceService.createFolder(res, choosenFolder.folder).then(function (result) {
+          WorkspaceService.createFolder(res, isEmpty(choosenFolder) ? 'owner' : choosenFolder.folder).then(function (result) {
             console.log(result.data);
             getFolders()
           }, function (error) {
