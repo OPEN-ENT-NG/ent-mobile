@@ -55,9 +55,17 @@ angular.module('ent.workspace_service', ['ion-tree-list', 'ngCookies'])
     }else{
       str = 'remove' ;
     }
-    return $http.put(domainENT+'/workspace/share/'+str+'/'+idItem, sharingDatas, {
-      transformRequest: transformRequestForActions
-    });
+
+    var req = {
+      method: "PUT",
+      url: domainENT+'/workspace/share/'+str+'/'+idItem,
+      headers : {
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+      },
+      data : transformRequestForActions(sharingDatas)
+    };
+
+    return $http(req);
   }
 
   this.commentDocById = function (id, comment){
