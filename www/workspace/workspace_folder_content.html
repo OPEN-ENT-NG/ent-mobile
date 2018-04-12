@@ -67,7 +67,8 @@
 
         <ion-checkbox ng-repeat="doc in documents track by $index" ng-model="doc.checked" ng-show=checkable class="checkbox-list-item">
           <div ng-click="goToFile(doc)" class="item item-text-wrap item-thumbnail-left" >
-            <img http-src={{getImageUrl(doc.icon_image)}}></img>
+            <img ng-if="isDocImage(doc.metadata) == 'true'" http-src={{getImageUrl(doc.icon_image)}}></img>
+            <img ng-if="isDocImage(doc.metadata) == 'false'" src="img/defaultfile.png"/>
             <h2>{{doc.name}}</h2>
             <h3>{{doc.ownerName}}</h3>
             <i class="share-1icon- icon-share-custom" ng-show="doc.shared != null && doc.shared.length > 0 && isMyDocuments()"></i>

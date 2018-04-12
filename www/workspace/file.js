@@ -123,6 +123,17 @@ angular.module('ent.workspace_file',['ent.workspace_service'])
     $state.go("app.workspace_file_versions")
   }
 
+  $scope.isDocImage = function(metadata)
+  {
+    if (metadata == 0 || metadata == undefined) {
+      return 'false';
+    }
+    if (metadata['content-type'].indexOf("image") != -1) {
+      return 'true';
+    }
+    return 'false';
+  }
+
   $scope.getCountComments = function(doc, commentsAreShown){
     if(doc.comments != null){
       var text
