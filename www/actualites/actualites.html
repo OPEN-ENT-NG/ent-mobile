@@ -4,12 +4,12 @@
   </ion-nav-buttons>
 
   <ion-content scroll="false">
-    <ion-scroll ng-if="(infos | filter:filterByThread).length>0" class="scroll" direction="y" has-bouncing="true" >
+    <ion-scroll ng-if="(infos | filter:filterByThread).length>0" class="scroll" direction="y" has-bouncing="true"">
       <ion-refresher pulling-text="Actualiser" on-refresh="doRefreshInfos()">
       </ion-refresher>
 
       <ion-list>
-        <ion-item ng-repeat="info in filtered=(infos | filter:filterByThread) track by $index" class="card">
+        <ion-item ng-repeat="info in filtered=(infos | filter:filterByThread) | limitTo:totalDisplayed track by $index" class="card">
 
           <div class="item item-avatar item-text-wrap">
             <img http-src="{{getImageUrl(info.thread_icon)}}" alt="icone {{info.thread_title}}"/>
@@ -38,6 +38,7 @@
         </ion-item>
       </ion-list>
 
+      <ion-infinite-scroll on-infinite = "loadMore()" distance = "10%"></ion-infinite-scroll>
     </ion-scroll>
 
     <div ng-if="(infos | filter:filterByThread).length==0" class="empty-content">

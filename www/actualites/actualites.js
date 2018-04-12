@@ -62,7 +62,14 @@ angular.module('ent.actualites', ['ent.actualites_service'])
     $scope.$apply()
   }
 
+  $scope.loadMore = function () {
+    $scope.totalDisplayed += 3;
+    $scope.$broadcast('scroll.infiniteScrollComplete');
+  };
+
+  //the controller
   function getActualites(){
+    $scope.totalDisplayed = 10;
     $ionicLoading.show({
       template: '<ion-spinner icon="android"/>'
     });
