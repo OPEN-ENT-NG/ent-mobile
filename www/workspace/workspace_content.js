@@ -300,6 +300,17 @@ angular.module('ent.workspace_content',['ent.workspace_service',])
     });
   }
 
+  $scope.isDocImage = function(metadata)
+  {
+    if (metadata == 0 || metadata == undefined) {
+      return 'false';
+    }
+    if (metadata['content-type'].indexOf("image") != -1) {
+      return 'true';
+    }
+    return 'false';
+  }
+
   function getFolders(filter){
     WorkspaceService.getFoldersByFilter(filter, filter=="owner").then(function(res){
       $scope.folders = res.data;

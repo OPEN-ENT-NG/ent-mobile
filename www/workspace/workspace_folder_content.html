@@ -57,8 +57,9 @@
       <ion-list>
 
         <ion-item ng-repeat="doc in documents track by $index" class="item item-text-wrap item-thumbnail-left " ng-click="goToFile(doc)"  on-hold="enableCheck(doc)" ng-hide=checkable >
-          <img ng-if="doc.test ==='true'" http-src={{getThumbnailUrl(doc.icon_image)}}></img>
-          <img ng-if="doc.test ==='false'" http-src={{getImageUrl(doc.icon_image)}}></img>
+          <img ng-if="doc.test == 'true' && isDocImage(doc.metadata) =='true'" http-src={{getThumbnailUrl(doc.icon_image)}}/>
+          <img ng-if="doc.test == 'false' && isDocImage(doc.metadata) =='true'" http-src={{getImageUrl(doc.icon_image)}}/>
+          <img ng-if="isDocImage(doc.metadata) == 'false'" src="img/defaultfile.png"/>
           <h2>{{doc.name}}</h2>
           <h3>{{doc.ownerName}}</h3>
           <i class="share-1icon- icon-share-custom" ng-show="doc.shared != null && doc.shared.length > 0 && isMyDocuments()"></i>

@@ -155,6 +155,17 @@ angular.module('ent.workspace_folder_depth',['ent.workspace_service'])
     deregisterHardBack();
   });
 
+  $scope.isDocImage = function(metadata)
+  {
+    if (metadata == 0 || metadata == undefined) {
+      return 'false';
+    }
+    if (metadata['content-type'].indexOf("image") != -1) {
+      return 'true';
+    }
+    return 'false';
+  }
+
   function getData(){
     $ionicLoading.show({
       template: '<ion-spinner icon="android"/>'
