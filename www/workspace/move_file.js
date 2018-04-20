@@ -12,6 +12,7 @@ angular.module('ent.workspace_move_file', ['ent.workspace_service', 'ion-tree-li
       rootFolders = [];
       WorkspaceService.getCompleteFoldersByFilter('owner').then(function (res) {
         //init: retrait de Trash et ajout des dossiers parents
+        console.log(res);
         for (var i = 0; i < res.data.length; i++) {
           if (!res.data[i].folder.startsWith('Trash_')) {
             if (res.data[i].name === res.data[i].folder) {
@@ -21,15 +22,14 @@ angular.module('ent.workspace_move_file', ['ent.workspace_service', 'ion-tree-li
             }
           }
         }
-
         for (var j = 0; j < rootFolders.length; j++) {
           recursiveAddFolder(rootFolders[j], allFolders);
         }
 
-        if (allFolders.length !== 0) {
-          rootFolders.push({folder: "Non-définis", name: "Non-définis", tree: allFolders, checked: false});
-          allFolders = [];
-        }
+        //if (allFolders.length !== 0) {
+        //  rootFolders.push({folder: "Non-définis", name: "Non-définis", tree: allFolders, checked: false});
+        //  allFolders = [];
+        //}
 
         $scope.tasks = [{
           folder: {folder: 'owner', name: $rootScope.translationWorkspace["documents"]},
