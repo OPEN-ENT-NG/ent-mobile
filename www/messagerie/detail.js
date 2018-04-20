@@ -1,4 +1,4 @@
-angular.module('ent.message_detail', ['ent.message_services'])
+angular.module('ent.message_detail', ['ent.message_services', 'ent'])
 
 .controller('MessagesDetailCtrl', function($scope, $rootScope, $ionicPopover, $state, domainENT, MessagerieServices,  $ionicLoading, $ionicHistory, DeleteMessagesPopupFactory,MoveMessagesPopupFactory, AlertMessagePopupFactory){
 

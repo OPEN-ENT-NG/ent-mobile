@@ -1,4 +1,4 @@
-<ion-view ng-controller="MessagesDetailCtrl">
+<ion-view>
   <ion-nav-title>{{checkable ? getCountOfCheckedMessages(): getNameFolder(nameFolder)}}</ion-nav-title>
   <ion-nav-buttons side="right">
 
@@ -34,7 +34,9 @@
           </h2>
         </div>
 
-        <div class="item-text-wrap item corpsMessage htmlEntContent" ng-bind-html= "renderHtml(mail.body)" ng-show=mail.body overflow-scroll="true"></div>
+        <div class="item-text-wrap item corpsMessage htmlEntContent" ng-if="mail.body" overflow-scroll="true">
+          <render-html err='showAlertError' data="mail.body" open-fct="openLocalFile(path, type)"></render-html>
+        </div>
 
         <div class="item borderBottomItemDismissed borderTopItemDismissed" ng-show=mail.attachments.length!=0>
           <ion-list>

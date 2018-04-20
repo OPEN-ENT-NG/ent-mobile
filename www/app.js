@@ -1,8 +1,10 @@
-angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute','ent.actualites','ent.blog','ent.blog-list','ent.oauth2',
-'ent.messagerie','ent.workspace','ent.user','ent.pronotes', 'angularMoment','ent.test', 'ng-mfb', 'ui.router', 'angular.img'])
+angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute','ent.actualites','ent.blog',
+'ent.blog-list','ent.oauth2', 'ent.messagerie','ent.workspace','ent.user','ent.pronotes', 'angularMoment',
+  'ent.test', 'ng-mfb', 'ui.router', 'angular.img'])
 
 
-.run(function($ionicPlatform, $ionicLoading, $rootScope,$cordovaGlobalization, amMoment, $ionicSideMenuDelegate, $rootScope) {
+.run(function($ionicPlatform, $ionicLoading, $rootScope,$cordovaGlobalization, amMoment, $ionicSideMenuDelegate,
+              $rootScope) {
 
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -114,7 +116,8 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     url: '/messagerie/:nameFolder/:idMessage',
     views: {
       'menuContent': {
-        templateUrl: 'messagerie/detail.html'
+        templateUrl: 'messagerie/detail.html',
+        controller: 'MessagesDetailCtrl'
       }
     }
   })
@@ -152,7 +155,8 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     url: '/actualites',
     views: {
       'menuContent': {
-        templateUrl: 'actualites/actualites.html'
+        templateUrl: 'actualites/actualites.html',
+        controller: 'ActualitesCtrl'
       }
     }
   })
@@ -338,24 +342,10 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     }
   }, 1000);
 
-  $scope.renderHtml = function (text){
-    if(text != null){
-      text = text.replace(/="\/\//g, "=\"https://");
-      text = text.replace(/="\//g, "=\""+domainENT+"/");
-
-      //pb dans le cas de téléchargement de fichiers
-      // var newString = text.replace(/href="([\S]+)"/g, "onClick=window.plugins.fileOpener.open(\"$1\")")
-      var newString = text.replace(/href="([\S]+)"/g, "onClick=\"window.open('$1', '_blank', 'location=no')\"");
-
-      // console.log(newString);
-      return $sce.trustAsHtml(newString);
-    }
-  }
-
   $scope.downloadFile = function (filename, urlFile, fileMIMEType, module){
     // Save location
     var url = $sce.trustAsResourceUrl(urlFile)
-    var targetPath = cordova.file.externalRootDirectory + '/Pictures/ENT/' + filename;
+    var targetPath = cordova.file.externalRootDirectory + 'Download/' + filename;
     //$cordovaProgress.showSimpleWithLabelDetail(true, 'Téléchargement en cours (Bouton retour pour quitter)', filename)
     SpinnerDialog.show(null, 'Téléchargement en cours (Bouton retour pour quitter)', true);
 
@@ -664,7 +654,78 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     var units = ['bytes', 'kB', 'MB', 'GB', 'TB', 'PB'], number = Math.floor(Math.log(bytes) / Math.log(1024))
     return (bytes / Math.pow(1024, Math.floor(number))).toFixed(precision) +  ' ' + units[number]
   }
-});
+})
+
+  .directive('renderHtml', function ($compile, $sce, $http, $cordovaFile, domainENT, $ionicLoading) {
+    return {
+      restrict: 'E',
+      scope: {
+        data: '=',
+        openFct : '&',
+        err: '&'
+      },
+      link: function (scope, element) {
+
+        if (scope.data != null) {
+          scope.data = scope.data.replace(/="\/\//g, "=\"https://");
+          scope.data = scope.data.replace(/="\//g, "=\"" + domainENT + "/");
+          scope.data = scope.data.replace(/href="([\S]+)"/g, "ng-click=\"getFile('$1')\"");
+
+          scope.data = $sce.getTrustedHtml($sce.trustAsHtml(scope.data));
+          element.html(scope.data);
+          $compile(element)(scope);
+        }
+
+        scope.getFile = function (fileAddr) {
+
+          $ionicLoading.show({
+            template: '<ion-spinner icon="android"/>'
+          });
+
+          var config =
+            {
+              method: 'GET',
+              url: $sce.getTrustedUrl($sce.trustAsResourceUrl(fileAddr)),
+              responseType: 'arraybuffer',
+              cache: true
+            };
+
+          $http(config).then(function(result) {
+            var contentType = result.headers('content-type');
+            var fileName = moment(result.headers('date')).format('x') + '.' + /.*\/(.*)/g.exec(contentType)[1];
+            var filePath = ionic.Platform.isIOS() ?
+              cordova.file.dataDirectory : cordova.file.externalRootDirectory + 'Download/';
+
+            window.resolveLocalFileSystemURL(filePath, function (fs) {
+              fs.getFile(fileName, {create: true, exclusive: false}, function(file) {
+                file.createWriter(function (fileWriter) {
+
+                  fileWriter.onwriteend = function (f) {
+                    scope.openFct({path: file.nativeURL, type: contentType});
+                    $ionicLoading.hide();
+                  };
+
+                  fileWriter.onerror = function (err) {
+                    scope.err(err);
+                  };
+
+                  if (result) {
+                    fileWriter.write(new Blob([result.data], {type: contentType}));
+                  }
+                });
+              }, function (err) {
+                scope.err(err)
+              });
+            }, function (err) {
+              scope.err(err)
+            });
+          }, function (err) {
+            scope.err(err)
+          });
+        };
+      }
+    }
+  });
 
 function setProfileImage (regularPath, userId){
   return (regularPath != null && regularPath.length > 0 && regularPath != "no-avatar.jpg") ? regularPath:"/userbook/avatar/"+userId;
