@@ -1,7 +1,7 @@
 var actionsName = {
-  "read" : 1,
+  "read" : 3,
   "contrib" : 2,
-  "comment" : 3,
+  "comment" : 1,
   "manager" : 0
 }
 
