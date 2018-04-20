@@ -670,6 +670,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
           scope.data = scope.data.replace(/="\/\//g, "=\"https://");
           scope.data = scope.data.replace(/="\//g, "=\"" + domainENT + "/");
           scope.data = scope.data.replace(/href="([\S]+)"/g, "ng-click=\"getFile('$1')\"");
+          scope.data = scope.data.replace(/ src=/g, " http-src=");
 
           scope.data = $sce.getTrustedHtml($sce.trustAsHtml(scope.data));
           element.html(scope.data);
