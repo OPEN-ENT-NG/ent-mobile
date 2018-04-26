@@ -210,3 +210,8 @@ ion-popover-view.fit ion-content {
     z-index: 10;
     color: rgba(0,0,0,0.7);
 }
+
+.login-checkbox {
+  background-color: #0084CA !important;
+  border-color:  #0084CA !important;
+}
