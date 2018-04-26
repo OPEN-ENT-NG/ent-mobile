@@ -40,4 +40,8 @@ angular.module('ent.blog_service', [])
   this.getTraduction = function(){
     return $http.get(domainENT+"/blog/i18n");
   }
+
+  this.commentPostById = function (idBlog, idPost, comment) {
+      return $http.post(domainENT+'/blog/comment/' + idBlog + '/' + idPost, {'comment': comment});
+    };
 })

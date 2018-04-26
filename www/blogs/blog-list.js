@@ -5,6 +5,7 @@ angular.module('ent.blog-list', ['ent.blog_service'])
   getListBlogs()
 
   $scope.goToBlog = function (blog) {
+    $rootScope.blog = blog;
     $state.go('app.blog', {nameBlog: blog.title, idBlog: blog._id})
   }
 

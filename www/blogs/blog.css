@@ -1,0 +1,7 @@
+.actucard a.comment-icon {
+  float: right;
+  font-weight: normal;
+  color: #666;
+  text-decoration: none;
+  padding-top: 16px;
+}
