@@ -1,6 +1,6 @@
 angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute','ent.actualites','ent.blog',
 'ent.blog-list','ent.oauth2', 'ent.messagerie','ent.workspace','ent.user','ent.pronotes', 'angularMoment',
-  'ent.test', 'ng-mfb', 'ui.router', 'angular.img'])
+  'ent.test', 'ng-mfb', 'ui.router', 'angular.img', 'ent.request'])
 
 
 .run(function($ionicPlatform, $ionicLoading, $rootScope,$cordovaGlobalization, amMoment, $ionicSideMenuDelegate,
@@ -285,7 +285,8 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   .state('login', {
     url: '/login',
     templateUrl: 'authentification/login-credentials.html',
-    controller: 'LoginCtrl'
+    controller: 'LoginCtrl',
+    cache: false
   })
 
   // if none of the above states are matched, use this as the fallback
@@ -303,12 +304,12 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
                           {'name':'Documents','icon':'custom-folder foldericon-', 'href':'#/app/workspace'},
                           {'name':'Pronote','icon':'custom-pronote pronote-1icon-', 'href':'#/app/listPronotes'}];
 
-  SkinFactory.getSkin().then(function(res) {
+  //SkinFactory.getSkin().then(function(res) {
     localStorage.setItem('skin', '/assets/themes/paris/skins/default/');
     //localStorage.setItem('skin', res.data.skin);
-  } , function(err){
-    $scope.showAlertError(err);
-  });
+  //} , function(err){
+  //  $scope.showAlertError(err);
+  //});
 
   getTranslationActualites();
   getTranslationConversation();
@@ -399,12 +400,12 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
       result = path
     } else {
       if (!localStorage.getItem('skin') || localStorage.getItem('skin') == 'undefined' ) {
-        SkinFactory.getSkin().then(function(res) {
+       // SkinFactory.getSkin().then(function(res) {
           localStorage.setItem('skin', '/assets/themes/paris/skins/default/');
 //          localStorage.setItem('skin', res.data.skin)
           console.log(localStorage.getItem('skin'))
           result = localStorage.getItem('skin')+defaultImage
-        });
+       // });
       } else {
         result = localStorage.getItem('skin')+defaultImage
       }

@@ -1,15 +1,15 @@
-angular.module('ent.actualites_service', [])
+angular.module('ent.actualites_service', ['ent.request'])
 
-.service('ActualitesService', function($http, domainENT){
+.service('ActualitesService', function($http, domainENT, RequestService){
   this.getAllInfos = function(){
-    return $http.get(domainENT+"/actualites/infos");
+    return RequestService.get(domainENT+"/actualites/infos");
   }
 
   this.getAllThreads = function(){
-    return $http.get(domainENT+"/actualites/threads");
+    return RequestService.get(domainENT+"/actualites/threads");
   }
 
   this.getTranslation = function(){
-    return $http.get(domainENT+"/actualites/i18n");
+    return RequestService.get(domainENT+"/actualites/i18n");
   }
 })

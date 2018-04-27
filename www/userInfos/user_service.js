@@ -1,23 +1,23 @@
-angular.module('ent.user', [])
+angular.module('ent.user', ['ent.request'])
 
-  .service('SkinFactory', function($http, domainENT){
+  .service('SkinFactory', function($http, domainENT, RequestService){
     this.getSkin = function(){
-      return  $http.get(domainENT+"/theme");
+      return $http.get(domainENT+"/theme");
     }
   })
 
-  .service('UserFactory', function(domainENT, $http){
+  .service('UserFactory', function(domainENT, $http, RequestService){
 
     this.whoAmI= function (userId) {
-      return $http.get(domainENT+"/userbook/api/person?id="+userId);
+      return RequestService.get(domainENT+"/userbook/api/person?id="+userId);
     };
 
     this.getCurrentUser = function () {
-      return $http.get(domainENT+'/auth/oauth2/userinfo');
+      return RequestService.get(domainENT+'/auth/oauth2/userinfo');
     };
 
     this.getTranslation = function () {
-      return $http.get(domainENT+'/userbook/i18n');
+      return RequestService.get(domainENT+'/userbook/i18n');
     }
   })
 

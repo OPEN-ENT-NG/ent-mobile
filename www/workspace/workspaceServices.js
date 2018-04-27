@@ -1,6 +1,6 @@
-angular.module('ent.workspace_service', ['ion-tree-list', 'ngCookies'])
+angular.module('ent.workspace_service', ['ion-tree-list', 'ngCookies', 'ent.request'])
 
-.service('WorkspaceService', function($http, domainENT, $q, $cookies){
+.service('WorkspaceService', function($http, domainENT, $q, $cookies, RequestService){
 
   // var configHeaders = {
   //   headers: { 'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8",
@@ -22,28 +22,29 @@ angular.module('ent.workspace_service', ['ion-tree-list', 'ngCookies'])
   }
 
   this.getFoldersByFilter = function(filter, hierarchical){
-    return $http.get(domainENT+"/workspace/folders/list?filter="+parametersUrl(filter, hierarchical))
+    return RequestService.get(domainENT+"/workspace/folders/list?filter="+parametersUrl(filter, hierarchical));
   }
 
   this.getDocumentsByFilter = function(filter,hierarchical){
-    return $http.get(domainENT+"/workspace/documents?filter="+parametersUrl(filter,hierarchical))
+    return RequestService.get(domainENT+"/workspace/documents?filter="+parametersUrl(filter,hierarchical))
   }
 
   this.getDocumentsByFolderAndFilter = function(folderName,filter){
-    return $http.get(domainENT+'/workspace/documents/'+folderName+'?filter='+filter+'&hierarchical=true&_='+getTimeInMillis())
+    return RequestService.get(domainENT+'/workspace/documents/'+folderName+'?filter='+filter+'&hierarchical=true&_='+getTimeInMillis())
   }
 
   this.getTrashFilesContent = function(){
-    return $http.get(domainENT+"/workspace/documents/Trash?filter=owner&_="+getTimeInMillis())
+    return RequestService.get(domainENT+"/workspace/documents/Trash?filter=owner&_="+getTimeInMillis())
   }
 
   this.getCompleteFoldersByFilter = function(filter) {
-    return $http.get(domainENT+'/workspace/folders/list?filter=' + filter + '&_='+getTimeInMillis())
+    return RequestService.get(domainENT+'/workspace/folders/list?filter=' + filter + '&_='+getTimeInMillis())
   }
 
   this.getSharingItemDatas = function(idItem) {
-      return $http.get(domainENT+'/workspace/share/json/'+idItem);
-//      return $http.get(domainENT+'/workspace/share/json/'+idItem, {headers : {'XSRF-TOKEN' : $cookies.get('XSRF-TOKEN')}});
+    return RequestService.get(domainENT+'/workspace/share/json/'+idItem);
+
+      //      return $http.get(domainENT+'/workspace/share/json/'+idItem, {headers : {'XSRF-TOKEN' : $cookies.get('XSRF-TOKEN')}});
   }
 
   this.updateSharingActions = function (idItem, sharingDatas, isRemove){
@@ -69,46 +70,46 @@ angular.module('ent.workspace_service', ['ion-tree-list', 'ngCookies'])
   }
 
   this.commentDocById = function (id, comment){
-    return $http.post(domainENT+'/workspace/document/'+id+'/comment', "comment="+ comment)
+    return RequestService.post(domainENT+'/workspace/document/'+id+'/comment', "comment="+ comment)
   }
 
   this.renameDoc = function (id, newName){
-    return $http.put(domainENT+'/workspace/rename/document/'+id, {name: newName})
+    return RequestService.put(domainENT+'/workspace/rename/document/'+id, {name: newName})
   }
 
   this.renameFolder = function (id, newName){
-    return $http.put(domainENT+'/workspace/folder/rename/'+id, {name: newName})
+    return RequestService.put(domainENT+'/workspace/folder/rename/'+id, {name: newName})
   }
 
   this.renameItem = function (item, type, newName){
     console.log(item);
     var urlType = type =='folder' ? 'folder/rename/'+item._id : 'rename/document/'+item._id
     console.log(urlType);
-    return $http.put(domainENT+'/workspace/'+urlType , {name: newName})
+    return RequestService.put(domainENT+'/workspace/'+urlType , {name: newName})
   }
 
 
   this.trashDoc = function (id){
-    return $http.put(domainENT+'/workspace/document/trash/'+id)
+    return RequestService.put(domainENT+'/workspace/document/trash/'+id)
   }
 
   this.versionDoc = function (id){
-    return $http.get(domainENT+'/workspace/document/'+id+'/revisions?_='+getTimeInMillis())
+    return RequestService.get(domainENT+'/workspace/document/'+id+'/revisions?_='+getTimeInMillis())
   }
 
   this.putNewVersion = function (id, newVersion){
-    return $http.put(domainENT+'/workspace/document/'+id+'?thumbnail=120x120&thumbnail=290x290', newVersion, {
+    return RequestService.put(domainENT+'/workspace/document/'+id+'?thumbnail=120x120&thumbnail=290x290', newVersion, {
       transformRequest: angular.identity,
       headers: {'Content-Type': undefined}
     });
   }
 
   this.deleteVersion = function(idDoc, idVersion){
-    return $http.delete(domainENT+'/workspace/document/'+idDoc+'/revision/'+idVersion)
+    return RequestService.delete(domainENT+'/workspace/document/'+idDoc+'/revision/'+idVersion)
   }
 
   this.uploadDoc = function(doc){
-    return $http.post(domainENT+'/workspace/document?thumbnail=120x120&thumbnail=290x290&quality=0.8', doc, {
+    return RequestService.post(domainENT+'/workspace/document?thumbnail=120x120&thumbnail=290x290&quality=0.8', doc, {
       transformRequest: angular.identity,
       headers: {'Content-Type': undefined}
     });
@@ -116,7 +117,7 @@ angular.module('ent.workspace_service', ['ion-tree-list', 'ngCookies'])
 
   this.moveDoc = function(idDoc, folderName){
     folderName = folderName=='owner' ? '':'/'+folderName
-    return $http.put(domainENT+'/workspace/documents/move/'+idDoc+folderName)
+    return RequestService.put(domainENT+'/workspace/documents/move/'+idDoc+folderName)
   }
 
   this.moveSelectedDocs = function(arrayDocs, folderName){
@@ -127,7 +128,7 @@ angular.module('ent.workspace_service', ['ion-tree-list', 'ngCookies'])
 
     angular.forEach(arrayDocs, function(item) {
       var deferredItemList = $q.defer();
-      $http.put(domainENT+'/workspace/documents/move/'+item._id+folderName).then(function(resp) {
+      RequestService.put(domainENT+'/workspace/documents/move/'+item._id+folderName).then(function(resp) {
         combinedItems = combinedItems.concat(resp.data);
         deferredItemList.resolve();
       });
@@ -150,7 +151,7 @@ angular.module('ent.workspace_service', ['ion-tree-list', 'ngCookies'])
 
     angular.forEach(arrayFolders, function(item) {
       var deferredItemList = $q.defer();
-      $http.put(domainENT+'/workspace/folder/move/'+item._id,"path="+folderName).then(function(resp) {
+      RequestService.put(domainENT+'/workspace/folder/move/'+item._id,"path="+folderName).then(function(resp) {
         combinedItems = combinedItems.concat(resp.data);
         deferredItemList.resolve();
       });
@@ -166,25 +167,25 @@ angular.module('ent.workspace_service', ['ion-tree-list', 'ngCookies'])
 
   this.copyDoc = function(idDoc, folderName){
     folderName = folderName=='owner' ? '':'/'+folderName
-    return $http.post(domainENT+'/workspace/documents/copy/'+idDoc+folderName)
+    return RequestService.post(domainENT+'/workspace/documents/copy/'+idDoc+folderName)
   }
 
   this.trashFolder = function (id){
-    return $http.put(domainENT+'/workspace/folder/trash/'+id)
+    return RequestService.put(domainENT+'/workspace/folder/trash/'+id)
   }
 
   this.createFolder = function (folderName, path){
     var data = "name="+folderName;
     data = path!='owner' ? "name="+folderName+"&path="+path.folder : data;
     console.log(data);
-    return $http.post(domainENT+'/workspace/folder',data)
+    return RequestService.post(domainENT+'/workspace/folder',data)
   }
 
   this.copyFolder = function (folder, path){
     var data = "name="+folder.name;
     data = path!='owner' ? "name="+folder.name+"&path="+path: data;
     console.log(data);
-    return $http.put(domainENT+'/workspace/folder/copy/'+folder._id, data)
+    return RequestService.put(domainENT+'/workspace/folder/copy/'+folder._id, data)
   }
 
   this.copySelectedFolders = function(arrayFolders, path){
@@ -197,7 +198,7 @@ angular.module('ent.workspace_service', ['ion-tree-list', 'ngCookies'])
       data = path!='owner' ? "name="+item.name+"&path="+path: data;
       console.log(data);
       var deferredItemList = $q.defer();
-      $http.put(domainENT+'/workspace/folder/copy/'+item._id, data).then(function(resp) {
+      RequestService.put(domainENT+'/workspace/folder/copy/'+item._id, data).then(function(resp) {
         combinedItems = combinedItems.concat(resp.data);
         deferredItemList.resolve();
       });
@@ -219,7 +220,7 @@ angular.module('ent.workspace_service', ['ion-tree-list', 'ngCookies'])
 
     angular.forEach(arrayDocs, function(item) {
       var deferredItemList = $q.defer();
-      $http.post(domainENT+'/workspace/documents/copy/'+item._id+folderName).then(function(resp) {
+      RequestService.post(domainENT+'/workspace/documents/copy/'+item._id+folderName).then(function(resp) {
         combinedItems = combinedItems.concat(resp.data);
         deferredItemList.resolve();
       });
@@ -238,7 +239,7 @@ angular.module('ent.workspace_service', ['ion-tree-list', 'ngCookies'])
     var combinedItems = [];
 
     angular.forEach(arrayDocs, function(item) {
-      var request = isMyDocuments ? $http.put(domainENT+'/workspace/document/trash/'+item._id) : $http.delete(domainENT+'/workspace/document/'+item._id)
+      var request = isMyDocuments ? RequestService.put(domainENT+'/workspace/document/trash/'+item._id) : RequestService.delete(domainENT+'/workspace/document/'+item._id)
       var deferredItemList = $q.defer();
       request.then(function(resp) {
         combinedItems = combinedItems.concat(resp.data);
@@ -259,7 +260,7 @@ angular.module('ent.workspace_service', ['ion-tree-list', 'ngCookies'])
     var combinedItems = [];
 
     angular.forEach(arrayFolders, function(item) {
-      var request = isMyDocuments ? $http.put(domainENT+'/workspace/folder/trash/'+item._id) : $http.delete(domainENT+'/workspace/folder/'+item._id)
+      var request = isMyDocuments ? RequestService.put(domainENT+'/workspace/folder/trash/'+item._id) : RequestService.delete(domainENT+'/workspace/folder/'+item._id)
 
       var deferredItemList = $q.defer();
       request.then(function(resp) {
@@ -281,7 +282,7 @@ angular.module('ent.workspace_service', ['ion-tree-list', 'ngCookies'])
     var combinedItems = [];
     angular.forEach(arrayDocs, function(item) {
       var deferredItemList = $q.defer();
-      $http.put(domainENT+'/workspace/restore/document/'+item._id).then(function(resp) {
+      RequestService.put(domainENT+'/workspace/restore/document/'+item._id).then(function(resp) {
         combinedItems = combinedItems.concat(resp.data);
         deferredItemList.resolve();
       });
@@ -300,7 +301,7 @@ angular.module('ent.workspace_service', ['ion-tree-list', 'ngCookies'])
     var combinedItems = [];
     angular.forEach(arrayFolders, function(item) {
       var deferredItemList = $q.defer();
-      $http.put(domainENT+'/workspace/folder/restore/'+item._id).then(function(resp) {
+      RequestService.put(domainENT+'/workspace/folder/restore/'+item._id).then(function(resp) {
         combinedItems = combinedItems.concat(resp.data);
         deferredItemList.resolve();
       });
@@ -314,7 +315,7 @@ angular.module('ent.workspace_service', ['ion-tree-list', 'ngCookies'])
   }
 
   this.getTranslation = function(){
-    return $http.get(domainENT+"/workspace/i18n");
+    return RequestService.get(domainENT+"/workspace/i18n");
   }
 
   var parametersUrl = function(filter, hierarchical){

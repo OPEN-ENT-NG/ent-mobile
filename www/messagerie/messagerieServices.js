@@ -1,6 +1,6 @@
-angular.module('ent.message_services', [])
+angular.module('ent.message_services', ['ent.request'])
 
-.service('MessagerieServices', function($http, $q, domainENT){
+.service('MessagerieServices', function($http, $q, domainENT, RequestService){
 
   var configHeaders = {
     headers: { 'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8", 'Authorization': $http.defaults.headers.common['Authorization'] }
@@ -8,24 +8,24 @@ angular.module('ent.message_services', [])
 
 
   this.postAttachment = function(messageId, attachment){
-    return $http.post(domainENT+"/conversation/message/"+ messageId +"/attachment",  attachment, {
+    return RequestService.post(domainENT+"/conversation/message/"+ messageId +"/attachment",  attachment, {
       transformRequest: angular.identity,
       headers: {'Content-Type': undefined, 'Authorization': $http.defaults.headers.common['Authorization'] }
     });
   }
 
   this.getMessagesFolder = function (url) {
-    return $http.get(url);
+    return RequestService.get(url);
   }
 
   this.getCustomFolders = function(){
-    return $http.get(domainENT+"/conversation/folders/list");
+    return RequestService.get(domainENT+"/conversation/folders/list");
   }
 
   this.getExtraFolders = function(locationId){
     var urlEnd = locationId == "TRASH" ? "trash":"parentId="+locationId;
     console.log(domainENT+"/conversation/folders/list?"+urlEnd);
-    return $http.get(domainENT+"/conversation/folders/list?"+urlEnd);
+    return RequestService.get(domainENT+"/conversation/folders/list?"+urlEnd);
   }
 
   this.getCountUnread = function(folders){
@@ -41,7 +41,7 @@ angular.module('ent.message_services', [])
         toRequest += "true";
       if (folderId != "INBOX" && folderId != "OUTBOX" && folderId != "DRAFT" && folderId != "THRASH")
         toRequest += "&restrain";
-        $http.get(toRequest).then(function(resp) {
+      RequestService.get(toRequest).then(function(resp) {
         combinedItems[folderIndex] = resp.data;
         deferredItemList.resolve();
       });
@@ -61,7 +61,7 @@ angular.module('ent.message_services', [])
 
     angular.forEach(arrayMessages, function(item) {
       var deferredItemList = $q.defer();
-      $http.put(domainENT+"/conversation/restore?id="+item.id).then(function(resp) {
+      RequestService.put(domainENT+"/conversation/restore?id="+item.id).then(function(resp) {
         combinedItems = combinedItems.concat(resp.data);
         deferredItemList.resolve();
       });
@@ -75,7 +75,7 @@ angular.module('ent.message_services', [])
   }
 
   this.restoreMessage = function (id){
-    return $http.put(domainENT+"/conversation/restore?id="+id);
+    return RequestService.put(domainENT+"/conversation/restore?id="+id);
   }
 
   this.deleteSelectedMessages = function(arrayMessages, nameFolder){
@@ -87,13 +87,13 @@ angular.module('ent.message_services', [])
       console.log(item);
 
       if(nameFolder=="trash"){
-        $http.delete(domainENT+"/conversation/delete?id="+item.id).then(function(resp) {
+        RequestService.delete(domainENT+"/conversation/delete?id="+item.id).then(function(resp) {
           combinedItems = combinedItems.concat(resp.data);
           deferredItemList.resolve();
         });
         promises.push(deferredItemList.promise);
       } else {
-        $http.put(domainENT+"/conversation/trash?id="+item.id).then(function(resp) {
+        RequestService.put(domainENT+"/conversation/trash?id="+item.id).then(function(resp) {
           combinedItems = combinedItems.concat(resp.data);
           deferredItemList.resolve();
         });
@@ -108,7 +108,7 @@ angular.module('ent.message_services', [])
   }
 
   this.getMessage = function(id){
-    return $http.get(domainENT+"/conversation/message/"+id);
+    return RequestService.get(domainENT+"/conversation/message/"+id);
   }
 
   this.moveMessages = function(messagesToMove, folderId){
@@ -117,7 +117,7 @@ angular.module('ent.message_services', [])
     var combinedItems = [];
     angular.forEach(messagesToMove, function(message) {
       var deferredItemList = $q.defer();
-      $http.put(domainENT+"/conversation/move/userfolder/"+folderId+"?id="+message.id).then(function(resp) {
+      RequestService.put(domainENT+"/conversation/move/userfolder/"+folderId+"?id="+message.id).then(function(resp) {
         combinedItems = combinedItems.concat(resp.data);
         deferredItemList.resolve();
       });
@@ -131,32 +131,32 @@ angular.module('ent.message_services', [])
   }
 
   this.moveMessage = function(messageId, folderId){
-    return $http.put(domainENT+"/conversation/move/userfolder/"+folderId+"?id="+messageId);
+    return RequestService.put(domainENT+"/conversation/move/userfolder/"+folderId+"?id="+messageId);
   }
 
   this.getContactsService = function(){
-    return $http.get(domainENT+"/conversation/visible");
+    return RequestService.get(domainENT+"/conversation/visible");
   }
 
   this.saveWithId = function(id, mailData){
-    return $http.put(domainENT+'/conversation/draft/'+id,mailData, configHeaders );
+    return RequestService.put(domainENT+'/conversation/draft/'+id,mailData, configHeaders );
   }
 
   this.saveNewDraft = function (mailData){
-    return $http.post(domainENT+'/conversation/draft',mailData, configHeaders );
+    return RequestService.post(domainENT+'/conversation/draft',mailData, configHeaders );
   }
 
   this.sendMail = function(mailData){
-    return $http.post(domainENT+'/conversation/send?id='+mailData.id,mailData, configHeaders );
+    return RequestService.post(domainENT+'/conversation/send?id='+mailData.id,mailData, configHeaders );
   }
 
   this.sendReplyOne = function(mailData){
-    return $http.post(domainENT+'/conversation/send?In-Reply-To='+mailData.id,mailData, configHeaders );
+    return RequestService.post(domainENT+'/conversation/send?In-Reply-To='+mailData.id,mailData, configHeaders );
 
   }
 
   this.getTranslation = function(){
-    return $http.get(domainENT+'/conversation/i18n');
+    return RequestService.get(domainENT+'/conversation/i18n');
   }
 
   this.getNonPersonalFolders = function(){

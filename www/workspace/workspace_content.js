@@ -1,4 +1,4 @@
-angular.module('ent.workspace_content',['ent.workspace_service',])
+angular.module('ent.workspace_content',['ent.workspace_service'])
 
 .controller('WorkspaceFolderContentCtlr', function($scope, $rootScope, $stateParams, $state, WorkspaceService, $ionicLoading, MimeTypeFactory, CreateNewFolderPopUpFactory, $ionicPopup, $cordovaVibration, $ionicHistory, $ionicPlatform, $ionicPopover, RenamePopUpFactory, MovingItemsFactory){
 

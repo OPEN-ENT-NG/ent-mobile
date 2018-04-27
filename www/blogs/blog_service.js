@@ -1,20 +1,20 @@
-angular.module('ent.blog_service', [])
-.service('BlogsService', function($http, domainENT, $q){
+angular.module('ent.blog_service', ['ent.request'])
+.service('BlogsService', function($http, domainENT, $q, RequestService){
 
   this.getAllBlogs = function () {
-    return $http.get(domainENT+"/blog/list/all");
+    return RequestService.get(domainENT+"/blog/list/all");
   }
 
   this.getAllPostsByBlogId = function(id){
-    return $http.get(domainENT+"/blog/post/list/all/"+id+"?state=PUBLISHED");
+    return RequestService.get(domainENT+"/blog/post/list/all/"+id+"?state=PUBLISHED");
   }
 
   this.getPostContentById = function(idBlog, idPost){
-    return $http.get(domainENT + "/blog/post/" + idBlog + "/" + idPost + "?state=PUBLISHED");
+    return RequestService.get(domainENT + "/blog/post/" + idBlog + "/" + idPost + "?state=PUBLISHED");
   }
 
   this.getPostCommentsById = function (idBlog, idPost) {
-    return $http.get(domainENT + "/blog/comments/" + idBlog + "/" + idPost);
+    return RequestService.get(domainENT + "/blog/comments/" + idBlog + "/" + idPost);
   }
 
   this.getAuthors = function (idBlog, posts){
@@ -24,7 +24,7 @@ angular.module('ent.blog_service', [])
 
     angular.forEach(posts, function(item) {
       var deferredItemListAuthors = $q.defer();
-      $http.get(domainENT+"/userbook/api/person?id="+item.author.userId).then(function(resp) {
+      RequestService.get(domainENT+"/userbook/api/person?id="+item.author.userId).then(function(resp) {
         combinedItemsAuthors = combinedItemsAuthors.concat(resp.data.result[0]);
         deferredItemListAuthors.resolve();
       });
@@ -38,10 +38,10 @@ angular.module('ent.blog_service', [])
   }
 
   this.getTraduction = function(){
-    return $http.get(domainENT+"/blog/i18n");
+    return RequestService.get(domainENT+"/blog/i18n");
   }
 
   this.commentPostById = function (idBlog, idPost, comment) {
-      return $http.post(domainENT+'/blog/comment/' + idBlog + '/' + idPost, {'comment': comment});
+      return RequestService.post(domainENT+'/blog/comment/' + idBlog + '/' + idPost, {'comment': comment});
     };
 })
