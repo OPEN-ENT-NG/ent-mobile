@@ -3,6 +3,7 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
 .controller('NewMessageCtrl', function($scope, $rootScope, $ionicPopover, $state, $ionicHistory, MessagerieServices,$ionicLoading,$ionicPopup,domainENT, $filter,AlertMessagePopupFactory){
 
   $scope.$on('$ionicView.beforeEnter', function(){
+    getContacts();
     console.log("Entering new messqge ctrler");
     $scope.email = {
       destinatairesTo: [],
@@ -62,7 +63,34 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
     console.log($scope.email);
   });
 
-
+  function getContacts () {
+    $ionicLoading.show({
+      template: '<ion-spinner icon="android"/>'
+    });
+    $rootScope.contacts = [];
+    MessagerieServices.getContactsService().then(function(resp){
+      for(var i = 0; i< resp.data.groups.length; i++){
+        $rootScope.contacts.push({
+          _id:  resp.data.groups[i].id,
+          displayName:  resp.data.groups[i].name,
+          groupDisplayName:  resp.data.groups[i].groupDisplayName,
+          profile:  resp.data.groups[i].status
+        });
+      }
+      for(var i = 0; i<  resp.data.users.length; i++){
+        $rootScope.contacts.push({
+          _id:  resp.data.users[i].id,
+          displayName:  resp.data.users[i].displayName,
+          groupDisplayName:  resp.data.users[i].groupDisplayName,
+          profile:  resp.data.users[i].status
+        });
+      };
+      $ionicLoading.hide()
+    }, function(err){
+      $ionicLoading.hide()
+      $scope.showAlertError();
+    });
+  }
             $scope.addContactTo = function(search, contact){
               $scope.email.destinatairesTo.push(contact);
               search.value ="";
