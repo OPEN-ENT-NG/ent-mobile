@@ -1,6 +1,21 @@
 angular.module('ent.request', ['ent.workspace_service', 'ent'])
 
-.service('RequestService', function($http, $q, $state, $ionicLoading) {
+.service('RequestService', function($http, $q, $state, $ionicLoading, $rootScope, $ionicPopup) {
+
+    onError = function()
+    {
+      $ionicLoading.hide();
+      console.log($rootScope.navigator.onLine);
+      if (!$rootScope.navigator.onLine)
+      {
+        $ionicPopup.show({
+          title: 'Pas de connexion à Internet.',
+          buttons: [
+            { text: 'OK' }
+          ]
+        })
+      }
+    }
 
     this.get = function (url, config) {
       return $q(function(resolve, reject){
@@ -13,6 +28,8 @@ angular.module('ent.request', ['ent.workspace_service', 'ent'])
           }
           else
             resolve(response)
+        }, function (err) {
+          onError();
         })
       })
     }
@@ -28,6 +45,8 @@ angular.module('ent.request', ['ent.workspace_service', 'ent'])
           }
           else
             resolve(response)
+        }, function (err) {
+          onError();
         })
       })
     }
@@ -43,6 +62,8 @@ angular.module('ent.request', ['ent.workspace_service', 'ent'])
           }
           else
             resolve(response)
+        }, function (err) {
+          onError();
         })
       })
     }
@@ -58,6 +79,8 @@ angular.module('ent.request', ['ent.workspace_service', 'ent'])
           }
           else
             resolve(response)
+        }, function (err) {
+          onError();
         })
       })
     }
