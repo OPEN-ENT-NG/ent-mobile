@@ -86,7 +86,10 @@ angular.module('ent.blog', ['ent.blog_service'])
         return true;
       } else {
         for (var i = 0; i < $rootScope.blog.shared.length; i++) {
-          if ($rootScope.blog.shared[i]['userId'] == $rootScope.myUser.userId
+          if (($rootScope.blog.shared[i]['userId'] == $rootScope.myUser.userId
+            || $rootScope.myUser.groupsIds.some(function (id) {
+              return id == $rootScope.blog.shared[i]['groupId'];
+            }))
             && $rootScope.blog.shared[i]['org-entcore-blog-controllers-PostController|comment']) {
             return true;
           }

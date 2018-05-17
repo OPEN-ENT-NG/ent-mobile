@@ -13,7 +13,7 @@ angular.module('ent.user', ['ent.request'])
     };
 
     this.getCurrentUser = function () {
-      return RequestService.get(domainENT+'/auth/oauth2/userinfo');
+      return RequestService.get(domainENT+'/auth/oauth2/userinfo', {'headers' : {'Accept' : 'version=2.1'}});
     };
 
     this.getTranslation = function () {
@@ -57,6 +57,7 @@ angular.module('ent.user', ['ent.request'])
       UserFactory.getCurrentUser().then(function(res){
         UserFactory.whoAmI(res.data.userId).then(function(response) {
           $rootScope.myUser = response.data.result[0];
+          $rootScope.myUser.groupsIds = res.data.groupsIds;
           $rootScope.myUser.photo = setProfileImage($scope.myUser.photo, res.data.userId);
           $rootScope.myUser.type = "directory."+$rootScope.myUser.type[0];
           $rootScope.myUser.translatedType = TranslationService.getTraduction($rootScope.myUser.type);
