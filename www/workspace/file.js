@@ -250,7 +250,10 @@ angular.module('ent.workspace_file',['ent.workspace_service'])
       isOwner = true ;
     }else{
       for(var i = 0 ; i < $rootScope.doc.shared.length ; i++){
-        if($rootScope.doc.shared[i].userId == $rootScope.myUser.userId){
+        if($rootScope.doc.shared[i].userId == $rootScope.myUser.userId ||
+          $rootScope.myUser.groupsIds.some(function (id) {
+          return id == $rootScope.doc.shared[i]['groupId'];
+        })){
           myUserRights.push($rootScope.doc.shared[i]);
           break;
         }
