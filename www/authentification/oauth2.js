@@ -101,9 +101,11 @@ angular.module('ent.oauth2', [])
       }
       $state.go('app.actualites');
     }, function errorCallback(response) {
+
        $scope.wrongLogin = true;
        $scope.rememberMe = false;
        localStorage.setItem("RememberMe", "false");
+       $scope.isOnline = $rootScope.navigator.onLine;
        $state.go("login");
     })
   }
