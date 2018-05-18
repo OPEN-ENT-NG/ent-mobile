@@ -21,10 +21,19 @@ angular.module('ent.blog_service', ['ent.request'])
     var promisesAuthors = [];
     var deferredCombinedItemsAuthors = $q.defer();
     var combinedItemsAuthors = [];
+    var uniqItemsAuthors = [];
 
-    angular.forEach(posts, function(item) {
+    posts.forEach(function(item) {
+      if(!uniqItemsAuthors.some(function (auth) {
+          return auth == item.author.userId;
+      })) {
+        uniqItemsAuthors.push(item.author.userId);
+      }
+    });
+
+    uniqItemsAuthors.forEach(function(authId) {
       var deferredItemListAuthors = $q.defer();
-      RequestService.get(domainENT+"/userbook/api/person?id="+item.author.userId).then(function(resp) {
+      RequestService.get(domainENT+"/userbook/api/person?id="+ authId).then(function(resp) {
         combinedItemsAuthors = combinedItemsAuthors.concat(resp.data.result[0]);
         deferredItemListAuthors.resolve();
       });

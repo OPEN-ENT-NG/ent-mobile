@@ -384,7 +384,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
 
   $scope.getImageUrl = function (path) {
     if (path) {
-      return domainENT + path
+      return domainENT + (path.startsWith('/') ? path : '/' + path);
     }
   }
 
