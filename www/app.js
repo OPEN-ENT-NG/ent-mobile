@@ -14,7 +14,8 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
       cordova.plugins.Keyboard.disableScroll(true);
     }
     if (window.StatusBar) {
-      StatusBar.styleDefault();
+      StatusBar.styleLightContent();
+      StatusBar.overlaysWebView(false);
     }
 
     if (ionic.Platform.isIOS()){
