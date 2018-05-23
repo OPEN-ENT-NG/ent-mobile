@@ -215,3 +215,9 @@ ion-popover-view.fit ion-content {
   background-color: #0084CA !important;
   border-color:  #0084CA !important;
 }
+
+.blog-comment {
+  overflow: visible !important;
+  text-overflow: initial !important;
+  white-space: normal !important;
+}
