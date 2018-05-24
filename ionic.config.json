@@ -1,6 +1,6 @@
 {
-  "name": "ENT Mobile",
-  "app_id": "com.entcore.mobile",
+  "name": "Paris Classe Numerique",
+  "app_id": "",
   "gulpStartupTasks": [
     "sass",
     "watch"

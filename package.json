@@ -1,26 +1,26 @@
 {
-  "name": "ENT_mobile_08032016",
-  "version": "2.0.2",
+  "name": "Paris Classe Numerique",
+  "version": "0.1.0",
   "description": "ENT mobile: An Ionic project",
   "dependencies": {
     "angular-moment": "^0.10.3",
     "com.bez4pieci.cookies": "git+https://github.com/bez4pieci/Phonegap-Cookies-Plugin.git",
     "com.lampa.startapp": "~0.1.4",
-    "cordova-android": "~5.1.1",
+    "cordova-android": "5.1.1",
     "cordova-ios": "4.4.0",
     "cordova-plugin-app-version": "~0.1.9",
     "cordova-plugin-appavailability": "~0.4.2",
-    "cordova-plugin-compat": "~1.0.0",
+    "cordova-plugin-compat": "^1.2.0",
     "cordova-plugin-console": "~1.0.3",
     "cordova-plugin-device": "~1.1.2",
-    "cordova-plugin-file": "^3.0.0",
+    "cordova-plugin-file": "^4.3.3",
     "cordova-plugin-file-opener2": "~2.0.2",
-    "cordova-plugin-file-transfer": "~1.5.1",
+    "cordova-plugin-file-transfer": "^1.6.3",
     "cordova-plugin-globalization": "~1.0.3",
-    "cordova-plugin-inappbrowser": "~1.4.0",
     "cordova-plugin-ionic-keyboard": "^2.0.5",
-    "cordova-plugin-ionic-webview": "^1.1.19",
+    "cordova-plugin-ionic-webview": "^1.2.1",
     "cordova-plugin-keyboard": "~1.1.4",
+    "cordova-plugin-progressindicator": "^1.2.0",
     "cordova-plugin-splashscreen": "~3.2.2",
     "cordova-plugin-statusbar": "~2.1.3",
     "cordova-plugin-vibration": "~2.1.1",
@@ -33,8 +33,7 @@
     "gulp-rename": "^1.2.0",
     "gulp-sass": "^2.0.4",
     "mfb": "^0.12.0",
-    "moment": "^2.11.2",
-    "org.pbernasconi.progressindicator": "git+https://github.com/pbernasconi/cordova-progressIndicator.git"
+    "moment": "^2.11.2"
   },
   "devDependencies": {
     "bower": "^1.3.3",
@@ -58,10 +57,6 @@
     {
       "locator": "https://github.com/pwlin/cordova-plugin-file-opener2.git",
       "id": "cordova-plugin-file-opener2"
-    },
-    {
-      "locator": "https://github.com/pbernasconi/cordova-progressIndicator.git",
-      "id": "org.pbernasconi.progressindicator"
     },
     "cordova-plugin-inappbrowser",
     "cordova-plugin-app-version",
@@ -96,11 +91,8 @@
       "cordova-plugin-compat": {},
       "cordova-plugin-console": {},
       "cordova-plugin-device": {},
-      "cordova-plugin-file": {},
       "cordova-plugin-file-opener2": {},
-      "cordova-plugin-file-transfer": {},
       "cordova-plugin-globalization": {},
-      "cordova-plugin-inappbrowser": {},
       "cordova-plugin-keyboard": {},
       "cordova-plugin-splashscreen": {},
       "cordova-plugin-statusbar": {},
@@ -108,9 +100,11 @@
       "cordova-plugin-whitelist": {},
       "cordova-plugin-x-toast": {},
       "cordova.plugins.diagnostic": {},
-      "org.pbernasconi.progressindicator": {},
       "cordova-plugin-ionic-keyboard": {},
-      "cordova-plugin-ionic-webview": {}
+      "cordova-plugin-ionic-webview": {},
+      "cordova-plugin-file": {},
+      "cordova-plugin-file-transfer": {},
+      "org.pbernasconi.progressindicator": {}
     }
   }
 }
