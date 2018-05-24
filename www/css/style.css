@@ -216,6 +216,15 @@ ion-popover-view.fit ion-content {
   border-color:  #0084CA !important;
 }
 
+.version {
+  position: absolute;
+  width: 100%;
+  margin: auto;
+  text-align: center;
+  color: lightgray;
+  bottom: 5px
+}
+
 .blog-comment {
   overflow: visible !important;
   text-overflow: initial !important;

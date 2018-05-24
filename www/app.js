@@ -3,8 +3,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   'ent.test', 'ng-mfb', 'ui.router', 'angular.img', 'ent.request'])
 
 
-.run(function($ionicPlatform, $ionicLoading, $rootScope,$cordovaGlobalization, amMoment, $ionicSideMenuDelegate,
-              $rootScope) {
+.run(function($ionicPlatform, $ionicLoading, $rootScope,$cordovaGlobalization, amMoment) {
 
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -23,6 +22,14 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
         navigator.splashscreen.hide();
       }, 3000 - 1000);
     }
+
+    cordova.getAppVersion.getVersionNumber(function (version) {
+      $rootScope.version = version;
+    });
+
+    cordova.getAppVersion.getAppName(function (name) {
+      $rootScope.appName = name;
+    });
 
     cordova.plugins.diagnostic.requestRuntimePermissions(function(status){
       console.log(status);
@@ -606,14 +613,6 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
       })
     }
   }
-})
-
-.directive('appVersion', function () {
-  return function(scope, elm, attrs) {
-    cordova.getAppVersion(function (version) {
-      elm.text(version);
-    });
-  };
 })
 
 .directive('onLongPress', function($timeout) {
