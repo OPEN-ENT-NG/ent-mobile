@@ -17,12 +17,6 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
       StatusBar.overlaysWebView(false);
     }
 
-    if (ionic.Platform.isIOS()){
-      setTimeout(function () {
-        navigator.splashscreen.hide();
-      }, 3000 - 1000);
-    }
-
     cordova.getAppVersion.getVersionNumber(function (version) {
       $rootScope.version = version;
     });
@@ -60,7 +54,6 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
 
     window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
     window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFS, fail);
-    navigator.splashscreen.hide();
   });
 
 })
@@ -302,7 +295,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   // $urlRouterProvider.otherwise('/app/workspace/documents');
 })
 
-.controller('AppCtrl', function ($scope, $rootScope, $sce, $state, $ionicPlatform, $cordovaToast, $cordovaInAppBrowser, $ionicSideMenuDelegate, $cordovaFileTransfer, $cordovaFileOpener2, domainENT, $ionicHistory, SkinFactory, $ionicPopup, ActualitesService, MessagerieServices,PronoteService, BlogsService, WorkspaceService, $filter, $http){
+.controller('AppCtrl', function ($scope, $rootScope, $sce, $state, $ionicPlatform, $ionicSideMenuDelegate, $cordovaFileTransfer, $cordovaFileOpener2, domainENT, $ionicHistory, SkinFactory, $ionicPopup, ActualitesService, MessagerieServices,PronoteService, BlogsService, WorkspaceService, $filter, $http){
 
   $rootScope.filterThreads = [];
 

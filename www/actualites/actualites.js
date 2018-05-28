@@ -1,8 +1,19 @@
 angular.module('ent.actualites', ['ent.actualites_service'])
 
-.controller('ActualitesCtrl', function ($scope, $state, $rootScope, ActualitesService,$ionicLoading) {
+.controller('ActualitesCtrl', function ($ionicPlatform, $scope, $state, $rootScope, ActualitesService,$ionicLoading) {
 
-  getActualites();
+  $ionicPlatform.ready(function() {
+    $scope.$on('$ionicView.loaded', function () {
+      setTimeout(function () {
+        navigator.splashscreen.hide();
+      }, 100);
+    });
+
+    $scope.$on('$ionicView.enter', function () {
+      $rootScope.navigator = navigator;
+      getActualites();
+    });
+  });
 
   $scope.getCountComments = function(info, commentsAreShown){
     if(info.comments != null){

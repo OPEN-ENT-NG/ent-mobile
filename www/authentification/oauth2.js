@@ -56,11 +56,13 @@ angular.module('ent.oauth2', [])
     }
   })
 
-.controller('LoginCtrl', function($scope, $state, OAuthService, $rootScope) {
+  .controller('LoginCtrl', function($ionicPlatform, $scope, $state, OAuthService, $rootScope) {
 
-  $rootScope.navigator = navigator;
-  $scope.isOnline = $rootScope.navigator.onLine;
-  CheckRememberMe();
+    $ionicPlatform.ready(function () {
+      $rootScope.navigator = navigator;
+      $scope.isOnline = $rootScope.navigator.onLine;
+      CheckRememberMe();
+    });
 
   function CheckRememberMe() {
     var tmpRemMe = localStorage.getItem("RememberMe");
@@ -82,8 +84,10 @@ angular.module('ent.oauth2', [])
       }, function errorCallback(response) {
         $scope.rememberMe = false;
         localStorage.setItem("RememberMe", "false");
-        $state.go("login");
+        navigator.splashscreen.hide();
       })
+    } else {
+      navigator.splashscreen.hide();
     }
   }
 
