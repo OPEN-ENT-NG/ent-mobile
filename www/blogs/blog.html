@@ -5,7 +5,6 @@
       <ion-refresher pulling-text="Actualiser" on-refresh="doRefreshPosts()">
       </ion-refresher>
 
-      <div ng-if=posts.length>
         <ion-list>
           <ion-item ng-repeat="post in filteredPosts=(posts | orderBy: 'modified.$date' : true) track by $index"
                     class="card">
@@ -45,11 +44,9 @@
 
           </ion-item>
         </ion-list>
-      </div>
-
     </ion-scroll>
 
-    <div ng-if="posts.length==0" class="empty-content">
+    <div ng-if="noPost" class="empty-content">
       Pas de posts disponibles
     </div>
 

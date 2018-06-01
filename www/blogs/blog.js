@@ -140,17 +140,20 @@ angular.module('ent.blog', ['ent.blog_service'])
       BlogsService.getAllPostsByBlogId(id).then(function(res) {
         $scope.posts = res.data;
         console.log($scope.posts);
-      })
-        .then(function(){
+        $ionicLoading.hide();
+        if($scope.posts.length !== 0) {
           BlogsService.getAuthors(id, $scope.posts).then(function(resAuthors) {
             for(var i=0; i<$scope.posts.length; i++){
               $scope.posts[i].author.photo = setProfileImage(findElementById(resAuthors, $scope.posts[i].author.userId).photo, $scope.posts[i].author.userId);
             }
-            $ionicLoading.hide();
           });
-        }, function(err){
-          $ionicLoading.hide();
-          $scope.showAlertError(err)
-        });
+        } else {
+          $scope.noPost = true;
+        }
+      }, function(err){
+        $ionicLoading.hide();
+        $scope.showAlertError(err)
+        $scope.noPost = true;
+      });
     }
   });
