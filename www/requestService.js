@@ -30,6 +30,7 @@ angular.module('ent.request', ['ent.workspace_service', 'ent'])
             resolve(response)
         }, function (err) {
           onError();
+          reject(err);
         })
       })
     }
@@ -47,6 +48,7 @@ angular.module('ent.request', ['ent.workspace_service', 'ent'])
             resolve(response)
         }, function (err) {
           onError();
+          reject(err);
         })
       })
     }
@@ -64,6 +66,7 @@ angular.module('ent.request', ['ent.workspace_service', 'ent'])
             resolve(response)
         }, function (err) {
           onError();
+          reject(err);
         })
       })
     }
@@ -81,6 +84,7 @@ angular.module('ent.request', ['ent.workspace_service', 'ent'])
             resolve(response)
         }, function (err) {
           onError();
+          reject(err);
         })
       })
     }

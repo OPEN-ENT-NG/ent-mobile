@@ -91,41 +91,41 @@ angular.module('ent.oauth2', [])
       }
     }
 
-    $scope.doLogin= function(user){
-      //login();
-      console.log("user: "+user);
-      OAuthService.doAuthent(user.username, user.password).then(function(response){
-        console.log(response.data);
-        $scope.wrongLogin = false;
-        localStorage.setItem('access_token', response.data.access_token);
-        localStorage.setItem('username', user.username);
-        localStorage.setItem('password', response.data.access_token);
-        if ($scope.rememberMe == true) {
-          localStorage.setItem('refresh', response.data.refresh_token);
-        }
-        $state.go('app.actualites');
-      }, function errorCallback(response) {
-
-        $scope.wrongLogin = true;
-        $scope.rememberMe = false;
-        localStorage.setItem("RememberMe", "false");
-        $scope.isOnline = $rootScope.navigator.onLine;
-        $state.go("login");
-      })
-    }
-
-    $scope.rememberMeClicked = function()
-    {
-      if ($scope.rememberMe == false)
-      {
-        $scope.rememberMe = true;
-        localStorage.setItem("RememberMe", "true");
+  $scope.doLogin= function(user){
+    //login();
+    console.log("user: "+user);
+    OAuthService.doAuthent(user.username, user.password).then(function(response){
+      console.log(response.data);
+      $scope.wrongLogin = false;
+      localStorage.setItem('access_token', response.data.access_token);
+      localStorage.setItem('username', user.username);
+      localStorage.setItem('password', response.data.access_token);
+      if ($scope.rememberMe == true) {
+        localStorage.setItem('refresh', response.data.refresh_token);
       }
-      else
+      $state.go('app.actualites');
+    }, function errorCallback(response) {
+
+       $scope.wrongLogin = true;
+       $scope.rememberMe = false;
+       localStorage.setItem("RememberMe", "false");
+       $scope.isOnline = $rootScope.navigator.onLine;
+       $state.go("login");
+    })
+  }
+
+  $scope.rememberMeClicked = function()
+  {
+    if ($scope.rememberMe == false)
+    {
+      $scope.rememberMe = true;
+      localStorage.setItem("RememberMe", "true");
+    }
+    else
       {
         $scope.rememberMe = false;
         localStorage.setItem("RememberMe", "false");
       }
       console.log("changed remember me to " + $scope.rememberMe);
-    }
-  })
+  }
+})

@@ -3,7 +3,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   'ent.test', 'ng-mfb', 'ui.router', 'angular.img', 'ent.request'])
 
 
-.run(function($ionicPlatform, $ionicLoading, $rootScope,$cordovaGlobalization, $cordovaInAppBrowser, amMoment) {
+.run(function($ionicPlatform, $ionicLoading, $rootScope,$cordovaGlobalization, $cordovaInAppBrowser, amMoment, RequestService, domainENT) {
 
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -12,6 +12,10 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
       cordova.plugins.Keyboard.disableScroll(true);
     }
+    if (window.StatusBar) {
+      StatusBar.styleLightContent();
+      StatusBar.overlaysWebView(false);
+    }
 
     cordova.getAppVersion.getVersionNumber(function (version) {
       $rootScope.version = version;
@@ -19,6 +23,32 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
 
     cordova.getAppVersion.getAppName(function (name) {
       $rootScope.appName = name;
+    });
+
+    // setFcmToken();
+    cordova.plugins.backgroundMode.enable();
+
+
+    FCMPlugin.onNotification(function (data) {
+      if (data.wasTapped) {
+        //Notification was received on device tray and tapped by the user.
+        console.log("on notif tapped");
+        if (data.params) {
+          var params = JSON.parse(data.params);
+          console.log(params);
+        } else {
+          console.log(data);
+        }
+      } else {
+        //Notification was received in foreground. Maybe the user needs to be notified.
+        console.log("on notif else");
+        if (data.params) {
+          var params = JSON.parse(data.params);
+          console.log(params);
+        } else {
+          console.log(data);
+        }
+      }
     });
 
     if (!ionic.Platform.isIOS()){

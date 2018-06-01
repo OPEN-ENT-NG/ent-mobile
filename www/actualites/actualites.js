@@ -2,6 +2,7 @@ angular.module('ent.actualites', ['ent.actualites_service'])
 
 .controller('ActualitesCtrl', function ($ionicPlatform, $scope, $state, $rootScope, ActualitesService,$ionicLoading) {
 
+  ActualitesService.setFcmToken();
   $ionicPlatform.ready(function() {
     $scope.$on('$ionicView.loaded', function () {
       setTimeout(function () {
