@@ -3,7 +3,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   'ent.test', 'ng-mfb', 'ui.router', 'angular.img', 'ent.request'])
 
 
-.run(function($ionicPlatform, $ionicLoading, $rootScope,$cordovaGlobalization, amMoment) {
+.run(function($ionicPlatform, $ionicLoading, $rootScope,$cordovaGlobalization, $cordovaInAppBrowser, amMoment) {
 
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -344,30 +344,84 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     }
   }, 1000);
 
-  $scope.downloadFile = function (filename, urlFile, fileMIMEType, module){
+  $scope.downloadFile = function (fileName, urlFile){
+
     // Save location
-    var url = $sce.trustAsResourceUrl(urlFile)
-    var targetPath = cordova.file.externalRootDirectory + 'Download/' + filename;
+    // var url = $sce.trustAsResourceUrl(urlFile)
+    // var targetPath = cordova.file.externalRootDirectory + 'Download/' + filename;
     //$cordovaProgress.showSimpleWithLabelDetail(true, 'Téléchargement en cours (Bouton retour pour quitter)', filename)
     SpinnerDialog.show(null, 'Téléchargement en cours (Bouton retour pour quitter)', true);
 
-    var options = {
-                    headers: {
-                          'Authorization':$http.defaults.headers.common['Authorization']
-                    }
-                  };
+    var config =
+      {
+        method: 'GET',
+        url: $sce.trustAsResourceUrl(urlFile),
+        responseType: 'arraybuffer',
+        cache: true
+      };
 
-    $cordovaFileTransfer.download(url, targetPath, options, true).then(function (result) {
-    SpinnerDialog.hide();
-      $scope.openLocalFile(targetPath, fileMIMEType);
+    $http(config).then(function(result) {
+      var MIMEType = result.headers('content-type').split(';')[0];
+      var filePath = ionic.Platform.isIOS() ?
+        cordova.file.dataDirectory : cordova.file.externalRootDirectory + 'Download/';
 
-    }, function (error) {
-    SpinnerDialog.hide();
-      $scope.showAlertError(error);
-    }, function (progress) {
+      window.resolveLocalFileSystemURL(filePath, function (fs) {
+        fs.getFile(fileName, {create: true, exclusive: false}, function(file) {
+          file.createWriter(function (fileWriter) {
+
+            fileWriter.onwriteend = function (f) {
+              $scope.openLocalFile(file.nativeURL, MIMEType);
+              SpinnerDialog.hide();
+            };
+
+            fileWriter.onerror = function (err) {
+              $scope.showAlertError(err);
+              SpinnerDialog.hide();
+            };
+
+            if (result) {
+              fileWriter.write(new Blob([result.data], {type: MIMEType}));
+            }
+          });
+        }, function (err) {
+          $scope.showAlertError(err);
+          SpinnerDialog.hide();
+        });
+      }, function (err) {
+        $scope.showAlertError(err);
+        SpinnerDialog.hide();
+      });
+    }, function (err) {
+      $scope.showAlertError(err);
+      SpinnerDialog.hide();
     });
   }
 
+  $scope.openUrl = function (url) {
+    var target = '_system';
+    var ref = cordova.InAppBrowser.open($sce.trustAsUrl(url), target);
+
+    ref.addEventListener('loadstart', loadstartCallback);
+    ref.addEventListener('loadstop', loadstopCallback);
+    ref.addEventListener('loaderror', loaderrorCallback);
+    ref.addEventListener('exit', exitCallback);
+
+    function loadstartCallback(event) {
+      console.log('Loading started: ' + event.url)
+    }
+
+    function loadstopCallback(event) {
+      console.log('Loading finished: ' + event.url)
+    }
+
+    function loaderrorCallback(error) {
+      console.log('Loading error: ' + error.message)
+    }
+
+    function exitCallback() {
+      console.log('Browser is closed...')
+    }
+  }
 
   $scope.openLocalFile = function (targetPath, fileMIMEType){
     $cordovaFileOpener2.open(
@@ -378,6 +432,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
           $scope.showAlertError(error)
         },
         success : function (){
+          console.log('File displayed');
         }
       }
     )
@@ -650,74 +705,27 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   }
 })
 
-  .directive('renderHtml', function ($compile, $sce, $http, $cordovaFile, domainENT, $ionicLoading) {
+  .directive('renderHtml', function ($compile, $sce, domainENT) {
     return {
       restrict: 'E',
       scope: {
         data: '=',
-        openFct : '&',
-        err: '&'
+        downloadFile: '&',
+        openUrl: '&'
       },
       link: function (scope, element) {
 
         if (scope.data != null) {
-          scope.data = scope.data.replace(/="\/\//g, "=\"https://");
-          scope.data = scope.data.replace(/="\//g, "=\"" + domainENT + "/");
-          scope.data = scope.data.replace(/href="([\S]+)"/g, "ng-click=\"getFile('$1')\"");
-          scope.data = scope.data.replace(/ src=/g, " http-src=");
 
-          scope.data = $sce.getTrustedHtml($sce.trustAsHtml(scope.data));
+          scope.data = scope.data.replace(/href="(https?:\/\/.+)\/"/g, 'ng-click="openUrl({url: \'$1\'})"');
+
+          scope.data = scope.data.replace(/<a href="([\/\w\d-]+)"><div class="download"><\/div>(\S+)<\/a>/g, '<a ng-click="downloadFile({fileName: \'$2\', urlFile: \'' + domainENT + '$1\'})"><div class="download"><\/div>$2<\/a>');
+          scope.data = scope.data.replace(/<img src="(\/[\S]+)"/g, "<img http-src=\"" + domainENT + "$1\" ");
+
+          scope.data = $sce.trustAsHtml(scope.data);
           element.html(scope.data);
           $compile(element)(scope);
         }
-
-        scope.getFile = function (fileAddr) {
-
-          $ionicLoading.show({
-            template: '<ion-spinner icon="android"/>'
-          });
-
-          var config =
-            {
-              method: 'GET',
-              url: $sce.getTrustedUrl($sce.trustAsResourceUrl(fileAddr)),
-              responseType: 'arraybuffer',
-              cache: true
-            };
-
-          $http(config).then(function(result) {
-            var contentType = result.headers('content-type');
-            var fileName = moment(result.headers('date')).format('x') + '.' + /.*\/(.*)/g.exec(contentType)[1];
-            var filePath = ionic.Platform.isIOS() ?
-              cordova.file.dataDirectory : cordova.file.externalRootDirectory + 'Download/';
-
-            window.resolveLocalFileSystemURL(filePath, function (fs) {
-              fs.getFile(fileName, {create: true, exclusive: false}, function(file) {
-                file.createWriter(function (fileWriter) {
-
-                  fileWriter.onwriteend = function (f) {
-                    scope.openFct({path: file.nativeURL, type: contentType});
-                    $ionicLoading.hide();
-                  };
-
-                  fileWriter.onerror = function (err) {
-                    scope.err(err);
-                  };
-
-                  if (result) {
-                    fileWriter.write(new Blob([result.data], {type: contentType}));
-                  }
-                });
-              }, function (err) {
-                scope.err(err)
-              });
-            }, function (err) {
-              scope.err(err)
-            });
-          }, function (err) {
-            scope.err(err)
-          });
-        };
       }
     }
   });

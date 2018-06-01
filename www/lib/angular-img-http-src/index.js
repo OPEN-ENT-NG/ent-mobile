@@ -1,9 +1,10 @@
 (function () {
 	'use strict';
 
-	angular.module('angular.img', [
-	]).directive('httpSrc', ['$http', function ($http) {
+	angular.module('angular.img', []).directive('httpSrc', ['$http', function ($http) {
 		return {
+		  restrict: 'A',
+		  scope: true,
 			link: function ($scope, elem, attrs) {
 				function revokeObjectURL() {
 					if ($scope.objectURL) {
@@ -32,7 +33,9 @@
 									{ type: response.headers('Content-Type') }
 								);
 								$scope.objectURL = URL.createObjectURL(blob);
-							});
+							}, function error(err) {
+							  console.log(err);
+              });
 					}
 				});
 			}

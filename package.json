@@ -17,6 +17,7 @@
     "cordova-plugin-file-opener2": "~2.0.2",
     "cordova-plugin-file-transfer": "^1.6.3",
     "cordova-plugin-globalization": "~1.0.3",
+    "cordova-plugin-inappbrowser": "^3.0.0",
     "cordova-plugin-ionic-keyboard": "^2.0.5",
     "cordova-plugin-ionic-webview": "^1.2.1",
     "cordova-plugin-keyboard": "~1.1.4",
@@ -104,7 +105,8 @@
       "cordova-plugin-ionic-webview": {},
       "cordova-plugin-file": {},
       "cordova-plugin-file-transfer": {},
-      "org.pbernasconi.progressindicator": {}
+      "org.pbernasconi.progressindicator": {},
+      "cordova-plugin-inappbrowser": {}
     }
   }
 }

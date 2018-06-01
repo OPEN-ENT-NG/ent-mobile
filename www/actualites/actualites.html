@@ -22,7 +22,7 @@
           <ion-card-content class="item htmlEntContent actucard" overflow-scroll="true">
 
             <div class="item-text-wrap">
-              <render-html err='showAlertError' data="info.content" open-fct="openLocalFile(path, type)"></render-html>
+                <render-html data="info.content" open-url="openUrl(url)" download-file="downloadFile(fileName, urlFile)"></render-html>
             </div>
 
             <div ng-show="info.comments !=  null">
