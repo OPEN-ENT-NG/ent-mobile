@@ -1,6 +1,6 @@
 angular.module('ent.oauth2', [])
 
-.service('OAuthService', function(domainENT, $http,OAuth2Params){
+  .service('OAuthService', function(domainENT, $http,OAuth2Params){
 
     console.log(OAuth2Params);
     this.doAuthent = function (username, password) {
@@ -16,7 +16,7 @@ angular.module('ent.oauth2', [])
       var url = domainENT + "/auth/oauth2/token";
       var data = "grant_type=password&username=" + username + "&password=" + password + "&client_id="
         + OAuth2Params.clientId + "&client_secret=" + OAuth2Params.secret
-        + "&scope=userbook userinfo directory workspace conversation document blog actualites avatar";
+        + "&scope=" + OAuth2Params.scope;
       return $http.post(url, data, options).then(function (result) {
         console.log(result);
         $http.defaults.headers.common['Authorization'] = 'Bearer ' + result.data.access_token;
@@ -42,7 +42,7 @@ angular.module('ent.oauth2', [])
       var url = domainENT + "/auth/oauth2/token";
       var data = "grant_type=refresh_token&refresh_token=" + refreshToken + "&client_id="
         + OAuth2Params.clientId + "&client_secret=" + OAuth2Params.secret
-        + "&scope=userbook userinfo directory workspace conversation document blog actualites avatar";
+        + "&scope=" + OAuth2Params.scope;
       return $http.post(url, data, options).then(function (result) {
         console.log(result);
         $http.defaults.headers.common['Authorization'] = 'Bearer ' + result.data.access_token;
@@ -64,68 +64,68 @@ angular.module('ent.oauth2', [])
       CheckRememberMe();
     });
 
-  function CheckRememberMe() {
-    var tmpRemMe = localStorage.getItem("RememberMe");
-    if (tmpRemMe && tmpRemMe != null) {
-      if (tmpRemMe == "true")
-        $scope.rememberMe = true;
-      else
+    function CheckRememberMe() {
+      var tmpRemMe = localStorage.getItem("RememberMe");
+      if (tmpRemMe && tmpRemMe != null) {
+        if (tmpRemMe == "true")
+          $scope.rememberMe = true;
+        else
+          $scope.rememberMe = false;
+      }
+      else {
+        localStorage.setItem("RememberMe", "false");
         $scope.rememberMe = false;
+      }
+      if ($scope.rememberMe == true && localStorage.getItem("refresh") != null) {
+        OAuthService.doRefresh(localStorage.getItem("refresh").toString()).then(function (response) {
+          $scope.wrongLogin = false;
+          localStorage.setItem('access_token', response.data.access_token);
+          $state.go('app.actualites');
+        }, function errorCallback(response) {
+          $scope.rememberMe = false;
+          localStorage.setItem("RememberMe", "false");
+          navigator.splashscreen.hide();
+        })
+      } else {
+        navigator.splashscreen.hide();
+      }
     }
-    else {
-      localStorage.setItem("RememberMe", "false");
-      $scope.rememberMe = false;
-    }
-    if ($scope.rememberMe == true && localStorage.getItem("refresh") != null) {
-      OAuthService.doRefresh(localStorage.getItem("refresh").toString()).then(function (response) {
+
+    $scope.doLogin= function(user){
+      //login();
+      console.log("user: "+user);
+      OAuthService.doAuthent(user.username, user.password).then(function(response){
+        console.log(response.data);
         $scope.wrongLogin = false;
         localStorage.setItem('access_token', response.data.access_token);
+        localStorage.setItem('username', user.username);
+        localStorage.setItem('password', response.data.access_token);
+        if ($scope.rememberMe == true) {
+          localStorage.setItem('refresh', response.data.refresh_token);
+        }
         $state.go('app.actualites');
       }, function errorCallback(response) {
+
+        $scope.wrongLogin = true;
         $scope.rememberMe = false;
         localStorage.setItem("RememberMe", "false");
-        navigator.splashscreen.hide();
+        $scope.isOnline = $rootScope.navigator.onLine;
+        $state.go("login");
       })
-    } else {
-      navigator.splashscreen.hide();
     }
-  }
 
-  $scope.doLogin= function(user){
-    //login();
-    console.log("user: "+user);
-    OAuthService.doAuthent(user.username, user.password).then(function(response){
-      console.log(response.data);
-      $scope.wrongLogin = false;
-      localStorage.setItem('access_token', response.data.access_token);
-      localStorage.setItem('username', user.username);
-      localStorage.setItem('password', response.data.access_token);
-      if ($scope.rememberMe == true) {
-        localStorage.setItem('refresh', response.data.refresh_token);
-      }
-      $state.go('app.actualites');
-    }, function errorCallback(response) {
-
-       $scope.wrongLogin = true;
-       $scope.rememberMe = false;
-       localStorage.setItem("RememberMe", "false");
-       $scope.isOnline = $rootScope.navigator.onLine;
-       $state.go("login");
-    })
-  }
-
-  $scope.rememberMeClicked = function()
-  {
-    if ($scope.rememberMe == false)
+    $scope.rememberMeClicked = function()
     {
-      $scope.rememberMe = true;
-      localStorage.setItem("RememberMe", "true");
-    }
-    else
+      if ($scope.rememberMe == false)
+      {
+        $scope.rememberMe = true;
+        localStorage.setItem("RememberMe", "true");
+      }
+      else
       {
         $scope.rememberMe = false;
         localStorage.setItem("RememberMe", "false");
       }
       console.log("changed remember me to " + $scope.rememberMe);
-  }
-})
+    }
+  })
