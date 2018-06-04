@@ -25,25 +25,27 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
       $rootScope.appName = name;
     });
 
-    cordova.plugins.diagnostic.requestRuntimePermissions(function(status){
-      console.log(status);
-      switch(status){
+    if (!ionic.Platform.isIOS()){
+      cordova.plugins.diagnostic.requestRuntimePermissions(function(status){
+        console.log(status);
+        switch(status){
           case cordova.plugins.diagnostic.permissionStatus.NOT_REQUESTED:
-              console.log("Permission not requested");
-              break;
+            console.log("Permission not requested");
+            break;
           case cordova.plugins.diagnostic.permissionStatus.DENIED:
-              console.log("Permission denied");
-              break;
+            console.log("Permission denied");
+            break;
           case cordova.plugins.diagnostic.permissionStatus.GRANTED:
-              console.log("Permission granted always");
-              break;
+            console.log("Permission granted always");
+            break;
           case cordova.plugins.diagnostic.permissionStatus.GRANTED_WHEN_IN_USE:
-              console.log("Permission granted only when in use");
-              break;
-      }
-    }, function(error){
+            console.log("Permission granted only when in use");
+            break;
+        }
+      }, function(error){
         console.error(error);
-    }, cordova.plugins.diagnostic.runtimePermissionGroups.STORAGE);
+      }, cordova.plugins.diagnostic.runtimePermissionGroups.STORAGE);
+    }
 
     $cordovaGlobalization.getPreferredLanguage().then(function(result) {
       localStorage.setItem('preferredLanguage', result.value);
