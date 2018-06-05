@@ -1,7 +1,9 @@
 <ion-view view-title="Liste des Pronotes" ng-controller="ListingUsersCtrl">
 
   <ion-content>
-    <div ng-if="pronotes.length>0">
+    <ion-scroll ng-if="pronotes.length > 0" class="scroll" direction="y" has-bouncing="true">
+      <ion-refresher pulling-text="Actualiser" on-refresh="getAllAccounts()">
+      </ion-refresher>
       <ion-list>
         <div ng-repeat="pronote in pronotes">
           <ion-item ng-click="showPronote(pronote.address,pronote.name)">
@@ -9,7 +11,7 @@
           </ion-item>
         </div>
       </ion-list>
-    </div>
+    </ion-scroll>
 
     <div ng-if="pronotes.length==0" class="empty-content">
       Pas de compte Pronote disponible
