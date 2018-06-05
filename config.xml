@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget android-packageName="fr.openent.mdp.alpha" ios-CFBundleIdentifier="fr.openent" version="0.1.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget android-packageName="fr.openent.mdp.alpha" ios-CFBundleIdentifier="fr.openent" version="0.1.2" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Paris Classe Numérique</name>
     <description>
     Application Mobile OpenENT pour la mairie de Paris
@@ -11,6 +11,10 @@
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
+    <preference name="Orientation" value="portrait" />
+    <preference name="StatusBarOverlaysWebView" value="false" />
+    <preference name="StatusBarStyle" value="lightcontent" />
+    <preference name="StatusBarBackgroundColor" value="#0084CA" />
     <preference name="DisallowOverscroll" value="true" />
     <preference name="BackupWebStorage" value="none" />
     <preference name="SplashMaintainAspectRatio" value="true" />
@@ -67,44 +71,31 @@
         <icon height="58" src="resources/ios/icon/icon-small@2x.png" width="58" />
         <icon height="87" src="resources/ios/icon/icon-small@3x.png" width="87" />
         <icon height="1024" src="resources/ios/icon/icon-1024.png" width="1024" />
-        <splash height="1136" src="resources/ios/splash/Default-568h@2x~iphone.png" width="640" />
-        <splash height="1334" src="resources/ios/splash/Default-667h.png" width="750" />
-        <splash height="2208" src="resources/ios/splash/Default-736h.png" width="1242" />
-        <splash height="1242" src="resources/ios/splash/Default-Landscape-736h.png" width="2208" />
-        <splash height="1536" src="resources/ios/splash/Default-Landscape@2x~ipad.png" width="2048" />
-        <splash height="2048" src="resources/ios/splash/Default-Landscape@~ipadpro.png" width="2732" />
-        <splash height="768" src="resources/ios/splash/Default-Landscape~ipad.png" width="1024" />
-        <splash height="2048" src="resources/ios/splash/Default-Portrait@2x~ipad.png" width="1536" />
-        <splash height="2732" src="resources/ios/splash/Default-Portrait@~ipadpro.png" width="2048" />
-        <splash height="1024" src="resources/ios/splash/Default-Portrait~ipad.png" width="768" />
-        <splash height="960" src="resources/ios/splash/Default@2x~iphone.png" width="640" />
-        <splash height="480" src="resources/ios/splash/Default~iphone.png" width="320" />
-        <splash height="2732" src="resources/ios/splash/Default@2x~universal~anyany.png" width="2732" />
+        <splash src="resources/ios/splash/Default@3x~universal~anyany.png" />
+        <splash src="resources/ios/splash/Default@2x~universal~anyany.png" />
+        <splash src="resources/ios/splash/Default@2x~universal~comany.png" />
+        <splash src="resources/ios/splash/Default@2x~universal~comcom.png" />
+        <splash src="resources/ios/splash/Default@3x~universal~anycom.png" />
+        <splash src="resources/ios/splash/Default@3x~universal~comany.png" />
         <config-file mode="add" parent="ITSAppUsesNonExemptEncryption" target="*-Info.plist">
             <false />
         </config-file>
     </platform>
-    <plugin name="com.bez4pieci.cookies" spec="git+https://github.com/bez4pieci/Phonegap-Cookies-Plugin.git" />
-    <plugin name="com.lampa.startapp" spec="~0.1.4" />
+    <plugin name="com.bez4pieci.cookies" spec="https://github.com/bez4pieci/Phonegap-Cookies-Plugin.git" />
     <plugin name="cordova-plugin-app-version" spec="~0.1.9" />
-    <plugin name="cordova-plugin-appavailability" spec="~0.4.2" />
-    <plugin name="cordova-plugin-console" spec="~1.0.3" />
-    <plugin name="cordova-plugin-file-opener2" spec="~2.0.2" />
-    <plugin name="cordova-plugin-globalization" spec="~1.0.3" />
-    <plugin name="cordova-plugin-keyboard" spec="~1.1.4" />
-    <plugin name="cordova-plugin-statusbar" spec="~2.1.3" />
-    <plugin name="cordova-plugin-vibration" spec="~2.1.1" />
-    <plugin name="cordova-plugin-whitelist" spec="^1.3.3" />
-    <plugin name="cordova-plugin-device" spec="^2.0.1" />
-    <plugin name="cordova-plugin-splashscreen" spec="^5.0.2" />
-    <plugin name="cordova-plugin-x-toast" spec="~2.5.2" />
-    <plugin name="cordova.plugins.diagnostic" spec="~3.1.2" />
-    <plugin name="cordova-plugin-ionic-keyboard" spec="^2.0.5" />
-    <plugin name="cordova-plugin-ionic-webview" spec="^1.2.1" />
-    <plugin name="cordova-plugin-file" spec="^4.3.3" />
-    <plugin name="cordova-plugin-file-transfer" spec="^1.6.3" />
+    <plugin name="cordova-plugin-file-opener2" spec="~2.0.19" />
+    <plugin name="cordova-plugin-globalization" spec="~1.11.0" />
+    <plugin name="cordova-plugin-statusbar" spec="~2.4.2" />
+    <plugin name="cordova-plugin-vibration" spec="~3.1.0" />
+    <plugin name="cordova-plugin-whitelist" spec="~1.3.3" />
+    <plugin name="cordova-plugin-ionic-keyboard" spec="~2.1.2" />
+    <plugin name="cordova-plugin-ionic-webview" spec="~1.2.1" />
+    <plugin name="cordova-plugin-file" spec="~6.0.1" />
+    <plugin name="cordova-plugin-file-transfer" spec="~1.7.1" />
     <plugin name="org.pbernasconi.progressindicator" spec="~1.1.0" />
-    <plugin name="cordova-plugin-inappbrowser" spec="^3.0.0" />
-    <engine name="android" spec="5.1.1" />
-    <engine name="ios" spec="4.4.0" />
+    <plugin name="cordova-plugin-inappbrowser" spec="~3.0.0" />
+    <plugin name="cordova.plugins.diagnostic" spec="~4.0.8" />
+    <engine name="android" spec="~7.1.0" />
+    <engine name="ios" spec="~4.5.4" />
+    <plugin name="cordova-plugin-splashscreen" spec="^5.0.2" />
 </widget>

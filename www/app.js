@@ -12,10 +12,6 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
       cordova.plugins.Keyboard.disableScroll(true);
     }
-    if (window.StatusBar) {
-      StatusBar.styleLightContent();
-      StatusBar.overlaysWebView(false);
-    }
 
     cordova.getAppVersion.getVersionNumber(function (version) {
       $rootScope.version = version;
