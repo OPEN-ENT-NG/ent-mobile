@@ -26,10 +26,10 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     });
 
     // setFcmToken();
-    cordova.plugins.backgroundMode.enable();
+    // cordova.plugins.backgroundMode.enable();
 
 
-    FCMPlugin.onNotification(function (data) {
+    window.FirebasePlugin.onNotificationOpen(function (data) {
       if (data.wasTapped) {
         //Notification was received on device tray and tapped by the user.
         console.log("on notif tapped");

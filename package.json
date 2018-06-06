@@ -1,112 +1,63 @@
 {
   "name": "Paris Classe Numerique",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "ENT mobile: An Ionic project",
   "dependencies": {
     "angular-moment": "^0.10.3",
-    "com.bez4pieci.cookies": "git+https://github.com/bez4pieci/Phonegap-Cookies-Plugin.git",
-    "com.lampa.startapp": "~0.1.4",
-    "cordova-android": "5.1.1",
-    "cordova-ios": "4.4.0",
-    "cordova-plugin-app-version": "~0.1.9",
-    "cordova-plugin-appavailability": "~0.4.2",
-    "cordova-plugin-compat": "^1.2.0",
-    "cordova-plugin-console": "~1.0.3",
-    "cordova-plugin-device": "~1.1.2",
-    "cordova-plugin-file": "^4.3.3",
-    "cordova-plugin-file-opener2": "~2.0.2",
-    "cordova-plugin-file-transfer": "^1.6.3",
-    "cordova-plugin-globalization": "~1.0.3",
+    "com.bez4pieci.cookies": "https://github.com/bez4pieci/Phonegap-Cookies-Plugin.git",
+    "cordova-android": "7.1.0",
+    "cordova-ios": "4.5.4",
+    "cordova-plugin-app-version": "^0.1.9",
+    "cordova-plugin-file": "^6.0.1",
+    "cordova-plugin-file-opener2": "^2.0.19",
+    "cordova-plugin-file-transfer": "^1.7.1",
+    "cordova-plugin-firebase": "^1.0.5",
+    "cordova-plugin-globalization": "^1.0.9",
     "cordova-plugin-inappbrowser": "^3.0.0",
-    "cordova-plugin-ionic-keyboard": "^2.0.5",
+    "cordova-plugin-ionic-keyboard": "^2.1.2",
     "cordova-plugin-ionic-webview": "^1.2.1",
-    "cordova-plugin-keyboard": "~1.1.4",
-    "cordova-plugin-progressindicator": "^1.2.0",
-    "cordova-plugin-splashscreen": "~3.2.2",
-    "cordova-plugin-statusbar": "~2.1.3",
-    "cordova-plugin-vibration": "~2.1.1",
-    "cordova-plugin-whitelist": "~1.2.2",
-    "cordova-plugin-x-toast": "~2.5.2",
-    "cordova.plugins.diagnostic": "~3.1.2",
-    "gulp": "^3.5.6",
-    "gulp-concat": "^2.2.0",
-    "gulp-minify-css": "^0.3.0",
-    "gulp-rename": "^1.2.0",
-    "gulp-sass": "^2.0.4",
+    "cordova-plugin-splashscreen": "^3.2.2",
+    "cordova-plugin-statusbar": "^2.1.3",
+    "cordova-plugin-vibration": "^2.1.6",
+    "cordova-plugin-whitelist": "^1.2.2",
+    "cordova-remove-cookies": "git+https://github.com/bez4pieci/Phonegap-Cookies-Plugin.git",
+    "cordova.plugins.diagnostic": "^3.1.7",
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-minify-css": "^1.2.4",
+    "gulp-rename": "^1.2.3",
+    "gulp-sass": "^4.0.1",
     "mfb": "^0.12.0",
-    "moment": "^2.11.2"
+    "moment": "^2.11.2",
+    "shelljs": "^0.8.2"
   },
   "devDependencies": {
     "bower": "^1.3.3",
     "dotenv": "^4.0.0",
-    "gulp": "~3.9.1",
-    "gulp-sass": "~2.2.0",
     "gulp-util": "^2.2.14",
-    "lodash": "^4.17.4",
-    "shelljs": "^0.3.0"
+    "lodash": "^4.17.4"
   },
-  "cordovaPlugins": [
-    "cordova-plugin-device",
-    "cordova-plugin-console",
-    "cordova-plugin-whitelist",
-    "cordova-plugin-splashscreen",
-    "cordova-plugin-statusbar",
-    "ionic-plugin-keyboard",
-    "cordova-plugin-file-transfer",
-    "cordova-plugin-file",
-    "cordova-plugin-compat",
-    {
-      "locator": "https://github.com/pwlin/cordova-plugin-file-opener2.git",
-      "id": "cordova-plugin-file-opener2"
-    },
-    "cordova-plugin-inappbrowser",
-    "cordova-plugin-app-version",
-    {
-      "locator": "https://github.com/bez4pieci/Phonegap-Cookies-Plugin.git",
-      "id": "com.bez4pieci.cookies"
-    },
-    "cordova-plugin-vibration",
-    "cordova-plugin-globalization",
-    "cordova-plugin-appavailability",
-    "com.lampa.startapp",
-    "cordova-sqlite-storage",
-    {
-      "locator": "https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin.git",
-      "id": "cordova-plugin-x-toast"
-    },
-    "cordova.plugins.diagnostic"
-  ],
-  "cordovaPlatforms": [
-    "android"
-  ],
   "cordova": {
-    "platforms": [
-      "android",
-      "ios"
-    ],
     "plugins": {
       "com.bez4pieci.cookies": {},
-      "com.lampa.startapp": {},
       "cordova-plugin-app-version": {},
-      "cordova-plugin-appavailability": {},
-      "cordova-plugin-compat": {},
-      "cordova-plugin-console": {},
       "cordova-plugin-device": {},
       "cordova-plugin-file-opener2": {},
       "cordova-plugin-globalization": {},
-      "cordova-plugin-keyboard": {},
       "cordova-plugin-splashscreen": {},
       "cordova-plugin-statusbar": {},
       "cordova-plugin-vibration": {},
       "cordova-plugin-whitelist": {},
-      "cordova-plugin-x-toast": {},
       "cordova.plugins.diagnostic": {},
       "cordova-plugin-ionic-keyboard": {},
       "cordova-plugin-ionic-webview": {},
-      "cordova-plugin-file": {},
       "cordova-plugin-file-transfer": {},
-      "org.pbernasconi.progressindicator": {},
-      "cordova-plugin-inappbrowser": {}
-    }
+      "cordova-plugin-inappbrowser": {},
+      "cordova-plugin-file": {},
+      "cordova-plugin-firebase": {}
+    },
+    "platforms": [
+      "android"
+    ]
   }
 }
