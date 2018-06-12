@@ -25,32 +25,6 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
       $rootScope.appName = name;
     });
 
-    // setFcmToken();
-    // cordova.plugins.backgroundMode.enable();
-
-
-    window.FirebasePlugin.onNotificationOpen(function (data) {
-      if (data.wasTapped) {
-        //Notification was received on device tray and tapped by the user.
-        console.log("on notif tapped");
-        if (data.params) {
-          var params = JSON.parse(data.params);
-          console.log(params);
-        } else {
-          console.log(data);
-        }
-      } else {
-        //Notification was received in foreground. Maybe the user needs to be notified.
-        console.log("on notif else");
-        if (data.params) {
-          var params = JSON.parse(data.params);
-          console.log(params);
-        } else {
-          console.log(data);
-        }
-      }
-    });
-
     if (!ionic.Platform.isIOS()){
       cordova.plugins.diagnostic.requestRuntimePermissions(function(status){
         console.log(status);
@@ -345,6 +319,28 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   getTraductionBlogs();
   getTraductionWorkspace();
 
+  window.FirebasePlugin.onNotificationOpen(function (data) {
+    if (data.wasTapped) {
+      //Notification was received on device tray and tapped by the user.
+      if (data.title == "Nouveau billet de blog ")
+        $state.go("app.blog-list");
+    } else {
+      //Notification was received in foreground. Maybe the user needs to be notified.
+      console.log(data);
+      if (data.params) {
+        var params = JSON.parse(data.params);
+      }
+      if (data.title == "Nouveau billet de blog " || params.blogTitle != undefined)
+        $state.go("app.blog-list");
+      else if (data.title == "Nouvelle actualité " || params.profilUri != undefined)
+        $state.go("app.actualites");
+      else if (params.messageUri)
+        $state.go("app.messagerie");
+      else
+        console.log(data.title);
+    }
+  });
+
   $scope.$watch(function () {
     return $ionicSideMenuDelegate.getOpenRatio();
   }, function (ratio) {
@@ -537,6 +533,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     $ionicHistory.clearHistory()
     $ionicHistory.clearCache();
     //navigator.splashscreen.show();
+    window.FirebasePlugin.unregister();
     $state.go("login");
     window.cookies.clear(function() {
       console.log('Cookies cleared!');
