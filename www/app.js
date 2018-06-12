@@ -320,24 +320,27 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   getTraductionWorkspace();
 
   window.FirebasePlugin.onNotificationOpen(function (data) {
-    if (data.wasTapped) {
+    if (data.wasTapped || data.tap == true) {
       //Notification was received on device tray and tapped by the user.
-      if (data.title == "Nouveau billet de blog ")
-        $state.go("app.blog-list");
-    } else {
-      //Notification was received in foreground. Maybe the user needs to be notified.
       console.log(data);
       if (data.params) {
         var params = JSON.parse(data.params);
+        console.log(params);
       }
-      if (data.title == "Nouveau billet de blog " || params.blogTitle != undefined)
-        $state.go("app.blog-list");
-      else if (data.title == "Nouvelle actualité " || params.profilUri != undefined)
-        $state.go("app.actualites");
-      else if (params.messageUri)
-        $state.go("app.messagerie");
-      else
-        console.log(data.title);
+        if (data.title == "Nouveau billet de blog " || params.blogTitle != undefined)
+          $state.go("app.blog-list");
+        else if (data.title == "Nouvelle actualité " || params.profilUri != undefined)
+          $state.go("app.actualites");
+        else if (params.messageUri) {
+          var messageId = params.messageUri.split("/").pop();
+          console.log(messageId);
+          $state.go("app.message_detail", {nameFolder: 'INBOX', idMessage: messageId});
+        }
+        else
+          console.log(data.title);
+    } else {
+      //Notification was received in foreground. Maybe the user needs to be notified.
+      console.log("one notif else");
     }
   });
 

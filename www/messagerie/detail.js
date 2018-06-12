@@ -1,8 +1,18 @@
-angular.module('ent.message_detail', ['ent.message_services', 'ent'])
+angular.module('ent.message_detail', ['ent.message_services', 'ent.messagerie'])
 
 .controller('MessagesDetailCtrl', function($scope, $rootScope, $ionicPopover, $state, domainENT, MessagerieServices,  $ionicLoading, $ionicHistory, DeleteMessagesPopupFactory,MoveMessagesPopupFactory, AlertMessagePopupFactory){
 
   getMessage();
+
+  $rootScope.getRealName = function (id, displayNames){
+    var returnName = "Inconnu";
+    for(var i = 0; i< displayNames.length; i++){
+      if(id == displayNames[i][0]){
+        returnName = displayNames[i][1];
+      }
+    }
+    return returnName;
+  }
 
   $scope.isDraft =  function(){
     return "draft" === $rootScope.nameFolder;
