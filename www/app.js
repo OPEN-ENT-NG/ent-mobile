@@ -320,38 +320,46 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   getTraductionWorkspace();
 
   window.FirebasePlugin.onNotificationOpen(function (data) {
-    if (data.wasTapped || data.tap == true) {
+    if (data.tap) {
       //Notification was received on device tray and tapped by the user.
       console.log(data);
       if (data.params) {
         var params = JSON.parse(data.params);
-        console.log(params);
-      }
-      $rootScope.notification = {};
-        if (data.title == "Nouveau billet de blog " || params.blogTitle != undefined) {
-          console.log("Tapped Blog Notif");
-          $rootScope.notification.state = "app.blog";
-          $rootScope.notification.id = params.postUri.split("/").pop();
-          $state.go("app.blog", {nameBlog: params.blogTitle, idBlog: params.blogUri.split("/").pop()});
-        }
-        else if (data.title == "Nouvelle actualité " || params.profilUri != undefined) {
-          console.log("Tapped Actu Notif");
-          $rootScope.notification.state = "app.actualites";
-          $rootScope.notification.id = params.resourceUri.split("/").pop();
-          $state.go("app.actualites");
-        }
-        else if (params.messageUri) {
-          console.log("Tapped Message Notif");
+        var module = (/\/([\w]+)\W?\//g).exec(params.resourceUri)[1];
 
-          $rootScope.notification.state = "app.message_detail";
-          $rootScope.notification.id = params.messageUri.split("/").pop();
-          $state.go("app.message_detail", {nameFolder: 'INBOX', idMessage: $rootScope.notification.id});
+        $rootScope.notification = {};
+
+        switch (module) {
+          case 'blog': {
+            $rootScope.notification.state = "app.blog";
+            $rootScope.notification.id = params.postUri.split("/").pop();
+            $state.go("app.blog", {nameBlog: params.blogTitle, idBlog: params.blogUri.split("/").pop()});
+            break;
+          }
+          case 'workspace': {
+            $state.go("app.workpace_folder_content", {nameWorkspaceFolder: 'share'});
+            break;
+          }
+          case 'conversation': {
+            $rootScope.notification.state = "app.message_detail";
+            $rootScope.notification.id = params.messageUri.split("/").pop();
+            $state.go("app.message_detail", {nameFolder: 'INBOX', idMessage: $rootScope.notification.id});
+            break;
+          }
+          case 'actualites': {
+            $rootScope.notification.state = "app.actualites";
+            $rootScope.notification.id = params.resourceUri.split("/").pop();
+            $state.go("app.actualites");
+            break;
+          }
+          default: {
+            console.log(data.title);
+          }
         }
-        else
-          console.log(data.title);
-    } else {
-      //Notification was received in foreground. Maybe the user needs to be notified.
-      console.log("on notif else");
+      } else {
+        //Notification was received in foreground. Maybe the user needs to be notified.
+        console.log("on notif else");
+      }
     }
   });
 
