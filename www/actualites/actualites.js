@@ -4,16 +4,6 @@ angular.module('ent.actualites', ['ent.actualites_service'])
 
   $rootScope.notification = $rootScope.notification || {};
 
-  $rootScope.$watch(function () { return $rootScope.notification }, function() {
-    if ($rootScope.notification.hasOwnProperty('id')
-      && $rootScope.notification.state === 'app.actualites')
-    {
-      console.log("Scrolling to " + $rootScope.notification.id);
-      $location.hash($rootScope.notification.id);
-      $rootScope.notification = {};
-    }
-  });
-
   ActualitesService.setFcmToken();
 
   $ionicPlatform.ready(function() {
@@ -130,6 +120,17 @@ angular.module('ent.actualites', ['ent.actualites_service'])
         }
       }
       $ionicLoading.hide();
+
+      setTimeout(function() {
+        if ($rootScope.notification.hasOwnProperty('id')
+          && $rootScope.notification.state === 'app.actualites') {
+          console.log('Scrolling to news ' + $rootScope.notification.id);
+          $location.hash($rootScope.notification.id);
+          $rootScope.notification = {};
+        }
+      }, 100);
+
+
     }, function(err){
       $ionicLoading.hide();
       $scope.showAlertError(err);
