@@ -330,8 +330,9 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
       $rootScope.notification = {};
         if (data.title == "Nouveau billet de blog " || params.blogTitle != undefined) {
           console.log("Tapped Blog Notif");
-          $rootScope.notification.state = "app.blog-list";
-          $state.go("app.blog-list");
+          $rootScope.notification.state = "app.blog";
+          $rootScope.notification.id = params.postUri.split("/").pop();
+          $state.go("app.blog", {nameBlog: params.blogTitle, idBlog: params.blogUri.split("/").pop()});
         }
         else if (data.title == "Nouvelle actualité " || params.profilUri != undefined) {
           console.log("Tapped Actu Notif");

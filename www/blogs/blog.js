@@ -3,6 +3,7 @@ angular.module('ent.blog', ['ent.blog_service'])
 
   .controller('BlogCtrl', function($scope, $ionicPopup, BlogsService, $stateParams, $ionicPopover, $rootScope, $filter, $ionicLoading){
 
+    delete $rootScope.notification;
     $scope.nameBlog = $stateParams.nameBlog;
     getPostsByBlogId($stateParams.idBlog);
 
