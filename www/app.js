@@ -337,7 +337,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
             break;
           }
           case 'workspace': {
-            $state.go("app.workpace_folder_content", {nameWorkspaceFolder: 'share'});
+            $state.go("app.workpace_folder_content", {nameWorkspaceFolder: 'shared'});
             break;
           }
           case 'conversation': {
