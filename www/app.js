@@ -327,20 +327,30 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
         var params = JSON.parse(data.params);
         console.log(params);
       }
-        if (data.title == "Nouveau billet de blog " || params.blogTitle != undefined)
+      $rootScope.notification = {};
+        if (data.title == "Nouveau billet de blog " || params.blogTitle != undefined) {
+          console.log("Tapped Blog Notif");
+          $rootScope.notification.state = "app.blog-list";
           $state.go("app.blog-list");
-        else if (data.title == "Nouvelle actualité " || params.profilUri != undefined)
+        }
+        else if (data.title == "Nouvelle actualité " || params.profilUri != undefined) {
+          console.log("Tapped Actu Notif");
+          $rootScope.notification.state = "app.actualites";
+          $rootScope.notification.id = params.resourceUri.split("/").pop();
           $state.go("app.actualites");
+        }
         else if (params.messageUri) {
-          var messageId = params.messageUri.split("/").pop();
-          console.log(messageId);
-          $state.go("app.message_detail", {nameFolder: 'INBOX', idMessage: messageId});
+          console.log("Tapped Message Notif");
+
+          $rootScope.notification.state = "app.message_detail";
+          $rootScope.notification.id = params.messageUri.split("/").pop();
+          $state.go("app.message_detail", {nameFolder: 'INBOX', idMessage: $rootScope.notification.id});
         }
         else
           console.log(data.title);
     } else {
       //Notification was received in foreground. Maybe the user needs to be notified.
-      console.log("one notif else");
+      console.log("on notif else");
     }
   });
 

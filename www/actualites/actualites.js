@@ -1,8 +1,21 @@
 angular.module('ent.actualites', ['ent.actualites_service'])
 
-.controller('ActualitesCtrl', function ($ionicPlatform, $scope, $state, $rootScope, ActualitesService,$ionicLoading) {
+.controller('ActualitesCtrl', function ($ionicPlatform, $ionicScrollDelegate, $location, $scope, $state, $rootScope, ActualitesService,$ionicLoading, $anchorScroll) {
+
+  $rootScope.notification = $rootScope.notification || {};
+
+  $rootScope.$watch(function () { return $rootScope.notification }, function() {
+    if ($rootScope.notification.hasOwnProperty('id')
+      && $rootScope.notification.state === 'app.actualites')
+    {
+      console.log("Scrolling to " + $rootScope.notification.id);
+      $location.hash($rootScope.notification.id);
+      $rootScope.notification = {};
+    }
+  });
 
   ActualitesService.setFcmToken();
+
   $ionicPlatform.ready(function() {
     $scope.$on('$ionicView.loaded', function () {
       setTimeout(function () {

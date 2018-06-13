@@ -3,6 +3,7 @@ angular.module('ent.message_detail', ['ent.message_services', 'ent.messagerie'])
 .controller('MessagesDetailCtrl', function($scope, $rootScope, $ionicPopover, $state, domainENT, MessagerieServices,  $ionicLoading, $ionicHistory, DeleteMessagesPopupFactory,MoveMessagesPopupFactory, AlertMessagePopupFactory){
 
   getMessage();
+  delete $rootScope.notification;
 
   $rootScope.getRealName = function (id, displayNames){
     var returnName = "Inconnu";

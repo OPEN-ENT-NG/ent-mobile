@@ -8,8 +8,10 @@
       <ion-refresher pulling-text="Actualiser" on-refresh="doRefreshInfos()">
       </ion-refresher>
 
-      <ion-list>
-        <ion-item ng-repeat="info in filtered=(infos | filter:filterByThread) | limitTo:totalDisplayed track by $index" class="card">
+      <ion-list >
+        <ion-item id="{{info._id}}"
+          ng-repeat="info in filtered=(infos | filter:filterByThread) | limitTo:totalDisplayed track by $index"
+                  class="card">
 
           <div class="item item-avatar item-text-wrap">
             <img http-src="{{getImageUrl(info.thread_icon)}}" alt="icone {{info.thread_title}}"/>
