@@ -1,6 +1,6 @@
 {
   "name": "ParisClasseNumerique",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "ENT mobile: An Ionic project",
   "dependencies": {
     "angular-moment": "^0.10.3",
