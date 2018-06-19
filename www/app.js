@@ -299,15 +299,24 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   // $urlRouterProvider.otherwise('/app/workspace/documents');
 })
 
-.controller('AppCtrl', function ($scope, $rootScope, $sce, $state, $ionicPlatform, $ionicSideMenuDelegate, $cordovaFileTransfer, $cordovaFileOpener2, domainENT, $ionicHistory, SkinFactory, $ionicPopup, ActualitesService, MessagerieServices,PronoteService, BlogsService, WorkspaceService, $filter, $http){
+.controller('AppCtrl', function (PronoteService, $scope, $rootScope, $sce, $state, $ionicPlatform, $ionicSideMenuDelegate, $cordovaFileTransfer, $cordovaFileOpener2, domainENT, $ionicHistory, SkinFactory, $ionicPopup, ActualitesService, MessagerieServices,PronoteService, BlogsService, WorkspaceService, $filter, $http){
 
   $rootScope.filterThreads = [];
 
   $rootScope.listMenu =  [{'name':'Actualites','icon':'custom-newspaper newspapericon-', 'href':'#/app/actualites'},
                           {'name':'Messagerie','icon':'custom-mail mailicon-', 'href':'#/app/messagerie/inbox/INBOX'},
                           {'name':'Blog','icon':'custom-bullhorn bullhornicon-', 'href':'#/app/blog-list'},
-                          {'name':'Documents','icon':'custom-folder foldericon-', 'href':'#/app/workspace'},
-                          {'name':'Pronote','icon':'custom-pronote pronote-1icon-', 'href':'#/app/listPronotes'}];
+                          {'name':'Documents','icon':'custom-folder foldericon-', 'href':'#/app/workspace'}];
+
+  PronoteService.getAllAccounts().then(function(resp){
+    if (resp.length > 0) {
+      $rootScope.listMenu.push({
+        'name': 'Pronote',
+        'icon': 'custom-pronote pronote-1icon-',
+        'href': '#/app/listPronotes'
+      });
+    }
+  });
 
   //SkinFactory.getSkin().then(function(res) {
     localStorage.setItem('skin', '/assets/themes/paris/skins/default/');
