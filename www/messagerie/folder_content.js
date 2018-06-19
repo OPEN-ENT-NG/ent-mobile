@@ -19,9 +19,8 @@ angular.module('ent.message_folder', ['ent.message_services'])
   $scope.restoreMessages = function(){
     MessagerieServices.restoreSelectedMessages(getSelectedMessages()).then(function(){
       getMessagesAndFolders()
-    }, function(err){
-      $scope.showAlertError()
-      $ionicLoading.hide()
+    }, function() {
+      $ionicLoading.hide();
     });
   }
 
@@ -44,8 +43,6 @@ angular.module('ent.message_folder', ['ent.message_services'])
       if(res!=null){
         MessagerieServices.moveMessages(getSelectedMessages(), res).then(function(){
           getMessagesAndFolders();
-        }, function(err){
-          $scope.showAlertError();
         });
       }
       $ionicLoading.hide();
@@ -75,9 +72,8 @@ angular.module('ent.message_folder', ['ent.message_services'])
       $ionicListDelegate.closeOptionButtons()
       updateMessages()
       $ionicLoading.hide();
-    }, function(err){
+    }, function() {
       $ionicLoading.hide();
-      $scope.showAlertError();
     });
   }
 
@@ -90,8 +86,6 @@ angular.module('ent.message_folder', ['ent.message_services'])
         if(res){
           MessagerieServices.deleteSelectedMessages(messagesList, $stateParams.nameFolder).then(function(){
             getMessagesAndFolders();
-          }, function(err){
-            $scope.showAlertError();
           });
         }
       })
@@ -184,10 +178,9 @@ angular.module('ent.message_folder', ['ent.message_services'])
     MessagerieServices.getMessagesFolder(url).then(function (response) {
       $scope.messages = response.data;
       initCheckedValue();
-    }), function(err){
+    }, function() {
       $ionicLoading.hide();
-      $scope.showAlertError();
-    };
+    });
   };
 
   function getExtraFolders(){
@@ -201,7 +194,7 @@ angular.module('ent.message_folder', ['ent.message_services'])
           isPersonnal: true
         });
       }
-    }).then(function(){
+    }).then(function() {
       var folderIds = [];
       angular.forEach($scope.extraFolders, function(extraFolder) {
         folderIds.push(extraFolder.id);
@@ -216,11 +209,10 @@ angular.module('ent.message_folder', ['ent.message_services'])
           $scope.extraFolders[i].count = response[i].count;
         }
         $ionicLoading.hide();
-      })
-    }), function(err){
+      });
+    }, function() {
       $ionicLoading.hide();
-      $scope.showAlertError();
-    };
+    });
   }
 
   function initCheckedValue(){

@@ -1,5 +1,5 @@
 angular.module('ent.blog_service', ['ent.request'])
-.service('BlogsService', function($http, domainENT, $q, RequestService){
+.service('BlogsService', function(domainENT, $q, RequestService){
 
   this.getAllBlogs = function () {
     return RequestService.get(domainENT+"/blog/list/all");

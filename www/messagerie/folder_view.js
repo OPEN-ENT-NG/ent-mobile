@@ -63,10 +63,9 @@ angular.module('ent.messagerie', ['ent.message_services', 'ent.message_folder', 
         console.log($scope.folders);
         $ionicLoading.hide();
       })
-    }) , function(err){
+    } , function() {
       $ionicLoading.hide();
-      $scope.showAlertError();
-    };
+    });
   }
 
   function initCheckedValue(){
@@ -97,10 +96,9 @@ angular.module('ent.messagerie', ['ent.message_services', 'ent.message_folder', 
           profile:  resp.data.users[i].status
         });
       };
-      $ionicLoading.hide()
-    }, function(err){
-      $ionicLoading.hide()
-      $scope.showAlertError();
+      $ionicLoading.hide();
+    }, function() {
+      $ionicLoading.hide();
     });
   }
 })

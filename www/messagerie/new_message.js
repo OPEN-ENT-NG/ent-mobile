@@ -86,9 +86,8 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
         });
       };
       $ionicLoading.hide()
-    }, function(err){
+    }, function(){
       $ionicLoading.hide()
-      $scope.showAlertError();
     });
   }
             $scope.addContactTo = function(search, contact){
@@ -134,18 +133,12 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
                     console.log("Reply One Success");
                     $ionicLoading.hide();
                     $state.go("app.messagerie");
-                  }, function (err) {
-                    console.log(err);
-                    $scope.showAlertError();
                   });
                 } else {
                   MessagerieServices.sendMail(getMailData()).then(function (resp) {
                     console.log("Message Success");
                     $ionicLoading.hide();
                     $state.go("app.messagerie");
-                  }, function (err) {
-                    console.log(err);
-                    $scope.showAlertError();
                   });
                 }
               } else {
@@ -185,9 +178,8 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
                   name: "file"
                 })
                 $scope.$apply()
-              }, function(e){
+              }, function(){
                 $ionicLoading.hide();
-                $scope.showAlertError(e);
               });
             }
 
@@ -228,8 +220,6 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
                   $ionicHistory.clearCache();
                   $ionicHistory.goBack();
                 })
-              }, function(err){
-                $scope.showAlertError();
               });
             }
 
@@ -240,8 +230,6 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
                 console.log($scope.email.id);
                 $scope.email.id = resp.data.id;
                 console.log($scope.email);
-              }, function(err){
-                $scope.showAlertError();
               });
             }
 

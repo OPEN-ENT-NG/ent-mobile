@@ -45,8 +45,8 @@ angular.module('ent.message_detail', ['ent.message_services', 'ent.messagerie'])
             $ionicHistory.clearCache();
             $ionicHistory.goBack();
           })
-        }, function(err){
-          $scope.showAlertError();
+        }, function(){
+          $ionicLoading.hide();
         });
       }
     })
@@ -63,8 +63,6 @@ angular.module('ent.message_detail', ['ent.message_services', 'ent.messagerie'])
       if(res!=null){
         MessagerieServices.moveMessage(id, res).then(function(){
           $ionicHistory.goBack();
-        }, function(err){
-          $scope.showAlertError();
         });
       }
       $ionicLoading.hide();
@@ -77,8 +75,6 @@ angular.module('ent.message_detail', ['ent.message_services', 'ent.messagerie'])
     });
     MessagerieServices.restoreSelectedMessages(message).then(function(){
       $ionicHistory.goBack();
-    }, function(err){
-      $scope.showAlertError();
     });
     $ionicLoading.hide();
   }
@@ -130,9 +126,8 @@ angular.module('ent.message_detail', ['ent.message_services', 'ent.messagerie'])
       $scope.mail.cc = getArrayNames(res.data.cc, res.data);
       console.log($scope.mail);
       $ionicLoading.hide();
-    }, function(err){
+    }, function(){
       $ionicLoading.hide();
-      $scope.showAlertError();
     });
   }
 

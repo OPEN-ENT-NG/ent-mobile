@@ -87,9 +87,7 @@
             <false />
         </config-file>
     </platform>
-    <plugin name="com.bez4pieci.cookies" spec="https://github.com/bez4pieci/Phonegap-Cookies-Plugin.git" />
     <plugin name="cordova-plugin-app-version" spec="^0.1.9" />
-    <plugin name="cordova-plugin-device" spec="^2.0.2" />
     <plugin name="cordova-plugin-file-opener2" spec="^2.0.19" />
     <plugin name="cordova-plugin-globalization" spec="^1.0.9" />
     <plugin name="cordova-plugin-splashscreen" spec="^3.2.2" />
@@ -103,6 +101,9 @@
     <plugin name="cordova-plugin-inappbrowser" spec="^3.0.0" />
     <plugin name="cordova-plugin-file" spec="^6.0.1" />
     <plugin name="cordova-plugin-firebase" spec="^1.0.5" />
-    <engine name="android" spec="~7.1.0" />
     <plugin name="cordova-plugin-local-notification" spec="^0.9.0-beta.2" />
+    <plugin name="cordova-plugin-network-information" spec="~2.0.1" />
+    <engine name="android" spec="7.1.0" />
+    <engine name="ios" spec="4.5.4" />
+    <plugin name="com.bez4pieci.cookies" spec="https://github.com/bez4pieci/Phonegap-Cookies-Plugin.git" />
 </widget>

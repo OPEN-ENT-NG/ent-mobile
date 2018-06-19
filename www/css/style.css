@@ -230,3 +230,68 @@ ion-popover-view.fit ion-content {
   text-overflow: initial !important;
   white-space: normal !important;
 }
+
+.offline-message {
+  width: 80%;
+  left: 10%;
+  position: fixed;
+  top: 80px;
+  text-align: center;
+  transition: all 1s ease;
+  color: white;
+  font-weight: bold;
+  z-index: 10;
+  border-radius: 4px;
+  padding: 10px 0;
+  font-size: medium;
+  box-shadow: 5px 5px 8px 0 rgba(0, 0, 0, 0.2);
+  /*background-color: gray;*/
+}
+
+/* ngIf animation */
+.offline-message.ng-enter,
+.offline-message.ng-leave {
+  transition: opacity ease-in-out 0.5s;
+}
+
+.offline-message.ng-enter,
+.offline-message.ng-leave.ng-leave-active {
+  opacity: 0;
+}
+
+.offline-message.ng-leave,
+.offline-message.ng-enter.ng-enter-active {
+  opacity: 1;
+}
+
+.offline-message span {
+  line-height: normal;
+}
+
+.offline-message.online {
+  background-color: #46bfaf;
+}
+
+.offline-message.offline {
+  background-color: #e13a3a;
+}
+
+.offline-message.attempting {
+  background-color: #ecbe30;
+}
+
+.plug {
+  color: white;
+  display: inline-block !important;
+  margin: 5px 15px 5px 0;
+}
+
+.fadeinout {
+  animation: blinker 2s ease-in-out infinite;
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
+}

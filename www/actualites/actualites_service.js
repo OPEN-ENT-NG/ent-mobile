@@ -1,6 +1,6 @@
 angular.module('ent.actualites_service', ['ent.request'])
 
-.service('ActualitesService', function($http, domainENT, RequestService){
+.service('ActualitesService', function(domainENT, RequestService){
   this.getAllInfos = function(){
     return RequestService.get(domainENT+"/actualites/infos");
   }

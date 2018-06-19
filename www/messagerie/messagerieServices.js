@@ -1,16 +1,11 @@
 angular.module('ent.message_services', ['ent.request'])
 
-.service('MessagerieServices', function($http, $q, domainENT, RequestService){
-
-  var configHeaders = {
-    headers: { 'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8", 'Authorization': $http.defaults.headers.common['Authorization'] }
-  };
-
+.service('MessagerieServices', function($q, domainENT, RequestService){
 
   this.postAttachment = function(messageId, attachment){
     return RequestService.post(domainENT+"/conversation/message/"+ messageId +"/attachment",  attachment, {
       transformRequest: angular.identity,
-      headers: {'Content-Type': undefined, 'Authorization': $http.defaults.headers.common['Authorization'] }
+      headers: {'Content-Type': undefined }
     });
   }
 

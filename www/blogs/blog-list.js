@@ -26,9 +26,8 @@ angular.module('ent.blog-list', ['ent.blog_service'])
         $scope.blogs[i].thumbnail = $scope.setCorrectImage($scope.blogs[i].thumbnail , '/../../../img/illustrations/blog-default.png')
       }
       $ionicLoading.hide();
-    }), function(err){
+    }, function() {
       $ionicLoading.hide();
-      $scope.showAlertError(err);
-    }
+    });
   }
 });

@@ -131,9 +131,8 @@ angular.module('ent.actualites', ['ent.actualites_service'])
       }, 100);
 
 
-    }, function(err){
+    }, function(){
       $ionicLoading.hide();
-      $scope.showAlertError(err);
     });
   }
 });

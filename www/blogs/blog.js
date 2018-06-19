@@ -72,8 +72,7 @@ angular.module('ent.blog', ['ent.blog_service'])
                   $ionicLoading.hide();
                 });
               $ionicLoading.hide();
-            }, function (err) {
-              $scope.showAlertError(err);
+            }, function () {
               $ionicLoading.hide();
             });
           }
@@ -121,14 +120,13 @@ angular.module('ent.blog', ['ent.blog_service'])
             .then(function (res) {
               post.comments = res.data;
               $ionicLoading.hide();
-            }, function (err) {
+            }, function () {
               post.comments = [];
               $ionicLoading.hide();
             });
-        }, function (err) {
+        }, function () {
           post.content = null;
           $ionicLoading.hide();
-          $scope.showAlertError(err);
         });
     }
 
@@ -151,9 +149,8 @@ angular.module('ent.blog', ['ent.blog_service'])
         } else {
           $scope.noPost = true;
         }
-      }, function(err){
+      }, function(){
         $ionicLoading.hide();
-        $scope.showAlertError(err)
         $scope.noPost = true;
       });
     }

@@ -3,11 +3,13 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   'ent.test', 'ng-mfb', 'ui.router', 'angular.img', 'ent.request'])
 
 
-.run(function($ionicPlatform, $ionicLoading, $rootScope,$cordovaGlobalization, $cordovaInAppBrowser, amMoment, RequestService, domainENT) {
+.run(function($ionicPlatform, $ionicLoading, $rootScope,$cordovaGlobalization, $cordovaInAppBrowser, amMoment, RequestService) {
 
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
+    RequestService.setDefaultHeaders()
+
     if (window.cordova && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
       cordova.plugins.Keyboard.disableScroll(true);
@@ -786,6 +788,48 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
         }
       }
     }
+  })
+
+  .directive('offline', function () {
+    return {
+      restrict: 'E',
+      transclude: true,
+      template: '<div class="offline-message {{status}}" ng-if="status">' +
+      '<i class=\'fa fa-plug plug\' ng-class=\'{"fadeinout" : status == "attempting"}\' ng-if="status != \'offline\'"></i>' +
+      '<span>{{getMessage(status)}}</span>' +
+      '</div>',
+
+      controller: ['$scope', function ($scope)  {
+
+        document.addEventListener("offline", function () {
+          $scope.status = 'offline';
+          setTimeout(function () {
+            if ($scope.status) {
+              $scope.status = 'attempting';
+              $scope.$apply();
+            }
+          }, 3000);
+        });
+
+        document.addEventListener("online", function () {
+          if ($scope.status == 'attempting') {
+            $scope.status = 'online';
+            setTimeout(function () {
+              delete $scope.status;
+              $scope.$apply();
+            }, 1000);
+          }
+        });
+
+        $scope.getMessage = function (status) {
+          switch (status) {
+            case 'offline' : return "Pas de connexion";
+            case 'attempting' : return "Tentative de connexion";
+            case 'online' : return "Connecté";
+          }
+        };
+      }]
+    };
   });
 
 function setProfileImage (regularPath, userId){
