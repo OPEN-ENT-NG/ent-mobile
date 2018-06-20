@@ -7,6 +7,15 @@ angular.module('ent.pronotes', ['ent.pronotes_service'])
 
     $scope.showPronote = function (link, namePronote) {
       $rootScope.pronoteName = namePronote;
+      var profileMap = {
+        TEACHER: 'professeur',
+        STUDENT: 'eleve',
+        RELATIVE: 'parent'
+      };
+      if (Object.keys(profileMap).indexOf($rootScope.myUser.userType.toUpperCase()) !== -1) {
+        link += 'mobile.' + profileMap[$rootScope.myUser.userType.toUpperCase()]
+          + '.html?';
+      }
       $rootScope.link = $sce.trustAsResourceUrl(link);
       $state.go("app.pronote");
     }

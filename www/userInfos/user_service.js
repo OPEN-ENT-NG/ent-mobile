@@ -59,6 +59,7 @@ angular.module('ent.user', ['ent.request'])
           $rootScope.myUser = response.data.result[0];
           $rootScope.myUser.groupsIds = res.data.groupsIds;
           $rootScope.myUser.photo = setProfileImage($scope.myUser.photo, res.data.userId);
+          $rootScope.myUser.userType = $rootScope.myUser.type[0];
           $rootScope.myUser.type = "directory."+$rootScope.myUser.type[0];
           $rootScope.myUser.translatedType = TranslationService.getTraduction($rootScope.myUser.type);
           console.log($rootScope.myUser);
