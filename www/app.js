@@ -370,7 +370,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
           break;
         }
         default: {
-          console.log(data.title);
+          window.open(domainENT + '/auth/login?callBack=' + encodeURIComponent(domainENT + params.resourceUri), '_system');
         }
       }
     }
