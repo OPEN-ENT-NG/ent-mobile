@@ -86,7 +86,10 @@ angular.module('ent.workspace_folder_depth',['ent.workspace_service'])
 
     var newDoc = ele.files[0];
     console.log(newDoc);
-    SpinnerDialog.show(null, 'Ajout de document en cours', true);
+
+    $ionicLoading.show({
+      template: '<ion-spinner icon="android"/>'
+    });
 
     var formData = new FormData()
     formData.append('file', newDoc)
@@ -101,9 +104,9 @@ angular.module('ent.workspace_folder_depth',['ent.workspace_service'])
           }
         })
       })
-      SpinnerDialog.hide();
+      $ionicLoading.hide();
     }, function(err){
-      SpinnerDialog.hide();
+      $ionicLoading.hide();
       $scope.showAlertError()
     });
   }

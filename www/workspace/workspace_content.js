@@ -1,6 +1,9 @@
 angular.module('ent.workspace_content',['ent.workspace_service'])
 
-.controller('WorkspaceFolderContentCtlr', function($scope, $rootScope, $stateParams, $state, WorkspaceService, $ionicLoading, MimeTypeFactory, CreateNewFolderPopUpFactory, $ionicPopup, $cordovaVibration, $ionicHistory, $ionicPlatform, $ionicPopover, RenamePopUpFactory, MovingItemsFactory){
+.controller('WorkspaceFolderContentCtlr', function($scope, $rootScope, $stateParams, $state, WorkspaceService,
+                                                   $ionicLoading, MimeTypeFactory, CreateNewFolderPopUpFactory,
+                                                   $ionicPopup, $cordovaVibration, $ionicHistory, $ionicPlatform,
+                                                   $ionicPopover, RenamePopUpFactory, MovingItemsFactory){
 
   var filter = getFilter($stateParams.nameWorkspaceFolder)
   $rootScope.checkable = false
@@ -112,7 +115,9 @@ angular.module('ent.workspace_content',['ent.workspace_service'])
     if(newDoc.size > $rootScope.translationWorkspace["max.file.size"]){
       $scope.getAlertPopupNoTitle($rootScope.translationWorkspace["file.too.large.limit"]+ $scope.getSizeFile(parseInt($rootScope.translationWorkspace["max.file.size"])))
     } else {
-      SpinnerDialog.show(null, 'Ajout en cours', true);
+      $ionicLoading.show({
+        template: '<ion-spinner icon="android"/>'
+      });
 
       var formData = new FormData()
       formData.append('file', newDoc)
@@ -130,9 +135,9 @@ angular.module('ent.workspace_content',['ent.workspace_service'])
           console.log($scope.documents);
           console.log("files: "+$scope.documents.length);
         })
-        SpinnerDialog.hide();
+        $ionicLoading.hide();
       }, function(err){
-        SpinnerDialog.hide();
+        $ionicLoading.hide();
         $scope.showAlertError()
       });
     }

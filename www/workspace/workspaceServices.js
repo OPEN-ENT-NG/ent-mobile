@@ -98,7 +98,7 @@ angular.module('ent.workspace_service', ['ion-tree-list', 'ngCookies', 'ent.requ
   }
 
   this.putNewVersion = function (id, newVersion){
-    return RequestService.put(domainENT+'/workspace/document/'+id+'?thumbnail=120x120&thumbnail=290x290', newVersion, {
+    return $http.put(domainENT+'/workspace/document/'+id+'?thumbnail=120x120&thumbnail=290x290', newVersion, {
       transformRequest: angular.identity,
       headers: {'Content-Type': undefined}
     });
@@ -109,7 +109,7 @@ angular.module('ent.workspace_service', ['ion-tree-list', 'ngCookies', 'ent.requ
   }
 
   this.uploadDoc = function(doc){
-    return RequestService.post(domainENT+'/workspace/document?thumbnail=120x120&thumbnail=290x290&quality=0.8', doc, {
+    return $http.post(domainENT+'/workspace/document?thumbnail=120x120&thumbnail=290x290&quality=0.8', doc, {
       transformRequest: angular.identity,
       headers: {'Content-Type': undefined}
     });

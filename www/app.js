@@ -299,7 +299,10 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   // $urlRouterProvider.otherwise('/app/workspace/documents');
 })
 
-.controller('AppCtrl', function (PronoteService, $scope, $rootScope, $sce, $state, $ionicPlatform, $ionicSideMenuDelegate, $cordovaFileTransfer, $cordovaFileOpener2, domainENT, $ionicHistory, SkinFactory, $ionicPopup, ActualitesService, MessagerieServices,PronoteService, BlogsService, WorkspaceService, $filter, $http){
+.controller('AppCtrl', function (PronoteService, $scope, $rootScope, $sce, $state, $ionicPlatform,
+                                 $ionicSideMenuDelegate, $cordovaFileTransfer, $cordovaFileOpener2, domainENT,
+                                 $ionicHistory, SkinFactory, $ionicPopup, ActualitesService, MessagerieServices,
+                                 PronoteService, BlogsService, WorkspaceService, $filter, $http, $ionicLoading){
 
   $rootScope.filterThreads = [];
 
@@ -418,7 +421,10 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     // var url = $sce.trustAsResourceUrl(urlFile)
     // var targetPath = cordova.file.externalRootDirectory + 'Download/' + filename;
     //$cordovaProgress.showSimpleWithLabelDetail(true, 'Téléchargement en cours (Bouton retour pour quitter)', filename)
-    SpinnerDialog.show(null, 'Téléchargement en cours (Bouton retour pour quitter)', true);
+
+    $ionicLoading.show({
+      template: '<ion-spinner icon="android"/>'
+    });
 
     var config =
       {
@@ -439,12 +445,12 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
 
             fileWriter.onwriteend = function (f) {
               $scope.openLocalFile(file.nativeURL, MIMEType);
-              SpinnerDialog.hide();
+              $ionicLoading.hide();
             };
 
             fileWriter.onerror = function (err) {
               $scope.showAlertError(err);
-              SpinnerDialog.hide();
+              $ionicLoading.hide();
             };
 
             if (result) {
@@ -453,15 +459,15 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
           });
         }, function (err) {
           $scope.showAlertError(err);
-          SpinnerDialog.hide();
+          $ionicLoading.hide();
         });
       }, function (err) {
         $scope.showAlertError(err);
-        SpinnerDialog.hide();
+        $ionicLoading.hide();
       });
     }, function (err) {
       $scope.showAlertError(err);
-      SpinnerDialog.hide();
+      $ionicLoading.hide();
     });
   }
 
