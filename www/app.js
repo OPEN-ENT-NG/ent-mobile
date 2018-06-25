@@ -336,7 +336,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   function manageNotification (data) {
     if (data.params) {
       var params = JSON.parse(data.params);
-      var module = (/\/([\w]+)\W?\//g).exec(params.resourceUri)[1];
+      var module = (/\/([\w]+)\W?/g).exec(params.resourceUri)[1];
 
       $rootScope.notification = {};
 
