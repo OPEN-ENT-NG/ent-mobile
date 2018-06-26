@@ -1,0 +1,67 @@
+<ion-view view-title="Première Connexion">
+  <ion-content class="fondbleu">
+    <div>
+      <img src="img/logo1.png" class="img-responsive">
+    </div>
+    <!--<div ng-if="wrongLogin && isOnline" class="wrong-auth">L'identifiant ou le mot de passe est incorrect.</div>-->
+
+    <div class="list firstco" ng-init="inputTypePassword = inputTypeActiv = inputTypeConfirm = 'password'">
+
+      <div class="error-message" ng-if="error"><span>{{error}}</span></div>
+
+      <label class="item item-input margin-login">
+        <input type="text" ng-model="user.login" placeholder="Login">
+      </label>
+
+      <div class="item item-input margin-login">
+        <input type="{{inputTypeActiv}}"
+               ng-model="user.activationCode"
+               placeholder="Code d'activation">
+        <span class="fa"
+              ng-class="{'fa-eye-slash' : inputTypeActiv !== 'password', 'fa-eye' : inputTypeActiv == 'password'} "
+              ng-click="inputTypeActiv = inputTypeActiv ==='password' ? 'text' : 'password'"></span>
+      </div>
+
+      <div class="item item-input margin-login">
+        <input type="{{inputTypePassword}}"
+               ng-model="user.password"
+               placeholder="Mot de passe">
+        <span class="fa"
+              ng-class="{'fa-eye-slash' : inputTypePassword !== 'password', 'fa-eye' : inputTypePassword == 'password'} "
+              ng-click="inputTypePassword = inputTypePassword ==='password' ? 'text' : 'password'"></span>
+      </div>
+
+      <div class="item item-input margin-login">
+        <input type="{{inputTypeConfirm}}"
+               ng-model="user.confirmPassword"
+               placeholder="Confirmez mot de passe">
+        <span class="fa"
+              ng-class="{'fa-eye-slash' : inputTypeConfirm !== 'password', 'fa-eye' : inputTypeConfirm == 'password'} "
+              ng-click="inputTypeConfirm = inputTypeConfirm ==='password' ? 'text' : 'password'"></span>
+      </div>
+
+      <div class="complexity" ng-if="user.password !== undefined">
+        <span>Sécurité : {{translateComplexity(passwordComplexity(user.password), true)}}</span>
+        <div class="complexityBar">
+          <div class="complexityLvl" ng-class="translateComplexity(passwordComplexity(user.password))" ng-style="{width: passwordComplexity(user.password) / 20 * 100 + '%'}">
+
+          </div>
+        </div>
+        <span ng-if="translateComplexity(passwordComplexity(user.password)) !== 'strong'">Il est recommandé de mélanger chiffres, lettres, majuscules, minuscules et caractères spéciaux.</span>
+      </div>
+
+      <label class="item item-input margin-login">
+        <input type="text" ng-model="user.mail" placeholder="Courriel">
+      </label>
+
+      <label class="item item-input margin-login">
+        <input type="text" ng-model="user.phone" placeholder="Téléphone mobile">
+      </label>
+
+      <ion-checkbox class="login-checkbox" ng-model="user.acceptCGU">J'accepte les conditions générales d'utilisation</ion-checkbox>
+
+      <button class="button-block button-login" ng-click="doActivate(user)">Activer</button>
+    </div>
+
+  </ion-content>
+</ion-view>

@@ -15,7 +15,6 @@ angular.module('ent.request', ['ent.workspace_service', 'ent'])
 
     function onError (reject, error) {
       $ionicLoading.hide();
-      console.log($rootScope.navigator.onLine);
       reject(error);
     }
 

@@ -115,7 +115,7 @@ ion-popover-view.fit ion-content {
   color: #C4C4C4;
 }
 
-.button-login {
+.button-login, .button-firstco {
   color: #FFF;
   background-color: #FF8500;
   border-color: #b2b2b2;
@@ -136,7 +136,11 @@ ion-popover-view.fit ion-content {
   cursor: pointer;
 }
 
-.taillelogin {
+.button-login {
+  margin-bottom: 10px;
+}
+
+.taillelogin, .firstco{
   margin: 0 2%;
   min-width: 52px;
   min-height: 47px;
@@ -231,7 +235,7 @@ ion-popover-view.fit ion-content {
   white-space: normal !important;
 }
 
-.offline-message {
+.offline-message, .error-message {
   width: 80%;
   left: 10%;
   position: fixed;
@@ -264,19 +268,19 @@ ion-popover-view.fit ion-content {
   opacity: 1;
 }
 
-.offline-message span {
+.offline-message span, .error-message {
   line-height: normal;
 }
 
-.offline-message.online {
+.offline-message.online, .complexityLvl.strong {
   background-color: #46bfaf;
 }
 
-.offline-message.offline {
+.offline-message.offline, .complexityLvl.weak, .error-message {
   background-color: #e13a3a;
 }
 
-.offline-message.attempting {
+.offline-message.attempting, .complexityLvl.moderate {
   background-color: #ecbe30;
 }
 
@@ -294,4 +298,46 @@ ion-popover-view.fit ion-content {
   50% {
     opacity: 0;
   }
+}
+
+.firstco span {
+  color: #e5e5e5;
+  font-weight: bold;
+  white-space: normal;
+}
+
+.firstco .item-input> span {
+  position: absolute;
+  right: 0;
+  font-size: 1.5em;
+  width: 30px;
+  /*height: 100%;*/
+  display: block;
+  z-index: 10;
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.firstco .item-input {
+  position: relative;
+}
+
+.firstco .confirmError {
+  border-color : #e13a3a;
+}
+
+.firstco .complexityBar {
+  overflow: hidden;
+  border-radius: 8px;
+  height: 20px;
+  box-shadow: 0 0 3px #555;
+  background-color: white;
+  margin: 5px 10px;
+}
+
+.firstco .complexity {
+  margin: 20px 15px 25px;
+}
+
+.firstco .complexityLvl {
+  height: 100%;
 }

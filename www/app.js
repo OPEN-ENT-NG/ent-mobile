@@ -1,6 +1,6 @@
 angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute','ent.actualites','ent.blog',
 'ent.blog-list','ent.oauth2', 'ent.messagerie','ent.workspace','ent.user','ent.pronotes', 'angularMoment',
-  'ent.test', 'ng-mfb', 'ui.router', 'angular.img', 'ent.request'])
+  'ent.test', 'ng-mfb', 'ui.router', 'angular.img', 'ent.request', 'ent.firstConnection', 'ent.firstConnectionService'])
 
 
 .run(function($ionicPlatform, $ionicLoading, $rootScope,$cordovaGlobalization, $cordovaInAppBrowser, amMoment, RequestService) {
@@ -294,8 +294,15 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     cache: false
   })
 
+    .state('firstConnection', {
+      url: '/firstConnection',
+      templateUrl: 'firstConnection/firstConnection.html',
+      controller: 'FirstConnectionCtrl'
+    })
+
+
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/login')
+  $urlRouterProvider.otherwise('/login');
   // $urlRouterProvider.otherwise('/app/workspace/documents');
 })
 
