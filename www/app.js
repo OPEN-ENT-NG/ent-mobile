@@ -309,9 +309,11 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
 .controller('AppCtrl', function (PronoteService, $scope, $rootScope, $sce, $state, $ionicPlatform,
                                  $ionicSideMenuDelegate, $cordovaFileTransfer, $cordovaFileOpener2, domainENT,
                                  $ionicHistory, SkinFactory, $ionicPopup, ActualitesService, MessagerieServices,
-                                 PronoteService, BlogsService, WorkspaceService, $filter, $http, $ionicLoading){
+                                 PronoteService, BlogsService, WorkspaceService, $filter, $http, $ionicLoading, $q, $timeout){
 
-  $rootScope.filterThreads = [];
+  $ionicPlatform.ready(function () {
+
+    $rootScope.filterThreads = [];
 
   $rootScope.listMenu =  [{'name':'Actualites','icon':'custom-newspaper newspapericon-', 'href':'#/app/actualites'},
                           {'name':'Messagerie','icon':'custom-mail mailicon-', 'href':'#/app/messagerie/inbox/INBOX'},
@@ -331,14 +333,72 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   //SkinFactory.getSkin().then(function(res) {
     localStorage.setItem('skin', '/assets/themes/paris/skins/default/');
     //localStorage.setItem('skin', res.data.skin);
-  //} , function(err){
-  //  $scope.showAlertError(err);
-  //});
+    //} , function(err){
+    //  $scope.showAlertError(err);
+    //});
 
-  getTranslationActualites();
-  getTranslationConversation();
-  getTraductionBlogs();
-  getTraductionWorkspace();
+    var intentHandler = function (intent) {
+      if (intent && intent.hasOwnProperty("action") && intent.action == "android.intent.action.SEND") {
+        var image = intent.extras["android.intent.extra.STREAM"];
+
+        $ionicLoading.show({
+          template: '<ion-spinner icon="android"/>'
+        });
+
+        window.FilePath.resolveNativePath(image, function (filepath) {
+          window.resolveLocalFileSystemURL(filepath, function (entry) {
+            entry.file(function (file) {
+              if ($rootScope.translationWorkspace && file.size > $rootScope.translationWorkspace["max.file.size"]) {
+                $scope.getAlertPopupNoTitle($rootScope.translationWorkspace["file.too.large.limit"] + $scope.getSizeFile(parseInt($rootScope.translationWorkspace["max.file.size"])))
+              } else {
+
+                var reader = new FileReader();
+
+                reader.onloadend = function () {
+
+                  var formData = new FormData();
+                  formData.append('file', new Blob([this.result], {type: file.type}), file.name);
+
+                  WorkspaceService.uploadDoc(formData).then(function (result) {
+                    console.log(result);
+                    if($state.current.name !== 'app.workpace_folder_content') {
+                      $state.go("app.workpace_folder_content", {nameWorkspaceFolder: "documents"});
+                    } else {
+                      $scope.$broadcast('workspace_load');
+                    }
+                    $ionicLoading.hide();
+                  }, function (err) {
+                    $ionicLoading.hide();
+                    console.log("upload failed");
+                    $ionicLoading.hide();
+                    $scope.showAlertError();
+                  });
+
+                };
+                reader.readAsArrayBuffer(file);
+              }
+            });
+          }, function (errdata) {
+            console.log(errdata);
+            $ionicLoading.hide();
+          });
+        }, function (errdata) {
+          console.log(errdata);
+          $ionicLoading.hide();
+
+
+        });
+      }
+    };
+
+ $timeout(function() {
+  $q.all([getTranslationActualites(),
+  getTranslationConversation(),
+  getTraductionBlogs(),
+  getTraductionWorkspace()]).then(function () {
+    window.plugins.intent.setNewIntentHandler(intentHandler);
+  });
+ }, 5000);
 
   function manageNotification (data) {
     if (data.params) {
@@ -421,6 +481,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
       $scope.closeApp = true ;
     }
   }, 1000);
+});
 
   $scope.downloadFile = function (fileName, urlFile){
 
@@ -611,7 +672,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   }
 
   function getTranslationActualites(){
-    ActualitesService.getTranslation().then(function(resp){
+    return ActualitesService.getTranslation().then(function(resp){
       $rootScope.translationActus = resp.data
     }, function(err){
       $scope.showAlertError(err)
@@ -619,7 +680,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   }
 
   function getTranslationConversation() {
-    MessagerieServices.getTranslation().then(function(resp) {
+    return MessagerieServices.getTranslation().then(function(resp) {
       $rootScope.translationConversation = resp.data
     }), function(err) {
       $scope.showAlertError(err)
@@ -627,7 +688,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   }
 
   function getTraductionBlogs(){
-    BlogsService.getTraduction().then(function(resp){
+    return BlogsService.getTraduction().then(function(resp){
       $rootScope.translationBlog = resp.data;
       $rootScope.translationBlog['filters.drafts'] = $rootScope.translationBlog['filters.drafts'].substring(0,$rootScope.translationBlog['filters.drafts'].indexOf('(')-1);
       $rootScope.translationBlog['filters.submitted'] = $rootScope.translationBlog['filters.submitted'].substring(0,$rootScope.translationBlog['filters.submitted'].indexOf('(')-1);
@@ -637,7 +698,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   }
 
   function getTraductionWorkspace(){
-    WorkspaceService.getTranslation().then(function(resp) {
+    return WorkspaceService.getTranslation().then(function(resp) {
       $rootScope.translationWorkspace = resp.data;
     }), function (err){
       $scope.showAlertError(err)

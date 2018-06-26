@@ -9,6 +9,9 @@ angular.module('ent.workspace_content',['ent.workspace_service'])
   $rootScope.checkable = false
   getData()
 
+  $scope.$on('workspace_load', function(){
+     getData();
+  });
 
   $rootScope.isMyDocuments = function(){
     return $stateParams.nameWorkspaceFolder == "documents"

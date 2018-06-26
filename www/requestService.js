@@ -2,16 +2,15 @@ angular.module('ent.request', ['ent.workspace_service', 'ent'])
 
   .service('RequestService', function($timeout, $http, $q, $state, $ionicLoading, $rootScope, $ionicPopup) {
 
-    var timeout = function() {
-      return $timeout(function () {
-        $ionicPopup.show({
-          title: 'Pas de connexion à Internet.',
-          buttons: [
-            {text: 'OK'}
-          ]
-        });
-      }, 3000);
-    }
+    // var timeout = $timeout(function () {
+    //     $ionicPopup.show({
+    //       title: 'Pas de connexion à Internet.',
+    //       buttons: [
+    //         {text: 'OK'}
+    //       ]
+    //     });
+    //   }, 10000);
+    var timeout = 3000;
 
     function onError (reject, error) {
       $ionicLoading.hide();
