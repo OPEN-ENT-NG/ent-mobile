@@ -3,11 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="Content-Security-Policy"
-        content="default-src *; connect-src *;
+        content="default-src * blob: data:; connect-src *;
          script-src 'self' 'unsafe-inline' 'unsafe-eval';
          img-src * https://* data: blob: filesystem:;
           style-src  'self' 'unsafe-inline';
-           media-src *">
+           media-src *;
+          worker-src data: blob:">
   <meta name="viewport" content="viewport-fit=cover, initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
   <title></title>
 

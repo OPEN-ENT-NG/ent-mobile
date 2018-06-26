@@ -18,6 +18,31 @@ angular.module('ent.oauth2', [])
         return RequestService.setDefaultAuth({access: result.data.access_token, refresh: result.data.refresh_token});
       });
     };
+
+    this.setFcmToken = function() {
+      window.FirebasePlugin.getToken(function (token) {
+        if (token == null) {
+          setTimeout(this.setFcmToken, 1000);
+          return;
+        }
+        var url = domainENT + "/timeline/pushNotif/fcmToken?fcmToken=" + token;
+        console.log(url);
+        RequestService.put(url).then(function (response) {
+          console.log(response);
+          localStorage.setItem('fcmToken', token);
+        }, function (error) {
+          console.log("put token failed");
+          throw error;
+        });
+      });
+    }.bind(this)
+
+    this.deleteFcmToken = function () {
+      var fcmToken = localStorage.getItem("fcmToken");
+      if (fcmToken == null) return;
+      var url = domainENT + "/timeline/pushNotif/fcmToken?fcmToken=" + fcmToken;
+      return RequestService.delete(url);
+    }
   })
 
   .controller('LoginCtrl', function($ionicPlatform, $scope, $state, OAuthService, $rootScope) {
@@ -61,6 +86,7 @@ angular.module('ent.oauth2', [])
         localStorage.setItem('password', response.access);
         if ($scope.rememberMe == true) {
           localStorage.setItem('refresh', response.refresh);
+          OAuthService.setFcmToken();
         }
         $state.go('app.actualites');
       }, function errorCallback() {

@@ -47,6 +47,14 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
       }, function(error){
         console.error(error);
       }, cordova.plugins.diagnostic.runtimePermissionGroups.STORAGE);
+    } else {
+      console.log("IOS : Granted permission");
+      window.FirebasePlugin.grantPermission(function () {
+        console.log("IOS: Permission granted");
+        window.FirebasePlugin.hasPermission(function(data){
+          console.log("IOS: has firebase permission ? " + data.isEnabled);
+        });
+      });
     }
 
     $cordovaGlobalization.getPreferredLanguage().then(function(result) {
@@ -309,7 +317,8 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
 .controller('AppCtrl', function (PronoteService, $scope, $rootScope, $sce, $state, $ionicPlatform,
                                  $ionicSideMenuDelegate, $cordovaFileTransfer, $cordovaFileOpener2, domainENT,
                                  $ionicHistory, SkinFactory, $ionicPopup, ActualitesService, MessagerieServices,
-                                 PronoteService, BlogsService, WorkspaceService, $filter, $http, $ionicLoading, $q, $timeout){
+                                 PronoteService, BlogsService, WorkspaceService, $filter, $http, $ionicLoading, $q, $timeout,
+                                 OAuthService){
 
   $ionicPlatform.ready(function () {
 
@@ -448,6 +457,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
         manageNotification(data);
       } else {
         data.text = data.body;
+        data.foreground = true;
         cordova.plugins.notification.local.schedule(data);
         cordova.plugins.notification.local.on('click', function (notification) {
           manageNotification(notification);
@@ -647,8 +657,9 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
 
 
   $scope.logout = function(){
+    OAuthService.deleteFcmToken();
     localStorage. clear();
-    $ionicHistory.clearHistory()
+    $ionicHistory.clearHistory();
     $ionicHistory.clearCache();
     //navigator.splashscreen.show();
     window.FirebasePlugin.unregister();

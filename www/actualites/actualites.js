@@ -4,8 +4,6 @@ angular.module('ent.actualites', ['ent.actualites_service'])
 
   $rootScope.notification = $rootScope.notification || {};
 
-  ActualitesService.setFcmToken();
-
   $ionicPlatform.ready(function() {
     $scope.$on('$ionicView.loaded', function () {
       setTimeout(function () {
