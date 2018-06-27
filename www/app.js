@@ -354,8 +354,9 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
           template: '<ion-spinner icon="android"/>'
         });
 
-        window.FilePath.resolveNativePath(image, function (filepath) {
-          window.resolveLocalFileSystemURL(filepath, function (entry) {
+        window.plugins.intent.getRealPathFromContentUrl(image, function (filepath) {
+
+          window.resolveLocalFileSystemURL("file://" + filepath, function (entry) {
             entry.file(function (file) {
               if ($rootScope.translationWorkspace && file.size > $rootScope.translationWorkspace["max.file.size"]) {
                 $scope.getAlertPopupNoTitle($rootScope.translationWorkspace["file.too.large.limit"] + $scope.getSizeFile(parseInt($rootScope.translationWorkspace["max.file.size"])))
@@ -394,20 +395,16 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
         }, function (errdata) {
           console.log(errdata);
           $ionicLoading.hide();
-
-
         });
       }
     };
 
- $timeout(function() {
   $q.all([getTranslationActualites(),
   getTranslationConversation(),
   getTraductionBlogs(),
   getTraductionWorkspace()]).then(function () {
     window.plugins.intent.setNewIntentHandler(intentHandler);
   });
- }, 5000);
 
   function manageNotification (data) {
     if (data.params) {
