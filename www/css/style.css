@@ -242,7 +242,7 @@ color: #FFF;
   white-space: normal !important;
 }
 
-.offline-message, .error-message {
+.offline-message, .firstco-message {
   width: 80%;
   left: 10%;
   position: fixed;
@@ -275,15 +275,15 @@ color: #FFF;
   opacity: 1;
 }
 
-.offline-message span, .error-message {
+.offline-message span, .firstco-message {
   line-height: normal;
 }
 
-.offline-message.online, .complexityLvl.strong {
+.offline-message.online, .complexityLvl.strong, .firstco-message.success {
   background-color: #46bfaf;
 }
 
-.offline-message.offline, .complexityLvl.weak, .error-message {
+.offline-message.offline, .complexityLvl.weak, .firstco-message.error {
   background-color: #e13a3a;
 }
 
@@ -347,4 +347,8 @@ color: #FFF;
 
 .firstco .complexityLvl {
   height: 100%;
+}
+
+.firstco .disabled {
+  background-color: lightgray;
 }

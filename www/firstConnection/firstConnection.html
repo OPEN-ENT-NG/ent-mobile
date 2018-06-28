@@ -7,7 +7,8 @@
 
     <div class="list firstco" ng-init="inputTypePassword = inputTypeActiv = inputTypeConfirm = 'password'">
 
-      <div class="error-message" ng-if="error"><span>{{error}}</span></div>
+      <div class="firstco-message error" ng-if="error"><span>{{error}}</span></div>
+      <div class="firstco-message success" ng-if="success"><span>{{success}}</span></div>
 
       <label class="item item-input margin-login">
         <input type="text" ng-model="user.login" placeholder="Identifiant">
@@ -60,7 +61,7 @@
 
       <ion-checkbox class="login-checkbox" ng-model="user.acceptCGU">J'accepte les conditions générales d'utilisation</ion-checkbox>
 
-      <button class="button-block button-login" ng-click="doActivate(user)">Activer</button>
+      <button ng-class="{'disabled' : !(user.login && user.activationCode && user.password && user.confirmPassword && user.acceptCGU)}" class="button-block button-login" ng-click="doActivate(user)">Activer</button>
     </div>
 
   </ion-content>

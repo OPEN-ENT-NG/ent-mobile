@@ -1,6 +1,6 @@
 angular.module('ent.firstConnection', [])
 
-  .controller('FirstConnectionCtrl', function ($timeout, $ionicPlatform, $scope, FirstConnectionService, $ionicPopup, $state, $rootScope) {
+  .controller('FirstConnectionCtrl', function ($timeout, $ionicPlatform, $scope, FirstConnectionService) {
 
     $ionicPlatform.ready(function () {
       getRegex();
@@ -10,10 +10,14 @@ angular.module('ent.firstConnection', [])
 
     $scope.doActivate = function (user) {
       FirstConnectionService.activate(user).then(function (resp) {
-        $scope.error = resp.data.error.message;
-        $timeout(function() {
-          delete $scope.error;
-        }, 2000);
+        if(resp.data.error) {
+          $scope.error = resp.data.error.message;
+          $timeout(function () {
+            delete $scope.error;
+          }, 2000);
+        } else {
+          $scope.success = 'Compte activé avec succès';
+        }
       });
     }
 
