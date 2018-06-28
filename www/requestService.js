@@ -22,9 +22,7 @@ angular.module('ent.request', ['ent.workspace_service', 'ent'])
       if (str.startsWith("<!doctype html>")) {
         $ionicLoading.hide();
         resolve(response);
-        $timeout(function() {
-          $state.go('login');
-        }, 2000);
+        $state.go('login');
       } else {
         resolve(response);
       }
