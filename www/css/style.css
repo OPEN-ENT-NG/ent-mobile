@@ -135,6 +135,13 @@ ion-popover-view.fit ion-content {
   line-height: 42px;
   cursor: pointer;
 }
+.button-firstco-login {
+margin: 15px auto;
+display: block;
+text-align: center;
+text-decoration: none;
+color: #FFF;
+}
 
 .button-login {
   margin-bottom: 10px;
