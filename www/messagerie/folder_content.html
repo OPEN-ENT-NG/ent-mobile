@@ -29,14 +29,14 @@
             <div  class="item-text-wrap" style="float: right; width: 90%;" ng-if=checkable>
               <span class="right">{{formatDateLocale(message.date)}}</span>
               {{getRealName(message.from, message.displayNames)}}
-              <i class="attachicon-" ng-show="message.attachments.length != 0"></i>
+              <i class="attachicon-" ng-show="message.hasAttachment"></i>
               <h3>{{message.subject}}</h3>
             </div>
 
             <div class="item-text-wrap" style="float: right; width: 100%;" ng-if=!checkable>
               <span class="right">{{formatDateLocale(message.date)}}</span>
               {{getRealName(message.from, message.displayNames)}}
-              <i class="attachicon-" ng-show="message.attachments.length != 0"></i>
+              <i class="attachicon-" ng-show="message.hasAttachment"></i>
               <h3>{{message.subject}}</h3>
             </div>
           </div>
@@ -46,14 +46,14 @@
             <div  class="item-text-wrap" style="float: right; width: 90%;" ng-if=checkable>
               <span class="right">{{formatDateLocale(message.date)}}</span>
               {{getRealName(message.from, message.displayNames)}}
-              <i class="attachicon-" ng-show="message.attachments.length != 0"></i>
+              <i class="attachicon-" ng-show="message.hasAttachment"></i>
               <h3>{{message.subject}}</h3>
             </div>
 
             <div class="item-text-wrap" style="float: right; width: 100%;" ng-if=!checkable>
               <span class="right">{{formatDateLocale(message.date)}}</span>
               {{getRealName(message.from, message.displayNames)}}
-              <i class="attachicon-" ng-show="message.attachments.length != 0"></i>
+              <i class="attachicon-" ng-show="message.hasAttachment"></i>
               <h3>{{message.subject}}</h3>
             </div>
 
