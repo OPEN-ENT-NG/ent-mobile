@@ -877,7 +877,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
 
           scope.data = scope.data.replace(/<a href="([\/\w\d-]+)"><div class="download"><\/div>(\S+)<\/a>/g, '<a ng-click="downloadFile({fileName: \'$2\', urlFile: \'' + domainENT + '$1\'})"><div class="download"><\/div>$2<\/a>');
           scope.data = scope.data.replace(/<img src="(\/[\S]+)"/g, "<img http-src=\"" + domainENT + "$1\" ");
-
+          scope.data = scope.data.replace(/<img src="(http(s?):\/\/[\S]+)"/g, '<img http-src="$1"');
           scope.data = $sce.trustAsHtml(scope.data);
           element.html(scope.data);
           $compile(element)(scope);
