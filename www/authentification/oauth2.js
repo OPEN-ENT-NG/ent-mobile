@@ -49,32 +49,7 @@ angular.module('ent.oauth2', [])
 
     $ionicPlatform.ready(function () {
       $rootScope.navigator = navigator;
-      CheckRememberMe();
     });
-
-    function CheckRememberMe() {
-      var tmpRemMe = localStorage.getItem("RememberMe");
-      if (tmpRemMe != null) {
-          $scope.rememberMe = !!tmpRemMe;
-      } else {
-        localStorage.setItem("RememberMe", "false");
-        $scope.rememberMe = false;
-      }
-      if ($scope.rememberMe == true && localStorage.getItem("refresh") != null) {
-        OAuthService.doAuthent({refreshToken: localStorage.getItem("refresh").toString()})
-          .then(function (response) {
-            $scope.wrongLogin = false;
-            localStorage.setItem('access_token', response.access);
-            $state.go('app.actualites');
-          }, function errorCallback() {
-            $scope.rememberMe = false;
-            localStorage.setItem("RememberMe", "false");
-            navigator.splashscreen.hide();
-          })
-      } else {
-        navigator.splashscreen.hide();
-      }
-    }
 
     $scope.doLogin= function(user){
       OAuthService.doAuthent({username: user.username, password: user.password}).
