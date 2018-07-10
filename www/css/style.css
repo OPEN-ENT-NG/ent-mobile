@@ -352,3 +352,9 @@ color: #FFF;
 .firstco .disabled {
   background-color: lightgray;
 }
+
+.popup-buttons button {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
