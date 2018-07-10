@@ -435,6 +435,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
         case 'conversation': {
           $rootScope.notification.state = "app.message_detail";
           $rootScope.notification.id = params.messageUri.split("/").pop();
+          $rootScope.nameFolder = 'inbox';
           $state.go("app.message_detail", {
             nameFolder: 'INBOX',
             idMessage: $rootScope.notification.id
