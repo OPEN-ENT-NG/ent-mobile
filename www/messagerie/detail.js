@@ -20,7 +20,7 @@ angular.module('ent.message_detail', ['ent.message_services', 'ent.messagerie'])
   }
 
   $scope.isInbox =  function(){
-    return "inbox" === $rootScope.nameFolder;
+    return ['outbox', 'draft', 'trash'].indexOf($rootScope.nameFolder) === -1;
   }
 
   $scope.isTrash =  function(){
