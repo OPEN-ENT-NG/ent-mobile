@@ -13,7 +13,9 @@ angular.module('ent.user', ['ent.request'])
     };
 
     this.getCurrentUser = function () {
-      return RequestService.get(domainENT+'/auth/oauth2/userinfo', {'headers' : {'Accept' : 'version=2.1'}});
+
+        $http.defaults.headers.common['Accept'] = 'version=2.1';
+        return RequestService.get(domainENT+'/auth/oauth2/userinfo');
     };
 
     this.getTranslation = function () {
@@ -48,21 +50,22 @@ angular.module('ent.user', ['ent.request'])
     };
   })
 
-  .controller('UserCtrl', function(UserFactory, TranslationService, $scope, $rootScope){
+  .controller('UserCtrl', function(UserFactory, TranslationService, $scope, $rootScope, $http){
 
     getUser();
     TranslationService.getAllTraductions();
 
     function getUser(){
       UserFactory.getCurrentUser().then(function(res){
+        $http.defaults.headers.common['Accept'] = 'application/json;charset=UTF-8';
         UserFactory.whoAmI(res.data.userId).then(function(response) {
+          console.log(response);
           $rootScope.myUser = response.data.result[0];
           $rootScope.myUser.groupsIds = res.data.groupsIds;
           $rootScope.myUser.photo = setProfileImage($scope.myUser.photo, res.data.userId);
           $rootScope.myUser.userType = $rootScope.myUser.type[0];
           $rootScope.myUser.type = "directory."+$rootScope.myUser.type[0];
           $rootScope.myUser.translatedType = TranslationService.getTraduction($rootScope.myUser.type);
-          console.log($rootScope.myUser);
         })
       }, function errorCallback(response) {
         $scope.showAlertError();
