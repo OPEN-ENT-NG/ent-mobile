@@ -48,7 +48,7 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
         $scope.email.destinatairesTo = $rootScope.historyMail.to;
         $scope.email.destinatairesCc = $rootScope.historyMail.cc;
         $scope.email.sujet = $rootScope.historyMail.subject;
-        $scope.email.newMessage= $rootScope.historyMail.body.replace(/\<br\/\>/g, "\n");
+        $scope.email.newMessage= $rootScope.historyMail.body.toString().replace(/\<br\/\>/g, "\n");
         $scope.email.id = $rootScope.historyMail.id;
         $scope.email.attachments = $rootScope.historyMail.attachments;
         break;
