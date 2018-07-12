@@ -63,6 +63,14 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
     console.log($scope.email);
   });
 
+  function generateUUID()
+  {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+      var r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  }
+
   function getContacts () {
     $ionicLoading.show({
       template: '<ion-spinner icon="android"/>'
@@ -127,14 +135,14 @@ angular.module('ent.new_message', ['ent.message_services', 'monospaced.elastic']
                 $ionicLoading.show({
                   template: '<ion-spinner icon="android"/>'
                 });
-                if ($rootScope.historyMail.action == "REPLY_ONE")
-                {
+                if ($rootScope.historyMail.action == "REPLY_ONE" || $rootScope.historyMail.action == "FORWARD") {
                   MessagerieServices.sendReplyOne(getMailData()).then(function (resp) {
                     console.log("Reply One Success");
                     $ionicLoading.hide();
                     $state.go("app.messagerie");
                   });
-                } else {
+                }
+                 else {
                   MessagerieServices.sendMail(getMailData()).then(function (resp) {
                     console.log("Message Success");
                     $ionicLoading.hide();
