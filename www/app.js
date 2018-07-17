@@ -8,8 +8,9 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
-    RequestService.setDefaultHeaders()
-
+    RequestService.setDefaultHeaders();
+    //window.FirebasePlugin.setBadgeNumber(0);
+    cordova.plugins.notification.badge.clear();
     if (window.cordova && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
       cordova.plugins.Keyboard.disableScroll(true);
@@ -136,6 +137,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   })
   .state('app.new_message', {
     url: '/new_message',
+    cache: false,
     views: {
       'menuContent': {
         templateUrl: 'messagerie/new_message.html',
@@ -412,12 +414,17 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   });
 
   function manageNotification (data) {
+    //window.FirebasePlugin.getBadgeNumber(function(n) {
+    //  window.FirebasePlugin.setBadgeNumber(n - 1);
+    //});
+    //cordova.plugins.notification.badge.decrease(1, function (badge) {
+      // badge is now 9 (11 - 2)
+    //});
     if (data.params) {
       var params = JSON.parse(data.params);
       var module = (/\/([\w]+)\W?/g).exec(params.resourceUri)[1];
 
       $rootScope.notification = {};
-
       switch (module) {
         case 'blog': {
           $rootScope.notification.state = "app.blog";
@@ -456,9 +463,16 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
   }
 
   window.FirebasePlugin.onNotificationOpen(function (data) {
+    cordova.plugins.notification.badge.increase(1, function (badge) {
+      // badge is now 11 (10 + 1)
+    });
       if (data.tap) {
         manageNotification(data);
       } else {
+       // window.FirebasePlugin.getBadgeNumber(function(n) {
+       //   window.FirebasePlugin.setBadgeNumber(n + 1);
+       // });
+
         data.text = data.body;
         data.foreground = true;
         cordova.plugins.notification.local.schedule(data);
