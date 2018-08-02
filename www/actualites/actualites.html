@@ -4,7 +4,7 @@
   </ion-nav-buttons>
 
   <ion-content scroll="false">
-    <ion-scroll ng-if="(infos | filter:filterByThread).length>0" class="scroll" direction="y" has-bouncing="true"">
+    <ion-scroll ng-if="(infos | filter:filterByThread).length>0" class="scroll" direction="y" has-bouncing="true">
       <ion-refresher pulling-text="Actualiser" on-refresh="doRefreshInfos()">
       </ion-refresher>
 

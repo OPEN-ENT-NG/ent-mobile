@@ -1,6 +1,7 @@
 angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute','ent.actualites','ent.blog',
 'ent.blog-list','ent.oauth2', 'ent.messagerie','ent.workspace','ent.user','ent.pronotes', 'angularMoment',
-  'ent.test', 'ng-mfb', 'ui.router', 'angular.img', 'ent.request', 'ent.firstConnection', 'ent.firstConnectionService', 'ent.authLoader'])
+  'ent.test', 'ng-mfb', 'ui.router', 'ent.timeline', 'angular.img', 'ent.request', 'ent.firstConnection',
+  'ent.firstConnectionService', 'ent.authLoader', 'ent.profile'])
 
 
 .run(function($ionicPlatform, $ionicLoading, $rootScope,$cordovaGlobalization, $cordovaInAppBrowser, amMoment, RequestService) {
@@ -166,6 +167,16 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
     }
   })
 
+    .state('app.timeline', {
+      url: '/timeline',
+      views: {
+        'menuContent': {
+          templateUrl: 'timeline/timeline.html',
+          controller: "TimelineCtrl"
+        }
+      }
+    })
+
   .state('app.actualites', {
     url: '/actualites',
     views: {
@@ -285,6 +296,15 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
       }
     }
   })
+    .state('app.profile', {
+      url: '/profile',
+      views: {
+        'menuContent': {
+          controller: 'ProfileCtrl',
+          templateUrl: 'profile/profile.html'
+        }
+      }
+    })
 
 
   .state('app.test', {
@@ -327,12 +347,13 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
                                  PronoteService, BlogsService, WorkspaceService, $filter, $http, $ionicLoading, $q, $timeout,
                                  OAuthService){
 
+  $rootScope.showGridMenu = false;
+
   $ionicPlatform.ready(function () {
 
     $rootScope.filterThreads = [];
 
   $rootScope.listMenu =  [{'name':'Actualites','icon':'custom-newspaper newspapericon-', 'href':'#/app/actualites'},
-                          {'name':'Messagerie','icon':'custom-mail mailicon-', 'href':'#/app/messagerie/inbox/INBOX'},
                           {'name':'Blog','icon':'custom-bullhorn bullhornicon-', 'href':'#/app/blog-list'},
                           {'name':'Documents','icon':'custom-folder foldericon-', 'href':'#/app/workspace'}];
 
@@ -481,6 +502,64 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies','ngSanitize', 'ngRoute'
         })
       }
   });
+
+    $scope.homeButton = function() {
+      $state.go("app.timeline");
+    }
+
+    $scope.messageButton = function() {
+      $state.go("app.messagerie");
+    };
+
+    $scope.gridButton = function () {
+      $rootScope.showGridMenu = !$rootScope.showGridMenu;
+    };
+
+    $scope.actuButton = function () {
+      $state.go("app.actualites");
+      $rootScope.showGridMenu = !$rootScope.showGridMenu;
+    }
+
+    $scope.blogButton = function () {
+      $state.go("app.blog");
+      $rootScope.showGridMenu = !$rootScope.showGridMenu;
+    }
+
+    $scope.docuButton = function () {
+      $state.go("app.workspace");
+      $rootScope.showGridMenu = !$rootScope.showGridMenu;
+    }
+
+    $scope.pronoteButton = function () {
+      $state.go("app.pronote");
+      $rootScope.showGridMenu = !$rootScope.showGridMenu;
+    }
+
+    $scope.profileButton = function() {
+      $state.go("app.profile");
+    }
+
+    $scope.clickTimelineNotif = function(type, resource, params) {
+      console.log(type);
+      switch (type) {
+        case "MESSAGERIE":
+          $state.go("app.message_detail", {nameFolder: 'INBOX', idMessage: resource});
+          break;
+        case "NEWS":
+          $state.go("app.actualites");
+          break;
+        case "BLOG":
+          console.log(params.blogTitle);
+          console.log(params.blogUri.split("/").pop());
+          $state.go("app.blog", {nameBlog: params.blogTitle, idBlog: params.blogUri.split("/").pop()});
+          break;
+        case "WORKSPACE":
+          $state.go("app.workpace_folder_content", {nameWorkspaceFolder: 'shared'});
+          break;
+        default:
+          window.open(domainENT + '/auth/login?callBack=' + encodeURIComponent(domainENT + params.resourceUri), '_system');
+        }
+    }
 
   $scope.$watch(function () {
     return $ionicSideMenuDelegate.getOpenRatio();

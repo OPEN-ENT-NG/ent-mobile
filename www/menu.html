@@ -1,11 +1,12 @@
 <ion-side-menus enable-menu-with-back-views="false">
   <ion-side-menu-content>
     <ion-nav-bar class="bar-positive">
-      <ion-nav-back-button>
-      </ion-nav-back-button>
-      <ion-nav-buttons side="left">
-        <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
-        </button>
+      <!--<ion-nav-back-button>
+      </ion-nav-back-button>-->
+      <ion-nav-buttons side="right">
+
+        <!-- <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+         </button> -->
       </ion-nav-buttons>
     </ion-nav-bar>
     <ion-nav-view name="menuContent"></ion-nav-view>
@@ -20,7 +21,7 @@
       </div>
     </div>
 
-    <ion-content class="has-side-menu-header">
+   <!-- <ion-content class="has-side-menu-header">
       <div ng-repeat="menu in listMenu | orderBy:'name'">
         <ion-item menu-close href="{{menu.href}}">
           <i class="{{menu.icon}}" style="vertical-align:middle;display:inline-block;"></i>
@@ -30,13 +31,46 @@
       </div>
       <div class="item item-divider"></div>
       <ion-item menu-close ng-click="logout()">
+              <i class="officon-" ng-click="logout()"></i>
+
         <i class="officon-"></i>
         Déconnexion
       </ion-item>
-    </ion-content>
+    </ion-content> -->
 
     <ion-footer-bar class="bar-stable" >
       <small>{{appName}} v{{version}}</span></small>
     </ion-footer-bar>
   </ion-side-menu>
+  <ion-footer-bar align-title="left" class="bar-assertive menu-bar">
+    <div class="menu-button">
+      <i class="button icon-left ion-home" ng-click="homeButton()"></i>
+    </div>
+    <div class="menu-button">
+      <i class="button icon-left ion-chatbox" ng-click="messageButton()"></i>
+    </div>
+    <div class="menu-button">
+      <div class="menu-grid" ng-class="{ hidden: !showGridMenu }">
+
+        <div ng-repeat="menu in listMenu | orderBy:'name'">
+          <ion-item menu-close href="{{menu.href}}" ng-click="gridButton()">
+            <i class="{{menu.icon}}" style="vertical-align:middle;display:inline-block;"></i>
+            <h2 ng-if="menu.name!='Pronote'" style="vertical-align:middle;display:inline-block;">{{menu.name}}</h2>
+            <h2 ng-if="menu.name=='Pronote'" style="vertical-align:middle;display:inline-block;margin-left:40px;">{{menu.name}}</h2>
+            <!--<span class="badge badge-assertive" ng-if="menu.name==='Messagerie'" ng-show="badgeMessagerie!=0" >{{badgeMessagerie}}</span>-->
+          </ion-item>
+        </div>
+        <!--<li ng-click="actuButton()" class="menu-card"> <i class="icon-left ion-home"></i>Actualités</li>
+        <li ng-click="blogButton()" class="menu-card">Blog</li>
+        <li ng-click="docuButton()" class="menu-card">Espace documentaire</li>
+        <li ng-click="pronoteButton()" class="menu-card">Pronote</li>-->
+
+      </div>
+      <i class="button icon-left ion-grid" ng-click="gridButton()"></i>
+    </div>
+    <div class="menu-button">
+      <i class="button icon-left ion-person" ng-click="profileButton()"></i>
+    </div>
+  </ion-footer-bar>
 </ion-side-menus>
+

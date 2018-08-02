@@ -13,7 +13,7 @@ angular.module('ent.authLoader', ['ent.oauth2'])
             .then(function (response) {
               $scope.wrongLogin = false;
               localStorage.setItem('access_token', response.access);
-              $state.go('app.actualites');
+              $state.go('app.timeline');
             }, function errorCallback() {
               $scope.rememberMe = false;
               localStorage.setItem("RememberMe", "false");

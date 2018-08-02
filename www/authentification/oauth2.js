@@ -63,7 +63,7 @@ angular.module('ent.oauth2', [])
           localStorage.setItem('refresh', response.refresh);
           OAuthService.setFcmToken();
         }
-        $state.go('app.actualites');
+        $state.go('app.timeline');
       }, function errorCallback() {
         $scope.wrongLogin = true;
         $scope.rememberMe = false;
