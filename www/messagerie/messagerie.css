@@ -1,33 +1,34 @@
-.attachment{
+.attachment {
   width: 100%;
   height: auto;
 }
 
-.middle-attachment{
+.middle-attachment {
   position: relative;
   width: 80%;
   background-color: yellow;
   padding: 2%;
   vertical-align: middle;
 }
-.right-attachment{
+
+.right-attachment {
   width: 10%;
   position: relative;
-  text-align:center;
+  text-align: center;
   vertical-align: middle;
   background-color: red;
 }
 
-.left-attachment{
+.left-attachment {
   position: relative;
   width: 10%;
-  text-align:center;
+  text-align: center;
   vertical-align: middle;
   background-color: green;
 }
 
 .float-button {
-  background-color:#FF8500;
+  background-color: #FF8500;
   opacity: 0.9;
   color: white;
   border-radius: 50%;
@@ -36,7 +37,7 @@
   padding: 25px;
   font-size: 20px;
   position: fixed;
-  bottom: 5%; /* Adjust height */
+  bottom: 60px; /* Adjust height */
   right: 5%; /* Adjust position */
   z-index: 1000;
 }
@@ -57,25 +58,25 @@
   color: white;
 }
 
-.listeDestinataires{
+.listeDestinataires {
   padding-bottom: 2px;
 }
 
-.inputDestinataire{
+.inputDestinataire {
   width: 100%
 }
 
-.destinataireMessagerie{
+.destinataireMessagerie {
   display: inline-flex;
-  background-color:#4BAFD5;
+  background-color: #4BAFD5;
   margin-bottom: 5px;
 }
 
-.destinataireMessagerie i{
+.destinataireMessagerie i {
   margin: auto;
 }
 
-.destinataireMessagerie h2{
+.destinataireMessagerie h2 {
   color: white;
   margin: 5px
 }
@@ -86,30 +87,31 @@
 
 .header-mail span.ng-binding {
   /*font-size:14px;*/
-  color:CCC;
+  color: CCC;
 }
 
-.pj{
+.pj {
   margin: 5px;
 }
 
-.corpsMessage{
+.corpsMessage {
   border-bottom-style: hidden;
 }
 
-.unreadMessage{
-  font-weight:bold;
+.unreadMessage {
+  font-weight: bold;
 }
 
 .unreadMessage i {
   color: #CCC;
   float: right;
-  font-weight:bold;
+  font-weight: bold;
   font-size: 12px;
 }
+
 .unreadMessage h2.ng-binding {
   /*font-size:18px;*/
-  font-weight:bold;
+  font-weight: bold;
 }
 
 .message i {
@@ -117,8 +119,9 @@
   float: right;
   font-size: 12px;
 }
+
 .message h2.ng-binding {
-  font-size:18px;
+  font-size: 18px;
 }
 
 .right {
@@ -128,11 +131,11 @@
 }
 
 .item h3.ng-binding {
-  font-size:12px;
+  font-size: 12px;
   color: #CCC;
 }
 
-.ajoutPJ{
+.ajoutPJ {
   display: inline-flex;
   background-color: #F0F0F0;
   margin-bottom: 5px;
@@ -149,25 +152,25 @@
   margin: auto;
 }
 
-.logoAjoutPj{
+.logoAjoutPj {
   zoom: 90%;
   margin: auto;
   margin-right: 10px;
 }
 
-.borderBottomItemDismissed{
+.borderBottomItemDismissed {
   border-bottom-style: none;
 }
 
-.borderTopItemDismissed{
+.borderTopItemDismissed {
   border-top-style: none;
 }
 
-.writtingZone{
+.writtingZone {
   height: 10%;
 }
 
-.fillParent{
+.fillParent {
   width: 100% !important;
   height: 100% !important;
 }

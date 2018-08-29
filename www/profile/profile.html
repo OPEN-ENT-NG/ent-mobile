@@ -4,34 +4,75 @@
     <button class="button icon-right ion-log-out" ng-click="logout()"></button>
   </ion-nav-buttons>
   <ion-content scroll="false">
-    <ion-scroll class="scroll" direction="y" has-bouncing="true" >
+    <div class="profile">
+      <ion-tabs class="tabs-positive tabs-top">
+        <ion-tab title="Utilisateur">
+          <ion-scroll class="scroll" direction="y" has-bouncing="true">
+            <div>
+              <div style="display:table;margin-top:5px">
+                <img http-src="{{getImageUrl(myUser.photo)}}" class="profile-pic"/>
+                <h4 class="profile-title">{{myUser.displayName}}</h4>
+              </div>
+              <h2 class="profile-sub">Identifiant</h2>
+              <h2 class="profile-info">{{myUser.login}}</h2>
 
-      <div style="display:table;margin-top:5px">
-        <img http-src="{{getImageUrl(myUser.photo)}}" class="profile-pic"/>
-        <h4 class="profile-title">{{myUser.displayName}}</h4>
-      </div>
-      <h2 class="profile-sub">Identifiant</h2>
-      <h2 class="profile-info">{{myUser.login}}</h2>
+              <h2 class="profile-sub">Prénom</h2>
+              <h2 class="profile-info">{{user.data.firstName}}</h2>
 
-      <h2 class="profile-sub">Prénom</h2>
-      <h2 class="profile-info">{{user.data.firstName}}</h2>
+              <h2 class="profile-sub">Nom</h2>
+              <h2 class="profile-info">{{user.data.lastName}}</h2>
 
-      <h2 class="profile-sub">Nom</h2>
-      <h2 class="profile-info">{{user.data.lastName}}</h2>
+              <h2 class="profile-sub">Email</h2>
+              <h2 class="profile-info">{{user.data.email}}</h2>
 
-      <h2 class="profile-sub">Email</h2>
-      <h2 class="profile-info">{{user.data.email}}</h2>
+              <h2 class="profile-sub">Mobile</h2>
+              <h2 class="profile-info" ng-if="user.data.mobile">{{user.data.mobile}}</h2>
+              <h2 class="profile-info" ng-if="!user.data.mobile">-</h2>
 
-      <h2 class="profile-sub">Mobile</h2>
-      <h2 class="profile-info" ng-if="user.data.mobile">{{user.data.mobile}}</h2>
-      <h2 class="profile-info" ng-if="!user.data.mobile">-</h2>
+              <h2 class="profile-sub">Date de naissance</h2>
+              <h2 class="profile-info">{{birthdate}}</h2>
 
-      <h2 class="profile-sub">Date de naissance</h2>
-      <h2 class="profile-info"  >{{birthdate}}</h2>
-
-      <h2 class="profile-sub">Établissement</h2>
-      <h2 class="profile-info"  >{{user.data.structureNodes[0].name}}</h2>
-
-    </ion-scroll>
+              <h2 class="profile-sub">Établissement<span
+                ng-if="user.data.structureNodes.length > 1">s</span></h2>
+              <h2 class="profile-info" ng-repeat="structure in user.data.structureNodes">
+                {{ structure.name }}</h2>
+            </div>
+          </ion-scroll>
+        </ion-tab>
+        <ion-tab title="Notifications">
+          <ion-scroll class="scroll" direction="y" has-bouncing="true">
+            <div class="bottom-margin" style="width: 90%; margin-left: auto; margin-right: auto;">
+              <ul>
+                <li ng-repeat="appli in applis | orderBy:'translation'"
+                    ng-if="appli.notifications.length > 0">
+                  <h4>{{ appli.translation }}</h4>
+                  <ul class="actions-list">
+                    <li ng-repeat="action in appli.notifications" class="action">
+                      <label class="toggle" ng-init="preferences.config[action]['push-notif'] = preferences.config[action].hasOwnProperty('push-notif')
+                      ? preferences.config[action]['push-notif'] : appsMapped[action]['push-notif']">
+                        <input type="checkbox" ng-model="preferences.config[action]['push-notif']"
+                               ng-checked="preferences.config[action]['push-notif']">
+                        <div class="track">
+                          <div class="handle"></div>
+                        </div>
+                      </label>
+                      <div class="action-label">
+                        {{ translations[action] }}
+                      </div>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+              <div class="spinner-container">
+                <ion-spinner icon="android" ng-show="loader.preferences">&nbsp;</ion-spinner>
+              </div>
+              <button class="button" ng-hide="loader.preferences" ng-click="updatePreferences()">
+                Enregistrer
+              </button>
+            </div>
+          </ion-scroll>
+        </ion-tab>
+      </ion-tabs>
+    </div>
   </ion-content>
 </ion-view>
