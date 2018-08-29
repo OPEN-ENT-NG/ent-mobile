@@ -375,6 +375,7 @@ ion-popover-view.fit ion-content {
 .menu-bar > div.menu-button > i.button::before {
   width: 100%;
   text-align: center;
+  margin: 0 !important;
 }
 
 .menu-bar > div.menu-button > div.menu-grid {
