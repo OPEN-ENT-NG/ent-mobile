@@ -574,7 +574,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies', 'ngSanitize', 'ngRoute
       $scope.gridButton = function () {
         $rootScope.showGridMenu = !$rootScope.showGridMenu;
         $rootScope.locationPath = $rootScope.showGridMenu ? '/grid' : $location.$$path;
-        manageLocation();
+        manageLocation($rootScope.showGridMenu ? '/grid' : null);
       };
 
       $scope.actuButton = function () {
