@@ -352,9 +352,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies', 'ngSanitize', 'ngRoute
     $rootScope.locationPath = $state.current.url;
 
     function manageLocation(url) {
-      if (!url) {
-        return;
-      }
+      url = url || $state.current.url;
 
       switch (url) {
         case '/messagerie':
