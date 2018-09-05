@@ -609,6 +609,9 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies', 'ngSanitize', 'ngRoute
             $state.go("app.message_detail", {nameFolder: 'INBOX', idMessage: resource});
             break;
           case "NEWS":
+            $rootScope.notification = params;
+            $rootScope.notification.state = 'app.actualites';
+            $rootScope.notification.id = params.resourceUri.split("/").pop();
             $state.go("app.actualites");
             break;
           case "BLOG":
