@@ -612,8 +612,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies', 'ngSanitize', 'ngRoute
             $state.go("app.actualites");
             break;
           case "BLOG":
-            console.log(params.blogTitle);
-            console.log(params.blogUri.split("/").pop());
+            $rootScope.notificationParam = params;
             $state.go("app.blog", {
               nameBlog: params.blogTitle,
               idBlog: params.blogUri.split("/").pop()

@@ -1,17 +1,27 @@
 angular.module('ent.blog', ['ent.blog_service'])
 
 
-  .controller('BlogCtrl', function($scope, $ionicPopup, BlogsService, $stateParams, $ionicPopover, $rootScope, $filter, $ionicLoading){
+  .controller('BlogCtrl', function ($scope, $ionicPopup, BlogsService, $stateParams, $ionicPopover, $rootScope, $filter, $ionicLoading) {
+    function manageNotificationParam() {
+      if ($rootScope.notificationParam !== undefined) {
+        $stateParams._id = $rootScope.notificationParam.postUri.split("/").pop();
+        getPostsByBlogId($stateParams.idBlog);
+      }
+    }
 
+    manageNotificationParam();
+    $scope.$watch(function () {
+      return $rootScope.notificationParam
+    }, manageNotificationParam);
     delete $rootScope.notification;
     $scope.nameBlog = $stateParams.nameBlog;
     getPostsByBlogId($stateParams.idBlog);
 
-    $scope.getCountComments = function(post){
-      if(post.comments != null){
+    $scope.getCountComments = function (post) {
+      if (post.comments != null) {
         var size = post.comments.length;
-        var unite = size ==1 ? "Commentaire":"Commentaires";
-        return size+" "+unite;
+        var unite = size == 1 ? "Commentaire" : "Commentaires";
+        return size + " " + unite;
       }
     }
 
@@ -19,7 +29,7 @@ angular.module('ent.blog', ['ent.blog_service'])
     * if given group is the selected group, deselect it
     * else, select the given group
     */
-    $scope.toggleComments = function(post) {
+    $scope.toggleComments = function (post) {
       if ($scope.areCommentsShown(post)) {
         $scope.shownComments = null;
       } else {
@@ -27,7 +37,7 @@ angular.module('ent.blog', ['ent.blog_service'])
       }
     };
 
-    $scope.areCommentsShown = function(post) {
+    $scope.areCommentsShown = function (post) {
       return $scope.shownComments === post;
     };
 
@@ -62,7 +72,7 @@ angular.module('ent.blog', ['ent.blog_service'])
             $ionicLoading.show({
               template: '<ion-spinner icon="android"/>'
             });
-            BlogsService.commentPostById($stateParams.idBlog, post._id, res).then(function(result) {
+            BlogsService.commentPostById($stateParams.idBlog, post._id, res).then(function (result) {
               BlogsService.getPostCommentsById($stateParams.idBlog, post._id)
                 .then(function (res) {
                   post.comments = res.data;
@@ -98,15 +108,15 @@ angular.module('ent.blog', ['ent.blog_service'])
       return false;
     };
 
-    $scope.doRefreshPosts = function() {
+    $scope.doRefreshPosts = function () {
       $scope.posts.unshift(getPostsByBlogId($stateParams.idBlog));
 
       $scope.$broadcast('scroll.refreshComplete');
       $scope.$apply()
     }
 
-    $scope.getPostContent = function(post){
-      if(post.content !== undefined) {
+    $scope.getPostContent = function (post) {
+      if (post.content !== undefined) {
         post.content = undefined;
         return;
       }
@@ -114,7 +124,7 @@ angular.module('ent.blog', ['ent.blog_service'])
         template: '<ion-spinner icon="android"/>'
       });
       BlogsService.getPostContentById($stateParams.idBlog, post._id)
-        .then(function(res) {
+        .then(function (res) {
           post.content = res.data.content;
           BlogsService.getPostCommentsById($stateParams.idBlog, post._id)
             .then(function (res) {
@@ -130,26 +140,35 @@ angular.module('ent.blog', ['ent.blog_service'])
         });
     }
 
-    function getPostsByBlogId(id){
+    function getPostsByBlogId(id) {
       $ionicLoading.show({
         template: '<ion-spinner icon="android"/>'
       });
       $scope.posts = [];
 
-      BlogsService.getAllPostsByBlogId(id).then(function(res) {
+      BlogsService.getAllPostsByBlogId(id).then(function (res) {
         $scope.posts = res.data;
         console.log($scope.posts);
         $ionicLoading.hide();
-        if($scope.posts.length !== 0) {
-          BlogsService.getAuthors(id, $scope.posts).then(function(resAuthors) {
-            for(var i=0; i<$scope.posts.length; i++){
+        if ($stateParams._id) {
+          var post = res.data[0], i = 0;
+          while (post._id !== $stateParams._id && i <= res.data.length) {
+            post = res.data[i];
+            i++;
+          }
+          $scope.getPostContent(post);
+          delete $rootScope.notificationParam;
+        }
+        if ($scope.posts.length !== 0) {
+          BlogsService.getAuthors(id, $scope.posts).then(function (resAuthors) {
+            for (var i = 0; i < $scope.posts.length; i++) {
               $scope.posts[i].author.photo = setProfileImage(findElementById(resAuthors, $scope.posts[i].author.userId).photo, $scope.posts[i].author.userId);
             }
           });
         } else {
           $scope.noPost = true;
         }
-      }, function(){
+      }, function () {
         $ionicLoading.hide();
         $scope.noPost = true;
       });
