@@ -580,3 +580,8 @@ ion-popover-view.fit ion-content {
   font-weight: bold;
   margin-top: -5px;
 }
+
+.mfb-component--br {
+  right: 0;
+  bottom: 35px !important;
+}
