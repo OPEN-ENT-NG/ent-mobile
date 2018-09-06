@@ -625,7 +625,7 @@ angular.module('ent', ['ionic', 'ngCordova', 'ngCookies', 'ngSanitize', 'ngRoute
             $state.go("app.workpace_folder_content", {nameWorkspaceFolder: 'shared'});
             break;
           default:
-            window.open(domainENT + '/auth/login?callBack=' + encodeURIComponent(domainENT + params.resourceUri), '_system');
+            window.open(domainENT + '/auth/login?callBack=' + encodeURIComponent(domainENT + (params.resourceUri || params.uri)), '_system');
         }
       }
 
