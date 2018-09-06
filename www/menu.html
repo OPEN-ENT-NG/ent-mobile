@@ -1,8 +1,7 @@
-<ion-side-menus enable-menu-with-back-views="false">
+<ion-side-menus enable-menu-with-back-views="false" ng-controller="UserCtrl">
   <ion-side-menu-content>
     <ion-nav-bar class="bar-positive">
-      <ion-nav-back-button>
-      </ion-nav-back-button>
+      <ion-nav-back-button ng-show="displayBackButton()"></ion-nav-back-button>
       <ion-nav-buttons side="right">
 
         <!-- <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
@@ -12,16 +11,16 @@
     <ion-nav-view name="menuContent"></ion-nav-view>
   </ion-side-menu-content>
 
-  <ion-side-menu side="left" ng-controller="UserCtrl">
+  <!-- <ion-side-menu side="left" >
     <div class="bar bar-header bar-side-menu">
       <div class="item item-avatar">
         <img http-src="{{getImageUrl(myUser.photo)}}"/>
         <h2>{{myUser.displayName}}</h2>
         <h2>{{myUser.translatedType}}</h2>
       </div>
-    </div>
+    </div> -->
 
-    <!-- <ion-content class="has-side-menu-header">
+  <!-- <ion-content class="has-side-menu-header">
        <div ng-repeat="menu in listMenu | orderBy:'name'">
          <ion-item menu-close href="{{menu.href}}">
            <i class="{{menu.icon}}" style="vertical-align:middle;display:inline-block;"></i>
@@ -38,9 +37,9 @@
        </ion-item>
      </ion-content> -->
 
-    <ion-footer-bar class="bar-stable">
-      <small>{{appName}} v{{version}}</span></small>
-    </ion-footer-bar>
+  <ion-footer-bar class="bar-stable">
+    <small>{{appName}} v{{version}}</span></small>
+  </ion-footer-bar>
   </ion-side-menu>
   <ion-footer-bar align-title="left" class="bar-assertive menu-bar">
     <div class="menu-button" ng-class="{active : locationPath === '/timeline'}">
@@ -56,14 +55,11 @@
         <div class="arrow-down">▼</div>
         <div ng-repeat="menu in listMenu | orderBy:'name'" class="menu-grid-item grid-item">
           <ion-item menu-close href="{{menu.href}}" ng-click="gridButton()" class="menu-grid-item">
-            <i class="{{menu.icon}} menu-grid-item" ng-class="{pronote : menu.name === 'Pronote'}"
-               style="display:block;margin-bottom: 5px;"></i>
-            <div class="menu-grid-item"
-                 style="font-size: 10px; text-transform: uppercase; font-weight: bold; display: block; color: #2d98c0 !important;">
+            <i class="{{menu.icon}} menu-grid-item" ng-class="{pronote : menu.name === 'Pronote'}" style="display:block;margin-bottom: 5px;"></i>
+            <div class="menu-grid-item" style="font-size: 10px; text-transform: uppercase; font-weight: bold; display: block; color: #2d98c0 !important;">
               {{menu.name}}
             </div>
-            <span class="badge badge-assertive" ng-if="menu.name==='Messagerie'"
-                  ng-show="badgeMessagerie!=0">{{badgeMessagerie}}</span>
+            <span class="badge badge-assertive" ng-if="menu.name==='Messagerie'" ng-show="badgeMessagerie!=0">{{badgeMessagerie}}</span>
           </ion-item>
         </div>
         <!--<li ng-click="actuButton()" class="menu-card"> <i class="icon-left ion-home"></i>Actualités</li>
@@ -81,4 +77,3 @@
     </div>
   </ion-footer-bar>
 </ion-side-menus>
-
