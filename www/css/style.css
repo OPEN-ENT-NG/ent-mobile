@@ -108,18 +108,19 @@ ion-popover-view.fit ion-content {
 }
 
 .fondbleu {
-  background-image: -webkit-linear-gradient(top, #0084CA 70%, #0084CA 30%);
-  background-image: -moz-linear-gradient(top, #0084CA 70%, #0084CA 30%);
-  background-image: linear-gradient(top, #0084CA 70%, #0084CA 30%);
+  background-image: -webkit-linear-gradient(top, #0084ca 70%, #0084ca 30%);
+  background-image: -moz-linear-gradient(top, #0084ca 70%, #0084ca 30%);
+  background-image: linear-gradient(top, #0084ca 70%, #0084ca 30%);
 }
 
 .input-label {
-  color: #C4C4C4;
+  color: #c4c4c4;
 }
 
-.button-login, .button-firstco {
-  color: #FFF;
-  background-color: #FF8500;
+.button-login,
+.button-firstco {
+  color: #fff;
+  background-color: #ff8500;
   border-color: #b2b2b2;
   position: relative;
   display: inline-block;
@@ -143,14 +144,15 @@ ion-popover-view.fit ion-content {
   display: block;
   text-align: center;
   text-decoration: none;
-  color: #FFF;
+  color: #fff;
 }
 
 .button-login {
   margin-bottom: 10px;
 }
 
-.taillelogin, .firstco {
+.taillelogin,
+.firstco {
   margin: 0 2%;
   min-width: 52px;
   min-height: 47px;
@@ -198,7 +200,7 @@ ion-popover-view.fit ion-content {
   bottom: 0;
   left: 0;
   right: 0;
-  opacity: 0.001
+  opacity: 0.001;
 }
 
 .cardCenter {
@@ -227,8 +229,8 @@ ion-popover-view.fit ion-content {
 }
 
 .login-checkbox {
-  background-color: #0084CA !important;
-  border-color: #0084CA !important;
+  background-color: #0084ca !important;
+  border-color: #0084ca !important;
 }
 
 .version {
@@ -237,7 +239,7 @@ ion-popover-view.fit ion-content {
   margin: auto;
   text-align: center;
   color: lightgray;
-  bottom: 5px
+  bottom: 5px;
 }
 
 .blog-comment {
@@ -246,7 +248,8 @@ ion-popover-view.fit ion-content {
   white-space: normal !important;
 }
 
-.offline-message, .firstco-message {
+.offline-message,
+.firstco-message {
   width: 80%;
   left: 10%;
   position: fixed;
@@ -279,19 +282,25 @@ ion-popover-view.fit ion-content {
   opacity: 1;
 }
 
-.offline-message span, .firstco-message {
+.offline-message span,
+.firstco-message {
   line-height: normal;
 }
 
-.offline-message.online, .complexityLvl.strong, .firstco-message.success {
+.offline-message.online,
+.complexityLvl.strong,
+.firstco-message.success {
   background-color: #46bfaf;
 }
 
-.offline-message.offline, .complexityLvl.weak, .firstco-message.error {
+.offline-message.offline,
+.complexityLvl.weak,
+.firstco-message.error {
   background-color: #e13a3a;
 }
 
-.offline-message.attempting, .complexityLvl.moderate {
+.offline-message.attempting,
+.complexityLvl.moderate {
   background-color: #ecbe30;
 }
 
@@ -448,7 +457,7 @@ ion-popover-view.fit ion-content {
 }
 
 .profile-title {
-  color: #0084CA;
+  color: #0084ca;
   display: table-cell;
   vertical-align: middle;
 }
@@ -491,7 +500,7 @@ ion-popover-view.fit ion-content {
 }
 
 .profile .tabs-top > ion-scroll .scroll > div {
-  margin-top: 65px !important;
+  margin-top: 50px !important;
 }
 
 .profile .tabs-top > ion-scroll .scroll > div.bottom-margin {
@@ -499,14 +508,20 @@ ion-popover-view.fit ion-content {
 }
 
 .profile .actions-list {
-  padding: 0 20px;
+  padding: 0;
 }
 
-.profile .actions-list li > label.toggle {
+.profile .actions-list .item.item-divider h4 {
+  font-size: inherit !important;
+  padding: 10px 0 !important;
+  overflow: visible;
+}
+
+.profile .actions-list .item > label.toggle {
   display: table-cell;
 }
 
-.profile .actions-list li > .action-label {
+.profile .actions-list .item > .action-label {
   word-break: initial;
   word-wrap: break-word;
   width: calc(75% - 15px);
@@ -515,7 +530,25 @@ ion-popover-view.fit ion-content {
   padding-left: 15px;
 }
 
-.profile .action .toggle, .profile .action > span {
+.profile .actions-list .item.item-divider {
+  background-color: #fff;
+}
+
+.profile .actions-list .item.item-divider .fa-chevron-right {
+  color: #888;
+  float: right;
+}
+
+.profile .actions-list .item.item-divider .fa-chevron-right.rotate {
+  transform: rotate(90deg);
+}
+
+.profile .actions-list .notifications-list .item {
+  padding: 5px 16px !important;
+}
+
+.profile .action .toggle,
+.profile .action > span {
   display: inline-block;
 }
 
@@ -528,13 +561,13 @@ ion-popover-view.fit ion-content {
 
 .profile .button {
   background-color: #ff8500;
-  color: #FFFFFF;
+  color: #ffffff;
   text-transform: uppercase;
   width: 100%;
 }
 
 .profile .button:hover {
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
 .profile .spinner-container {
@@ -549,22 +582,30 @@ ion-popover-view.fit ion-content {
 .bar.bar-assertive {
   border-color: transparent !important;
   background-color: #ffffff !important;
-  background-image: linear-gradient(0deg, #ddd, #ddd 50%, transparent 50%) !important;
+  background-image: linear-gradient(
+    0deg,
+    #ddd,
+    #ddd 50%,
+    transparent 50%
+  ) !important;
   padding: 3px !important;
 }
 
-.bar-assertive .button, .bar-assertive .button.activated {
+.bar-assertive .button,
+.bar-assertive .button.activated {
   border-color: transparent !important;
   background-color: transparent !important;
   box-shadow: none !important;
 }
 
-.bar-assertive .button, .bar-footer .menu-button span.menu-button-text {
+.bar-assertive .button,
+.bar-footer .menu-button span.menu-button-text {
   color: #2d98c0 !important;
 }
 
-.bar-assertive .menu-button.active .button, .bar-footer .menu-button.active span.menu-button-text {
-  color: #FF8500 !important;
+.bar-assertive .menu-button.active .button,
+.bar-footer .menu-button.active span.menu-button-text {
+  color: #ff8500 !important;
 }
 
 .bar-footer {
