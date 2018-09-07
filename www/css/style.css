@@ -443,6 +443,17 @@ ion-popover-view.fit ion-content {
   margin-bottom: 5px;
 }
 
+.menu-bar .grid-item > ion-item.item > a i.pcn-link::before {
+  content: " ";
+  background-image: url(../img/pcn-badge.png);
+  background-size: 19px;
+  height: 25px;
+  display: block;
+  width: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
 .menu-bar .grid-item > ion-item.item > a i.pronote {
   font-size: 16px;
 }

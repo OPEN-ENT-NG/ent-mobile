@@ -473,6 +473,11 @@ angular
 
       $rootScope.listMenu = [
         {
+          name: "Accéder à l'ENT",
+          icon: "pcn-link",
+          href: domainENT
+        },
+        {
           name: "Actualites",
           icon: "custom-newspaper newspapericon-",
           href: "#/app/actualites"
