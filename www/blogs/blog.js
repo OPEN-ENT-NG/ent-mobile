@@ -1,7 +1,7 @@
 angular.module('ent.blog', ['ent.blog_service'])
 
 
-  .controller('BlogCtrl', function ($scope, $ionicPopup, BlogsService, $stateParams, $ionicPopover, $rootScope, $filter, $ionicLoading) {
+  .controller('BlogCtrl', function ($scope, $ionicPopup, $ionicPlatform, BlogsService, $stateParams, $ionicPopover, $rootScope, $filter, $ionicLoading) {
     function manageNotificationParam() {
       if ($rootScope.notificationParam !== undefined) {
         $stateParams._id = $rootScope.notificationParam.postUri.split("/").pop();
@@ -66,6 +66,10 @@ angular.module('ent.blog', ['ent.blog_service'])
             }
           ]
         });
+
+        $ionicPlatform.registerBackButtonAction(function (e) {
+          myPopup.close();
+        }, 1001);
 
         myPopup.then(function (res) {
           if (res) {
