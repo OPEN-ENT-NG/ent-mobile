@@ -1,6 +1,6 @@
 angular.module('ent.request', ['ent.workspace_service', 'ent'])
 
-  .service('RequestService', function($timeout, $http, $q, $state, $ionicLoading, $rootScope, $ionicPopup) {
+  .service('RequestService', function($timeout, $http, $q, $state, $ionicLoading) {
 
     // var timeout = $timeout(function () {
     //     $ionicPopup.show({

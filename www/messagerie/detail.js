@@ -52,16 +52,16 @@ angular.module('ent.message_detail', ['ent.message_services', 'ent.messagerie'])
     })
   }
 
-  $scope.moveMessage = function(id){
+  $scope.moveMessage = function(message){
     var popupMove = MoveMessagesPopupFactory.getPopup($scope);
     popupMove.then(function(res){
 
       $ionicLoading.show({
         template: '<ion-spinner icon="android"/>'
       });
-      console.log(res);
+
       if(res!=null){
-        MessagerieServices.moveMessage(id, res).then(function(){
+        MessagerieServices.moveMessages([message], res).then(function(){
           $ionicHistory.goBack();
         });
       }
@@ -73,14 +73,13 @@ angular.module('ent.message_detail', ['ent.message_services', 'ent.messagerie'])
     $ionicLoading.show({
       template: '<ion-spinner icon="android"/>'
     });
-    MessagerieServices.restoreSelectedMessages(message).then(function(){
+    MessagerieServices.restoreSelectedMessages([message]).then(function(){
       $ionicHistory.goBack();
     });
     $ionicLoading.hide();
   }
 
   $scope.editMail = function(action){
-    console.log("edit");
     $scope.closePopover();
     $scope.mail.action = action;
     $rootScope.historyMail = $scope.mail;

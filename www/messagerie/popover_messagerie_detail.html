@@ -11,13 +11,13 @@
       <a class="item" ng-show="!isDraft()"  ng-click=editMail('FORWARD')>{{translationConversation["transfer"]}}</a>
 
       <!-- déplacer -->
-      <a class="item"  ng-hide="isTrash()" ng-click=moveMessage(mail.id)>{{translationConversation["move.inside.folder"]}}</a>
+      <a class="item"  ng-hide="isTrash()" ng-click=moveMessage(mail)>{{translationConversation["move.inside.folder"]}}</a>
 
       <!-- supprimer -->
-      <a class="item"  ng-hide="isTrash()" ng-click=trash(mail.id)>{{translationConversation["delete"]}}</a>
+      <a class="item"  ng-hide="isTrash()" ng-click=trash(mail)>{{translationConversation["delete"]}}</a>
 
       <!-- restaurer -->
-      <a class="item" ng-show="isTrash()" ng-click="restoreMessage(mail.id)">{{translationConversation["restore"]}}</a>
+      <a class="item" ng-show="isTrash()" ng-click="restoreMessage(mail)">{{translationConversation["restore"]}}</a>
 
     </ion-list>
   </ion-content>

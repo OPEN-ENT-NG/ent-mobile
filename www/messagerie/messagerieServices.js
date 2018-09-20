@@ -50,56 +50,24 @@ angular.module('ent.message_services', ['ent.request'])
     }
 
     this.restoreSelectedMessages = function (arrayMessages) {
-      var promises = [];
-      var deferredCombinedItems = $q.defer();
-      var combinedItems = [];
+
+      var ids = [];
 
       angular.forEach(arrayMessages, function (item) {
-        var deferredItemList = $q.defer();
-        RequestService.put(domainENT + "/conversation/restore?id=" + item.id).then(function (resp) {
-          combinedItems = combinedItems.concat(resp.data);
-          deferredItemList.resolve();
-        });
-        promises.push(deferredItemList.promise);
+        ids.push(item.id);
       });
 
-      $q.all(promises).then(function () {
-        deferredCombinedItems.resolve(combinedItems);
-      });
-      return deferredCombinedItems.promise;
-    }
-
-    this.restoreMessage = function (id) {
-      return RequestService.put(domainENT + "/conversation/restore?id=" + id);
+      return RequestService.put(domainENT + "/conversation/restore", {"id": ids});
     }
 
     this.deleteSelectedMessages = function (arrayMessages, nameFolder) {
-      var promises = [];
-      var deferredCombinedItems = $q.defer();
-      var combinedItems = [];
+      var ids = [];
+
       angular.forEach(arrayMessages, function (item) {
-        var deferredItemList = $q.defer();
-        console.log(item);
-
-        if (nameFolder == "trash") {
-          RequestService.delete(domainENT + "/conversation/delete?id=" + item.id).then(function (resp) {
-            combinedItems = combinedItems.concat(resp.data);
-            deferredItemList.resolve();
-          });
-          promises.push(deferredItemList.promise);
-        } else {
-          RequestService.put(domainENT + "/conversation/trash?id=" + item.id).then(function (resp) {
-            combinedItems = combinedItems.concat(resp.data);
-            deferredItemList.resolve();
-          });
-          promises.push(deferredItemList.promise);
-        }
+        ids.push(item.id);
       });
 
-      $q.all(promises).then(function () {
-        deferredCombinedItems.resolve(combinedItems);
-      });
-      return deferredCombinedItems.promise;
+      return RequestService.put(domainENT + "/conversation/" + (nameFolder == "trash" ? "delete" : "trash"), {"id": ids});
     }
 
     this.getMessage = function (id) {
@@ -107,28 +75,13 @@ angular.module('ent.message_services', ['ent.request'])
     }
 
     this.moveMessages = function (messagesToMove, folderId) {
-      var promises = [];
-      var deferredCombinedItems = $q.defer();
-      var combinedItems = [];
+      var ids = [];
       angular.forEach(messagesToMove, function (message) {
-        var deferredItemList = $q.defer();
-        RequestService.put(domainENT + "/conversation/move/userfolder/" + folderId + "?id=" + message.id).then(function (resp) {
-          combinedItems = combinedItems.concat(resp.data);
-          deferredItemList.resolve();
-        });
-        promises.push(deferredItemList.promise);
+        ids.push(message.id);
       });
 
-      $q.all(promises).then(function () {
-        deferredCombinedItems.resolve(combinedItems);
-      });
-      return deferredCombinedItems.promise;
-    }
-
-    this.moveMessage = function (messageId, folderId) {
-      return RequestService.put(domainENT + "/conversation/move/userfolder/" + folderId + "?id=" + messageId);
-    }
-
+     return RequestService.put(domainENT + "/conversation/move/userfolder/" + folderId, {"id": ids});
+     }
     this.getContactsService = function () {
       return RequestService.get(domainENT + "/conversation/visible");
     }
