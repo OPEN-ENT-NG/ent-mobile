@@ -233,13 +233,21 @@ ion-popover-view.fit ion-content {
   border-color: #0084ca !important;
 }
 
-.version {
-  position: absolute;
-  width: 100%;
-  margin: auto;
-  text-align: center;
-  color: lightgray;
-  bottom: 5px;
+@media screen and (max-height: 600px)
+{
+  .version {
+    display: none
+  }}
+
+@media screen and (min-height: 600px) {
+  .version {
+    position: absolute;
+    width: 100%;
+    margin: auto;
+    text-align: center;
+    color: lightgray;
+    bottom: 5px;
+  }
 }
 
 .blog-comment {
