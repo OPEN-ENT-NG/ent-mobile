@@ -9,7 +9,7 @@ angular.module('ent.pronotes_service', ['ent.request'])
         if (!!resp && !!resp.data && !!resp.data.apps) {
 
           for (var i = 0; i < resp.data.apps.length; i++) {
-            if (resp.data.apps[i].name.indexOf("Pronote") > -1) {
+            if (resp.data.apps[i].name.toUpperCase().indexOf("PRONOTE") > -1 || resp.data.apps[i].displayName.toUpperCase().indexOf("PRONOTE") > -1) {
               pronotes.push({
                 name: resp.data.apps[i].displayName,
                 address: domainENT + "/cas/oauth/login?service=" + encodeURIComponent(resp.data.apps[i].address)
