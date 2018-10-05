@@ -1,6 +1,9 @@
 {
   "name": "Paris Classe Numerique",
-  "app_id": "",
+  "integrations": {
+    "cordova": {},
+    "gulp": {}
+  },
   "gulpStartupTasks": [
     "sass",
     "watch"
@@ -9,9 +12,5 @@
     "www/**/*",
     "!www/lib/**/*"
   ],
-  "type": "ionic1",
-  "integrations": {
-    "cordova": {},
-    "gulp": {}
-  }
+  "type": "ionic1"
 }

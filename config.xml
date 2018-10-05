@@ -1,125 +1,128 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget android-packageName="fr.openent.mdp.alpha" ios-CFBundleIdentifier="fr.openent"
-        version="0.4.0" xmlns="http://www.w3.org/ns/widgets"
-        xmlns:cdv="http://cordova.apache.org/ns/1.0">
-  <name>Paris Classe Numérique</name>
-  <description>
+<widget android-packageName="fr.openent.mdp.alpha" ios-CFBundleIdentifier="fr.openent" version="0.4.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>Paris Classe Numérique</name>
+    <description>
     Application Mobile OpenENT pour la mairie de Paris
   </description>
-  <author email="simon.ledunois@cgi.com">
+    <author email="simon.ledunois@cgi.com">
     CGI
   </author>
-  <content src="index.html"/>
-  <access origin="*"/>
-  <allow-intent href="http://*/*"/>
-  <allow-intent href="https://*/*"/>
-  <preference name="Orientation" value="portrait"/>
-  <preference name="StatusBarOverlaysWebView" value="false"/>
-  <preference name="StatusBarStyle" value="lightcontent"/>
-  <preference name="StatusBarBackgroundColor" value="#0084CA"/>
-  <preference name="DisallowOverscroll" value="true"/>
-  <preference name="BackupWebStorage" value="none"/>
-  <preference name="SplashMaintainAspectRatio" value="true"/>
-  <preference name="FadeSplashScreenDuration" value="300"/>
-  <preference name="SplashShowOnlyFirstTime" value="false"/>
-  <preference name="SplashScreen" value="screen"/>
-  <preference name="AutoHideSplashScreen" value="false"/>
-  <preference name="ShowSplashScreenSpinner" value="false"/>
-  <preference name="iosPersistentFileLocation" value="Compatibility"/>
-  <preference name="AndroidPersistentFileLocation" value="Compatibility"/>
-  <platform name="android">
-    <allow-intent href="market:*"/>
-    <icon density="ldpi" src="resources/android/icon/drawable-ldpi-icon.png"/>
-    <icon density="mdpi" src="resources/android/icon/drawable-mdpi-icon.png"/>
-    <icon density="hdpi" src="resources/android/icon/drawable-hdpi-icon.png"/>
-    <icon density="xhdpi" src="resources/android/icon/drawable-xhdpi-icon.png"/>
-    <icon density="xxhdpi" src="resources/android/icon/drawable-xxhdpi-icon.png"/>
-    <icon density="xxxhdpi" src="resources/android/icon/drawable-xxxhdpi-icon.png"/>
-    <icon density="ldpi" src="resources/android/icon/drawable-ldpi-fcm_push_icon.png"/>
-    <icon density="mdpi" src="resources/android/icon/drawable-mdpi-fcm_push_icon.png"/>
-    <icon density="hdpi" src="resources/android/icon/drawable-hdpi-fcm_push_icon.png"/>
-    <icon density="xhdpi" src="resources/android/icon/drawable-xhdpi-fcm_push_icon.png"/>
-    <icon density="xxhdpi" src="resources/android/icon/drawable-xxhdpi-fcm_push_icon.png"/>
-    <icon density="xxxhdpi" src="resources/android/icon/drawable-xxxhdpi-fcm_push_icon.png"/>
-    <splash density="land-ldpi" src="resources/android/splash/drawable-land-ldpi-screen.png"/>
-    <splash density="land-mdpi" src="resources/android/splash/drawable-land-mdpi-screen.png"/>
-    <splash density="land-hdpi" src="resources/android/splash/drawable-land-hdpi-screen.png"/>
-    <splash density="land-xhdpi" src="resources/android/splash/drawable-land-xhdpi-screen.png"/>
-    <splash density="land-xxhdpi" src="resources/android/splash/drawable-land-xxhdpi-screen.png"/>
-    <splash density="land-xxxhdpi" src="resources/android/splash/drawable-land-xxxhdpi-screen.png"/>
-    <splash density="port-ldpi" src="resources/android/splash/drawable-port-ldpi-screen.png"/>
-    <splash density="port-mdpi" src="resources/android/splash/drawable-port-mdpi-screen.png"/>
-    <splash density="port-hdpi" src="resources/android/splash/drawable-port-hdpi-screen.png"/>
-    <splash density="port-xhdpi" src="resources/android/splash/drawable-port-xhdpi-screen.png"/>
-    <splash density="port-xxhdpi" src="resources/android/splash/drawable-port-xxhdpi-screen.png"/>
-    <splash density="port-xxxhdpi" src="resources/android/splash/drawable-port-xxxhdpi-screen.png"/>
-    <config-file parent="/manifest" target="AndroidManifest.xml"
-                 xmlns:android="http://schemas.android.com/apk/res/android">
-      <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
-    </config-file>
-    <config-file parent="./application/activity" target="AndroidManifest.xml"
-                 xmlns:android="http://schemas.android.com/apk/res/android">
-      <intent-filter>
-        <action android:name="android.intent.action.SEND"/>
-        <category android:name="android.intent.category.DEFAULT"/>
-        <category android:name="android.intent.category.BROWSABLE"/>
-        <data android:mimeType="*/*"/>
-      </intent-filter>
-    </config-file>
-    <preference name="AndroidLaunchMode" value="singleTask"/>
-  </platform>
-  <platform name="ios">
-    <allow-intent href="itms:*"/>
-    <allow-intent href="itms-apps:*"/>
-    <icon height="57" src="resources/ios/icon/icon.png" width="57"/>
-    <icon height="114" src="resources/ios/icon/icon@2x.png" width="114"/>
-    <icon height="40" src="resources/ios/icon/icon-40.png" width="40"/>
-    <icon height="80" src="resources/ios/icon/icon-40@2x.png" width="80"/>
-    <icon height="120" src="resources/ios/icon/icon-40@3x.png" width="120"/>
-    <icon height="50" src="resources/ios/icon/icon-50.png" width="50"/>
-    <icon height="100" src="resources/ios/icon/icon-50@2x.png" width="100"/>
-    <icon height="60" src="resources/ios/icon/icon-60.png" width="60"/>
-    <icon height="120" src="resources/ios/icon/icon-60@2x.png" width="120"/>
-    <icon height="180" src="resources/ios/icon/icon-60@3x.png" width="180"/>
-    <icon height="72" src="resources/ios/icon/icon-72.png" width="72"/>
-    <icon height="144" src="resources/ios/icon/icon-72@2x.png" width="144"/>
-    <icon height="76" src="resources/ios/icon/icon-76.png" width="76"/>
-    <icon height="152" src="resources/ios/icon/icon-76@2x.png" width="152"/>
-    <icon height="167" src="resources/ios/icon/icon-83.5@2x.png" width="167"/>
-    <icon height="29" src="resources/ios/icon/icon-small.png" width="29"/>
-    <icon height="58" src="resources/ios/icon/icon-small@2x.png" width="58"/>
-    <icon height="87" src="resources/ios/icon/icon-small@3x.png" width="87"/>
-    <icon height="1024" src="resources/ios/icon/icon-1024.png" width="1024"/>
-    <splash src="resources/ios/splash/Default@3x~universal~anyany.png"/>
-    <splash src="resources/ios/splash/Default@2x~universal~anyany.png"/>
-    <splash src="resources/ios/splash/Default@2x~universal~comany.png"/>
-    <splash src="resources/ios/splash/Default@2x~universal~comcom.png"/>
-    <splash src="resources/ios/splash/Default@3x~universal~anycom.png"/>
-    <splash src="resources/ios/splash/Default@3x~universal~comany.png"/>
-    <config-file mode="add" parent="ITSAppUsesNonExemptEncryption" target="*-Info.plist">
-      <false/>
-    </config-file>
-  </platform>
-  <plugin name="cordova-plugin-app-version" spec="^0.1.9"/>
-  <plugin name="cordova-plugin-file-opener2" spec="^2.0.19"/>
-  <plugin name="cordova-plugin-globalization" spec="^1.0.9"/>
-  <plugin name="cordova-plugin-splashscreen" spec="^3.2.2"/>
-  <plugin name="cordova-plugin-statusbar" spec="^2.1.3"/>
-  <plugin name="cordova-plugin-vibration" spec="^2.1.6"/>
-  <plugin name="cordova-plugin-whitelist" spec="^1.2.2"/>
-  <plugin name="cordova.plugins.diagnostic" spec="^3.1.7"/>
-  <plugin name="cordova-plugin-ionic-keyboard" spec="^2.1.2"/>
-  <plugin name="cordova-plugin-ionic-webview" spec="^1.2.1"/>
-  <plugin name="cordova-plugin-file-transfer" spec="^1.7.1"/>
-  <plugin name="cordova-plugin-inappbrowser" spec="^3.0.0"/>
-  <plugin name="cordova-plugin-file" spec="^6.0.1"/>
-  <plugin name="cordova-plugin-firebase" spec="^1.0.5"/>
-  <plugin name="cordova-plugin-local-notification" spec="^0.9.0-beta.2"/>
-  <plugin name="cordova-plugin-network-information" spec="~2.0.1"/>
-  <plugin name="com.bez4pieci.cookies"
-          spec="https://github.com/bez4pieci/Phonegap-Cookies-Plugin.git"/>
-  <plugin name="com.napolitano.cordova.plugin.intent"
-          spec="https://github.com/napolitano/cordova-plugin-intent"/>
-  <engine name="android" spec="~7.1.0"/>
-  <engine name="ios" spec="~4.5.4"/>
+    <content src="index.html" />
+    <access origin="*" />
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+    <preference name="Orientation" value="portrait" />
+    <preference name="StatusBarOverlaysWebView" value="false" />
+    <preference name="StatusBarStyle" value="lightcontent" />
+    <preference name="StatusBarBackgroundColor" value="#0084CA" />
+    <preference name="DisallowOverscroll" value="true" />
+    <preference name="BackupWebStorage" value="none" />
+    <preference name="SplashMaintainAspectRatio" value="true" />
+    <preference name="FadeSplashScreenDuration" value="300" />
+    <preference name="SplashShowOnlyFirstTime" value="false" />
+    <preference name="SplashScreen" value="screen" />
+    <preference name="AutoHideSplashScreen" value="false" />
+    <preference name="ShowSplashScreenSpinner" value="false" />
+    <preference name="iosPersistentFileLocation" value="Compatibility" />
+    <preference name="AndroidPersistentFileLocation" value="Compatibility" />
+    <platform name="android">
+        <allow-intent href="market:*" />
+        <icon density="ldpi" src="resources/android/icon/drawable-ldpi-icon.png" />
+        <icon density="mdpi" src="resources/android/icon/drawable-mdpi-icon.png" />
+        <icon density="hdpi" src="resources/android/icon/drawable-hdpi-icon.png" />
+        <icon density="xhdpi" src="resources/android/icon/drawable-xhdpi-icon.png" />
+        <icon density="xxhdpi" src="resources/android/icon/drawable-xxhdpi-icon.png" />
+        <icon density="xxxhdpi" src="resources/android/icon/drawable-xxxhdpi-icon.png" />
+        <icon density="ldpi" src="resources/android/icon/drawable-ldpi-fcm_push_icon.png" />
+        <icon density="mdpi" src="resources/android/icon/drawable-mdpi-fcm_push_icon.png" />
+        <icon density="hdpi" src="resources/android/icon/drawable-hdpi-fcm_push_icon.png" />
+        <icon density="xhdpi" src="resources/android/icon/drawable-xhdpi-fcm_push_icon.png" />
+        <icon density="xxhdpi" src="resources/android/icon/drawable-xxhdpi-fcm_push_icon.png" />
+        <icon density="xxxhdpi" src="resources/android/icon/drawable-xxxhdpi-fcm_push_icon.png" />
+        <splash density="land-ldpi" src="resources/android/splash/drawable-land-ldpi-screen.png" />
+        <splash density="land-mdpi" src="resources/android/splash/drawable-land-mdpi-screen.png" />
+        <splash density="land-hdpi" src="resources/android/splash/drawable-land-hdpi-screen.png" />
+        <splash density="land-xhdpi" src="resources/android/splash/drawable-land-xhdpi-screen.png" />
+        <splash density="land-xxhdpi" src="resources/android/splash/drawable-land-xxhdpi-screen.png" />
+        <splash density="land-xxxhdpi" src="resources/android/splash/drawable-land-xxxhdpi-screen.png" />
+        <splash density="port-ldpi" src="resources/android/splash/drawable-port-ldpi-screen.png" />
+        <splash density="port-mdpi" src="resources/android/splash/drawable-port-mdpi-screen.png" />
+        <splash density="port-hdpi" src="resources/android/splash/drawable-port-hdpi-screen.png" />
+        <splash density="port-xhdpi" src="resources/android/splash/drawable-port-xhdpi-screen.png" />
+        <splash density="port-xxhdpi" src="resources/android/splash/drawable-port-xxhdpi-screen.png" />
+        <splash density="port-xxxhdpi" src="resources/android/splash/drawable-port-xxxhdpi-screen.png" />
+        <config-file parent="/manifest" target="AndroidManifest.xml" xmlns:android="http://schemas.android.com/apk/res/android">
+            <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+        </config-file>
+        <config-file parent="./application/activity" target="AndroidManifest.xml" xmlns:android="http://schemas.android.com/apk/res/android">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:mimeType="*/*" />
+            </intent-filter>
+        </config-file>
+        <config-file parent="./application" target="AndroidManifest.xml" xmlns:android="http://schemas.android.com/apk/res/android">
+            <meta-data android:name="google_analytics_adid_collection_enabled" android:value="false" />
+        </config-file>
+        <preference name="AndroidLaunchMode" value="singleTask" />
+    </platform>
+    <platform name="ios">
+        <allow-intent href="itms:*" />
+        <allow-intent href="itms-apps:*" />
+        <icon height="57" src="resources/ios/icon/icon.png" width="57" />
+        <icon height="114" src="resources/ios/icon/icon@2x.png" width="114" />
+        <icon height="40" src="resources/ios/icon/icon-40.png" width="40" />
+        <icon height="80" src="resources/ios/icon/icon-40@2x.png" width="80" />
+        <icon height="120" src="resources/ios/icon/icon-40@3x.png" width="120" />
+        <icon height="50" src="resources/ios/icon/icon-50.png" width="50" />
+        <icon height="100" src="resources/ios/icon/icon-50@2x.png" width="100" />
+        <icon height="60" src="resources/ios/icon/icon-60.png" width="60" />
+        <icon height="120" src="resources/ios/icon/icon-60@2x.png" width="120" />
+        <icon height="180" src="resources/ios/icon/icon-60@3x.png" width="180" />
+        <icon height="72" src="resources/ios/icon/icon-72.png" width="72" />
+        <icon height="144" src="resources/ios/icon/icon-72@2x.png" width="144" />
+        <icon height="76" src="resources/ios/icon/icon-76.png" width="76" />
+        <icon height="152" src="resources/ios/icon/icon-76@2x.png" width="152" />
+        <icon height="167" src="resources/ios/icon/icon-83.5@2x.png" width="167" />
+        <icon height="29" src="resources/ios/icon/icon-small.png" width="29" />
+        <icon height="58" src="resources/ios/icon/icon-small@2x.png" width="58" />
+        <icon height="87" src="resources/ios/icon/icon-small@3x.png" width="87" />
+        <icon height="1024" src="resources/ios/icon/icon-1024.png" width="1024" />
+        <splash src="resources/ios/splash/Default@3x~universal~anyany.png" />
+        <splash src="resources/ios/splash/Default@2x~universal~anyany.png" />
+        <splash src="resources/ios/splash/Default@2x~universal~comany.png" />
+        <splash src="resources/ios/splash/Default@2x~universal~comcom.png" />
+        <splash src="resources/ios/splash/Default@3x~universal~anycom.png" />
+        <splash src="resources/ios/splash/Default@3x~universal~comany.png" />
+        <config-file mode="add" parent="ITSAppUsesNonExemptEncryption" target="*-Info.plist">
+            <false />
+        </config-file>
+        <config-file mode="add" parent="firebase_analytics_collection_deactivated" target="*-Info.plist">
+            <true />
+        </config-file>
+        <config-file mode="add" parent="firebase_analytics_collection_deactivated" target="*-Info.plist">
+            <true />
+        </config-file>
+    </platform>
+    <plugin name="cordova-plugin-app-version" spec="^0.1.9" />
+    <plugin name="cordova-plugin-file-opener2" spec="^2.0.19" />
+    <plugin name="cordova-plugin-globalization" spec="^1.0.9" />
+    <plugin name="cordova-plugin-splashscreen" spec="^3.2.2" />
+    <plugin name="cordova-plugin-statusbar" spec="^2.1.3" />
+    <plugin name="cordova-plugin-vibration" spec="^2.1.6" />
+    <plugin name="cordova-plugin-whitelist" spec="^1.2.2" />
+    <plugin name="cordova.plugins.diagnostic" spec="^3.1.7" />
+    <plugin name="cordova-plugin-ionic-keyboard" spec="^2.1.2" />
+    <plugin name="cordova-plugin-ionic-webview" spec="^1.2.1" />
+    <plugin name="cordova-plugin-file-transfer" spec="^1.7.1" />
+    <plugin name="cordova-plugin-inappbrowser" spec="^3.0.0" />
+    <plugin name="cordova-plugin-file" spec="^6.0.1" />
+    <plugin name="cordova-plugin-firebase" spec="^1.0.5" />
+    <plugin name="cordova-plugin-local-notification" spec="^0.9.0-beta.2" />
+    <plugin name="cordova-plugin-network-information" spec="~2.0.1" />
+    <plugin name="com.bez4pieci.cookies" spec="https://github.com/bez4pieci/Phonegap-Cookies-Plugin.git" />
+    <plugin name="com.napolitano.cordova.plugin.intent" spec="https://github.com/napolitano/cordova-plugin-intent" />
+    <engine name="android" spec="7.1.1" />
+    <engine name="ios" spec="4.5.4" />
 </widget>
