@@ -106,6 +106,16 @@ angular
       window.requestFileSystem =
         window.requestFileSystem || window.webkitRequestFileSystem;
       window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFS, fail);
+
+      $rootScope.$on("$cordovaNetwork:offline", function() {
+        console.log("offline");
+        $rootScope.status = "offline";
+      });
+
+      $rootScope.$on("$cordovaNetwork:online", function() {
+        console.log("online");
+        $rootScope.status = $rootScope.status == undefined ? null : "online";
+      });
     });
   })
 
@@ -1281,35 +1291,19 @@ angular
       restrict: "E",
       transclude: true,
       template:
-        '<div class="offline-message {{status}}" ng-if="status">' +
+        '<div class="offline-message {{status}}" ng-if="status && message">' +
         "<i class='fa fa-plug plug' ng-class='{\"fadeinout\" : status == \"attempting\"}' ng-if=\"status != 'offline'\"></i>" +
-        "<span>{{getMessage(status)}}</span>" +
+        "<span>{{message}}</span>" +
         "</div>",
-
       controller: [
         "$scope",
-        function($scope) {
-          document.addEventListener("offline", function() {
-            $scope.status = "offline";
-            setTimeout(function() {
-              if ($scope.status) {
-                $scope.status = "attempting";
-                $scope.$apply();
-              }
-            }, 3000);
-          });
+        "$rootScope",
+        "$cordovaNetwork",
+        "$timeout",
+        function($scope, $rootScope, $cordovaNetwork, $timeout) {
+          $rootScope.message = "";
 
-          document.addEventListener("online", function() {
-            if ($scope.status == "attempting") {
-              $scope.status = "online";
-              setTimeout(function() {
-                delete $scope.status;
-                $scope.$apply();
-              }, 1000);
-            }
-          });
-
-          $scope.getMessage = function(status) {
+          getMessage = function(status) {
             switch (status) {
               case "offline":
                 return "Pas de connexion";
@@ -1317,8 +1311,31 @@ angular
                 return "Tentative de connexion";
               case "online":
                 return "Connecté";
+              default: {
+                return null;
+              }
             }
           };
+
+          checkStatus = function() {
+            if ($cordovaNetwork.getNetwork() == "none") {
+              return "attempting";
+            } else {
+              return null;
+            }
+          };
+
+          $rootScope.$watch("status", function(val) {
+            $timeout(function() {
+              $scope.message = getMessage(val);
+            });
+          });
+
+          setInterval(function() {
+            $timeout(function() {
+              $rootScope.status = checkStatus();
+            });
+          }, 5000);
         }
       ]
     };
