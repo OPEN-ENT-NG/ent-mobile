@@ -20,7 +20,7 @@
             <ion-card-content ng-if="post.content != undefined" class="item actucard">
 
               <div class="item-text-wrap htmlEntContent">
-                <render-html err='showAlertError' data="post.content" open-fct="openLocalFile(path, type)">
+                <render-html err='showAlertError' data="post.content"  open-url="openUrl" download-file="downloadFile(fileName, urlFile)">
                 </render-html>
               </div>
 

@@ -1255,13 +1255,13 @@ angular
       scope: {
         data: "=",
         downloadFile: "&",
-        openUrl: "&"
+        openUrl: "="
       },
       link: function(scope, element) {
         if (scope.data != null) {
           scope.data = scope.data.replace(
-            /href="(https?:\/\/.+)\/"/g,
-            "ng-click=\"openUrl({url: '$1'})\""
+            /href=(["'])(.*?)\1/g,
+            "ng-click=\"openUrl('$2')\""
           );
 
           scope.data = scope.data.replace(
