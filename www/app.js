@@ -400,7 +400,7 @@ angular
     $state,
     $ionicPlatform,
     $ionicSideMenuDelegate,
-    $cordovaFileTransfer,
+    $cordovaFile,
     $cordovaFileOpener2,
     domainENT,
     $ionicHistory,
@@ -828,72 +828,62 @@ angular
       }, 1000);
     });
 
-    $scope.downloadFile = function(fileName, urlFile) {
-      // Save location
-      // var url = $sce.trustAsResourceUrl(urlFile)
-      // var targetPath = cordova.file.externalRootDirectory + 'Download/' + filename;
-      //$cordovaProgress.showSimpleWithLabelDetail(true, 'Téléchargement en cours (Bouton retour pour quitter)', filename)
-
+    $scope.downloadFile = function(fileName, urlFile, contentType) {
       $ionicLoading.show({
         template: '<ion-spinner icon="android"/>'
       });
+      var filePath = ionic.Platform.isIOS()
+        ? cordova.file.dataDirectory
+        : cordova.file.externalRootDirectory + "Download/";
 
-      var config = {
-        method: "GET",
-        url: $sce.trustAsResourceUrl(urlFile),
-        responseType: "arraybuffer",
-        cache: true
+      var checkFile = function(successCallback, failCallback) {
+        $cordovaFile
+          .checkFile(filePath, fileName)
+          .then(function(entry) {
+            entry.file(function(data) {
+              if (data.type == contentType) {
+                successCallback();
+              } else {
+                failCallback();
+              }
+            });
+          })
+          .catch(failCallback);
       };
 
-      $http(config).then(
-        function(result) {
-          var MIMEType = result.headers("content-type").split(";")[0];
-          var filePath = ionic.Platform.isIOS()
-            ? cordova.file.dataDirectory
-            : cordova.file.externalRootDirectory + "Download/";
+      var openFile = function() {
+        $scope.openLocalFile(filePath + fileName, contentType);
+        $ionicLoading.hide();
+      };
 
-          window.resolveLocalFileSystemURL(
-            filePath,
-            function(fs) {
-              fs.getFile(
+      var failure = function(err) {
+        $scope.showAlertError(err);
+        $ionicLoading.hide();
+      };
+
+      var downloadFile = function() {
+        var config = {
+          method: "GET",
+          url: $sce.getTrustedResourceUrl($sce.trustAsResourceUrl(urlFile)),
+          responseType: "arraybuffer",
+          cache: true
+        };
+
+        $http(config).then(function(result) {
+          if (result.status === 200) {
+            $cordovaFile
+              .writeFile(
+                filePath,
                 fileName,
-                { create: true, exclusive: false },
-                function(file) {
-                  file.createWriter(function(fileWriter) {
-                    fileWriter.onwriteend = function(f) {
-                      $scope.openLocalFile(file.nativeURL, MIMEType);
-                      $ionicLoading.hide();
-                    };
+                new Blob([new Uint8Array(result.data)], { type: contentType })
+              )
+              .then(openFile)
+              .catch(failure);
+          }
+        }, failure);
+      };
 
-                    fileWriter.onerror = function(err) {
-                      $scope.showAlertError(err);
-                      $ionicLoading.hide();
-                    };
-
-                    if (result) {
-                      fileWriter.write(
-                        new Blob([result.data], { type: MIMEType })
-                      );
-                    }
-                  });
-                },
-                function(err) {
-                  $scope.showAlertError(err);
-                  $ionicLoading.hide();
-                }
-              );
-            },
-            function(err) {
-              $scope.showAlertError(err);
-              $ionicLoading.hide();
-            }
-          );
-        },
-        function(err) {
-          $scope.showAlertError(err);
-          $ionicLoading.hide();
-        }
-      );
+      checkFile(openFile, downloadFile);
     };
 
     $scope.openUrl = function(url) {
