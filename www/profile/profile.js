@@ -35,7 +35,15 @@ angular
             _splitted_date[2]
           ).toLocaleDateString();
           ProfileService.getApplications().then(function(applications) {
-            $scope.apps = applications.data;
+            $scope.apps = [];
+            applications.data.forEach(notif => {
+              if (
+                notif.restriction !== "INTERNAL" &&
+                notif.restriction !== "HIDDEN"
+              ) {
+                $scope.apps.push(notif);
+              }
+            });
             ProfileService.getI18nNotifications().then(function(i18n) {
               $scope.translations = i18n.data;
               ProfileService.getPreferences().then(function(userAppConf) {
