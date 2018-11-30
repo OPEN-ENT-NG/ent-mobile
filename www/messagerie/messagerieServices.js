@@ -126,14 +126,16 @@ angular
     this.sendMail = function(mailData) {
       return RequestService.post(
         domainENT + "/conversation/send?id=" + mailData.id,
-        mailData
+        mailData,
+        { timeout: 10000 }
       );
     };
 
     this.sendReplyOne = function(mailData) {
       return RequestService.post(
         domainENT + "/conversation/send?In-Reply-To=" + mailData.id,
-        mailData
+        mailData,
+        { timeout: 10000 }
       );
     };
 
