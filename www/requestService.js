@@ -8,7 +8,7 @@ angular
     $state,
     $ionicLoading
   ) {
-    var timeout = 3000;
+    var timeout = 5000;
 
     function onError(reject, error) {
       $ionicLoading.hide();
@@ -26,9 +26,8 @@ angular
       }
     }
 
-    function getConfig(config) {
-      config = config || {};
-      config.timeout = timeout;
+    function getConfig(config = {}) {
+      config.timeout = config.timeout || timeout;
       config.headers = Object.assign(
         config.headers || {},
         $http.defaults.headers.common
