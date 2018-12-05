@@ -3,72 +3,105 @@
     <ion-nav-bar class="bar-positive">
       <ion-nav-back-button ng-show="displayBackButton()"></ion-nav-back-button>
       <ion-nav-buttons side="right">
-
-        <!-- <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
-         </button> -->
+        <!--
+          <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+          </button>
+        -->
       </ion-nav-buttons>
     </ion-nav-bar>
     <ion-nav-view name="menuContent"></ion-nav-view>
+
+    <ion-footer-bar class="bar-stable">
+      <small
+        ><span>{{ appName }} v{{ version }}</span></small
+      >
+    </ion-footer-bar>
   </ion-side-menu-content>
 
-  <!-- <ion-side-menu side="left" >
+  <!--
+    <ion-side-menu side="left" >
     <div class="bar bar-header bar-side-menu">
       <div class="item item-avatar">
         <img http-src="{{getImageUrl(myUser.photo)}}"/>
         <h2>{{myUser.displayName}}</h2>
         <h2>{{myUser.translatedType}}</h2>
       </div>
-    </div> -->
+    </div>
+  -->
 
-  <!-- <ion-content class="has-side-menu-header">
-       <div ng-repeat="menu in listMenu | orderBy:'name'">
-         <ion-item menu-close href="{{menu.href}}">
-           <i class="{{menu.icon}}" style="vertical-align:middle;display:inline-block;"></i>
-           <h2 ng-if="menu.name!='Pronote'" style="vertical-align:middle;display:inline-block;">{{menu.name}}</h2>
-           <span class="badge badge-assertive" ng-if="menu.name==='Messagerie'" ng-show="badgeMessagerie!=0" >{{badgeMessagerie}}</span>
-         </ion-item>
-       </div>
-       <div class="item item-divider"></div>
-       <ion-item menu-close ng-click="logout()">
-               <i class="officon-" ng-click="logout()"></i>
+  <!--
+    <ion-content class="has-side-menu-header">
+      <div ng-repeat="menu in listMenu | orderBy:'name'">
+        <ion-item menu-close href="{{menu.href}}">
+          <i class="{{menu.icon}}" style="vertical-align:middle;display:inline-block;"></i>
+          <h2 ng-if="menu.name!='Pronote'" style="vertical-align:middle;display:inline-block;">{{menu.name}}</h2>
+          <span class="badge badge-assertive" ng-if="menu.name==='Messagerie'" ng-show="badgeMessagerie!=0" >{{badgeMessagerie}}</span>
+        </ion-item>
+      </div>
+      <div class="item item-divider"></div>
+      <ion-item menu-close ng-click="logout()">
+              <i class="officon-" ng-click="logout()"></i>
 
-         <i class="officon-"></i>
-         Déconnexion
-       </ion-item>
-     </ion-content> -->
+        <i class="officon-"></i>
+        Déconnexion
+      </ion-item>
+    </ion-content>
+  -->
 
-  <ion-footer-bar class="bar-stable">
-    <small>{{appName}} v{{version}}</span></small>
-  </ion-footer-bar>
-  </ion-side-menu>
   <ion-footer-bar align-title="left" class="bar-assertive menu-bar">
     <div class="menu-button" ng-class="{active : locationPath === '/timeline'}">
       <i class="button icon-left ion-home" ng-click="homeButton()"></i>
       <span class="menu-button-text">Accueil</span>
     </div>
-    <div class="menu-button" ng-class="{active : locationPath === '/messagerie'}">
+    <div
+      class="menu-button"
+      ng-class="{active : locationPath === '/messagerie'}"
+    >
       <i class="button icon-left ion-chatbox" ng-click="messageButton()"></i>
       <span class="menu-button-text">Messagerie</span>
     </div>
-    <div class="menu-button apps-menu-button" ng-class="{active : locationPath === '/grid'}">
-      <div class="menu-grid menu-grid-item apps-menu-button" ng-class="{ hidden: !showGridMenu }">
+    <div
+      class="menu-button apps-menu-button"
+      ng-class="{active : locationPath === '/grid'}"
+    >
+      <div
+        class="menu-grid menu-grid-item apps-menu-button"
+        ng-class="{ hidden: !showGridMenu }"
+      >
         <div class="arrow-down">▼</div>
-        <div ng-repeat="menu in listMenu | orderBy:'name'" class="menu-grid-item grid-item">
-          <ion-item menu-close href="{{menu.href}}" ng-click="gridButton()" class="menu-grid-item">
-            <i class="{{menu.icon}} menu-grid-item" ng-class="{pronote : menu.name === 'Pronote'}" style="display:block;margin-bottom: 5px;"></i>
-            <div class="menu-grid-item" style="font-size: 10px; text-transform: uppercase; font-weight: bold; display: block; color: #2d98c0 !important;">
-              {{menu.name}}
-            </div>
-            <span class="badge badge-assertive" ng-if="menu.name==='Messagerie'" ng-show="badgeMessagerie!=0">{{badgeMessagerie}}</span>
+        <div class="grid">
+          <ion-item
+            menu-close
+            ng-repeat="menu in listMenu"
+            href="{{menu.href}}"
+            ng-click="gridButton()"
+            class="menu-grid-item grid-item"
+          >
+            <i
+              class="{{menu.icon}} menu-grid-item"
+              ng-class="{pronote : menu.name === 'Pronote'}"
+              style="display:block;margin-bottom: 5px;"
+            ></i>
+            <span class="menu-grid-item"> {{ menu.name }} </span>
+            <span
+              class="badge badge-assertive"
+              ng-if="menu.name==='Messagerie'"
+              ng-show="badgeMessagerie!=0"
+              >{{ badgeMessagerie }}</span
+            >
           </ion-item>
         </div>
-        <!--<li ng-click="actuButton()" class="menu-card"> <i class="icon-left ion-home"></i>Actualités</li>
-        <li ng-click="blogButton()" class="menu-card">Blog</li>
-        <li ng-click="docuButton()" class="menu-card">Espace documentaire</li>
-        <li ng-click="pronoteButton()" class="menu-card">Pronote</li>-->
-
+        <!--
+          <li ng-click="actuButton()" class="menu-card"> <i class="icon-left ion-home"></i>Actualités</li>
+          <li ng-click="blogButton()" class="menu-card">Blog</li>
+          <li ng-click="docuButton()" class="menu-card">Espace documentaire</li>
+          <li ng-click="pronoteButton()" class="menu-card">Pronote</li>
+        -->
       </div>
-      <i class="button icon-left ion-grid apps-menu-button" ng-click="gridButton()"></i>
+      <i
+        class="button icon-left ion-grid apps-menu-button"
+        ng-click="gridButton()"
+      ></i>
       <span class="menu-button-text apps-menu-button">Applications</span>
     </div>
     <div class="menu-button" ng-class="{active : locationPath === '/profile'}">

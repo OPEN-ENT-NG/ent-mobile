@@ -423,26 +423,32 @@ ion-popover-view.fit ion-content {
   display: none;
 }
 
-.menu-bar .grid-item {
-  display: inline-block;
-  width: 50%;
-  min-height: 60px;
+.menu-bar .grid {
+  display: flex;
+  flex-wrap: wrap;
 }
 
-.menu-bar .grid-item > ion-item.item {
+.menu-bar .grid-item {
+  display: inline-block;
+  min-width: 50%;
+  min-height: 60px;
+  flex: 1;
+}
+
+.menu-bar .grid-item {
   width: 100%;
   text-align: center;
   border: none;
 }
 
-.menu-bar .grid-item > ion-item.item > a {
+.menu-bar .grid-item > a {
   padding: 10px 0 !important;
   width: 100%;
   text-overflow: unset;
   min-height: 60px;
 }
 
-.menu-bar .grid-item > ion-item.item > a i {
+.menu-bar .grid-item > a i {
   vertical-align: middle;
   display: inline-block;
   width: 100%;
@@ -451,7 +457,16 @@ ion-popover-view.fit ion-content {
   margin-bottom: 5px;
 }
 
-.menu-bar .grid-item > ion-item.item > a i.pcn-link::before {
+.menu-bar .grid-item > a span {
+  font-size: 10px; 
+  text-transform: uppercase; 
+  font-weight: bold;
+   display: block; 
+   color: #2d98c0 !important;
+   white-space: initial;
+}
+
+.menu-bar .grid-item > a i.pcn-link::before {
   content: " ";
   background-image: url(../img/pcn-badge.png);
   background-size: 19px;
@@ -462,11 +477,11 @@ ion-popover-view.fit ion-content {
   background-position: center;
 }
 
-.menu-bar .grid-item > ion-item.item > a i.pronote {
+.menu-bar .grid-item > a i.pronote {
   font-size: 16px;
 }
 
-.menu-bar .grid-item > ion-item.item > a i::before {
+.menu-bar .grid-item > a i::before {
   width: 100%;
   text-align: center;
 }

@@ -483,11 +483,6 @@ angular
 
       $rootScope.listMenu = [
         {
-          name: "Accéder à l'ENT",
-          icon: "pcn-link",
-          href: domainENT
-        },
-        {
           name: "Actualites",
           icon: "custom-newspaper newspapericon-",
           href: "#/app/actualites"
@@ -501,12 +496,17 @@ angular
           name: "Documents",
           icon: "custom-folder foldericon-",
           href: "#/app/workspace"
+        },
+        {
+          name: "Accéder à l'ENT",
+          icon: "pcn-link",
+          href: domainENT
         }
       ];
 
       PronoteService.getAllAccounts().then(function(resp) {
         if (resp.length > 0) {
-          $rootScope.listMenu.push({
+          $rootScope.listMenu.unshift({
             name: "Pronote",
             icon: "custom-pronote pronote-1icon-",
             href: "#/app/listPronotes"
