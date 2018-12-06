@@ -122,7 +122,6 @@ angular
   .config(function(
     $stateProvider,
     $urlRouterProvider,
-    $routeProvider,
     $ionicConfigProvider,
     $httpProvider
   ) {
@@ -485,22 +484,25 @@ angular
         {
           name: "Actualites",
           icon: "custom-newspaper newspapericon-",
-          href: "#/app/actualites"
+          state: "app.actualites"
+          // href: "#/app/actualites"
         },
         {
           name: "Blog",
           icon: "custom-bullhorn bullhornicon-",
-          href: "#/app/blog-list"
+          state: "app.blog-list"
+          // href: "#/app/blog-list"
         },
         {
           name: "Documents",
           icon: "custom-folder foldericon-",
-          href: "#/app/workspace"
+          state: "app.workspace"
+          // href: "#/app/workspace"
         },
         {
           name: "Accéder à l'ENT",
           icon: "pcn-link",
-          href: domainENT
+          state: domainENT
         }
       ];
 
@@ -509,7 +511,8 @@ angular
           $rootScope.listMenu.unshift({
             name: "Pronote",
             icon: "custom-pronote pronote-1icon-",
-            href: "#/app/listPronotes"
+            state: "app.listPronotes"
+            // href: "#/app/listPronotes"
           });
         }
       });
@@ -700,7 +703,6 @@ angular
           $state.current.name !== "app.messagerie" &&
           $state.current.name !== "app.profile" &&
           $state.current.name !== "app.blog" &&
-          $state.current.name !== "app.actualites" &&
           $state.current.name !== "app.workspace" &&
           $state.current.name !== "app.pronote"
         );
@@ -714,11 +716,15 @@ angular
 
       $scope.messageButton = function() {
         $state.go("app.messagerie");
-        // window.location.hash = '/app/messagerie';
         $rootScope.showGridMenu = false;
       };
 
-      $scope.gridButton = function() {
+      $scope.profileButton = function() {
+        $state.go("app.profile");
+        $rootScope.showGridMenu = false;
+      };
+
+      $scope.triggerGrid = function() {
         $rootScope.showGridMenu = !$rootScope.showGridMenu;
         $rootScope.locationPath = $rootScope.showGridMenu
           ? "/grid"
@@ -726,31 +732,37 @@ angular
         manageLocation($rootScope.showGridMenu ? "/grid" : null);
       };
 
-      $scope.actuButton = function() {
-        $state.go("app.actualites");
-        $rootScope.showGridMenu = false;
+      $scope.gridButton = function(state) {
+        if (state == "app.workspace") {
+          $scope.getAlertPopup(
+            "Non disponible",
+            "Ce module est en cours d'évolution."
+          );
+        } else if (state.includes("http")) {
+          $location.url(state);
+        } else {
+          $state.go(state);
+        }
       };
 
-      $scope.blogButton = function() {
-        $state.go("app.blog");
-        $rootScope.showGridMenu = !$rootScope.showGridMenu;
-      };
+      // $scope.actuButton = function() {
+      //   $scope.gridButton();
+      // };
 
-      $scope.docuButton = function() {
-        $state.go("app.workspace");
-        $rootScope.showGridMenu = !$rootScope.showGridMenu;
-      };
+      // $scope.blogButton = function() {
+      //   $state.go("app.blog");
+      //   $scope.gridButton();
+      // };
 
-      $scope.pronoteButton = function() {
-        $state.go("app.pronote");
-        $rootScope.showGridMenu = !$rootScope.showGridMenu;
-      };
+      // $scope.docuButton = function() {
+      //   // $state.go("app.workspace");
+      //   $scope.gridButton();
+      // };
 
-      $scope.profileButton = function() {
-        // window.location.hash = '/app/profile';
-        $state.go("app.profile");
-        $rootScope.showGridMenu = false;
-      };
+      // $scope.pronoteButton = function() {
+      //   $state.go("app.pronote");
+      //   $rootScope.showGridMenu = !$rootScope.showGridMenu;
+      // };
 
       $scope.clickTimelineNotif = function(type, resource, params) {
         console.log(type);

@@ -70,11 +70,9 @@
       >
         <div class="arrow-down">▼</div>
         <div class="grid">
-          <ion-item
-            menu-close
+          <div
             ng-repeat="menu in listMenu"
-            href="{{menu.href}}"
-            ng-click="gridButton()"
+            ng-click="gridButton(menu.state)"
             class="menu-grid-item grid-item"
           >
             <i
@@ -89,18 +87,12 @@
               ng-show="badgeMessagerie!=0"
               >{{ badgeMessagerie }}</span
             >
-          </ion-item>
+          </div>
         </div>
-        <!--
-          <li ng-click="actuButton()" class="menu-card"> <i class="icon-left ion-home"></i>Actualités</li>
-          <li ng-click="blogButton()" class="menu-card">Blog</li>
-          <li ng-click="docuButton()" class="menu-card">Espace documentaire</li>
-          <li ng-click="pronoteButton()" class="menu-card">Pronote</li>
-        -->
       </div>
       <i
         class="button icon-left ion-grid apps-menu-button"
-        ng-click="gridButton()"
+        ng-click="triggerGrid()"
       ></i>
       <span class="menu-button-text apps-menu-button">Applications</span>
     </div>
