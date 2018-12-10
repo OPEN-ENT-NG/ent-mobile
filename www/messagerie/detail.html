@@ -1,54 +1,74 @@
 <ion-view>
-  <ion-nav-title>{{checkable ? getCountOfCheckedMessages(): getNameFolder(nameFolder)}}</ion-nav-title>
+  <ion-nav-title>{{
+    checkable ? getCountOfCheckedMessages() : getNameFolder(nameFolder)
+  }}</ion-nav-title>
   <ion-nav-buttons side="right">
-
-    <button class="button button-icon button-clear ion-reply" ng-if=isInbox()  ng-click="editMail('REPLY_ONE')"></button>
-    <button class="button button-icon button-clear ion-android-more-vertical buttonActionBar" ng-click=openPopover($event)></button>
-
+    <button
+      class="button button-icon button-clear ion-reply"
+      ng-if="isInbox()"
+      ng-click="editMail('REPLY_ONE')"
+    ></button>
+    <button
+      class="button button-icon button-clear ion-android-more-vertical buttonActionBar"
+      ng-click="openPopover($event)"
+    ></button>
   </ion-nav-buttons>
 
   <ion-content scroll="false">
-    <ion-scroll class="scroll" direction="y" has-bouncing="true" >
-
+    <ion-scroll class="scroll" direction="y" has-bouncing="true">
       <div class="item">
-        <h2>{{mail.subject}}</h2>
+        <h2>{{ mail.subject }}</h2>
       </div>
 
       <div class="item-text-wrap">
         <div class="header-mail item">
-          <h2>{{translationConversation["transfer.from"]}} {{mail.from[0].displayName}}</h2>
+          <h2>
+            {{ translationConversation["transfer.from"] }}
+            {{ mail.from[0].displayName }}
+          </h2>
 
           <h2>
-            <span>{{translationConversation["transfer.to"]}}</span>
-            <span ng-repeat="personTo in mail.to track by personTo.entId">{{personTo.displayName}}<br/></span>
+            <span>{{ translationConversation["transfer.to"] }}</span>
+            <span ng-repeat="personTo in mail.to track by personTo.entId"
+              >{{ personTo.displayName }}<br
+            /></span>
           </h2>
 
           <h2 ng-show="mail.cc.length != 0">
-            <span>{{translationConversation["transfer.cc"]}}</span>
-            <span ng-repeat="personCc in mail.cc track by personCc.entId" >{{personCc.displayName}}<br/></span>
+            <span>{{ translationConversation["transfer.cc"] }}</span>
+            <span ng-repeat="personCc in mail.cc track by personCc.entId"
+              >{{ personCc.displayName }}<br
+            /></span>
           </h2>
 
-          <h2 >
-            <span>{{translationConversation["transfer.date"]}}</span>
-            <span >{{mail.date | date: 'dd/MM/yyyy H:mm'}}<br/></span>
+          <h2>
+            <span>{{ translationConversation["transfer.date"] }}</span>
+            <span>{{ mail.date | date: "dd/MM/yyyy H:mm" }}<br /></span>
           </h2>
         </div>
 
-        <div class="item-text-wrap item corpsMessage htmlEntContent" ng-if="mail.body" overflow-scroll="true">
-          <render-html err='showAlertError' data="mail.body" open-fct="openLocalFile(path, type)"></render-html>
+        <div
+          class="item-text-wrap item corpsMessage htmlEntContent"
+          ng-if="mail.body"
+          overflow-scroll="true"
+          render-html="{{mail.body}}">
         </div>
 
-        <div class="item borderBottomItemDismissed borderTopItemDismissed" ng-show=mail.attachments.length!=0>
-          <ion-list>
-            <div ng-repeat="attachment in mail.attachments track by $index">
-              <div class="ajoutPJ item-text-wrap">
-                <i class="downloadicon-"  ng-click="downloadAttachment(attachment.id)"></i>
-                <p>{{attachment.filename}} ({{getSizeFile(attachment.size)}})</p>
-              </div>
+        <div class="item borderBottomItemDismissed borderTopItemDismissed"
+        ng-show="mail.attachments.length!=0">
+        <ion-list>
+          <div ng-repeat="attachment in mail.attachments track by $index">
+            <div class="ajoutPJ item-text-wrap">
+              <i
+                class="downloadicon-"
+                ng-click="downloadAttachment(attachment.id)"
+              ></i>
+              <p>
+                {{ attachment.filename }} ({{ getSizeFile(attachment.size) }})
+              </p>
             </div>
-          </ion-list>
-        </div>
-
+          </div>
+        </ion-list>
       </div>
     </ion-scroll>
   </ion-content>

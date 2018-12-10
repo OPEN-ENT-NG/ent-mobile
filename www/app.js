@@ -699,12 +699,12 @@ angular
 
       $scope.displayBackButton = function() {
         return (
+          $state.current.name !== "app.actualites" &&
+          $state.current.name !== "app.blog-list" &&
+          $state.current.name !== "app.workspace" &&
           $state.current.name !== "app.timeline" &&
           $state.current.name !== "app.messagerie" &&
-          $state.current.name !== "app.profile" &&
-          $state.current.name !== "app.blog" &&
-          $state.current.name !== "app.workspace" &&
-          $state.current.name !== "app.pronote"
+          $state.current.name !== "app.profile"
         );
       };
 
@@ -739,7 +739,7 @@ angular
             "Ce module est en cours d'évolution."
           );
         } else if (state.includes("http")) {
-          $location.url(state);
+          $scope.openUrl(state);
         } else {
           $state.go(state);
         }
@@ -1253,36 +1253,30 @@ angular
 
   .directive("renderHtml", function($compile, $sce, domainENT) {
     return {
-      restrict: "E",
-      scope: {
-        data: "=",
-        downloadFile: "&",
-        openUrl: "="
-      },
-      link: function(scope, element) {
-        if (scope.data != null) {
-          scope.data = scope.data.replace(
+      restrict: "A",
+      link: function(scope, element, attrs) {
+        let data = angular.copy(attrs.renderHtml);
+        if (data != null) {
+          data = data.replace(
             /href=(["'])(.*?)\1/g,
             "ng-click=\"openUrl('$2')\""
           );
 
-          scope.data = scope.data.replace(
-            /<a href="([\/\w\d-]+)"><div class="download"><\/div>(\S+)<\/a>/g,
-            "<a ng-click=\"downloadFile({fileName: '$2', urlFile: '" +
+          data = data.replace(
+            /href="([\/\w\d-]+)"><div class="download"><\/div>(\S+)</g,
+            "ng-click=\"downloadFile({fileName: '$2', urlFile: '" +
               domainENT +
-              '$1\'})"><div class="download"></div>$2</a>'
+              '$1\'})"><div class="download"></div>$2<'
           );
-          scope.data = scope.data.replace(
-            /<img src="(\/[\S]+)"/g,
-            '<img http-src="' + domainENT + '$1" '
-          );
-          scope.data = scope.data.replace(
+          data = data.replace(
             /<img src="(http(s?):\/\/[\S]+)"/g,
             '<img http-src="$1"'
           );
-          scope.data = $sce.trustAsHtml(scope.data);
-          element.html(scope.data);
-          $compile(element)(scope);
+          data = data.replace(
+            /<img src="(\/[\S]+)"/g,
+            '<img http-src="' + domainENT + '$1" '
+          );
+          $compile(element.html($sce.trustAsHtml(data)).contents())(scope);
         }
       }
     };

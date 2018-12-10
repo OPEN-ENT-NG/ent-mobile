@@ -1,54 +1,75 @@
-<ion-view view-title={{nameBlog}}>
-
+<ion-view view-title="{{nameBlog}}">
   <ion-content scroll="false">
-    <ion-scroll class="scroll" direction="y" has-bouncing="true" >
+    <ion-scroll class="scroll" direction="y" has-bouncing="true">
       <ion-refresher pulling-text="Actualiser" on-refresh="doRefreshPosts()">
       </ion-refresher>
 
-        <ion-list>
-          <ion-item ng-repeat="post in filteredPosts=(posts | orderBy: 'modified.$date' : true) track by $index"
-                    class="card">
-            <div class="item item-avatar item-text-wrap" ng-click="getPostContent(post)">
-              <img http-src="{{getImageUrl(post.author.photo)}}"/>
+      <ion-list>
+        <ion-item
+          ng-repeat="post in filteredPosts=(posts | orderBy: 'modified.$date' : true) track by $index"
+          class="card"
+        >
+          <div
+            class="item item-avatar item-text-wrap"
+            ng-click="getPostContent(post)"
+          >
+            <img http-src="{{getImageUrl(post.author.photo)}}" />
 
-              <h2>{{post.title}}</h2>
+            <h2>{{ post.title }}</h2>
 
-              <h3>{{translationBlog["blog.by"]}} {{post.author.username}}</h3>
-              <p>{{formatDateLocale(post.modified.$date)}}</p>
+            <h3>{{ translationBlog["blog.by"] }} {{ post.author.username }}</h3>
+            <p>{{ formatDateLocale(post.modified.$date) }}</p>
+          </div>
+
+          <ion-card-content
+            ng-if="post.content != undefined"
+            class="item actucard"
+          >
+            <div
+              class="item-text-wrap htmlEntContent"
+              render-html="{{post.content}}"
+            ></div>
+
+            <div class="comment" ng-show="post.comments.length != 0">
+              <p
+                ng-click="toggleComments(post)"
+                ng-class="{active: areCommentsShown(post)}"
+                class="subdued"
+              >
+                {{ getCountComments(post) }}
+              </p>
+              <ion-item
+                class="item-accordion"
+                ng-repeat="comment in post.comments track by $index"
+                ng-show="areCommentsShown(post)"
+              >
+                <h3>
+                  {{ comment.author.username }},
+                  {{
+                    comment.modified.$date
+                      ? formatDateLocale(comment.modified.$date)
+                      : formatDateLocale(comment.created.$date)
+                  }}
+                </h3>
+                <p class="blog-comment">{{ comment.comment }}</p>
+              </ion-item>
             </div>
-
-            <ion-card-content ng-if="post.content != undefined" class="item actucard">
-
-              <div class="item-text-wrap htmlEntContent">
-                <render-html err='showAlertError' data="post.content"  open-url="openUrl" download-file="downloadFile(fileName, urlFile)">
-                </render-html>
+            <a
+              class="comment-icon"
+              ng-show="areCommentsShown(post) || post.comments.length == 0"
+              ng-if="isRightToComment()"
+              ng-click="commentPost(post)"
+            >
+              <div ng-style="isRightToComment() ? {opacity:1}:{opacity:0.5}">
+                <i class="icon ion-chatbox"></i>
+                {{ translationWorkspace["workspace.comment"] }}
               </div>
-
-              <div class="comment"  ng-show="post.comments.length != 0">
-                <p  ng-click="toggleComments(post)" ng-class="{active: areCommentsShown(post)}" class="subdued">
-                  {{getCountComments(post)}}
-                </p>
-                <ion-item class="item-accordion"  ng-repeat="comment in post.comments track by $index"  ng-show="areCommentsShown(post)">
-                  <h3>{{comment.author.username}}, {{comment.modified.$date ? formatDateLocale(comment.modified.$date):formatDateLocale(comment.created.$date)}}</h3>
-                  <p class="blog-comment">{{comment.comment}}</p>
-                </ion-item>
-              </div>
-              <a class="comment-icon" ng-show="areCommentsShown(post) || post.comments.length == 0"
-                 ng-if="isRightToComment()" ng-click="commentPost(post)">
-                <div ng-style="isRightToComment() ? {opacity:1}:{opacity:0.5}">
-                  <i class="icon ion-chatbox"></i>
-                  {{translationWorkspace["workspace.comment"]}}
-                </div>
-              </a>
-            </ion-card-content>
-
-          </ion-item>
-        </ion-list>
+            </a>
+          </ion-card-content>
+        </ion-item>
+      </ion-list>
     </ion-scroll>
 
-    <div ng-if="noPost" class="empty-content">
-      Pas de posts disponibles
-    </div>
-
+    <div ng-if="noPost" class="empty-content">Pas de posts disponibles</div>
   </ion-content>
 </ion-view>

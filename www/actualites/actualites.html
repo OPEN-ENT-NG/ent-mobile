@@ -1,53 +1,87 @@
-<ion-view view-title={{translationActus["actualites.title"]}}>
+<ion-view view-title="{{translationActus['actualites.title']}}">
   <ion-nav-buttons side="right">
-    <button class="button button-icon button-clear fa fa-list-ul"  ng-click="goThreads()" ></button>
+    <button
+      class="button button-icon button-clear fa fa-list-ul"
+      ng-click="goThreads()"
+    ></button>
   </ion-nav-buttons>
 
   <ion-content scroll="false">
-    <ion-scroll ng-if="(infos | filter:filterByThread).length>0" class="scroll" direction="y" has-bouncing="true">
+    <ion-scroll
+      ng-if="(infos | filter:filterByThread).length>0"
+      class="scroll"
+      direction="y"
+      has-bouncing="true"
+    >
       <ion-refresher pulling-text="Actualiser" on-refresh="doRefreshInfos()">
       </ion-refresher>
 
-      <ion-list >
-        <ion-item id="{{info._id}}"
+      <ion-list>
+        <ion-item
+          id="{{info._id}}"
           ng-repeat="info in filtered=(infos | filter:filterByThread) | limitTo:totalDisplayed track by $index"
-                  class="card">
-
+          class="card"
+        >
           <div class="item item-avatar item-text-wrap">
-            <img http-src="{{getImageUrl(info.thread_icon)}}" alt="icone {{info.thread_title}}"/>
-            <h2>{{info.title}}</h2>
+            <img
+              http-src="{{getImageUrl(info.thread_icon)}}"
+              alt="icone {{info.thread_title}}"
+            />
+            <h2>{{ info.title }}</h2>
 
-            <h3>{{translationActus["actualites.info.label.author"]}} {{info.username}}</h3>
-            <p>{{(info.publication_date ? formatDate(info.publication_date) : formatDateLocale(info.modified))}}</p>
+            <h3>
+              {{ translationActus["actualites.info.label.author"] }}
+              {{ info.username }}
+            </h3>
+            <p>
+              {{
+                info.publication_date
+                  ? formatDate(info.publication_date)
+                  : formatDateLocale(info.modified)
+              }}
+            </p>
           </div>
 
-          <ion-card-content class="item htmlEntContent actucard" overflow-scroll="true">
-
-            <div class="item-text-wrap">
-                <render-html data="info.content" open-url="openUrl(url)" download-file="downloadFile(fileName, urlFile)"></render-html>
-            </div>
+          <ion-card-content
+            class="item htmlEntContent actucard"
+            overflow-scroll="true"
+          >
+            <div class="item-text-wrap" render-html="{{info.content}}"></div>
 
             <div ng-show="info.comments !=  null">
-              <p  ng-click="toggleComments(info)" ng-class="{active: areCommentsShown(info)}" class="subdued comment">
-                {{getCountComments(info, areCommentsShown(info))}}
+              <p
+                ng-click="toggleComments(info)"
+                ng-class="{active: areCommentsShown(info)}"
+                class="subdued comment"
+              >
+                {{ getCountComments(info, areCommentsShown(info)) }}
               </p>
-              <ion-item class="item-accordion comment"  ng-repeat="item in info.comments track by $index"  ng-show="areCommentsShown(info)">
-                <h3>{{item.username}}, {{formatDateLocale(item.modified)}}</h3>
-                <p>{{item.comment}}</p>
+              <ion-item
+                class="item-accordion comment"
+                ng-repeat="item in info.comments track by $index"
+                ng-show="areCommentsShown(info)"
+              >
+                <h3>
+                  {{ item.username }}, {{ formatDateLocale(item.modified) }}
+                </h3>
+                <p>{{ item.comment }}</p>
               </ion-item>
-
             </div>
           </ion-card-content>
-
         </ion-item>
       </ion-list>
 
-      <ion-infinite-scroll on-infinite = "loadMore()" distance = "10%"></ion-infinite-scroll>
+      <ion-infinite-scroll
+        on-infinite="loadMore()"
+        distance="10%"
+      ></ion-infinite-scroll>
     </ion-scroll>
 
-    <div ng-if="(infos | filter:filterByThread).length==0" class="empty-content">
+    <div
+      ng-if="(infos | filter:filterByThread).length==0"
+      class="empty-content"
+    >
       Aucune actualité disponible
     </div>
-
   </ion-content>
 </ion-view>

@@ -1,28 +1,47 @@
 <ion-view view-title="Nouveau message">
-
   <ion-nav-buttons side="right">
     <label class="logoAjoutPj">
-      <input style="display:none;" type='file' onchange="angular.element(this).scope().addAttachment(this)" >
+      <input
+        style="display:none;"
+        type="file"
+        onchange="angular.element(this).scope().addAttachment(this)"
+      />
       <i class="button button-icon button-clear attachicon-"></i>
     </label>
-    <button class="button button-icon button-clear ion-android-send"  ng-click="sendMail()" ></button>
-    <button class="button button-icon button-clear ion-android-more-vertical buttonActionBar" ng-click = "openPopover($event)"></button>
+    <button
+      class="button button-icon button-clear ion-android-send"
+      ng-click="sendMail()"
+    ></button>
+    <button
+      class="button button-icon button-clear ion-android-more-vertical buttonActionBar"
+      ng-click="openPopover($event)"
+    ></button>
   </ion-nav-buttons>
   <ion-content>
-
     <div class="item listeDestinataires">
       <ion-list>
-        <div ng-repeat="destinataire in email.destinatairesTo track by $index" >
+        <div ng-repeat="destinataire in email.destinatairesTo track by $index">
           <div class="destinataireMessagerie item-text-wrap">
-            <h2>{{destinataire.displayName}} </h2>
-            <i class="cancel-circledicon-" ng-click="deleteFromDestinataireTo(destinataire)"></i>
+            <h2>{{ destinataire.displayName }}</h2>
+            <i
+              class="cancel-circledicon-"
+              ng-click="deleteFromDestinataireTo(destinataire)"
+            ></i>
           </div>
         </div>
       </ion-list>
-      <filter-box filtertext="searchTo" placeholder={{translationConversation["transfer.to"]}}></filter-box>
-      <ion-list >
-        <ion-item ng-show=searchTo.value.length!=0 ng-repeat="contact in contacts | filter: {displayName: searchTo.value} | limitTo: 5" ng-click="addContactTo(searchTo, contact)" ng-if="verifiedEmailDestinataire(false,contact)">
-          <h3><font color="#008B8B">{{contact.displayName}}</font></h3>
+      <filter-box
+        filtertext="searchTo"
+        placeholder="{{translationConversation['transfer.to']}}"
+      ></filter-box>
+      <ion-list>
+        <ion-item
+          ng-show="searchTo.value.length != 0"
+          ng-repeat="contact in contacts | filter: {displayName: searchTo.value} | limitTo: 5"
+          ng-click="addContactTo(searchTo, contact)"
+          ng-if="verifiedEmailDestinataire(false,contact)"
+        >
+          <h3 style="color: #008B8B">{{ contact.displayName }}</h3>
         </ion-item>
       </ion-list>
     </div>
@@ -31,47 +50,76 @@
       <ion-list>
         <div ng-repeat="destinataire in email.destinatairesCc track by $index">
           <div class="destinataireMessagerie item-text-wrap">
-            <h2>{{destinataire.displayName}} </h2>
-            <i class="cancel-circledicon-" ng-click="deleteFromDestinataireCc(destinataire)"></i>
+            <h2>{{ destinataire.displayName }}</h2>
+            <i
+              class="cancel-circledicon-"
+              ng-click="deleteFromDestinataireCc(destinataire)"
+            ></i>
           </div>
         </div>
       </ion-list>
-      <filter-box filtertext="searchCc" placeholder={{translationConversation["transfer.cc"]}}></filter-box>
-      <ion-list >
-        <ion-item ng-show=searchCc.value.length!=0 ng-repeat="contact in contacts | filter: {displayName: searchCc.value} | limitTo: 5" ng-click="addContactCc(searchCc, contact)" ng-if="verifiedEmailDestinataire(true,contact)">
-          <h3><font color="#008B8B">{{contact.displayName}}</font></h3>
+      <filter-box
+        filtertext="searchCc"
+        placeholder="{{translationConversation['transfer.cc']}}"
+      ></filter-box>
+      <ion-list>
+        <ion-item
+          ng-show="searchCc.value.length != 0"
+          ng-repeat="contact in contacts | filter: {displayName: searchCc.value} | limitTo: 5"
+          ng-click="addContactCc(searchCc, contact)"
+          ng-if="verifiedEmailDestinataire(true,contact)"
+        >
+          <h3 style="color: #008B8B">{{ contact.displayName }}</h3>
         </ion-item>
       </ion-list>
     </div>
 
-    <label class="item item-input" >
-      <input type="text" ng-model="email.sujet" placeholder={{translationConversation["sniplet.ml.subject.placeholder"]}}>
+    <label class="item item-input">
+      <input
+        type="text"
+        ng-model="email.sujet"
+        placeholder="{{translationConversation['sniplet.ml.subject.placeholder']}}"
+      />
     </label>
 
     <label class="item-input item borderBottomItemDismissed">
-      <textarea id="textMessage" ng-model="email.newMessage" ng-keyup="expandText()"
-      ng-keydown="expandText()" placeholder={{translationConversation["sniplet.ml.content.placeholder"]}}></textarea>
+      <textarea
+        id="textMessage"
+        ng-model="email.newMessage"
+        ng-keyup="expandText()"
+        ng-keydown="expandText()"
+        placeholder="{{translationConversation['sniplet.ml.content.placeholder']}}"
+      ></textarea>
     </label>
 
-
-    <div class="item borderTopItemDismissed borderBottomItemDismissed" ng-show="email.attachments.length>0">
+    <div
+      class="item borderTopItemDismissed borderBottomItemDismissed"
+      ng-show="email.attachments.length>0"
+    >
       <ion-list>
         <div ng-repeat="attachment in email.attachments track by $index">
           <div class="ajoutPJ item-text-wrap">
-            <i class="downloadicon-"  ng-click="downloadAttachment(attachment.id)"></i>
-            <p>{{attachment.filename}} ({{getSizeFile(attachment.size)}})</p>
-            <i class="cancel-circledicon-" ng-click="deleteAttachment($index)"></i>
+            <i
+              class="downloadicon-"
+              ng-click="downloadAttachment(attachment.id)"
+            ></i>
+            <p>
+              {{ attachment.filename }} ({{ getSizeFile(attachment.size) }})
+            </p>
+            <i
+              class="cancel-circledicon-"
+              ng-click="deleteAttachment($index)"
+            ></i>
           </div>
         </div>
       </ion-list>
     </div>
 
-    <div class="item-text-wrap item borderTopItemDismissed htmlEntContent" ng-if="email.corps.length!=0" overflow-scroll="true">
-      <render-html err='showAlertError' data="email.corps" open-fct="openLocalFile(path, type)"></render-html>
-    </div>
-
-
-
-
+    <div
+      class="item-text-wrap item borderTopItemDismissed htmlEntContent"
+      ng-if="email.corps.length!=0"
+      overflow-scroll="true"
+      render-html="{{email.corps}}"
+    ></div>
   </ion-content>
 </ion-view>
