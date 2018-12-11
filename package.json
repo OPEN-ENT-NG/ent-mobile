@@ -10,7 +10,7 @@
     "com.bez4pieci.cookies": "https://github.com/bez4pieci/Phonegap-Cookies-Plugin.git",
     "com.napolitano.cordova.plugin.intent": "https://github.com/napolitano/cordova-plugin-intent",
     "cordova": "^8.1.1",
-    "cordova-android": "7.1.1",
+    "cordova-android": "7.1.4",
     "cordova-ios": "4.5.4",
     "cordova-plugin-app-version": "^0.1.9",
     "cordova-plugin-badge": "^0.8.7",
@@ -18,7 +18,7 @@
     "cordova-plugin-file": "^6.0.1",
     "cordova-plugin-file-opener2": "^2.0.19",
     "cordova-plugin-file-transfer": "^1.7.1",
-    "cordova-plugin-firebase": "^1.1.4",
+    "cordova-plugin-firebase": "2.0.5",
     "cordova-plugin-globalization": "^1.11.0",
     "cordova-plugin-inappbrowser": "^3.0.0",
     "cordova-plugin-intent": "git+https://github.com/napolitano/cordova-plugin-intent.git",
@@ -40,7 +40,8 @@
     "ionic": "^4.2.0",
     "mfb": "^0.12.0",
     "moment": "^2.11.2",
-    "shelljs": "^0.8.2"
+    "shelljs": "^0.8.2",
+    "xcode": "^1.0.0"
   },
   "devDependencies": {
     "@ionic/v1-toolkit": "1.0.8",
@@ -64,15 +65,15 @@
       "cordova-plugin-file-transfer": {},
       "cordova-plugin-inappbrowser": {},
       "cordova-plugin-file": {},
-      "cordova-plugin-firebase": {},
       "cordova-plugin-network-information": {},
       "cordova-plugin-local-notification": {},
       "com.napolitano.cordova.plugin.intent": {},
-      "com.bez4pieci.cookies": {}
+      "com.bez4pieci.cookies": {},
+      "cordova-plugin-firebase": {}
     },
     "platforms": [
-      "android",
-      "ios"
+      "ios",
+      "android"
     ]
   }
 }
