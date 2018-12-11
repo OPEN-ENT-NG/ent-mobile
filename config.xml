@@ -9,8 +9,7 @@
   </author>
     <content src="index.html" />
     <access origin="*" />
-    <allow-intent href="http://*/*" />
-    <allow-intent href="https://*/*" />
+    <allow-navigation href="*" />
     <preference name="Orientation" value="portrait" />
     <preference name="StatusBarOverlaysWebView" value="false" />
     <preference name="StatusBarStyle" value="lightcontent" />
@@ -26,7 +25,6 @@
     <preference name="iosPersistentFileLocation" value="Compatibility" />
     <preference name="AndroidPersistentFileLocation" value="Compatibility" />
     <platform name="android">
-        <allow-intent href="market:*" />
         <icon density="ldpi" src="resources/android/icon/drawable-ldpi-icon.png" />
         <icon density="mdpi" src="resources/android/icon/drawable-mdpi-icon.png" />
         <icon density="hdpi" src="resources/android/icon/drawable-hdpi-icon.png" />
@@ -68,8 +66,6 @@
         <preference name="AndroidLaunchMode" value="singleTask" />
     </platform>
     <platform name="ios">
-        <allow-intent href="itms:*" />
-        <allow-intent href="itms-apps:*" />
         <icon height="57" src="resources/ios/icon/icon.png" width="57" />
         <icon height="114" src="resources/ios/icon/icon@2x.png" width="114" />
         <icon height="40" src="resources/ios/icon/icon-40.png" width="40" />
@@ -118,11 +114,11 @@
     <plugin name="cordova-plugin-file-transfer" spec="^1.7.1" />
     <plugin name="cordova-plugin-inappbrowser" spec="^3.0.0" />
     <plugin name="cordova-plugin-file" spec="^6.0.1" />
-    <plugin name="cordova-plugin-firebase" spec="^1.0.5" />
     <plugin name="cordova-plugin-local-notification" spec="^0.9.0-beta.2" />
     <plugin name="cordova-plugin-network-information" spec="~2.0.1" />
     <plugin name="com.bez4pieci.cookies" spec="https://github.com/bez4pieci/Phonegap-Cookies-Plugin.git" />
     <plugin name="com.napolitano.cordova.plugin.intent" spec="https://github.com/napolitano/cordova-plugin-intent" />
-    <engine name="android" spec="7.1.1" />
+    <plugin name="cordova-plugin-firebase" spec="2.0.5" />
     <engine name="ios" spec="4.5.4" />
+    <engine name="android" spec="7.1.4" />
 </widget>
