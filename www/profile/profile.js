@@ -4,7 +4,8 @@ angular
     $scope,
     $rootScope,
     $ionicPlatform,
-    ProfileService
+    ProfileService,
+    TimelineService
   ) {
     $scope.loader = {
       preferences: false
@@ -16,7 +17,7 @@ angular
 
     $scope.updatePreferences = function() {
       $scope.loader.preferences = true;
-      ProfileService.updatePreferences($scope.preferences).then(function() {
+      TimelineService.updatePreferences($scope.preferences).then(function() {
         $scope.loader.preferences = false;
       });
     };
@@ -44,9 +45,8 @@ angular
                 $scope.apps.push(notif);
               }
             });
-            ProfileService.getI18nNotifications().then(function(i18n) {
-              $scope.translations = i18n.data;
-              ProfileService.getPreferences().then(function(userAppConf) {
+            TimelineService.getTranslation().then(function(translation) {
+              TimelineService.getPreferences().then(function(userAppConf) {
                 $scope.appsMapped = {};
                 $scope.applis = {};
                 for (var i = 0; i < $scope.apps.length; i++) {
@@ -56,10 +56,10 @@ angular
                 for (var i = 0; i < $scope.apps.length; i++) {
                   if (!$scope.applis.hasOwnProperty($scope.apps[i].type)) {
                     $scope.applis[$scope.apps[i].type] = {
-                      translation: $scope.translations.hasOwnProperty(
+                      translation: translation.data.hasOwnProperty(
                         $scope.apps[i]["app-name"].toLowerCase()
                       )
-                        ? $scope.translations[
+                        ? translation.data[
                             $scope.apps[i]["app-name"].toLowerCase()
                           ]
                         : $scope.apps[i]["app-name"],

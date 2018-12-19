@@ -1,19 +1,37 @@
 <ion-view view-title="Fil de nouveautés">
+  <ion-nav-buttons side="right">
+    <button
+      class="button button-icon button-clear fa fa-list-ul"
+      ng-click="goPrefs()"
+    ></button>
+  </ion-nav-buttons>
 
   <ion-content scroll="false">
-    <ion-scroll ng-if="timeline.length > 0" class="scroll" direction="y" has-bouncing="true">
-
+    <ion-scroll
+      ng-if="timeline.length > 0"
+      class="scroll"
+      direction="y"
+      has-bouncing="true"
+    >
       <ion-list>
-
-        <ion-item id="{{timeline._id}}" ng-repeat="timeline in timeline | limitTo:totalDisplayed track by $index" class="card">
-          <div class="item item-avatar item-text-wrap" ng-click="clickTimelineNotif(timeline.type, timeline.resource, timeline.params)">
-            <img http-src="{{getThumbnail(timeline.sender)}}" alt="thumbnail"/>
-            <div  ng-bind-html="alterHTML(timeline.message)"></div>
+        <ion-item
+          id="{{timeline._id}}"
+          ng-repeat="timeline in timeline | limitTo:totalDisplayed track by $index"
+          class="card"
+        >
+          <div
+            class="item item-avatar item-text-wrap"
+            ng-click="clickTimelineNotif(timeline.type, timeline.resource, timeline.params)"
+          >
+            <img http-src="{{getThumbnail(timeline.sender)}}" alt="thumbnail" />
+            <div ng-bind-html="alterHTML(timeline.message)"></div>
           </div>
-
         </ion-item>
       </ion-list>
-      <ion-infinite-scroll on-infinite = "loadMore()" distance = "10%"></ion-infinite-scroll>
+      <ion-infinite-scroll
+        on-infinite="loadMore()"
+        distance="10%"
+      ></ion-infinite-scroll>
     </ion-scroll>
     <div ng-if="timeline.length == 0" class="empty-content">
       Aucune nouveauté trouvée

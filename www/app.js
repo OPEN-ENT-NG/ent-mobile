@@ -221,12 +221,23 @@ angular
 
       .state("app.timeline", {
         url: "/timeline",
+        abstract: true,
         views: {
           menuContent: {
-            templateUrl: "timeline/timeline.html",
-            controller: "TimelineCtrl"
+            controller: "TimelineCtrl",
+            template: "<ion-nav-view></ion-nav-view>"
           }
         }
+      })
+
+      .state("app.timeline.list", {
+        url: "/timeline",
+        templateUrl: "timeline/timeline.html"
+      })
+
+      .state("app.timeline.prefs", {
+        url: "/preferences",
+        templateUrl: "timeline/timeline_filter.html"
       })
 
       .state("app.actualites", {
@@ -410,6 +421,7 @@ angular
     PronoteService,
     BlogsService,
     WorkspaceService,
+    TimelineService,
     $filter,
     $http,
     $ionicLoading,
@@ -448,6 +460,10 @@ angular
         case "/blog-list":
         case "/blog/:nameBlog/:idBlog": {
           $rootScope.locationPath = "/grid";
+          break;
+        }
+        case "/prefs": {
+          $rootScope.locationPath = "/timeline";
           break;
         }
         default:
@@ -702,7 +718,7 @@ angular
           $state.current.name !== "app.actualites" &&
           $state.current.name !== "app.blog-list" &&
           $state.current.name !== "app.workspace" &&
-          $state.current.name !== "app.timeline" &&
+          $state.current.name !== "app.timeline.list" &&
           $state.current.name !== "app.messagerie" &&
           $state.current.name !== "app.profile"
         );
@@ -710,7 +726,7 @@ angular
 
       $scope.homeButton = function() {
         // window.location.hash = '/app/timeline';
-        $state.go("app.timeline");
+        $state.go("app.timeline.list");
         $rootScope.showGridMenu = false;
       };
 

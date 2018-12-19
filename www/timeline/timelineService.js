@@ -1,13 +1,35 @@
-angular.module('ent.timeline_service', ['ent.request'])
+angular
+  .module("ent.timeline_service", ["ent.request"])
 
-  .service('TimelineService', function(domainENT, RequestService){
+  .service("TimelineService", function(domainENT, RequestService) {
+    this.getTimeline = function(filter) {
+      return RequestService.get(
+        domainENT + "/timeline/lastNotifications?page=0" + filter
+      );
+    };
 
-    this.getTimeline = function(){
-      return RequestService.get(domainENT+"/timeline/lastNotifications?page=0&type=BLOG&type=EXERCIZER&type=FORUM&type=MESSAGERIE&type=COLLABORATIVEWALL&type=PAGES&type=USERBOOK&type=WIKI&type=CALENDAR&type=NEWS&type=WORKSPACE&type=MINDMAP&type=RACK");
-    }
+    this.getTypes = function() {
+      return RequestService.get(domainENT + "/timeline/types");
+    };
 
-    this.getThumbnail = function(senderId) {
-      return RequestService.get(domainENT+"/userbook/avatar/"+senderId+"?thumbnail=100x100");
-    }
+    this.getPreferences = function() {
+      return RequestService.get(domainENT + "/userbook/preference/timeline");
+    };
 
-  })
+    this.getTranslation = function() {
+      let translationNotif = RequestService.get(
+        domainENT + "/timeline/i18nNotifications"
+      );
+      let translationTimeline = RequestService.get(
+        domainENT + "/timeline/i18n"
+      );
+      return Promise.all([translationNotif, translationTimeline]);
+    };
+
+    this.updatePreferences = function(modules) {
+      return RequestService.put(domainENT + "/userbook/preference/timeline", {
+        page: 0,
+        type: modules
+      });
+    };
+  });

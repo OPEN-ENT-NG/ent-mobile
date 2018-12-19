@@ -1,80 +1,117 @@
-angular.module('ent.oauth2', [])
+angular
+  .module("ent.oauth2", [])
 
-  .service('OAuthService', function($q, domainENT, $ionicLoading, OAuth2Params, RequestService){
-
-    this.doAuthent = function (params) {
-      var data = 'client_id=' + OAuth2Params.clientId + '&client_secret=' + OAuth2Params.secret + '&scope=' + OAuth2Params.scope;
-      if(params.refreshToken) {
-        data += '&grant_type=refresh_token&refresh_token=' + params.refreshToken;
+  .service("OAuthService", function(
+    $q,
+    domainENT,
+    $ionicLoading,
+    OAuth2Params,
+    RequestService
+  ) {
+    this.doAuthent = function(params) {
+      var data =
+        "client_id=" +
+        OAuth2Params.clientId +
+        "&client_secret=" +
+        OAuth2Params.secret +
+        "&scope=" +
+        OAuth2Params.scope;
+      if (params.refreshToken) {
+        data +=
+          "&grant_type=refresh_token&refresh_token=" + params.refreshToken;
       } else {
-        data += '&grant_type=password&username=' + params.username + '&password=' + params.password;
+        data +=
+          "&grant_type=password&username=" +
+          params.username +
+          "&password=" +
+          params.password;
       }
 
       // getting the token
-      var base64Value = btoa(OAuth2Params.clientId.concat(":").concat(OAuth2Params.secret));
+      var base64Value = btoa(
+        OAuth2Params.clientId.concat(":").concat(OAuth2Params.secret)
+      );
 
       var url = domainENT + "/auth/oauth2/token";
-      return RequestService.post(url, data, {headers: {Authorization: 'Basic ' + base64Value}}).then(function (result) {
-        return RequestService.setDefaultAuth({access: result.data.access_token, refresh: result.data.refresh_token});
+      return RequestService.post(url, data, {
+        headers: { Authorization: "Basic " + base64Value }
+      }).then(function(result) {
+        return RequestService.setDefaultAuth({
+          access: result.data.access_token,
+          refresh: result.data.refresh_token
+        });
       });
     };
 
     this.setFcmToken = function() {
-      window.FirebasePlugin.getToken(function (token) {
+      window.FirebasePlugin.getToken(function(token) {
         if (token == null) {
           setTimeout(this.setFcmToken, 1000);
           return;
         }
         var url = domainENT + "/timeline/pushNotif/fcmToken?fcmToken=" + token;
         console.log(url);
-        RequestService.put(url).then(function (response) {
-          console.log(response);
-          localStorage.setItem('fcmToken', token);
-        }, function (error) {
-          console.log("put token failed");
-          throw error;
-        });
+        RequestService.put(url).then(
+          function(response) {
+            console.log(response);
+            localStorage.setItem("fcmToken", token);
+          },
+          function(error) {
+            console.log("put token failed");
+            throw error;
+          }
+        );
       });
-    }.bind(this)
+    }.bind(this);
 
-    this.deleteFcmToken = function () {
+    this.deleteFcmToken = function() {
       var fcmToken = localStorage.getItem("fcmToken");
       if (fcmToken == null) return;
       var url = domainENT + "/timeline/pushNotif/fcmToken?fcmToken=" + fcmToken;
       return RequestService.delete(url);
-    }
+    };
   })
 
-  .controller('LoginCtrl', function($ionicPlatform, $scope, $state, OAuthService, $rootScope) {
-
-    $ionicPlatform.ready(function () {
+  .controller("LoginCtrl", function(
+    $ionicPlatform,
+    $scope,
+    $state,
+    OAuthService,
+    $rootScope
+  ) {
+    $ionicPlatform.ready(function() {
       $rootScope.navigator = navigator;
     });
 
-    $scope.doLogin= function(user){
-      OAuthService.doAuthent({username: user.username, password: user.password}).
-      then(function(response){
-        console.log(response);
-        $scope.wrongLogin = false;
-        localStorage.setItem('access_token', response.access);
-        localStorage.setItem('username', user.username);
-        localStorage.setItem('password', response.access);
-        if ($scope.rememberMe == true) {
-          localStorage.setItem('refresh', response.refresh);
-          OAuthService.setFcmToken();
+    $scope.doLogin = function(user) {
+      OAuthService.doAuthent({
+        username: user.username,
+        password: user.password
+      }).then(
+        function(response) {
+          console.log(response);
+          $scope.wrongLogin = false;
+          localStorage.setItem("access_token", response.access);
+          localStorage.setItem("username", user.username);
+          localStorage.setItem("password", response.access);
+          if ($scope.rememberMe == true) {
+            localStorage.setItem("refresh", response.refresh);
+            OAuthService.setFcmToken();
+          }
+          $state.go("app.timeline.list");
+        },
+        function errorCallback() {
+          $scope.wrongLogin = true;
+          $scope.rememberMe = false;
+          localStorage.setItem("RememberMe", "false");
+          $state.go("login");
         }
-        $state.go('app.timeline');
-      }, function errorCallback() {
-        $scope.wrongLogin = true;
-        $scope.rememberMe = false;
-        localStorage.setItem("RememberMe", "false");
-        $state.go("login");
-      })
-    }
+      );
+    };
 
     $scope.rememberMeClicked = function() {
       $scope.rememberMe = !$scope.rememberMe;
       localStorage.setItem("RememberMe", $scope.rememberMe);
       console.log("changed remember me to " + $scope.rememberMe);
-    }
-  })
+    };
+  });
