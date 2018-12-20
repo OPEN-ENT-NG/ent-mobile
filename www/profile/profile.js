@@ -45,7 +45,7 @@ angular
                 $scope.apps.push(notif);
               }
             });
-            TimelineService.getTranslation().then(function(translation) {
+            ProfileService.getI18nNotifications().then(function(translation) {
               TimelineService.getPreferences().then(function(userAppConf) {
                 $scope.appsMapped = {};
                 $scope.applis = {};
