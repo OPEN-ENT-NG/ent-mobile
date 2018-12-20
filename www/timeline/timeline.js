@@ -51,29 +51,33 @@ angular
       $ionicLoading.show({
         template: '<ion-spinner icon="android"/>'
       });
+      $scope.preferences = [];
+
       TimelineService.getTranslation().then(translation => {
         TimelineService.getTypes().then(types => {
-          $scope.preferences = [];
+          TimelineService.getPreferences().then(prefs => {
+            let filter = JSON.parse(prefs.data.preference).type;
 
-          types.data.forEach(element => {
-            let elementName =
-              translation[0].data[element.toLowerCase()] ||
-              translation[1].data[element.toLowerCase()];
-            if (elementName != null) {
-              $scope.preferences.push({
-                type: element,
-                name: elementName,
-                checked: false
-              });
-            }
+            types.data.forEach(type => {
+              let name =
+                translation[0].data[type.toLowerCase()] ||
+                translation[1].data[type.toLowerCase()];
 
-            TimelineService.getPreferences().then(prefs => {
-              let filter = JSON.parse(prefs.data.preference).type;
-              filter.forEach(element => {
-                $scope.preferences.find(
-                  elem => elem.type === element
-                ).checked = true;
-              });
+              if (name != null) {
+                let checked = false;
+                for (const iterator of filter) {
+                  if (iterator == type) {
+                    checked = true;
+                    break;
+                  }
+                }
+
+                $scope.preferences.push({
+                  type: type,
+                  name: name,
+                  checked: checked
+                });
+              }
               $ionicLoading.hide();
             });
           });
