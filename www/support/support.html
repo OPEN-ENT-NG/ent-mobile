@@ -1,0 +1,65 @@
+<ion-view>
+  <ion-nav-title>Remonter un incident</ion-nav-title>
+  <ion-nav-buttons side="right">
+    <label class="logoAjoutPj" on-touch="addAttachment()">
+      <!-- <input
+          style="display:none;"
+          type="file"
+          onchange="angular.element(this).scope().addAttachment(this)"
+        /> -->
+      <i class="button button-icon button-clear attachicon-"></i>
+    </label>
+  </ion-nav-buttons>
+  <ion-content class="support">
+    <div class="list">
+      <label class="item item-input item-select item-stacked-label">
+        <span class="input-label">{{
+          translation["support.ticket.category"]
+        }}</span>
+        <select
+          ng-model="ticket.category"
+          ng-options="app.address as getTranslation(app) for app in apps"
+        >
+        </select>
+      </label>
+
+      <label class="item item-input item-select item-stacked-label">
+        <span class="input-label">{{
+          translation["support.ticket.school"]
+        }}</span>
+        <select
+          ng-model="ticket.school_id"
+          ng-options="school.id as school.name for school in schools"
+        ></select>
+      </label>
+
+      <label class="display-on-keyboard item item-input item-stacked-label">
+        <span style="color: red">*</span
+        ><span class="input-label">{{
+          translation["support.ticket.subject"]
+        }}</span>
+        <input type="text" ng-model="ticket.subject" />
+      </label>
+
+      <label
+        id="textarea"
+        class="display-on-keyboard item item-input item-stacked-label"
+      >
+        <div>
+          <span style="color: red">*</span
+          ><span class="input-label">{{
+            translation["support.ticket.description"]
+          }}</span>
+        </div>
+        <textarea
+          rows="10"
+          type="text"
+          ng-model="ticket.description"
+        ></textarea>
+      </label>
+      <button class="button button-block" ng-click="saveTicket()">
+        {{ translation["support.ticket.save"] }}
+      </button>
+    </div>
+  </ion-content>
+</ion-view>

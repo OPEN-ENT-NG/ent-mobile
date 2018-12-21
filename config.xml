@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget android-packageName="fr.openent.mdp.alpha" ios-CFBundleIdentifier="fr.openent" version="0.5.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget android-packageName="fr.openent.mdp.alpha" ios-CFBundleIdentifier="fr.openent" version="0.5.0" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Paris Classe Numérique</name>
     <description>
     Application Mobile OpenENT pour la mairie de Paris
@@ -11,6 +11,7 @@
     <access origin="*" />
     <allow-navigation href="*" />
     <preference name="Orientation" value="portrait" />
+    <preference name="fullscreen" value="false" />
     <preference name="StatusBarOverlaysWebView" value="false" />
     <preference name="StatusBarStyle" value="lightcontent" />
     <preference name="StatusBarBackgroundColor" value="#0084CA" />
@@ -49,10 +50,10 @@
         <splash density="port-xhdpi" src="resources/android/splash/drawable-port-xhdpi-screen.png" />
         <splash density="port-xxhdpi" src="resources/android/splash/drawable-port-xxhdpi-screen.png" />
         <splash density="port-xxxhdpi" src="resources/android/splash/drawable-port-xxxhdpi-screen.png" />
-        <config-file parent="/manifest" target="AndroidManifest.xml" xmlns:android="http://schemas.android.com/apk/res/android">
+        <config-file parent="/manifest" target="AndroidManifest.xml">
             <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
         </config-file>
-        <config-file parent="./application/activity" target="AndroidManifest.xml" xmlns:android="http://schemas.android.com/apk/res/android">
+        <config-file parent="./application/activity" target="AndroidManifest.xml">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -60,7 +61,7 @@
                 <data android:mimeType="*/*" />
             </intent-filter>
         </config-file>
-        <config-file parent="./application" target="AndroidManifest.xml" xmlns:android="http://schemas.android.com/apk/res/android">
+        <config-file parent="./application" target="AndroidManifest.xml">
             <meta-data android:name="google_analytics_adid_collection_enabled" android:value="false" />
         </config-file>
         <preference name="AndroidLaunchMode" value="singleTask" />
@@ -97,9 +98,6 @@
         <config-file mode="add" parent="firebase_analytics_collection_deactivated" target="*-Info.plist">
             <true />
         </config-file>
-        <config-file mode="add" parent="firebase_analytics_collection_deactivated" target="*-Info.plist">
-            <true />
-        </config-file>
     </platform>
     <plugin name="cordova-plugin-app-version" spec="^0.1.9" />
     <plugin name="cordova-plugin-file-opener2" spec="^2.0.19" />
@@ -109,7 +107,6 @@
     <plugin name="cordova-plugin-vibration" spec="^2.1.6" />
     <plugin name="cordova-plugin-whitelist" spec="^1.2.2" />
     <plugin name="cordova.plugins.diagnostic" spec="^3.1.7" />
-    <plugin name="cordova-plugin-ionic-keyboard" spec="^2.1.2" />
     <plugin name="cordova-plugin-ionic-webview" spec="^1.2.1" />
     <plugin name="cordova-plugin-file-transfer" spec="^1.7.1" />
     <plugin name="cordova-plugin-inappbrowser" spec="^3.0.0" />

@@ -13,8 +13,8 @@ angular
     "ent.workspace",
     "ent.user",
     "ent.pronotes",
+    "ent.support",
     "angularMoment",
-    "ent.test",
     "ng-mfb",
     "ui.router",
     "ent.timeline",
@@ -28,23 +28,16 @@ angular
 
   .run(function(
     $ionicPlatform,
-    $ionicLoading,
     $rootScope,
     $cordovaGlobalization,
-    $cordovaInAppBrowser,
     amMoment,
     RequestService
   ) {
     $ionicPlatform.ready(function() {
-      // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
-      // for form inputs)
       RequestService.setDefaultHeaders();
       //window.FirebasePlugin.setBadgeNumber(0);
       cordova.plugins.notification.badge.clear();
-      if (window.cordova && window.cordova.plugins.Keyboard) {
-        cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-        cordova.plugins.Keyboard.disableScroll(true);
-      }
+
       if (window.StatusBar) {
         StatusBar.styleLightContent();
         StatusBar.overlaysWebView(false);
@@ -368,13 +361,12 @@ angular
           }
         }
       })
-
-      .state("app.test", {
-        url: "/test",
+      .state("app.support", {
+        url: "/support",
         views: {
           menuContent: {
-            templateUrl: "test/input_file.html",
-            controller: "FoldersCtrl"
+            controller: "SupportCtrl",
+            templateUrl: "support/support.html"
           }
         }
       })
@@ -519,6 +511,11 @@ angular
           name: "Accéder à l'ENT",
           icon: "pcn-link",
           state: domainENT
+        },
+        {
+          name: "Assistance ENT",
+          icon: "custom-help-circled help-circledicon-",
+          state: "app.support"
         }
       ];
 

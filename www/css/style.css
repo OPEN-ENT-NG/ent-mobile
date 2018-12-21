@@ -35,6 +35,10 @@ ion-popover-view.fit ion-content {
   color: #ff8500;
 }
 
+.custom-help-circled {
+  color: #4BAFBC;
+}
+
 .center-image-item i {
   position: absolute;
   top: 50%;
