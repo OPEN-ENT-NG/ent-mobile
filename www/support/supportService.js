@@ -44,8 +44,8 @@ angular
         return appModules.some(function(module) {
           if (module === "pronote") {
             return app.displayName.toLowerCase().includes(module.toLowerCase());
-          } else {
-            return app.displayName.toLowerCase() === module.toLowerCase();
+          } else if (app.prefix) {
+            return app.prefix.toLowerCase() === "/" + module.toLowerCase();
           }
         });
       });

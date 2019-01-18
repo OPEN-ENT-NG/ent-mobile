@@ -72,8 +72,11 @@ angular
               $rootScope.version
             } / ` + $scope.ticket.subject;
 
+          var category = `mobile;${$scope.ticket.category}`;
+
           SupportService.createTicket({
             ...$scope.ticket,
+            category: category,
             subject: subject
           }).then(
             () => {
