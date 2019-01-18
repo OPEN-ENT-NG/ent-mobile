@@ -33,7 +33,7 @@ angular
       "timeline",
       "support",
       "workspace",
-      "messagerie",
+      "conversation",
       "actualites",
       "blog",
       "pronote"
