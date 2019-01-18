@@ -1303,51 +1303,28 @@ angular
       restrict: "E",
       transclude: true,
       template:
-        '<div class="offline-message {{status}}" ng-if="status && message">' +
-        "<i class='fa fa-plug plug' ng-class='{\"fadeinout\" : status == \"attempting\"}' ng-if=\"status != 'offline'\"></i>" +
+        '<div class="offline-message {{status}}" ng-if="message">' +
+        "<i class='fa fa-plug plug' ng-if=\"status != 'offline'\"></i>" +
         "<span>{{message}}</span>" +
         "</div>",
       controller: [
         "$scope",
         "$rootScope",
-        "$cordovaNetwork",
         "$timeout",
-        function($scope, $rootScope, $cordovaNetwork, $timeout) {
-          $rootScope.message = "";
-
-          getMessage = function(status) {
-            switch (status) {
-              case "offline":
-                return "Pas de connexion";
-              case "attempting":
-                return "Tentative de connexion";
-              case "online":
-                return "Connecté";
-              default: {
-                return null;
-              }
-            }
-          };
-
-          checkStatus = function() {
-            if ($cordovaNetwork.getNetwork() == "none") {
-              return "attempting";
-            } else {
-              return null;
-            }
-          };
-
+        function($scope, $rootScope, $timeout) {
           $rootScope.$watch("status", function(val) {
             $timeout(function() {
-              $scope.message = getMessage(val);
+              if (val === "offline") {
+                $scope.message = "Pas de connexion";
+              } else if (val === "online") {
+                $scope.message = "Connecté";
+              }
+
+              $timeout(function() {
+                $scope.message = null;
+              }, 5000);
             });
           });
-
-          setInterval(function() {
-            $timeout(function() {
-              $rootScope.status = checkStatus();
-            });
-          }, 5000);
         }
       ]
     };

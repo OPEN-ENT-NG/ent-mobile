@@ -233,11 +233,11 @@ ion-popover-view.fit ion-content {
   border-color: #0084ca !important;
 }
 
-@media screen and (max-height: 600px)
-{
+@media screen and (max-height: 600px) {
   .version {
-    display: none
-  }}
+    display: none;
+  }
+}
 
 @media screen and (min-height: 600px) {
   .version {
@@ -307,7 +307,6 @@ ion-popover-view.fit ion-content {
   background-color: #e13a3a;
 }
 
-.offline-message.attempting,
 .complexityLvl.moderate {
   background-color: #ecbe30;
 }
@@ -316,16 +315,6 @@ ion-popover-view.fit ion-content {
   color: white;
   display: inline-block !important;
   margin: 5px 15px 5px 0;
-}
-
-.fadeinout {
-  animation: blinker 2s ease-in-out infinite;
-}
-
-@keyframes blinker {
-  50% {
-    opacity: 0;
-  }
 }
 
 .firstco span {
@@ -449,12 +438,12 @@ ion-popover-view.fit ion-content {
 }
 
 .menu-bar .grid-item > span {
-  font-size: 10px; 
-  text-transform: uppercase; 
+  font-size: 10px;
+  text-transform: uppercase;
   font-weight: bold;
-   display: block; 
-   color: #2d98c0 !important;
-   white-space: initial;
+  display: block;
+  color: #2d98c0 !important;
+  white-space: initial;
 }
 
 .menu-bar .grid-item > i.pcn-link::before {
