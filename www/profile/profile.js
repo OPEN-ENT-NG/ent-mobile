@@ -29,12 +29,15 @@ angular
           console.log("test");
           $scope.myUser = $rootScope.myUser;
           $scope.user = res;
-          var _splitted_date = res.data.birthDate.split("-");
-          $scope.birthdate = new Date(
-            _splitted_date[0],
-            _splitted_date[1] - 1,
-            _splitted_date[2]
-          ).toLocaleDateString();
+          if (res.data.birthDate) {
+            var _splitted_date = res.data.birthDate.split("-");
+            $scope.birthdate = new Date(
+              _splitted_date[0],
+              _splitted_date[1] - 1,
+              _splitted_date[2]
+            ).toLocaleDateString();
+          }
+
           ProfileService.getApplications().then(function(applications) {
             $scope.apps = [];
             applications.data.forEach(notif => {
@@ -46,6 +49,7 @@ angular
               }
             });
             ProfileService.getI18nNotifications().then(function(translation) {
+              $scope.translations = translation.data;
               TimelineService.getPreferences().then(function(userAppConf) {
                 $scope.appsMapped = {};
                 $scope.applis = {};
@@ -56,10 +60,10 @@ angular
                 for (var i = 0; i < $scope.apps.length; i++) {
                   if (!$scope.applis.hasOwnProperty($scope.apps[i].type)) {
                     $scope.applis[$scope.apps[i].type] = {
-                      translation: translation.data.hasOwnProperty(
+                      translation: $scope.translations.hasOwnProperty(
                         $scope.apps[i]["app-name"].toLowerCase()
                       )
-                        ? translation.data[
+                        ? $scope.translations[
                             $scope.apps[i]["app-name"].toLowerCase()
                           ]
                         : $scope.apps[i]["app-name"],
