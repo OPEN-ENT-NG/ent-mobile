@@ -56,7 +56,10 @@ angular
       TimelineService.getTranslation().then(translation => {
         TimelineService.getTypes().then(types => {
           TimelineService.getPreferences().then(prefs => {
-            let filter = JSON.parse(prefs.data.preference).type;
+            let filter = [];
+            if (prefs.data.preference) {
+              filter = JSON.parse(prefs.data.preference).type;
+            }
 
             types.data.forEach(type => {
               let name =
@@ -78,8 +81,8 @@ angular
                   checked: checked
                 });
               }
-              $ionicLoading.hide();
             });
+            $ionicLoading.hide();
           });
         });
       });
@@ -92,7 +95,10 @@ angular
       });
 
       TimelineService.getPreferences().then(prefs => {
-        let filter = JSON.parse(prefs.data.preference).type;
+        let filter = [];
+        if (prefs.data.preference) {
+          filter = JSON.parse(prefs.data.preference).type;
+        }
         TimelineService.getTimeline(formatFilter(filter)).then(resp => {
           $scope.timeline = resp.data.results;
           $ionicLoading.hide();
