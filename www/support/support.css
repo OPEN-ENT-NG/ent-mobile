@@ -8,7 +8,7 @@
   left: 1%;
 }
 
-.support span {
+.support .input-label {
   font-weight: bold;
   margin: 3px;
 }
@@ -25,4 +25,8 @@
 .support .list > .item-select {
   padding-top: 15px;
   padding-bottom: 17px;
+}
+
+.support #subtitle {
+  white-space: inherit;
 }

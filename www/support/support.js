@@ -79,10 +79,14 @@ angular
             category: category,
             subject: subject
           }).then(
-            () => {
+            res => {
               $ionicLoading.hide();
               $scope
-                .getAlertPopup("Succès", "Demande créée avec succès.")
+                .getAlertPopupNoTitle(
+                  `Demande N°${
+                    res.data.id
+                  } créée avec succès. Retrouvez le suivi sur la version web du module Aide et support.`
+                )
                 .then(() => {
                   $state.go("app.timeline.list");
                 });

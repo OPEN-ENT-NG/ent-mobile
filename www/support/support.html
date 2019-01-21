@@ -12,6 +12,9 @@
   </ion-nav-buttons>
   <ion-content class="support">
     <div class="list">
+      <label class="item" id="subtitle">
+        <span>Uniquement pour les incidents de l’application mobile. </span>
+      </label>
       <label class="item item-input item-select item-stacked-label">
         <span class="input-label">{{
           translation["support.ticket.category"]
@@ -51,11 +54,7 @@
             translation["support.ticket.description"]
           }}</span>
         </div>
-        <textarea
-          rows="10"
-          type="text"
-          ng-model="ticket.description"
-        ></textarea>
+        <textarea rows="5" type="text" ng-model="ticket.description"></textarea>
       </label>
       <button class="button button-block" ng-click="saveTicket()">
         {{ translation["support.ticket.save"] }}
