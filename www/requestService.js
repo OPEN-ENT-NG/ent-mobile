@@ -62,8 +62,8 @@ angular
       });
     };
 
-    this.delete = function(url, config) {
-      config = getConfig(config);
+    this.delete = function(url, data, config) {
+      config = getConfig({ ...config, data });
       return $q(function(resolve, reject) {
         $http.delete(url, config).then(
           function(response) {

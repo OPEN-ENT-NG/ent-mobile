@@ -1,0 +1,146 @@
+<ion-view>
+  <ion-nav-title>
+    <span class="search-custom-header-label" style="vertical-align:baseline;">
+      <input
+        id="searchId"
+        placeholder="Rechercher un contact"
+        ng-model="search"
+        ng-change="updateSearch(search)"
+        style="vertical-align:baseline;"
+        class="input-search-header-custom"
+      />
+    </span>
+  </ion-nav-title>
+
+  <ion-nav-button side="right">
+    <button
+      class="icon ion-close-round white-icon-ion-close-round"
+      style="float:right;font-size:20px"
+    ></button>
+  </ion-nav-button>
+
+  <ion-content>
+    <ion-item class="item-text-wrap item-borderless">
+      <h4 style="color: #0069a1; font-size: 18px" ng-show="search.length == 0">
+        Partagé avec {{ contactShared.length }} personne{{
+          contactShared.length > 1 ? "s" : ""
+        }}
+      </h4>
+      <h4 style="font-size: 18px" ng-show="search.length > 0">
+        <span style="color: #0069a1">Contacts</span>
+        <span style="color: #cecece"> ({{ contacts.length }}) </span>
+      </h4>
+    </ion-item>
+    <ion-list ng-show="search==null || search.length == 0">
+      <ion-item
+        ng-repeat="contact in contactShared"
+        class="item-text-wrap"
+        ng-class="{'item-borderless':$index==0}"
+      >
+        <div ng-style="contact.read ? {opacity:1}:{opacity:0.3}">
+          <span
+            class="symbol"
+            style="display:inline-block;vertical-align: middle"
+          >
+            <i
+              class="icon custom-icon-arrow"
+              ng-class="contact.isSharingOpen ? 'ion-arrow-down-b' : 'ion-arrow-right-b'"
+            ></i>
+          </span>
+          <div
+            class="checkbox-list-item"
+            style="width:90%;padding:1%;display:inline-block;vertical-align: middle"
+            ng-click="openSharing(contact.id)"
+          >
+            <div>
+              <h2>{{ contact.name || contact.username }}</h2>
+              <h3>
+                <span style="color: #cecece">{{ contact.profile }}</span>
+              </h3>
+            </div>
+          </div>
+        </div>
+        <table
+          ng-show="contact.isSharingOpen"
+          style="width:100%;margin-top:4%;"
+        >
+          <tr>
+            <td style="text-align:center">
+              <h3 ng-style="contact.read ? {color:'#66B5DF'}:{color:'#cecece'}">
+                Consulter
+              </h3>
+              <label class="toggle toggle-blue">
+                <input
+                  type="checkbox"
+                  ng-model="contact.read"
+                  ng-click="modifyCheckValues(contact, 'read')"
+                />
+                <div class="track"><div class="handle"></div></div>
+              </label>
+            </td>
+            <td style="text-align:center">
+              <h3
+                ng-style="contact.contrib ? {color:'#66B5DF'}:{color:'#cecece'}"
+              >
+                Contribuer
+              </h3>
+              <label class="toggle toggle-blue">
+                <input
+                  type="checkbox"
+                  ng-model="contact.contrib"
+                  ng-click="modifyCheckValues(contact, 'contrib')"
+                />
+                <div class="track"><div class="handle"></div></div>
+              </label>
+            </td>
+            <td style="text-align:center">
+              <h3
+                ng-style="contact.manager ? {color:'#66B5DF'}:{color:'#cecece'}"
+              >
+                Gérer
+              </h3>
+              <label class="toggle toggle-blue">
+                <input
+                  type="checkbox"
+                  ng-model="contact.manager"
+                  ng-click="modifyCheckValues(contact, 'manager')"
+                />
+                <div class="track"><div class="handle"></div></div>
+              </label>
+            </td>
+            <td style="text-align:center">
+              <h3
+                ng-style="contact.comment ? {color:'#66B5DF'}:{color:'#cecece'}"
+              >
+                Commenter
+              </h3>
+              <label class="toggle toggle-blue">
+                <input
+                  type="checkbox"
+                  ng-model="contact.comment"
+                  ng-click="modifyCheckValues(contact, 'comment')"
+                />
+                <div class="track"><div class="handle"></div></div>
+              </label>
+            </td>
+          </tr>
+        </table>
+      </ion-item>
+    </ion-list>
+    <ion-list style="height:100%" ng-show="search.length > 0">
+      <ion-item
+        collection-repeat="contact in contacts"
+        item-height="60px"
+        class="item-text-wrap"
+        ng-class="{'item-borderless':$index==0}"
+        ng-click="addToShared(contact)"
+      >
+        <h2>{{ contact.displayName }}</h2>
+        <h3>
+          <span style="color: #cecece">{{ contact.profile }}</span>
+        </h3>
+      </ion-item>
+    </ion-list>
+    <!-- </ion-scroll> -->
+  </ion-content>
+</ion-view>

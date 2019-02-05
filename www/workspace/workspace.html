@@ -1,0 +1,32 @@
+<ion-view view-title="{{ translationWorkspace['workspace.title'] }}">
+  <ion-content>
+    <ion-item
+      ui-sref="app.workspace_tree({filter: 'owner'})"
+      class="item-text-wrap"
+    >
+      <i class="folder-open-2icon-"></i> {{ translationWorkspace["documents"] }}
+    </ion-item>
+
+    <ion-item
+      ui-sref="app.workspace_tree({filter: 'shared'})"
+      class="item-text-wrap"
+    >
+      <i class="folder-open-2icon-"></i> {{ translationWorkspace["shared"] }}
+    </ion-item>
+
+    <ion-item
+      ui-sref="app.workspace_tree({filter: 'appDocuments'})"
+      class="item-text-wrap"
+    >
+      <i class="folder-open-2icon-"></i>
+      {{ translationWorkspace["appDocuments"] }}
+    </ion-item>
+
+    <ion-item
+      ui-sref="app.workspace_tree({filter: 'trash'})"
+      class="item-text-wrap"
+    >
+      <i class="folder-open-2icon-"></i> {{ translationWorkspace["trash"] }}
+    </ion-item>
+  </ion-content>
+</ion-view>

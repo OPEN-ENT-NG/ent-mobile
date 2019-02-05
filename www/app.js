@@ -156,7 +156,7 @@ angular
         url: "/messagerie",
         cache: false,
         views: {
-          menuContent: {
+          "menuContent@app": {
             templateUrl: "messagerie/folder_view.html"
           }
         }
@@ -166,7 +166,7 @@ angular
         url: "/messagerie/:nameFolder/:idFolder",
         cache: false,
         views: {
-          menuContent: {
+          "menuContent@app": {
             templateUrl: "messagerie/folder_content.html"
           }
         }
@@ -175,7 +175,7 @@ angular
       .state("app.message_detail", {
         url: "/messagerie/:nameFolder/:idMessage",
         views: {
-          menuContent: {
+          "menuContent@app": {
             templateUrl: "messagerie/detail.html",
             controller: "MessagesDetailCtrl"
           }
@@ -185,7 +185,7 @@ angular
         url: "/new_message",
         cache: false,
         views: {
-          menuContent: {
+          "menuContent@app": {
             templateUrl: "messagerie/new_message.html",
             controller: "NewMessageCtrl"
           }
@@ -195,7 +195,7 @@ angular
       .state("app.blog-list", {
         url: "/blog-list",
         views: {
-          menuContent: {
+          "menuContent@app": {
             templateUrl: "blogs/blog-list.html",
             controller: "BlogListCtrl"
           }
@@ -205,7 +205,7 @@ angular
       .state("app.blog", {
         url: "/blog/:nameBlog/:idBlog",
         views: {
-          menuContent: {
+          "menuContent@app": {
             templateUrl: "blogs/blog.html",
             controller: "BlogCtrl"
           }
@@ -216,7 +216,7 @@ angular
         url: "/timeline",
         abstract: true,
         views: {
-          menuContent: {
+          "menuContent@app": {
             controller: "TimelineCtrl",
             template: "<ion-nav-view></ion-nav-view>"
           }
@@ -236,7 +236,7 @@ angular
       .state("app.actualites", {
         url: "/actualites",
         views: {
-          menuContent: {
+          "menuContent@app": {
             templateUrl: "actualites/actualites.html",
             controller: "ActualitesCtrl"
           }
@@ -246,7 +246,7 @@ angular
       .state("app.threads", {
         url: "/threads",
         views: {
-          menuContent: {
+          "menuContent@app": {
             templateUrl: "actualites/threads.html"
           }
         }
@@ -255,7 +255,7 @@ angular
       .state("app.listPronotes", {
         url: "/listPronotes",
         views: {
-          menuContent: {
+          "menuContent@app": {
             templateUrl: "pronotes/listPronotes.html"
           }
         }
@@ -264,7 +264,7 @@ angular
       .state("app.pronote", {
         url: "/pronote",
         views: {
-          menuContent: {
+          "menuContent@app": {
             templateUrl: "pronotes/pronote.html"
           }
         }
@@ -273,94 +273,90 @@ angular
       .state("app.workspace", {
         url: "/workspace",
         views: {
-          menuContent: {
-            templateUrl: "workspace/main_workspace.html"
+          "menuContent@app": {
+            templateUrl: "workspace/workspace.html"
           }
         }
       })
 
-      .state("app.workpace_folder_content", {
-        url: "/workspace/:nameWorkspaceFolder",
+      .state("app.workspace_tree", {
+        url: "/workspace/tree",
+        params: {
+          filter: null,
+          folderId: null,
+          folderName: null
+        },
         views: {
-          menuContent: {
+          "menuContent@app": {
             controller: "WorkspaceFolderContentCtlr",
-            templateUrl: "workspace/workspace_folder_content.html"
-            // resolve: {
-            //   foldersData : function(WorkspaceFoldersFactory){
-            //     var FolderData = WorkspaceFoldersFactory.getFolders(nameWorkspaceFolder)
-            //     return FolderData.$promise
-            //   }
-            // }
-          }
-        }
-      })
-
-      .state("app.workpace_trash", {
-        url: "/trashWorkspace",
-        views: {
-          menuContent: {
-            controller: "WorkspaceTrashContentCtlr",
-            templateUrl: "workspace/workspace_folder_content.html"
-          }
-        }
-      })
-
-      .state("app.workspace_folder_depth", {
-        url: "/workspace/:filtre/:parentFolderName/:nameFolder",
-        views: {
-          menuContent: {
-            controller: "WorkspaceFolderDepthCtlr",
-            templateUrl: "workspace/workspace_folder_content.html"
+            templateUrl: "workspace/tree.html"
           }
         }
       })
 
       .state("app.workspace_file", {
-        url: "/workspace/file/:filtre",
+        url: "/workspace/file",
+        params: {
+          filter: null,
+          file: null,
+          folderName: null
+        },
         views: {
-          menuContent: {
+          "menuContent@app": {
             controller: "WorkspaceFileCtlr",
             templateUrl: "workspace/file.html"
           }
         }
       })
 
-      .state("app.workspace_file_versions", {
-        url: "/workspace/file/versions/",
-        views: {
-          menuContent: {
-            controller: "FileVersionCtrl",
-            templateUrl: "workspace/file_versions.html"
-          }
-        }
-      })
+      // .state("app.workspace_file_versions", {
+      //   url: "/workspace/file/versions/",
+      //   views: {
+      //     "menuContent@app": {
+      //       controller: "FileVersionCtrl",
+      //       templateUrl: "workspace/file_versions.html"
+      //     }
+      //   }
+      // })
 
-      .state("app.workspace_tree", {
-        url: "/workspace/tree/:action",
+      .state("app.workspace_movecopy", {
+        url: "/workspace/move_copy",
+        params: {
+          action: null,
+          items: null
+        },
         views: {
-          menuContent: {
-            templateUrl: "workspace/tree-list-folders.html"
+          "menuContent@app": {
+            templateUrl: "workspace/move_copy.html",
+            controller: "MoveCopyCtrl"
           }
         }
       })
 
       .state("app.workspace_share", {
-        url: "/workspace/share/:idItems/:idOwner",
+        url: "/workspace/share",
+        params: {
+          filter: null,
+          ids: null
+        },
         views: {
-          menuContent: {
-            templateUrl: "workspace/share_items.html"
+          "menuContent@app": {
+            controller: "ShareItemController",
+            templateUrl: "workspace/share.html"
           }
         }
       })
+
       .state("app.profile", {
         url: "/profile",
         views: {
-          menuContent: {
+          "menuContent@app": {
             controller: "ProfileCtrl",
             templateUrl: "profile/profile.html"
           }
         }
       })
+
       .state("app.support", {
         url: "/support",
         views: {
@@ -383,6 +379,7 @@ angular
         templateUrl: "firstConnection/firstConnection.html",
         controller: "FirstConnectionCtrl"
       })
+
       .state("authLoading", {
         url: "/auth-loading",
         templateUrl: "authLoader/authLoader.html",
@@ -438,13 +435,10 @@ angular
           break;
         }
         case "/workspace":
-        case "/workspace/:nameWorkspaceFolder":
-        case "/trashWorkspace":
-        case "/workspace/:filtre/:parentFolderName/:nameFolder":
-        case "/workspace/file/:filtre":
-        case "/workspace/file/versions/":
-        case "/workspace/tree/:action":
-        case "/workspace/share/:idItems/:idOwner":
+        case "/workspace/tree":
+        case "/workspace/file":
+        case "/workspace/move_copy":
+        case "/workspace/share":
         case "/actualites":
         case "/threads":
         case "/listPronotes":
@@ -583,25 +577,17 @@ angular
                         );
 
                         WorkspaceService.uploadDoc(formData).then(
-                          function(result) {
-                            console.log(result);
-                            if (
-                              $state.current.name !==
-                              "app.workpace_folder_content"
-                            ) {
-                              $state.go("app.workpace_folder_content", {
-                                nameWorkspaceFolder: "documents"
-                              });
-                            } else {
-                              $scope.$broadcast("workspace_load");
-                            }
+                          function() {
+                            $state.go("app.workspace_tree", {
+                              filter: "owner"
+                            });
                             $ionicLoading.hide();
                           },
                           function(err) {
                             $ionicLoading.hide();
                             console.log("upload failed");
                             $ionicLoading.hide();
-                            $scope.showAlertError();
+                            $scope.showAlertError(err);
                           }
                         );
                       };
@@ -655,8 +641,8 @@ angular
               break;
             }
             case "workspace": {
-              $state.go("app.workpace_folder_content", {
-                nameWorkspaceFolder: "shared"
+              $state.go("app.workspace_tree", {
+                filer: "shared"
               });
               break;
             }
@@ -746,12 +732,7 @@ angular
       };
 
       $scope.gridButton = function(state) {
-        if (state == "app.workspace") {
-          $scope.getAlertPopup(
-            "Non disponible",
-            "Ce module est en cours d'évolution."
-          );
-        } else if (state.includes("http")) {
+        if (state.includes("http")) {
           $scope.openUrl(state);
         } else {
           $state.go(state);
@@ -800,8 +781,8 @@ angular
             });
             break;
           case "WORKSPACE":
-            $state.go("app.workpace_folder_content", {
-              nameWorkspaceFolder: "shared"
+            $state.go("app.workspace_tree", {
+              filter: "shared"
             });
             break;
           default:
@@ -939,7 +920,7 @@ angular
 
     $scope.openLocalFile = function(targetPath, fileMIMEType) {
       $cordovaFileOpener2.open(targetPath, fileMIMEType, {
-        error: function() {
+        error: function(error) {
           $scope.showAlertError(error);
         },
         success: function() {

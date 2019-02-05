@@ -1,5 +1,5 @@
 angular
-  .module("ent.new_message", ["ent.message_services", "monospaced.elastic"])
+  .module("ent.new_message", ["ent.message_services"])
 
   .controller("NewMessageCtrl", function(
     $scope,

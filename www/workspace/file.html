@@ -1,67 +1,123 @@
-<ion-view view-title={{doc.folder}} >
-
+<ion-view view-title="{{ doc.folder }}">
   <ion-content class="true" scroll="false">
-    <ion-scroll class="scroll" direction="y" has-bouncing="true" >
+    <ion-scroll class="scroll" direction="y" has-bouncing="true">
       <div class="card">
-
         <div class="item item-avatar item-text-wrap">
-          <img http-src="{{getImageUrl(doc.ownerPhoto)}}">
-          <h2>{{doc.name}}</h2>
-          <h3>{{doc.ownerName}}</h3>
-          <p>{{doc.modified ? formatDateLocale(doc.modified) : formatDateLocale(doc.created)}}</p>
+          <img http-src="{{ getImageUrl(doc.ownerPhoto) }}" />
+          <h2>{{ doc.name }}</h2>
+          <h3>{{ doc.ownerName }}</h3>
+          <p>
+            {{
+              doc.modified
+                ? formatDateLocale(doc.modified)
+                : formatDateLocale(doc.created)
+            }}
+          </p>
         </div>
 
         <ion-card-content class="item">
           <div class="cardCenter">
-            <img ng-if="doc.test ==='true' && isDocImage(doc.metadata) =='true'" class="file-image" http-src="{{getThumbnailUrl( doc.image ? doc.image:doc.icon_image)}}">
-            <img ng-if="doc.test ==='false' && isDocImage(doc.metadata) =='true'" class="file-image" http-src="{{getImageUrl( doc.image ? doc.image:doc.icon_image)}}">
-            <img ng-if="isDocImage(doc.metadata) == 'false'" src="img/defaultfile.png"/>
+            <img
+              ng-if="doc.test ==='true' && isDocImage(doc.metadata) =='true'"
+              class="file-image"
+              http-src="{{
+                getThumbnailUrl(doc.image ? doc.image : doc.icon_image)
+              }}"
+            />
+            <img
+              ng-if="doc.test ==='false' && isDocImage(doc.metadata) =='true'"
+              class="file-image"
+              http-src="{{
+                getImageUrl(doc.image ? doc.image : doc.icon_image)
+              }}"
+            />
+            <img
+              ng-if="isDocImage(doc.metadata) == 'false'"
+              src="img/defaultfile.png"
+            />
           </div>
 
-          <div class="comment"  ng-show="post.comments.length != 0">
-            <p  ng-click="toggleComments(doc)" ng-class="{active: areCommentsShown(doc)}" class="subdued">
-              {{getCountComments(doc)}}
+          <div class="comment" ng-show="post.comments.length != 0">
+            <p
+              ng-click="toggleComments()"
+              ng-class="{active: displayComments}"
+              class="subdued"
+            >
+              {{ getCountComments(doc) }}
             </p>
-            <ion-item class="item-accordion item-text-wrap"  ng-repeat="comment in doc.comments track by $index"  ng-show="areCommentsShown(doc)">
-              <h3>{{comment.authorName}}, {{formatDateLocale(comment.posted)}}</h3>
-              <p>{{comment.comment}}</p>
+            <ion-item
+              class="item-accordion item-text-wrap"
+              ng-repeat="comment in doc.comments track by $index"
+              ng-show="displayComments"
+            >
+              <h3>
+                {{ comment.authorName }}, {{ formatDateLocale(comment.posted) }}
+              </h3>
+              <p>{{ comment.comment }}</p>
             </ion-item>
           </div>
-
         </ion-card-content>
 
-          <div class="item tabs tabs-secondary tabs-icon-left">
-
-            <a class="tab-item" ng-click='downloadDoc()'>
-              <i class="icon downloadicon-"></i>
-            </a>
+        <div class="item tabs tabs-secondary tabs-icon-left">
+          <a class="tab-item" ng-click="downloadDoc()">
+            <i class="icon downloadicon-"></i>
+          </a>
 
           <a class="tab-item" ng-click="commentDoc()">
             <div ng-style="isRightToComment() ? {opacity:1}:{opacity:0.5}">
               <i class="icon ion-chatbox"></i>
-              {{translationWorkspace["workspace.comment"]}}
+              {{ translationWorkspace["workspace.comment"] }}
             </div>
           </a>
 
           <a class="tab-item" ng-click="goShare()">
             <div ng-style="isRightToShare() ? {opacity:1}:{opacity:0.5}">
               <i class="icon share-1icon-"></i>
-              {{translationWorkspace["workspace.share"]}}
+              {{ translationWorkspace["workspace.share"] }}
             </div>
           </a>
-
         </div>
       </div>
     </ion-scroll>
   </ion-content>
 
-
-<nav mfb-menu style="margin-top:25%" position="tr" effect="zoomin" active-icon="ion-plus-round" resting-icon="ion-plus-round" toggling-method="click" templateUrl="ng-mfb-menu-horizontal.tpl.html">
-  <!-- <button mfb-button icon="fa fa-code-fork " ng-click="versions()" label={{translationWorkspace["workspace.versions.list"]}}></button> -->
-  <button ng-if="isRightsToDelete()" mfb-button icon="ion-trash-a" ng-click="trashDoc()" label={{translationWorkspace["workspace.delete"]}}></button>
-  <button ng-if="isRightsToUpdate()" mfb-button icon="ion-edit" ng-click="renameDoc()" label={{translationWorkspace["workspace.rename"]}}></button>
-  <button ng-if="isRightsToMove()" mfb-button icon="moveicon-" ng-click="moveDoc()" label={{translationWorkspace["workspace.move"]}}></button>
-  <button mfb-button icon="fa fa-clone" ng-click="copyDoc()" label={{getCopyExpression()}}></button>
-
-</nav>
+  <nav
+    mfb-menu
+    style="margin-top:25%"
+    position="tr"
+    effect="zoomin"
+    active-icon="ion-plus-round"
+    resting-icon="ion-plus-round"
+    toggling-method="click"
+    templateUrl="ng-mfb-menu-horizontal.tpl.html"
+  >
+    <!-- <button mfb-button icon="fa fa-code-fork " ng-click="versions()" label={{translationWorkspace["workspace.versions.list"]}}></button> -->
+    <button
+      ng-if="isRightsToDelete()"
+      mfb-button
+      icon="ion-trash-a"
+      ng-click="trashDoc()"
+      label="{{ translationWorkspace['workspace.delete'] }}"
+    ></button>
+    <button
+      ng-if="isRightsToUpdate()"
+      mfb-button
+      icon="ion-edit"
+      ng-click="renameDoc()"
+      label="{{ translationWorkspace['workspace.rename'] }}"
+    ></button>
+    <button
+      ng-if="isRightsToMove()"
+      mfb-button
+      icon="moveicon-"
+      ng-click="moveDoc()"
+      label="{{ translationWorkspace['workspace.move'] }}"
+    ></button>
+    <button
+      mfb-button
+      icon="fa fa-clone"
+      ng-click="copyDoc()"
+      label="{{ getCopyExpression() }}"
+    ></button>
+  </nav>
 </ion-view>

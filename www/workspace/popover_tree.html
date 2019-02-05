@@ -1,0 +1,50 @@
+<ion-popover-view class="fit">
+  <ion-content>
+    <ion-list>
+      <!-- supprimer -->
+      <a
+        class="item"
+        ng-click="deleteSelectedItems()"
+        ng-show="hasRight('manage')"
+        >{{ translationWorkspace["workspace.delete"] }}</a
+      >
+
+      <!-- Renommer -->
+      <a
+        class="item"
+        ng-click="renameItem()"
+        ng-show="hasRight('manage') && !isTrash()"
+        >{{ translationWorkspace["workspace.rename"] }}</a
+      >
+
+      <!-- Restaurer -->
+      <a class="item" ng-click="restoreSelectedItems()" ng-show="isTrash()">{{
+        translationWorkspace["workspace.trash.restore"]
+      }}</a>
+
+      <!-- Copier dans l'arborescence -->
+      <a
+        class="item item-text-wrap"
+        ng-click="copySelectedItems()"
+        ng-show="!isTrash()"
+        >{{ getCopyExpression() }}</a
+      >
+
+      <!-- Déplacer -->
+      <a
+        class="item"
+        ng-click="moveSelectedItems()"
+        ng-show="hasRight('manage') && !isTrash()"
+        >{{ translationWorkspace["workspace.move"] }}</a
+      >
+
+      <!-- Partager -->
+      <a
+        class="item"
+        ng-click="shareSelectedItems()"
+        ng-show="hasRight('share') && !isTrash()"
+        >{{ translationWorkspace["workspace.share"] }}</a
+      >
+    </ion-list>
+  </ion-content>
+</ion-popover-view>
