@@ -2,15 +2,15 @@
   <ion-content direction="y" has-bouncing="true">
     <ion-item
       style="vertical-align: middle;"
-      ng-repeat="pref in preferences | orderBy:'name'"
+      ng-repeat="type in types | orderBy:'name'"
     >
       <h4 style="display: inline-block; margin: 10px 0; font-size: 18px">
-        {{ pref.name }}
+        {{ type.name }}
       </h4>
       <label style="margin: 0;" class="toggle right">
         <input
           type="checkbox"
-          ng-model="pref.checked"
+          ng-model="type.checked"
           ng-click="updatePreferences()"
         />
         <div class="track"><div class="handle"></div></div>

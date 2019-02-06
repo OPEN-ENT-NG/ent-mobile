@@ -26,10 +26,10 @@ angular
       return Promise.all([translationNotif, translationTimeline]);
     };
 
-    this.updatePreferences = function(modules) {
-      return RequestService.put(domainENT + "/userbook/preference/timeline", {
-        page: 0,
-        type: modules
-      });
+    this.updatePreferences = function(preferences) {
+      return RequestService.put(
+        domainENT + "/userbook/preference/timeline",
+        preferences
+      );
     };
   });

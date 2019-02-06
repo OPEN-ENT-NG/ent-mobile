@@ -9,8 +9,7 @@ angular
     domainENT,
     $state
   ) {
-    $scope.preferences = [];
-    $scope.filter = [];
+    $scope.types = [];
     $scope.timeline = [];
 
     $ionicPlatform.ready(function() {
@@ -52,30 +51,31 @@ angular
         template: '<ion-spinner icon="android"/>'
       });
       $scope.preferences = [];
+      $scope.types = [];
 
       TimelineService.getTranslation().then(translation => {
-        TimelineService.getTypes().then(types => {
+        TimelineService.getTypes().then(allTypes => {
           TimelineService.getPreferences().then(prefs => {
-            let filter = [];
-            if (prefs.data.preference) {
-              filter = JSON.parse(prefs.data.preference).type;
-            }
+            $scope.preferences = JSON.parse(prefs.data.preference);
+            $scope.types = $scope.preferences.types || [];
 
-            types.data.forEach(type => {
+            types = JSON.parse(prefs.data.preference).type;
+
+            allTypes.data.forEach(type => {
               let name =
                 translation[0].data[type.toLowerCase()] ||
                 translation[1].data[type.toLowerCase()];
 
               if (name != null) {
                 let checked = false;
-                for (const iterator of filter) {
+                for (const iterator of types) {
                   if (iterator == type) {
                     checked = true;
                     break;
                   }
                 }
 
-                $scope.preferences.push({
+                $scope.types.push({
                   type: type,
                   name: name,
                   checked: checked
@@ -107,6 +107,9 @@ angular
     }
 
     function formatFilter(filter) {
+      if (!filter instanceof Array) {
+        $ionicLoadng.hide();
+      }
       let result = "";
       filter.forEach(element => {
         result += "&type=" + element;
@@ -120,8 +123,10 @@ angular
     };
 
     $scope.updatePreferences = function() {
-      TimelineService.updatePreferences(
-        $scope.preferences.filter(elem => elem.checked).map(elem => elem.type)
-      );
+      $scope.preferences.type = $scope.types
+        .filter(elem => elem.checked)
+        .map(elem => elem.type);
+
+      TimelineService.updatePreferences($scope.preferences);
     };
   });
