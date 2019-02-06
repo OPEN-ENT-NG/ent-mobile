@@ -36,7 +36,7 @@ ion-popover-view.fit ion-content {
 }
 
 .custom-help-circled {
-  color: #4BAFBC;
+  color: #4bafbc;
 }
 
 .center-image-item i {
@@ -643,4 +643,20 @@ ion-popover-view.fit ion-content {
 .mfb-component--br {
   right: 0;
   bottom: 35px !important;
+}
+
+.share .button {
+  background-color: #ff8500;
+  color: #ffffff;
+  text-transform: uppercase;
+  width: 100%;
+}
+
+.share .spinner-container {
+  width: 100%;
+  text-align: center;
+}
+
+.share .spinner-container svg {
+  stroke: #ff8500;
 }

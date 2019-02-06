@@ -1,4 +1,4 @@
-<ion-view>
+<ion-view class="share">
   <ion-nav-title>
     <span class="search-custom-header-label" style="vertical-align:baseline;">
       <input
@@ -126,6 +126,12 @@
           </tr>
         </table>
       </ion-item>
+      <div class="spinner-container">
+        <ion-spinner icon="android" ng-show="loader.share">&nbsp;</ion-spinner>
+      </div>
+      <button class="button" ng-hide="loader.share" ng-click="saveSharing()">
+        Partager
+      </button>
     </ion-list>
     <ion-list style="height:100%" ng-show="search.length > 0">
       <ion-item
