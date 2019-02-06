@@ -90,12 +90,16 @@ angular
       });
     };
 
-    this.post = function(url, data, config) {
+    this.post = function(url, data, config, avoidRedirect) {
       config = getConfig(config);
       return $q(function(resolve, reject) {
         $http.post(url, data, config).then(
           function(response) {
-            onResolve(resolve, response);
+            if (avoidRedirect) {
+              resolve(response);
+            } else {
+              onResolve(resolve, response);
+            }
           },
           function(err) {
             onError(reject, err);

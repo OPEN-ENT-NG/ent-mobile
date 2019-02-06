@@ -1,29 +1,52 @@
-angular.module('ent.firstConnection', [])
+angular
+  .module("ent.firstConnection", [])
 
-  .controller('FirstConnectionCtrl', function ($timeout, $ionicPlatform, $scope, FirstConnectionService, $rootScope) {
-
-    $ionicPlatform.ready(function () {
+  .controller("FirstConnectionCtrl", function(
+    $timeout,
+    $ionicPlatform,
+    $scope,
+    FirstConnectionService,
+    $rootScope,
+    OAuthService,
+    $state
+  ) {
+    $ionicPlatform.ready(function() {
       getRegex();
-
-
     });
 
-    $scope.doActivate = function (user) {
-      FirstConnectionService.activate(user).then(function (resp) {
-        if(resp.data.error) {
+    $scope.doActivate = function(user) {
+      FirstConnectionService.activate(user).then(function(resp) {
+        if (resp.data.error) {
           $scope.error = resp.data.error.message;
         } else {
-          $rootScope.success = 'Compte activé avec succès';
+          $rootScope.success = "Compte activé avec succès";
+          doLogin(user.login, user.password);
         }
-        $timeout(function () {
+        $timeout(function() {
           delete $scope.error;
           delete $rootScope.success;
         }, 2000);
       });
-    }
+    };
 
-    $scope.passwordComplexity = function (password) {
+    var doLogin = function(username, password) {
+      OAuthService.doAuthent({
+        username,
+        password
+      }).then(
+        response => {
+          localStorage.setItem("access_token", response.access);
+          localStorage.setItem("username", username);
+          localStorage.setItem("password", response.access);
+          $state.go("app.timeline.list");
+        },
+        () => {
+          $state.go("login");
+        }
+      );
+    };
 
+    $scope.passwordComplexity = function(password) {
       if (!password) {
         return 0;
       }
@@ -32,7 +55,7 @@ angular.module('ent.firstConnection', [])
         return password.length;
       }
 
-      var score = password.length
+      var score = password.length;
       if (/[0-9]+/.test(password) && /[a-zA-Z]+/.test(password)) {
         score += 5;
       }
@@ -41,22 +64,21 @@ angular.module('ent.firstConnection', [])
       }
 
       return score;
-    }
+    };
 
-    $scope.translateComplexity = function (score, fr) {
-
+    $scope.translateComplexity = function(score, fr) {
       if (score < 12) {
-        return fr ? 'Faible' : 'weak';
+        return fr ? "Faible" : "weak";
       } else if (score < 20) {
-        return fr ? 'Modérée' : 'moderate';
+        return fr ? "Modérée" : "moderate";
       } else {
-        return fr ? 'Forte' : 'strong';
+        return fr ? "Forte" : "strong";
       }
     };
 
-    function getRegex () {
-      FirstConnectionService.getPasswordRegex().then(function (data) {
+    function getRegex() {
+      FirstConnectionService.getPasswordRegex().then(function(data) {
         $scope.regex = data.passwordRegex;
       });
     }
-  })
+  });
