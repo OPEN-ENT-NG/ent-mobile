@@ -18,33 +18,37 @@ angular
     $scope.contactShared = [];
     $scope.search = "";
 
-    for (let id of $stateParams["ids"]) {
-      items[id] = {};
-      WorkspaceService.getSharingItemDatas(id).then(({ data }) => {
-        for (let action of data.actions) {
-          items[id][action.displayName.split(".")[1]] = action.name;
-        }
-        if (Object.keys(items).length === 1) {
-          for (let group of data.groups.visibles) {
-            $scope.addToShared(
-              {
-                ...group,
-                ...reverseRights(items[id], data.groups.checked[group.id])
-              },
-              true
-            );
+    getData();
+
+    function getData() {
+      for (let id of $stateParams["ids"]) {
+        items[id] = {};
+        WorkspaceService.getSharingItemDatas(id).then(({ data }) => {
+          for (let action of data.actions) {
+            items[id][action.displayName.split(".")[1]] = action.name;
           }
-          for (let user of data.users.visibles) {
-            $scope.addToShared(
-              {
-                ...user,
-                ...reverseRights(items[id], data.users.checked[user.id])
-              },
-              false
-            );
+          if (Object.keys(items).length === 1) {
+            for (let group of data.groups.visibles) {
+              $scope.addToShared(
+                {
+                  ...group,
+                  ...reverseRights(items[id], data.groups.checked[group.id])
+                },
+                true
+              );
+            }
+            for (let user of data.users.visibles) {
+              $scope.addToShared(
+                {
+                  ...user,
+                  ...reverseRights(items[id], data.users.checked[user.id])
+                },
+                false
+              );
+            }
           }
-        }
-      });
+        });
+      }
     }
 
     // complementHeaderList();
@@ -550,12 +554,12 @@ angular
         for (let contactShared of $scope.contactShared) {
           let subdata = contactShared.isGroup ? data.groups : data.users;
           let rights = getRights(items[id], contactShared);
-          if (rights) {
-            subdata[contactShared.id] = getRights(items[id], contactShared);
+          if (rights.length > 0) {
+            subdata[contactShared.id] = rights;
           }
         }
 
-        WorkspaceService.updateSharingActions(id, data);
+        WorkspaceService.updateSharingActions(id, data).then(getData());
       }
       // for (var i = 0; i < $scope.contactShared.length; i++) {
       //   var contactShared = $scope.contactShared[i];

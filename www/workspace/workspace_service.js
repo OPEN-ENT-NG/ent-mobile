@@ -97,10 +97,10 @@ angular
     //   );
     // };
 
-    this.uploadDoc = function(doc) {
+    this.uploadDoc = function(doc, parentId) {
+      let parentIdParam = parentId ? `&parentId=${parentId}` : "";
       return $http.post(
-        domainENT +
-          "/workspace/document?thumbnail=120x120&thumbnail=290x290&quality=0.8",
+        `${domainENT}/workspace/document?thumbnail=120x120&thumbnail=290x290&quality=0.8${parentIdParam}`,
         doc,
         {
           transformRequest: angular.identity,

@@ -148,7 +148,7 @@ angular
 
         var formData = new FormData();
         formData.append("file", newDoc);
-        WorkspaceService.uploadDoc(formData).then(
+        WorkspaceService.uploadDoc(formData, $stateParams["folderId"]).then(
           function() {
             getData();
             $ionicLoading.hide();
