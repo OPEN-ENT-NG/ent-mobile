@@ -834,37 +834,38 @@ angular
       }, 1000);
     });
 
-    $scope.downloadFile = function(fileName, urlFile, contentType) {
+    $rootScope.downloadFile = function(fileName, urlFile) {
       $ionicLoading.show({
         template: '<ion-spinner icon="android"/>'
       });
+
       var filePath = ionic.Platform.isIOS()
         ? cordova.file.dataDirectory
         : cordova.file.externalRootDirectory + "Download/";
 
-      var checkFile = function(successCallback, failCallback) {
-        $cordovaFile
-          .checkFile(filePath, fileName)
-          .then(function(entry) {
-            entry.file(function(data) {
-              if (data.type == contentType) {
-                successCallback();
-              } else {
-                failCallback();
-              }
-            });
-          })
-          .catch(failCallback);
-      };
-
-      var openFile = function() {
-        $scope.openLocalFile(filePath + fileName, contentType);
-        $ionicLoading.hide();
-      };
-
       var failure = function(err) {
         $scope.showAlertError(err);
         $ionicLoading.hide();
+      };
+
+      var checkFile = function() {
+        $cordovaFile.checkFile(filePath, fileName).then(
+          fileEntry => openFile(fileEntry),
+          err => {
+            if (err.code === 1) {
+              downloadFile();
+            } else {
+              failure(err);
+            }
+          }
+        );
+      };
+
+      var openFile = function(fileEntry) {
+        fileEntry.file(file => {
+          $scope.openLocalFile(file.localURL, file.type);
+          $ionicLoading.hide();
+        });
       };
 
       var downloadFile = function() {
@@ -875,21 +876,26 @@ angular
           cache: true
         };
 
-        $http(config).then(function(result) {
-          if (result.status === 200) {
-            $cordovaFile
-              .writeFile(
-                filePath,
-                fileName,
-                new Blob([new Uint8Array(result.data)], { type: contentType })
-              )
-              .then(openFile)
-              .catch(failure);
-          }
-        }, failure);
+        $http(config).then(
+          result => {
+            if (result.status === 200 && result.data) {
+              $cordovaFile
+                .writeFile(
+                  filePath,
+                  fileName,
+                  new Blob([new Uint8Array(result.data)], {
+                    type: result.headers("content-type")
+                  }),
+                  true
+                )
+                .then(() => checkFile(), err => failure(err));
+            }
+          },
+          err => failure(err)
+        );
       };
 
-      checkFile(openFile, downloadFile);
+      checkFile();
     };
 
     $scope.openUrl = function(url) {
@@ -1252,15 +1258,12 @@ angular
         let data = angular.copy(attrs.renderHtml);
         if (data != null) {
           data = data.replace(
+            /href="([\/\w\d-]+)"><div class="download"><\/div>(.+)<\/a>/g,
+            `ng-click="downloadFile('$2', '${domainENT}$1')"><div class="download"></div>$2</a>`
+          );
+          data = data.replace(
             /href=(["'])(.*?)\1/g,
             "ng-click=\"openUrl('$2')\""
-          );
-
-          data = data.replace(
-            /href="([\/\w\d-]+)"><div class="download"><\/div>(\S+)</g,
-            "ng-click=\"downloadFile({fileName: '$2', urlFile: '" +
-              domainENT +
-              '$1\'})"><div class="download"></div>$2<'
           );
           data = data.replace(
             /<img src="(http(s?):\/\/[\S]+)"/g,

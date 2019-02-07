@@ -140,11 +140,7 @@ angular
         "/attachment/" +
         id;
       var attachment = findElementById($scope.mail.attachments, id);
-      $scope.downloadFile(
-        attachment.filename,
-        attachmentUrl,
-        attachment.contentType
-      );
+      $rootScope.downloadFile(attachment.filename, attachmentUrl);
     };
 
     function getMessage() {

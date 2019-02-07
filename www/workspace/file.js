@@ -29,11 +29,7 @@ angular
       cordova.plugins.diagnostic.getPermissionsAuthorizationStatus(
         function(statuses) {
           console.log(statuses);
-          $scope.downloadFile(
-            $scope.doc.metadata.filename,
-            docUrl,
-            $scope.doc.metadata["content-type"]
-          );
+          $rootScope.downloadFile($scope.doc.metadata.filename, docUrl);
         },
         function(error) {
           console.log(error);

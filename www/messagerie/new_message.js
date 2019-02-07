@@ -237,11 +237,7 @@ angular
         "/attachment/" +
         id;
       var attachment = findElementById($scope.email.attachments, id);
-      $scope.downloadFile(
-        attachment.filename,
-        attachmentUrl,
-        attachment.contentType
-      );
+      $rootScope.downloadFile(attachment.filename, attachmentUrl);
     };
 
     $scope.expandText = function() {
