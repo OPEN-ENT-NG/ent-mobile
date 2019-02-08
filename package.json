@@ -1,6 +1,6 @@
 {
   "name": "ParisClasseNumerique",
-  "version": "0.3.0",
+  "version": "0.6.0",
   "description": "ENT mobile: An Ionic project",
   "scripts": {
     "android": "ionic cordova run android --device"
