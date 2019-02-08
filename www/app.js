@@ -119,26 +119,6 @@ angular
     $httpProvider
   ) {
     $httpProvider.defaults.withCredentials = true;
-    $httpProvider.interceptors.push(function($rootScope) {
-      return {
-        request: function(config) {
-          if (localStorage.getItem("access_token")) {
-            // config.headers['Authorization'] = 'Bearer '+localStorage.getItem('access_token')
-            // console.log("localStorage.getItem('access_token') "+localStorage.getItem('access_token'));
-          }
-          // console.log("loading:show");
-          // $rootScope.$broadcast('loading:show')
-          return config;
-        },
-        response: function(response) {
-          // console.log("loading:hide");
-
-          //    alert('besoin de refreshToken');
-          // $rootScope.$broadcast('loading:hide')
-          return response;
-        }
-      };
-    });
 
     if (!ionic.Platform.isIOS()) {
       $ionicConfigProvider.scrolling.jsScrolling(false);
@@ -368,6 +348,9 @@ angular
       })
 
       .state("login", {
+        params: {
+          prefill: false
+        },
         url: "/login",
         templateUrl: "authentification/login-credentials.html",
         controller: "LoginCtrl",

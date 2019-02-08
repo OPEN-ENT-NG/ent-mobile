@@ -1,13 +1,7 @@
 angular
   .module("ent.request", ["ent.workspace_service", "ent"])
 
-  .service("RequestService", function(
-    $timeout,
-    $http,
-    $q,
-    $state,
-    $ionicLoading
-  ) {
+  .service("RequestService", function($http, $q, $state, $ionicLoading) {
     var timeout = 5000;
 
     function onError(reject, error) {
@@ -19,8 +13,9 @@ angular
       var str = response.data.toString();
       if (str.startsWith("<!doctype html>")) {
         $ionicLoading.hide();
-        resolve(response);
-        $state.go("login");
+        if ($state.current.name !== "login") {
+          $state.go("login", { prefill: true });
+        }
       } else {
         resolve(response);
       }

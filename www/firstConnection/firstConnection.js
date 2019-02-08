@@ -34,10 +34,9 @@ angular
         username,
         password
       }).then(
-        response => {
-          localStorage.setItem("access_token", response.access);
+        () => {
           localStorage.setItem("username", username);
-          localStorage.setItem("password", response.access);
+          localStorage.setItem("password", password);
           $state.go("app.timeline.list");
         },
         () => {

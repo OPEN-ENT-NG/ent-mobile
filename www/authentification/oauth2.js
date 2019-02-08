@@ -1,13 +1,7 @@
 angular
   .module("ent.oauth2", [])
 
-  .service("OAuthService", function(
-    $q,
-    domainENT,
-    $ionicLoading,
-    OAuth2Params,
-    RequestService
-  ) {
+  .service("OAuthService", function(domainENT, OAuth2Params, RequestService) {
     this.doAuthent = function(params) {
       var data =
         "client_id=" +
@@ -50,14 +44,11 @@ angular
           return;
         }
         var url = domainENT + "/timeline/pushNotif/fcmToken?fcmToken=" + token;
-        console.log(url);
         RequestService.put(url).then(
           function(response) {
-            console.log(response);
             localStorage.setItem("fcmToken", token);
           },
           function(error) {
-            console.log("put token failed");
             throw error;
           }
         );
@@ -77,24 +68,33 @@ angular
     $scope,
     $state,
     OAuthService,
-    $rootScope
+    $rootScope,
+    $stateParams
   ) {
+    $scope.user = {};
+
     $ionicPlatform.ready(function() {
       $rootScope.navigator = navigator;
+      if ($stateParams.hasOwnProperty("prefill") && $stateParams["prefill"]) {
+        $scope.user = {
+          username: localStorage.getItem("username"),
+          password: localStorage.getItem("password"),
+          rememberMe: !!localStorage.getItem("RememberMe")
+        };
+      }
     });
 
-    $scope.doLogin = function(user) {
+    $scope.doLogin = function() {
       OAuthService.doAuthent({
-        username: user.username,
-        password: user.password
+        username: $scope.user.username,
+        password: $scope.user.password
       }).then(
         function(response) {
-          console.log(response);
           $scope.wrongLogin = false;
-          localStorage.setItem("access_token", response.access);
-          localStorage.setItem("username", user.username);
-          localStorage.setItem("password", response.access);
-          if ($scope.rememberMe == true) {
+          localStorage.setItem("username", $scope.user.username);
+          localStorage.setItem("password", $scope.user.password);
+          if ($scope.user.rememberMe == true) {
+            localStorage.setItem("RememberMe", "true");
             localStorage.setItem("refresh", response.refresh);
             OAuthService.setFcmToken();
           }
@@ -102,16 +102,10 @@ angular
         },
         function errorCallback() {
           $scope.wrongLogin = true;
-          $scope.rememberMe = false;
+          $scope.user.rememberMe = false;
           localStorage.setItem("RememberMe", "false");
           $state.go("login");
         }
       );
-    };
-
-    $scope.rememberMeClicked = function() {
-      $scope.rememberMe = !$scope.rememberMe;
-      localStorage.setItem("RememberMe", $scope.rememberMe);
-      console.log("changed remember me to " + $scope.rememberMe);
     };
   });
