@@ -11,7 +11,7 @@ angular
     $ionicLoading,
     $cordovaVibration,
     $ionicHistory,
-    $ionicPlatform,
+    $ionicPopover,
     MoveMessagesPopupFactory,
     DeleteMessagesPopupFactory,
     $ionicListDelegate
@@ -30,6 +30,14 @@ angular
       return returnName;
     };
 
+    $ionicPopover
+      .fromTemplateUrl("messagerie/popover_messagerie_folder.html", {
+        scope: $scope
+      })
+      .then(function(popover) {
+        $rootScope.popover = popover;
+      });
+
     $scope.restoreMessages = function() {
       MessagerieServices.restoreSelectedMessages(getSelectedMessages()).then(
         function() {
@@ -39,10 +47,6 @@ angular
           $ionicLoading.hide();
         }
       );
-    };
-
-    $scope.goThreads = function() {
-      $state.go("app.messagerie");
     };
 
     $scope.canShowRestore = function() {

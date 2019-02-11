@@ -1,10 +1,11 @@
 <ion-view ng-controller="InboxCtrl" ng-cloak>
   <ion-nav-title>{{checkable ? getCountOfCheckedMessages(): getNameFolder(nameFolder)}}</ion-nav-title>
   <ion-nav-buttons side="right">
-    <button class="button button-icon button-clear fa fa-list-ul"  ng-click="goThreads()" ></button>
-    <button class="button button-icon button-clear ion-trash-a buttonActionBar" ng-if=checkable ng-click=deleteSelectedMessages()></button>
-    <button class="button button-icon button-clear ion-filing buttonActionBar" ng-if=checkable ng-click=showPopupMove()></button>
-    <button class="button button-icon button-clear ion-refresh buttonActionBar" ng-if=canShowRestore() ng-click="restoreMessages()"></button>
+      <button
+      class="button button-icon button-clear ion-android-more-vertical buttonActionBar"
+      ng-click="openPopover($event)"
+      ng-show="checkable"
+    ></button>
   </ion-nav-buttons>
 
   <ion-content scroll="false">

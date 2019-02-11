@@ -1,0 +1,20 @@
+<ion-popover-view class="fit">
+  <ion-content>
+    <ion-list>
+      <!-- déplacer -->
+      <a class="item" ng-click="showPopupMove()">{{
+        translationConversation["move.inside.folder"]
+      }}</a>
+
+      <!-- supprimer -->
+      <a class="item" ng-click="deleteSelectedMessages()">{{
+        translationConversation["delete"]
+      }}</a>
+
+      <!-- restaurer -->
+      <a class="item" ng-if="canShowRestore()" ng-click="restoreMessages()">{{
+        translationConversation["restore"]
+      }}</a>
+    </ion-list>
+  </ion-content>
+</ion-popover-view>
