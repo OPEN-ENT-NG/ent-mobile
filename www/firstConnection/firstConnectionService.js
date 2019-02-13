@@ -10,6 +10,10 @@ angular
       return RequestService.get(domainENT + "/auth/context");
     };
 
+    this.getAuthTranslation = function() {
+      return RequestService.get(`${domainENT}/auth/i18n`);
+    };
+
     this.activate = function(user) {
       return RequestService.post(
         domainENT + "/auth/activation",

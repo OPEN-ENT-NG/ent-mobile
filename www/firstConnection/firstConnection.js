@@ -8,11 +8,23 @@ angular
     FirstConnectionService,
     $rootScope,
     OAuthService,
-    $state
+    $state,
+    domainENT,
+    $sce
   ) {
     $ionicPlatform.ready(function() {
-      getRegex();
+      // getRegex();
+      FirstConnectionService.getAuthTranslation().then(({ data }) => {
+        $scope.translation = data;
+      });
     });
+
+    $scope.openCGU = function() {
+      cordova.InAppBrowser.open(
+        $sce.trustAsUrl(`${domainENT}${$scope.translation["auth.charter"]}`),
+        "_system"
+      );
+    };
 
     $scope.doActivate = function(user) {
       FirstConnectionService.activate(user).then(function(resp) {
@@ -75,9 +87,9 @@ angular
       }
     };
 
-    function getRegex() {
-      FirstConnectionService.getPasswordRegex().then(function(data) {
-        $scope.regex = data.passwordRegex;
-      });
-    }
+    // function getRegex() {
+    //   FirstConnectionService.getPasswordRegex().then(function(data) {
+    //     $scope.regex = data.passwordRegex;
+    //   });
+    // }
   });

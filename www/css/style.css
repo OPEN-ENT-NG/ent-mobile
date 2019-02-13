@@ -326,6 +326,14 @@ ion-popover-view.fit ion-content {
   color: #e5e5e5;
   font-weight: bold;
   white-space: normal;
+  font-size: 16px;
+}
+
+.firstco .checkboxContainer {
+  margin: 15px 0;
+  display: flex;
+  border-color: transparent;
+  align-items: center;
 }
 
 .firstco .item-input > span {

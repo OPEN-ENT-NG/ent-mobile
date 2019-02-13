@@ -94,12 +94,16 @@
         />
       </label>
 
-      <ion-checkbox class="login-checkbox" ng-model="user.acceptCGU"
-        >J'accepte les conditions générales d'utilisation</ion-checkbox
-      >
+      <div class="checkboxContainer">
+        <div class="checkbox checkbox-square" style="margin-right: 15px">
+          <input type="checkbox" ng-model="user.acceptCGU" />
+        </div>
+        <span ng-click="openCGU()">{{ translation["label.accept.cgu"] }}</span>
+      </div>
 
       <button
         ng-class="{'disabled' : !(user.login && user.activationCode && user.password && user.confirmPassword && user.acceptCGU)}"
+        ng-disabled="!(user.login && user.activationCode && user.password && user.confirmPassword && user.acceptCGU)"
         class="button-block button-login"
         ng-click="doActivate(user)"
       >
