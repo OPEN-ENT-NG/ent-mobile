@@ -8,7 +8,8 @@ angular
     $ionicPlatform,
     $ionicLoading,
     $state,
-    SupportService
+    SupportService,
+    getPopupFactory
   ) {
     $ionicPlatform.ready(function() {
       $scope.$on("$ionicView.enter", function() {
@@ -50,7 +51,7 @@ angular
       };
 
       $scope.addAttachment = function() {
-        $scope.getAlertPopup(
+        getPopupFactory.getAlertPopup(
           "Non disponible",
           "Cette fonctionnalité n'est pas encore disponible."
         );
@@ -59,7 +60,7 @@ angular
       $scope.saveTicket = function() {
         let error = checkTicket($scope.ticket);
         if (error) {
-          $scope.getAlertPopup(
+          getPopupFactory.getAlertPopup(
             "Erreur dans le formulaire",
             $scope.translation[error]
           );
@@ -93,7 +94,7 @@ angular
             },
             () => {
               $ionicLoading.hide();
-              $scope.getAlertPopup(
+              getPopupFactory.getAlertPopup(
                 "Echec",
                 "La création de la demande a échoué."
               );

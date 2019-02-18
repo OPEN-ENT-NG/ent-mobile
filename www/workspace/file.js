@@ -12,7 +12,8 @@ angular
     $ionicHistory,
     $ionicPopover,
     $state,
-    RenamePopUpFactory
+    RenamePopUpFactory,
+    getPopupFactory
   ) {
     var myUserRights = [];
     var isOwner = false;
@@ -113,7 +114,7 @@ angular
     };
 
     $scope.trashDoc = function(doc) {
-      $scope
+      getPopupFactory
         .getConfirmPopup(
           $rootScope.translationWorkspace["workspace.delete"],
           $rootScope.translationWorkspace["confirm.remove"],

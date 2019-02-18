@@ -1,0 +1,120 @@
+<ion-view view-title="Mot de passe perdu" id="forgotLoginPwd">
+  <ion-content class="fondbleu">
+    <div><img src="img/logo1.png" class="img-responsive" /></div>
+
+    <p class="title" ng-click="goBack()">
+      <i class="fa fa-arrow-left"></i>{{ translation["auth.back.to.login"] }}
+    </p>
+
+    <div class="padding">
+      <label class="title" ng-click="toggleCategory('password')">
+        <span>
+          {{ translation["auth.lost.password"] }}
+        </span></label
+      >
+
+      <div ng-show="categories.password === true">
+        <p>{{ translation["auth.lost.password.text"] }}</p>
+
+        <label class="item item-input margin-login">
+          <input
+            type="text"
+            autocomplete="false"
+            spellcheck="false"
+            autocapitalize="none"
+            ng-model="login"
+            placeholder="{{ translation['auth.email'] }}"
+          />
+        </label>
+
+        <spinner-button
+          css-class="'button-block button-login margin-login'"
+          disabled="!login"
+          click="sendLogin(login)"
+          loading="loading.login"
+          >{{ translation["auth.forgot.send"] }}</spinner-button
+        >
+
+        <spinner-button
+          ng-if="!!user.mail"
+          css-class="'padding button-block button-login'"
+          loading="loading.mail"
+          click="recoverPwdUsingMail(login)"
+          >Recevoir un mail à l'adresse {{ user.mail }}</spinner-button
+        >
+
+        <spinner-button
+          css-class="'padding button-block button-login'"
+          ng-if="!!user.mobile"
+          loading="loading.mobile"
+          click="recoverPwdUsingMobile(login)"
+          >Recevoir un SMS au numéro {{ user.mobile }}</spinner-button
+        >
+      </div>
+
+      <label class="title" ng-click="toggleCategory('id')"
+        ><span>{{ translation["auth.lost.id"] }}</span></label
+      >
+
+      <div ng-show="categories.id === true">
+        <div ng-hide="user.structures">
+          <p>{{ translation["auth.lost.id.text"] }}</p>
+
+          <label class="item item-input margin-login">
+            <input
+              type="text"
+              autocomplete="false"
+              spellcheck="false"
+              autocapitalize="none"
+              ng-model="mail"
+              placeholder="{{ translation['auth.mail'] }}"
+            />
+          </label>
+
+          <p>{{ translation["auth.info.firstName"] }}</p>
+
+          <label class="item item-input margin-login">
+            <input
+              type="text"
+              autocomplete="false"
+              spellcheck="false"
+              ng-model="firstName"
+              placeholder="Prénom"
+            />
+          </label>
+        </div>
+
+        <div ng-show="user.structures">
+          <p>{{ translation["auth.info.structure"] }}</p>
+          <select
+            ng-model="data.structureId"
+            ng-options="structure.structureId as structure.structureName for structure in user.structures"
+          ></select>
+        </div>
+
+        <spinner-button
+          css-class="'button-block button-login margin-login'"
+          disabled="!firstName || !mail"
+          click="recoverLoginUsingMail(mail, firstName, data.structureId)"
+          loading="loading.mail"
+          >{{ translation["auth.forgot.send"] }}</spinner-button
+        >
+
+        <spinner-button
+          css-class="'padding button-block button-login'"
+          ng-if="!!user.mobile"
+          loading="loading.mobile"
+          click="recoverLoginUsingMobile(mail, firstName, data.structureId)"
+          >Recevoir un SMS au numéro {{ user.mobile }}</spinner-button
+        >
+      </div>
+
+      <!-- <div id="goBackButton">
+        <button
+          class="button-block button-login margin-login"
+          ng-click="goBack()"
+        ></button>
+      </div> -->
+    </div>
+  </ion-content>
+</ion-view>

@@ -19,7 +19,8 @@ angular
     $ionicPopup,
     $cordovaVibration,
     $ionicPopover,
-    RenamePopUpFactory
+    RenamePopUpFactory,
+    getPopupFactory
   ) {
     $scope.$on("$ionicView.beforeEnter", function() {
       $scope.checkable = false;
@@ -135,7 +136,7 @@ angular
       var newDoc = ele.files[0];
 
       if (newDoc.size > $rootScope.translationWorkspace["max.file.size"]) {
-        $scope.getAlertPopupNoTitle(
+        getPopupFactory.getAlertPopupNoTitle(
           $rootScope.translationWorkspace["file.too.large.limit"] +
             $scope.getSizeFile(
               parseInt($rootScope.translationWorkspace["max.file.size"])

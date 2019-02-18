@@ -8,24 +8,9 @@ angular
     $ionicHistory,
     $stateParams,
     $ionicPopup,
-    CreateNewFolderPopUpFactory
+    CreateNewFolderPopUpFactory,
+    getPopupFactory
   ) {
-    /*
-    
-    {
-    "_id": "96f7d843-9242-44f9-84be-368d54f5855f",
-    "name": "yes",
-    "application": "media-library",
-    "shared": [],
-    "inheritedShares": [],
-    "eType": "folder",
-    "created": "2018-12-13 15:51.21.335",
-    "modified": "2018-12-13 15:51.21.335",
-    "owner": "91c22b66-ba1b-4fde-a3fe-95219cc18d4a",
-    "ownerName": "ISABELLE POLONIO (prof arts plastiques)",
-    "eParent": "d27dff3c-93ef-4d40-b133-ce54ce95e9f6",
-    "parents": ["53f777c4-7a7d-4755-86f3-b866ec4ea6f7", "d27dff3c-93ef-4d40-b133-ce54ce95e9f6"]
-}*/
     choosenFolder = null;
     getData();
 
@@ -82,7 +67,7 @@ angular
     };
 
     function moveItem(item) {
-      $scope
+      getPopupFactory
         .getConfirmPopup(
           $rootScope.translationWorkspace["move"],
           "Voulez-vous déplacer ce document dans le dossier " + item.name + "?",
@@ -98,7 +83,7 @@ angular
     }
 
     function copyItem(item) {
-      $scope
+      getPopupFactory
         .getConfirmPopup(
           $rootScope.translationWorkspace["workspace.copy"],
           "Voulez-vous copier ce document dans le dossier " + item.name + "?",

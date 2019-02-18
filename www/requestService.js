@@ -24,8 +24,8 @@ angular
     function getConfig(config = {}) {
       config.timeout = config.timeout || timeout;
       config.headers = Object.assign(
-        config.headers || {},
-        $http.defaults.headers.common
+        $http.defaults.headers.common,
+        config.headers || {}
       );
       return config;
     }

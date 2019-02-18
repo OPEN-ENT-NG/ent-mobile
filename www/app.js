@@ -22,6 +22,8 @@ angular
     "ent.request",
     "ent.firstConnection",
     "ent.firstConnectionService",
+    "ent.forgotLoginPwd",
+    "ent.forgotLoginPwdService",
     "ent.authLoader",
     "ent.profile"
   ])
@@ -363,6 +365,12 @@ angular
         controller: "FirstConnectionCtrl"
       })
 
+      .state("forgotLoginPwd", {
+        url: "/forgotLoginPwd",
+        templateUrl: "forgotLoginPwd/forgotLoginPwd.html",
+        controller: "ForgotLoginPwdCtrl"
+      })
+
       .state("authLoading", {
         url: "/auth-loading",
         templateUrl: "authLoader/authLoader.html",
@@ -538,7 +546,7 @@ angular
                       file.size >
                         $rootScope.translationWorkspace["max.file.size"]
                     ) {
-                      $scope.getAlertPopupNoTitle(
+                      getPopupFactory.getAlertPopupNoTitle(
                         $rootScope.translationWorkspace[
                           "file.too.large.limit"
                         ] +
@@ -1079,31 +1087,6 @@ angular
       );
     }
 
-    $scope.getConfirmPopup = function(title, template, cancelText, okText) {
-      return $ionicPopup.confirm({
-        title: title,
-        template: template,
-        cancelText: cancelText,
-        okText: okText
-      });
-    };
-
-    $scope.getAlertPopup = function(title, template) {
-      return $ionicPopup.alert({
-        title: title,
-        template: template,
-        okText: "OK"
-      });
-    };
-
-    $scope.getAlertPopupNoTitle = function(template) {
-      return $ionicPopup.alert({
-        template: template,
-        cssClass: "dismiss-title", // Hide title
-        okText: "OK"
-      });
-    };
-
     $scope.openPopover = function($event) {
       $rootScope.popover.show($event);
     };
@@ -1184,6 +1167,58 @@ angular
           }
         });
       }
+    };
+  })
+
+  .factory("getPopupFactory", function($ionicPopup) {
+    this.getConfirmPopup = function(title, template, cancelText, okText) {
+      return $ionicPopup.confirm({
+        title: title,
+        template: template,
+        cancelText: cancelText,
+        okText: okText
+      });
+    };
+
+    this.getAlertPopup = function(title, template) {
+      return $ionicPopup.alert({
+        title: title,
+        template: template,
+        okText: "OK"
+      });
+    };
+
+    this.getAlertPopupNoTitle = function(template) {
+      return $ionicPopup.alert({
+        template: template,
+        cssClass: "dismiss-title", // Hide title
+        okText: "OK"
+      });
+    };
+
+    // this.killPopop = function() {
+    //   return $ionicPopup.
+    // }
+
+    return this;
+  })
+
+  .directive("spinnerButton", function() {
+    return {
+      restrict: "E",
+      transclude: true,
+      replace: true,
+      scope: {
+        loading: "=",
+        click: "&",
+        disabled: "=",
+        cssClass: "=",
+        cssStyle: "="
+      },
+      template:
+        '<button class="{{cssClass}}" style="{{cssStyle}}" ng-disabled="disabled || loading" ng-click="click()">' +
+        '<div class="spinner-container" style="" ng-show="loading"><ion-spinner icon="android">&nbsp;</ion-spinner></div><ng-transclude></ng-transclude>' +
+        "</button>"
     };
   })
 
