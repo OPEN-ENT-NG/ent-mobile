@@ -1,104 +1,60 @@
-<ion-side-menus enable-menu-with-back-views="false" ng-controller="UserCtrl">
-  <ion-side-menu-content>
-    <ion-nav-bar class="bar-positive">
-      <ion-nav-back-button ng-show="displayBackButton()"></ion-nav-back-button>
-      <ion-nav-buttons side="right">
-        <!--
-          <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
-          </button>
-        -->
-      </ion-nav-buttons>
-    </ion-nav-bar>
-    <ion-nav-view name="menuContent"></ion-nav-view>
+<ion-nav-bar no-tap-scroll="true" align-title="left" class="bar-positive">
+  <ion-nav-back-button></ion-nav-back-button>
+</ion-nav-bar>
 
-    <ion-footer-bar class="bar-stable">
-      <small
-        ><span>{{ appName }} v{{ version }}</span></small
-      >
-    </ion-footer-bar>
-  </ion-side-menu-content>
+<ion-nav-view></ion-nav-view>
 
-  <!--
-    <ion-side-menu side="left" >
-    <div class="bar bar-header bar-side-menu">
-      <div class="item item-avatar">
-        <img http-src="{{getImageUrl(myUser.photo)}}"/>
-        <h2>{{myUser.displayName}}</h2>
-        <h2>{{myUser.translatedType}}</h2>
-      </div>
-    </div>
-  -->
-
-  <!--
-    <ion-content class="has-side-menu-header">
-      <div ng-repeat="menu in listMenu | orderBy:'name'">
-        <ion-item menu-close href="{{menu.href}}">
-          <i class="{{menu.icon}}" style="vertical-align:middle;display:inline-block;"></i>
-          <h2 ng-if="menu.name!='Pronote'" style="vertical-align:middle;display:inline-block;">{{menu.name}}</h2>
-          <span class="badge badge-assertive" ng-if="menu.name==='Messagerie'" ng-show="badgeMessagerie!=0" >{{badgeMessagerie}}</span>
-        </ion-item>
-      </div>
-      <div class="item item-divider"></div>
-      <ion-item menu-close ng-click="logout()">
-              <i class="officon-" ng-click="logout()"></i>
-
-        <i class="officon-"></i>
-        Déconnexion
-      </ion-item>
-    </ion-content>
-  -->
-
-  <ion-footer-bar align-title="left" class="bar-assertive menu-bar">
-    <div class="menu-button" ng-class="{active : locationPath === '/timeline'}">
-      <i class="button icon-left ion-home" ng-click="homeButton()"></i>
-      <span class="menu-button-text">Accueil</span>
-    </div>
+<ion-footer-bar
+  ng-show="displayBar()"
+  ng-controller="UserCtrl"
+  class="bar-assertive menu-bar"
+>
+  <div class="menu-button" ng-class="{active : isHomeActive()}">
+    <i class="button icon-left ion-home" ui-sref="app.timeline_list"></i>
+    <span class="menu-button-text">Accueil</span>
+  </div>
+  <div class="menu-button" ng-class="{active : isMessagerieActive()}">
+    <i class="button icon-left ion-chatbox" ui-sref="app.messagerie"></i>
+    <span class="menu-button-text">Messagerie</span>
+  </div>
+  <div
+    class="menu-button apps-menu-button"
+    ng-class="{active : isGridActive()}"
+  >
     <div
-      class="menu-button"
-      ng-class="{active : locationPath === '/messagerie'}"
+      class="menu-grid menu-grid-item apps-menu-button"
+      ng-class="{ hidden: isGridHidden() }"
     >
-      <i class="button icon-left ion-chatbox" ng-click="messageButton()"></i>
-      <span class="menu-button-text">Messagerie</span>
-    </div>
-    <div
-      class="menu-button apps-menu-button"
-      ng-class="{active : locationPath === '/grid'}"
-    >
-      <div
-        class="menu-grid menu-grid-item apps-menu-button"
-        ng-class="{ hidden: !showGridMenu }"
-      >
-        <div class="arrow-down">▼</div>
-        <div class="grid">
-          <div
-            ng-repeat="menu in listMenu"
-            ng-click="gridButton(menu.state)"
-            class="menu-grid-item grid-item"
+      <div class="arrow-down">▼</div>
+      <div class="grid">
+        <div
+          ng-repeat="menu in listMenu"
+          ng-click="gridButton(menu.state)"
+          class="menu-grid-item grid-item"
+        >
+          <i
+            class="{{ menu.icon }} menu-grid-item"
+            ng-class="{pronote : menu.name === 'Pronote'}"
+            style="display:block;margin-bottom: 5px;"
+          ></i>
+          <span class="menu-grid-item"> {{ menu.name }} </span>
+          <span
+            class="badge badge-assertive"
+            ng-if="menu.name==='Messagerie'"
+            ng-show="badgeMessagerie!=0"
+            >{{ badgeMessagerie }}</span
           >
-            <i
-              class="{{menu.icon}} menu-grid-item"
-              ng-class="{pronote : menu.name === 'Pronote'}"
-              style="display:block;margin-bottom: 5px;"
-            ></i>
-            <span class="menu-grid-item"> {{ menu.name }} </span>
-            <span
-              class="badge badge-assertive"
-              ng-if="menu.name==='Messagerie'"
-              ng-show="badgeMessagerie!=0"
-              >{{ badgeMessagerie }}</span
-            >
-          </div>
         </div>
       </div>
-      <i
-        class="button icon-left ion-grid apps-menu-button"
-        ng-click="triggerGrid()"
-      ></i>
-      <span class="menu-button-text apps-menu-button">Applications</span>
     </div>
-    <div class="menu-button" ng-class="{active : locationPath === '/profile'}">
-      <i class="button icon-left ion-person" ng-click="profileButton()"></i>
-      <span class="menu-button-text">Profil</span>
-    </div>
-  </ion-footer-bar>
-</ion-side-menus>
+    <i
+      class="button icon-left ion-grid apps-menu-button"
+      ng-click="triggerGrid()"
+    ></i>
+    <span class="menu-button-text apps-menu-button">Applications</span>
+  </div>
+  <div class="menu-button" ng-class="{active : isProfileActive()}">
+    <i class="button icon-left ion-person" ui-sref="app.profile"></i>
+    <span class="menu-button-text">Profil</span>
+  </div>
+</ion-footer-bar>

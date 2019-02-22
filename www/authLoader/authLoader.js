@@ -15,7 +15,7 @@ angular
           refreshToken: localStorage.getItem("refresh").toString()
         }).then(
           () => {
-            $state.go("app.timeline.list");
+            $state.go("app.timeline_list");
           },
           () => {
             localStorage.setItem("RememberMe", "false");

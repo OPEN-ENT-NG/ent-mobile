@@ -1,4 +1,7 @@
-<ion-view view-title="{{translationActus['actualites.title']}}">
+<ion-view
+  hide-back-button="true"
+  view-title="{{ translationActus['actualites.title'] }}"
+>
   <ion-nav-buttons side="right">
     <button
       class="button button-icon button-clear fa fa-list-ul"
@@ -18,14 +21,14 @@
 
       <ion-list>
         <ion-item
-          id="{{info._id}}"
+          id="{{ info._id }}"
           ng-repeat="info in filtered=(infos | filter:filterByThread) | limitTo:totalDisplayed track by $index"
           class="card"
         >
           <div class="item item-avatar item-text-wrap">
             <img
-              http-src="{{getImageUrl(info.thread_icon)}}"
-              alt="icone {{info.thread_title}}"
+              http-src="{{ getImageUrl(info.thread_icon) }}"
+              alt="icone {{ info.thread_title }}"
             />
             <h2>{{ info.title }}</h2>
 
@@ -46,7 +49,7 @@
             class="item htmlEntContent actucard"
             overflow-scroll="true"
           >
-            <div class="item-text-wrap" render-html="{{info.content}}"></div>
+            <div class="item-text-wrap" render-html="{{ info.content }}"></div>
 
             <div ng-show="info.comments !=  null">
               <p

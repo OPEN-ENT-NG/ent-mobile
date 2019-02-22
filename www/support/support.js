@@ -89,7 +89,7 @@ angular
                   } créée avec succès. Retrouvez le suivi sur la version web du module Aide et support.`
                 )
                 .then(() => {
-                  $state.go("app.timeline.list");
+                  $state.go("app.timeline_list");
                 });
             },
             () => {

@@ -20,15 +20,15 @@ angular
       });
 
       $scope.$on("$ionicView.enter", function() {
-        if ($state.current.name === "app.timeline.list") {
+        if ($state.current.name === "app.timeline_list") {
           $rootScope.navigator = navigator;
           $scope.totalDisplayed = 10;
 
           getTimeline();
-        } else if ($state.current.name === "app.timeline.prefs") {
+        } else if ($state.current.name === "app.timeline_prefs") {
           getPreferences();
         } else {
-          $state.go("app.timeline.list");
+          $state.go("app.timeline_list");
         }
       });
     });
@@ -43,7 +43,7 @@ angular
     };
 
     $scope.goPrefs = function() {
-      $state.go("app.timeline.prefs");
+      $state.go("app.timeline_prefs");
     };
 
     function getPreferences() {

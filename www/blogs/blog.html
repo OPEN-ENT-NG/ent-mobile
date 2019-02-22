@@ -1,4 +1,4 @@
-<ion-view view-title="{{nameBlog}}">
+<ion-view view-title="{{ nameBlog }}">
   <ion-content scroll="false">
     <ion-scroll class="scroll" direction="y" has-bouncing="true">
       <ion-refresher pulling-text="Actualiser" on-refresh="doRefreshPosts()">
@@ -13,7 +13,7 @@
             class="item item-avatar item-text-wrap"
             ng-click="getPostContent(post)"
           >
-            <img http-src="{{getImageUrl(post.author.photo)}}" />
+            <img http-src="{{ getImageUrl(post.author.photo) }}" />
 
             <h2>{{ post.title }}</h2>
 
@@ -27,7 +27,7 @@
           >
             <div
               class="item-text-wrap htmlEntContent"
-              render-html="{{post.content}}"
+              render-html="{{ post.content }}"
             ></div>
 
             <div class="comment" ng-show="post.comments.length != 0">

@@ -1,4 +1,4 @@
-<ion-view view-title="Fil de nouveautés">
+<ion-view hide-back-button="true" view-title="Fil de nouveautés">
   <ion-nav-buttons side="right">
     <button
       class="button button-icon button-clear fa fa-list-ul"
@@ -15,7 +15,7 @@
     >
       <ion-list>
         <ion-item
-          id="{{timeline._id}}"
+          id="{{ timeline._id }}"
           ng-repeat="timeline in timeline | limitTo:totalDisplayed track by $index"
           class="card"
         >
@@ -23,7 +23,10 @@
             class="item item-avatar item-text-wrap"
             ng-click="clickTimelineNotif(timeline.type, timeline.resource, timeline.params)"
           >
-            <img http-src="{{getThumbnail(timeline.sender)}}" alt="thumbnail" />
+            <img
+              http-src="{{ getThumbnail(timeline.sender) }}"
+              alt="thumbnail"
+            />
             <div ng-bind-html="alterHTML(timeline.message)"></div>
           </div>
         </ion-item>

@@ -126,6 +126,9 @@ angular
       $ionicConfigProvider.scrolling.jsScrolling(false);
     }
 
+    $ionicConfigProvider.views.swipeBackEnabled(false);
+    $ionicConfigProvider.backButton.text("").previousTitleText(false);
+
     $stateProvider
       .state("app", {
         url: "/app",
@@ -137,128 +140,81 @@ angular
       .state("app.messagerie", {
         url: "/messagerie",
         cache: false,
-        views: {
-          "menuContent@app": {
-            templateUrl: "messagerie/folder_view.html"
-          }
-        }
+        templateUrl: "messagerie/folder_view.html",
+        controller: "MessagerieFoldersCtrl"
       })
 
       .state("app.message_folder", {
         url: "/messagerie/:nameFolder/:idFolder",
         cache: false,
-        views: {
-          "menuContent@app": {
-            templateUrl: "messagerie/folder_content.html"
-          }
-        }
+        templateUrl: "messagerie/folder_content.html",
+        controller: "InboxCtrl"
       })
 
       .state("app.message_detail", {
         url: "/messagerie/:nameFolder/:idMessage",
-        views: {
-          "menuContent@app": {
-            templateUrl: "messagerie/detail.html",
-            controller: "MessagesDetailCtrl"
-          }
-        }
+        templateUrl: "messagerie/detail.html",
+        controller: "MessagesDetailCtrl"
       })
+
       .state("app.new_message", {
         url: "/new_message",
         cache: false,
-        views: {
-          "menuContent@app": {
-            templateUrl: "messagerie/new_message.html",
-            controller: "NewMessageCtrl"
-          }
-        }
+        templateUrl: "messagerie/new_message.html",
+        controller: "NewMessageCtrl"
       })
 
       .state("app.blog-list", {
         url: "/blog-list",
-        views: {
-          "menuContent@app": {
-            templateUrl: "blogs/blog-list.html",
-            controller: "BlogListCtrl"
-          }
-        }
+        templateUrl: "blogs/blog-list.html",
+        controller: "BlogListCtrl"
       })
 
       .state("app.blog", {
         url: "/blog/:nameBlog/:idBlog",
-        views: {
-          "menuContent@app": {
-            templateUrl: "blogs/blog.html",
-            controller: "BlogCtrl"
-          }
-        }
+        templateUrl: "blogs/blog.html",
+        controller: "BlogCtrl"
       })
 
-      .state("app.timeline", {
+      .state("app.timeline_list", {
         url: "/timeline",
-        abstract: true,
-        views: {
-          "menuContent@app": {
-            controller: "TimelineCtrl",
-            template: "<ion-nav-view></ion-nav-view>"
-          }
-        }
+        templateUrl: "timeline/timeline.html",
+        controller: "TimelineCtrl"
       })
 
-      .state("app.timeline.list", {
-        url: "/timeline",
-        templateUrl: "timeline/timeline.html"
-      })
-
-      .state("app.timeline.prefs", {
+      .state("app.timeline_prefs", {
         url: "/preferences",
-        templateUrl: "timeline/timeline_filter.html"
+        templateUrl: "timeline/timeline_filter.html",
+        controller: "TimelineCtrl"
       })
 
       .state("app.actualites", {
         url: "/actualites",
-        views: {
-          "menuContent@app": {
-            templateUrl: "actualites/actualites.html",
-            controller: "ActualitesCtrl"
-          }
-        }
+        templateUrl: "actualites/actualites.html",
+        controller: "ActualitesCtrl"
       })
 
       .state("app.threads", {
         url: "/threads",
-        views: {
-          "menuContent@app": {
-            templateUrl: "actualites/threads.html"
-          }
-        }
+        templateUrl: "actualites/threads.html",
+        controller: "ActualitesCtrl"
       })
 
       .state("app.listPronotes", {
         url: "/listPronotes",
-        views: {
-          "menuContent@app": {
-            templateUrl: "pronotes/listPronotes.html"
-          }
-        }
+        templateUrl: "pronotes/listPronotes.html",
+        controller: "PronoteCtrl"
       })
 
       .state("app.pronote", {
         url: "/pronote",
-        views: {
-          "menuContent@app": {
-            templateUrl: "pronotes/pronote.html"
-          }
-        }
+        templateUrl: "pronotes/pronote.html",
+        controller: "PronoteCtrl"
       })
 
       .state("app.workspace", {
         url: "/workspace",
-        views: {
-          "menuContent@app": {
-            templateUrl: "workspace/workspace.html"
-          }
-        }
+        templateUrl: "workspace/workspace.html"
       })
 
       .state("app.workspace_tree", {
@@ -268,12 +224,8 @@ angular
           folderId: null,
           folderName: null
         },
-        views: {
-          "menuContent@app": {
-            controller: "WorkspaceFolderContentCtlr",
-            templateUrl: "workspace/tree.html"
-          }
-        }
+        controller: "WorkspaceFolderContentCtlr",
+        templateUrl: "workspace/tree.html"
       })
 
       .state("app.workspace_file", {
@@ -283,12 +235,8 @@ angular
           file: null,
           folderName: null
         },
-        views: {
-          "menuContent@app": {
-            controller: "WorkspaceFileCtlr",
-            templateUrl: "workspace/file.html"
-          }
-        }
+        controller: "WorkspaceFileCtlr",
+        templateUrl: "workspace/file.html"
       })
 
       // .state("app.workspace_file_versions", {
@@ -307,12 +255,8 @@ angular
           action: null,
           items: null
         },
-        views: {
-          "menuContent@app": {
-            templateUrl: "workspace/move_copy.html",
-            controller: "MoveCopyCtrl"
-          }
-        }
+        templateUrl: "workspace/move_copy.html",
+        controller: "MoveCopyCtrl"
       })
 
       .state("app.workspace_share", {
@@ -321,32 +265,20 @@ angular
           filter: null,
           ids: null
         },
-        views: {
-          "menuContent@app": {
-            controller: "ShareItemController",
-            templateUrl: "workspace/share.html"
-          }
-        }
+        controller: "ShareItemController",
+        templateUrl: "workspace/share.html"
       })
 
       .state("app.profile", {
         url: "/profile",
-        views: {
-          "menuContent@app": {
-            controller: "ProfileCtrl",
-            templateUrl: "profile/profile.html"
-          }
-        }
+        controller: "ProfileCtrl",
+        templateUrl: "profile/profile.html"
       })
 
       .state("app.support", {
         url: "/support",
-        views: {
-          menuContent: {
-            controller: "SupportCtrl",
-            templateUrl: "support/support.html"
-          }
-        }
+        controller: "SupportCtrl",
+        templateUrl: "support/support.html"
       })
 
       .state("login", {
@@ -410,53 +342,13 @@ angular
     OAuthService,
     $location
   ) {
-    $rootScope.showGridMenu = false;
+    $scope.showGridMenu = false;
 
     $rootScope.locationPath = $state.current.url;
 
-    function manageLocation(url) {
-      url = url || $state.current.url;
-
-      switch (url) {
-        case "/messagerie":
-        case "/messagerie/:nameFolder/:idFolder":
-        case "/messagerie/:nameFolder/:idMessage":
-        case "/new_message": {
-          $rootScope.locationPath = "/messagerie";
-          break;
-        }
-        case "/workspace":
-        case "/workspace/tree":
-        case "/workspace/file":
-        case "/workspace/move_copy":
-        case "/workspace/share":
-        case "/actualites":
-        case "/threads":
-        case "/listPronotes":
-        case "/pronote":
-        case "/blog-list":
-        case "/blog/:nameBlog/:idBlog": {
-          $rootScope.locationPath = "/grid";
-          break;
-        }
-        case "/prefs": {
-          $rootScope.locationPath = "/timeline";
-          break;
-        }
-        default:
-          $rootScope.locationPath = url;
-      }
-    }
-
     $rootScope.$on("$stateChangeStart", function(event, toState) {
-      manageLocation(toState.url);
-      $rootScope.showGridMenu = false;
+      $scope.showGridMenu = false;
     });
-
-    // $rootScope.$on('$locationChangeSuccess', function () {
-    //   manageLocation();
-    //   $rootScope.showGridMenu = false;
-    // });
 
     document.addEventListener("click", function(event) {
       var regexp = /menu-grid|item-content/;
@@ -464,8 +356,7 @@ angular
         !regexp.test(event.target.className) &&
         event.target.className.indexOf("apps-menu-button") === -1
       ) {
-        $rootScope.showGridMenu = false;
-        manageLocation();
+        $scope.showGridMenu = false;
         $scope.$apply();
       }
     });
@@ -687,39 +578,54 @@ angular
         }
       });
 
-      $scope.displayBackButton = function() {
+      $scope.displayBar = function() {
+        let regexp = RegExp("^app.*$");
+        return regexp.test($state.current.name);
+      };
+
+      $scope.isHomeActive = function() {
         return (
-          $state.current.name !== "app.actualites" &&
-          $state.current.name !== "app.blog-list" &&
-          $state.current.name !== "app.workspace" &&
-          $state.current.name !== "app.timeline.list" &&
-          $state.current.name !== "app.messagerie" &&
-          $state.current.name !== "app.profile"
+          $state.current.name == "app.timeline_list" ||
+          $state.current.name == "app.timeline_prefs"
         );
       };
 
-      $scope.homeButton = function() {
-        // window.location.hash = '/app/timeline';
-        $state.go("app.timeline.list");
-        $rootScope.showGridMenu = false;
+      $scope.isMessagerieActive = function() {
+        return (
+          $state.current.name == "app.messagerie" ||
+          $state.current.name == "app.message_folder" ||
+          $state.current.name == "app.message_detail" ||
+          $state.current.name == "app.new_message"
+        );
       };
 
-      $scope.messageButton = function() {
-        $state.go("app.messagerie");
-        $rootScope.showGridMenu = false;
+      $scope.isGridActive = function() {
+        return (
+          $state.current.name == "app.blog-list" ||
+          $state.current.name == "app.blog" ||
+          $state.current.name == "app.actualites" ||
+          $state.current.name == "app.threads" ||
+          $state.current.name == "app.listPronotes" ||
+          $state.current.name == "app.pronote" ||
+          $state.current.name == "app.workspace" ||
+          $state.current.name == "app.workspace_tree" ||
+          $state.current.name == "app.workspace_file" ||
+          $state.current.name == "app.workspace_movecopy" ||
+          $state.current.name == "app.workspace_share" ||
+          $state.current.name == "app.support"
+        );
       };
 
-      $scope.profileButton = function() {
-        $state.go("app.profile");
-        $rootScope.showGridMenu = false;
+      $scope.isProfileActive = function() {
+        return $state.current.name == "app.profile";
       };
 
       $scope.triggerGrid = function() {
-        $rootScope.showGridMenu = !$rootScope.showGridMenu;
-        $rootScope.locationPath = $rootScope.showGridMenu
-          ? "/grid"
-          : $location.$$path;
-        manageLocation($rootScope.showGridMenu ? "/grid" : null);
+        $scope.showGridMenu = !$scope.showGridMenu;
+      };
+
+      $scope.isGridHidden = function() {
+        return !$scope.showGridMenu;
       };
 
       $scope.gridButton = function(state) {

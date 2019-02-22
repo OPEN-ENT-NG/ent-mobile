@@ -1,7 +1,8 @@
-<ion-view>
-  <ion-nav-title>{{
+<ion-view
+  view-title="{{
     checkable ? getCountOfCheckedMessages() : getNameFolder(nameFolder)
-  }}</ion-nav-title>
+  }}"
+>
   <ion-nav-buttons side="right">
     <button
       class="button button-icon button-clear ion-reply"
@@ -51,24 +52,27 @@
           class="item-text-wrap item corpsMessage htmlEntContent"
           ng-if="mail.body"
           overflow-scroll="true"
-          render-html="{{mail.body}}">
-        </div>
+          render-html="{{ mail.body }}"
+        ></div>
 
-        <div class="item borderBottomItemDismissed borderTopItemDismissed"
-        ng-show="mail.attachments.length!=0">
-        <ion-list>
-          <div ng-repeat="attachment in mail.attachments track by $index">
-            <div class="ajoutPJ item-text-wrap">
-              <i
-                class="downloadicon-"
-                ng-click="downloadAttachment(attachment.id)"
-              ></i>
-              <p>
-                {{ attachment.filename }} ({{ getSizeFile(attachment.size) }})
-              </p>
+        <div
+          class="item borderBottomItemDismissed borderTopItemDismissed"
+          ng-show="mail.attachments.length!=0"
+        >
+          <ion-list>
+            <div ng-repeat="attachment in mail.attachments track by $index">
+              <div class="ajoutPJ item-text-wrap">
+                <i
+                  class="downloadicon-"
+                  ng-click="downloadAttachment(attachment.id)"
+                ></i>
+                <p>
+                  {{ attachment.filename }} ({{ getSizeFile(attachment.size) }})
+                </p>
+              </div>
             </div>
-          </div>
-        </ion-list>
+          </ion-list>
+        </div>
       </div>
     </ion-scroll>
   </ion-content>

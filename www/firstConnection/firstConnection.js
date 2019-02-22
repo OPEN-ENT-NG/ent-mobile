@@ -19,6 +19,10 @@ angular
       });
     });
 
+    $scope.goBack = function() {
+      $ionicHistory.goBack();
+    };
+
     $scope.openCGU = function() {
       cordova.InAppBrowser.open(
         $sce.trustAsUrl(`${domainENT}${$scope.translation["auth.charter"]}`),
@@ -49,7 +53,7 @@ angular
         () => {
           localStorage.setItem("username", username);
           localStorage.setItem("password", password);
-          $state.go("app.timeline.list");
+          $state.go("app.timeline_list");
         },
         () => {
           $state.go("login");
