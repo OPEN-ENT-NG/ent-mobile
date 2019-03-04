@@ -385,7 +385,7 @@ angular
         },
         {
           name: "Accéder à l'ENT",
-          icon: "pcn-link",
+          icon: "ent-link",
           state: domainENT
         },
         {

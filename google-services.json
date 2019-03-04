@@ -1,31 +1,31 @@
 {
   "project_info": {
     "project_number": "250106798274",
-    "firebase_url": "https://ent-mobile-cgi.firebaseio.com",
-    "project_id": "ent-mobile-cgi",
-    "storage_bucket": "ent-mobile-cgi.appspot.com"
+    "firebase_url": "https://%ANDROID_PROJECT_ID%.firebaseio.com",
+    "project_id": "%ANDROID_PROJECT_ID%",
+    "storage_bucket": "%ANDROID_PROJECT_ID%.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:250106798274:android:96c311110eb5b3e0",
+        "mobilesdk_app_id": "%ANDROID_MOBILESDK_APP_ID%",
         "android_client_info": {
           "package_name": "fr.openent.mdp.alpha"
         }
       },
       "oauth_client": [
         {
-          "client_id": "250106798274-g7nsu7gfdbf2ld5g26k3a7sfcf7u2sn9.apps.googleusercontent.com",
+          "client_id": "%ANDROID_CLIENT_ID%",
           "client_type": 3
         },
         {
-          "client_id": "250106798274-g7nsu7gfdbf2ld5g26k3a7sfcf7u2sn9.apps.googleusercontent.com",
+          "client_id": "%ANDROID_CLIENT_ID%",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCDrVROSznSDbDnmFaAdh5jgpduoVEjIaA"
+          "current_key": "%ANDROID_API_KEY%"
         }
       ],
       "services": {

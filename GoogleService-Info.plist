@@ -7,11 +7,11 @@
 	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
 	<string>ca-app-pub-3940256099942544/4411468910</string>
 	<key>CLIENT_ID</key>
-	<string>250106798274-2g4ql92898798vu4f7kslae26qkhfd09.apps.googleusercontent.com</string>
+	<string>%IOS_CLIENT_ID%</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.250106798274-2g4ql92898798vu4f7kslae26qkhfd09</string>
+	<string>%IOS_REVERSED_CLIENT_ID%</string>
 	<key>API_KEY</key>
-	<string>AIzaSyBNkNrZ8lnLye_a1nADqpgNjMwFJghHZEs</string>
+	<string>%IOS_API_KEY%</string>
 	<key>GCM_SENDER_ID</key>
 	<string>250106798274</string>
 	<key>PLIST_VERSION</key>
@@ -19,9 +19,9 @@
 	<key>BUNDLE_ID</key>
 	<string>fr.openent</string>
 	<key>PROJECT_ID</key>
-	<string>ent-mobile-cgi</string>
+	<string>%IOS_PROJET_ID%</string>
 	<key>STORAGE_BUCKET</key>
-	<string>ent-mobile-cgi.appspot.com</string>
+	<string>%IOS_PROJET_ID%.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<true></true>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -33,8 +33,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:250106798274:ios:c4dc5e62938e7a0c</string>
+	<string>%IOS_GOOGLE_APP_ID%</string>
 	<key>DATABASE_URL</key>
-	<string>https://ent-mobile-cgi.firebaseio.com</string>
+	<string>https://%IOS_PROJET_ID%.firebaseio.com</string>
 </dict>
 </plist>

@@ -6,4 +6,5 @@ platforms/
 plugins/
 .idea/
 bower_components/
+config/
 .gradle/

@@ -459,9 +459,9 @@ ion-popover-view.fit ion-content {
   white-space: initial;
 }
 
-.menu-bar .grid-item > i.pcn-link::before {
+.menu-bar .grid-item > i.ent-link::before {
   content: " ";
-  background-image: url(../img/pcn-badge.png);
+  background-image: url(%ENT_ICON%);
   background-size: 19px;
   height: 25px;
   display: block;
