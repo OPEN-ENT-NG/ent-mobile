@@ -1,6 +1,10 @@
-<ion-view view-title="{{checkable ? getCountOfCheckedMessages(): getNameFolder(nameFolder)}}">
+<ion-view
+  view-title="{{
+    checkable ? getCountOfCheckedMessages() : getNameFolder(nameFolder)
+  }}"
+>
   <ion-nav-buttons side="right">
-      <button
+    <button
       class="button button-icon button-clear ion-android-more-vertical buttonActionBar"
       ng-click="openPopover($event)"
       ng-show="checkable"
@@ -8,65 +12,111 @@
   </ion-nav-buttons>
 
   <ion-content scroll="false">
-    <ion-scroll ng-if="extraFolders.length>0 || messages.length>0" class="scroll" direction="y" has-bouncing="true" >
-      <ion-refresher pulling-text="{{translationConversation[updating]}}" on-refresh="doRefreshMessages()">
+    <ion-scroll
+      ng-if="extraFolders.length>0 || messages.length>0"
+      class="scroll"
+      direction="y"
+      has-bouncing="true"
+    >
+      <ion-refresher
+        pulling-text="{{ translationConversation[updating] }}"
+        on-refresh="doRefreshMessages()"
+      >
       </ion-refresher>
 
       <ion-list>
-        <ion-item ng-repeat="extraFolder in extraFolders" href="#/app/messagerie/{{extraFolder.name}}/{{extraFolder.id}}">
+        <ion-item
+          ng-repeat="extraFolder in extraFolders"
+          ui-sref="message_folder({nameFolder: extraFolder.name, idFolder: extraFolder.id})"
+        >
           <i class="folder-open-2icon-"></i>
-          {{getNameFolder(extraFolder.name)}} <span ng-show="folder.count>0">({{extraFolder.count}})</span>
+          {{ getNameFolder(extraFolder.name) }}
+          <span ng-show="folder.count>0">({{ extraFolder.count }})</span>
         </ion-item>
       </ion-list>
 
-      <div class="item item-divider" ng-show=extraFolders.length!=0 ></div>
+      <div class="item item-divider" ng-show="extraFolders.length!=0"></div>
       <ion-list>
-        <ion-item ng-repeat="message in messages track by $index" ng-click="doAction($index)" on-hold="enableCheckMessages($index)">
-
+        <ion-item
+          ng-repeat="message in messages track by $index"
+          ng-click="doAction($index)"
+          on-hold="enableCheckMessages($index)"
+        >
           <div ng-if="!message.unread" class="message">
-            <input type="checkbox" ng-model="message.checked" ng-checked = "message.checked" ng-show=checkable style="vertical-align: -webkit-baseline-middle;">
+            <input
+              type="checkbox"
+              ng-model="message.checked"
+              ng-checked="message.checked"
+              ng-show="checkable"
+              style="vertical-align: -webkit-baseline-middle;"
+            />
 
-            <div  class="item-text-wrap" style="float: right; width: 90%;" ng-if=checkable>
-              <span class="right">{{formatDateLocale(message.date)}}</span>
-              {{getRealName(message.from, message.displayNames)}}
+            <div
+              class="item-text-wrap"
+              style="float: right; width: 90%;"
+              ng-if="checkable"
+            >
+              <span class="right">{{ formatDateLocale(message.date) }}</span>
+              {{ getRealName(message.from, message.displayNames) }}
               <i class="attachicon-" ng-show="message.hasAttachment"></i>
-              <h3>{{message.subject}}</h3>
+              <h3>{{ message.subject }}</h3>
             </div>
 
-            <div class="item-text-wrap" style="float: right; width: 100%;" ng-if=!checkable>
-              <span class="right">{{formatDateLocale(message.date)}}</span>
-              {{getRealName(message.from, message.displayNames)}}
+            <div
+              class="item-text-wrap"
+              style="float: right; width: 100%;"
+              ng-if="!checkable"
+            >
+              <span class="right">{{ formatDateLocale(message.date) }}</span>
+              {{ getRealName(message.from, message.displayNames) }}
               <i class="attachicon-" ng-show="message.hasAttachment"></i>
-              <h3>{{message.subject}}</h3>
+              <h3>{{ message.subject }}</h3>
             </div>
           </div>
 
           <div ng-if="message.unread" class="unreadMessage">
-            <input type="checkbox" ng-model="message.checked" ng-checked = "message.checked" ng-show=checkable>
-            <div  class="item-text-wrap" style="float: right; width: 90%;" ng-if=checkable>
-              <span class="right">{{formatDateLocale(message.date)}}</span>
-              {{getRealName(message.from, message.displayNames)}}
+            <input
+              type="checkbox"
+              ng-model="message.checked"
+              ng-checked="message.checked"
+              ng-show="checkable"
+            />
+            <div
+              class="item-text-wrap"
+              style="float: right; width: 90%;"
+              ng-if="checkable"
+            >
+              <span class="right">{{ formatDateLocale(message.date) }}</span>
+              {{ getRealName(message.from, message.displayNames) }}
               <i class="attachicon-" ng-show="message.hasAttachment"></i>
-              <h3>{{message.subject}}</h3>
+              <h3>{{ message.subject }}</h3>
             </div>
 
-            <div class="item-text-wrap" style="float: right; width: 100%;" ng-if=!checkable>
-              <span class="right">{{formatDateLocale(message.date)}}</span>
-              {{getRealName(message.from, message.displayNames)}}
+            <div
+              class="item-text-wrap"
+              style="float: right; width: 100%;"
+              ng-if="!checkable"
+            >
+              <span class="right">{{ formatDateLocale(message.date) }}</span>
+              {{ getRealName(message.from, message.displayNames) }}
               <i class="attachicon-" ng-show="message.hasAttachment"></i>
-              <h3>{{message.subject}}</h3>
+              <h3>{{ message.subject }}</h3>
             </div>
-
           </div>
 
-          <ion-option-button class="button-assertive" ng-click="deleteMessage(message)">
-            {{translationConversation["delete"]}}
+          <ion-option-button
+            class="button-assertive"
+            ng-click="deleteMessage(message)"
+          >
+            {{ translationConversation["delete"] }}
           </ion-option-button>
-
         </ion-item>
       </ion-list>
     </ion-scroll>
-    <div ng-if="extraFolders.length==0 && messages.length==0" class="empty-content">
+    <div
+      ng-if="extraFolders.length==0 && messages.length==0"
+      class="empty-content"
+    >
       Pas de message
     </div>
   </ion-content>

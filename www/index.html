@@ -5,7 +5,7 @@
     <meta
       http-equiv="Content-Security-Policy"
       content="default-src * blob: data:; connect-src *;
-         script-src 'self' 'unsafe-inline' 'unsafe-eval';
+         script-src * 'self' 'unsafe-inline' 'unsafe-eval';
          img-src * https://* data: blob: filesystem:;
           style-src  'self' 'unsafe-inline';
            media-src *;
@@ -35,6 +35,7 @@
     <script src="lib/angular-route/angular-route.js"></script>
     <script src="lib/ion-tree-list/ion-tree-list.js"></script>
     <script src="lib/angular-img-http-src/index.js"></script>
+    <script src="lib/jquery/dist/jquery.js"></script>
 
     <script src="lib/ng-material-floating-button/src/mfb-directive.js"></script>
     <link
@@ -107,5 +108,6 @@
   <body ng-app="ent">
     <offline></offline>
     <ng-include src="'menu.html'"></ng-include>
+    <xiti></xiti>
   </body>
 </html>

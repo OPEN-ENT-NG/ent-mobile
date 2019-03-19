@@ -131,94 +131,96 @@ angular
 
     $stateProvider
       .state("app", {
-        url: "/app",
         abstract: true,
         templateUrl: "menu.html",
         controller: "AppCtrl"
       })
 
       .state("app.messagerie", {
-        url: "/messagerie",
         cache: false,
+        xitiIndex: "messagerie",
         templateUrl: "messagerie/folder_view.html",
         controller: "MessagerieFoldersCtrl"
       })
 
       .state("app.message_folder", {
-        url: "/messagerie/:nameFolder/:idFolder",
+        params: {
+          nameFolder: "",
+          idFolder: ""
+        },
         cache: false,
         templateUrl: "messagerie/folder_content.html",
         controller: "InboxCtrl"
       })
 
       .state("app.message_detail", {
-        url: "/messagerie/:nameFolder/:idMessage",
+        params: {
+          nameFolder: "",
+          idMessage: ""
+        },
         templateUrl: "messagerie/detail.html",
         controller: "MessagesDetailCtrl"
       })
 
       .state("app.new_message", {
-        url: "/new_message",
         cache: false,
         templateUrl: "messagerie/new_message.html",
         controller: "NewMessageCtrl"
       })
 
       .state("app.blog-list", {
-        url: "/blog-list",
+        xitiIndex: "blog",
         templateUrl: "blogs/blog-list.html",
         controller: "BlogListCtrl"
       })
 
       .state("app.blog", {
-        url: "/blog/:nameBlog/:idBlog",
+        params: {
+          nameBlog: "",
+          idBlog: ""
+        },
         templateUrl: "blogs/blog.html",
         controller: "BlogCtrl"
       })
 
       .state("app.timeline_list", {
-        url: "/timeline",
         templateUrl: "timeline/timeline.html",
         controller: "TimelineCtrl"
       })
 
       .state("app.timeline_prefs", {
-        url: "/preferences",
         templateUrl: "timeline/timeline_filter.html",
         controller: "TimelineCtrl"
       })
 
       .state("app.actualites", {
-        url: "/actualites",
+        xitiIndex: "actualites",
         templateUrl: "actualites/actualites.html",
         controller: "ActualitesCtrl"
       })
 
       .state("app.threads", {
-        url: "/threads",
         templateUrl: "actualites/threads.html",
         controller: "ActualitesCtrl"
       })
 
       .state("app.listPronotes", {
-        url: "/listPronotes",
         templateUrl: "pronotes/listPronotes.html",
         controller: "PronoteCtrl"
       })
 
       .state("app.pronote", {
-        url: "/pronote",
+        xitiIndex: "pronotes",
         templateUrl: "pronotes/pronote.html",
         controller: "PronoteCtrl"
       })
 
       .state("app.workspace", {
-        url: "/workspace",
+        xitiIndex: "workspace",
         templateUrl: "workspace/workspace.html"
       })
 
       .state("app.workspace_tree", {
-        url: "/workspace/tree",
         params: {
           filter: null,
           folderId: null,
@@ -229,7 +231,6 @@ angular
       })
 
       .state("app.workspace_file", {
-        url: "/workspace/file",
         params: {
           filter: null,
           file: null,
@@ -250,7 +251,6 @@ angular
       // })
 
       .state("app.workspace_movecopy", {
-        url: "/workspace/move_copy",
         params: {
           action: null,
           items: null
@@ -260,7 +260,6 @@ angular
       })
 
       .state("app.workspace_share", {
-        url: "/workspace/share",
         params: {
           filter: null,
           ids: null
@@ -270,13 +269,13 @@ angular
       })
 
       .state("app.profile", {
-        url: "/profile",
+        xitiIndex: "profile",
         controller: "ProfileCtrl",
         templateUrl: "profile/profile.html"
       })
 
       .state("app.support", {
-        url: "/support",
+        xitiIndex: "support",
         controller: "SupportCtrl",
         templateUrl: "support/support.html"
       })
@@ -285,26 +284,22 @@ angular
         params: {
           prefill: false
         },
-        url: "/login",
         templateUrl: "authentification/login-credentials.html",
         controller: "LoginCtrl",
         cache: false
       })
 
       .state("firstConnection", {
-        url: "/firstConnection",
         templateUrl: "firstConnection/firstConnection.html",
         controller: "FirstConnectionCtrl"
       })
 
       .state("forgotLoginPwd", {
-        url: "/forgotLoginPwd",
         templateUrl: "forgotLoginPwd/forgotLoginPwd.html",
         controller: "ForgotLoginPwdCtrl"
       })
 
       .state("authLoading", {
-        url: "/auth-loading",
         templateUrl: "authLoader/authLoader.html",
         controller: "AuthLoaderCtrl"
       });
@@ -326,21 +321,17 @@ angular
     $cordovaFileOpener2,
     domainENT,
     $ionicHistory,
-    SkinFactory,
     $ionicPopup,
     ActualitesService,
     MessagerieServices,
     PronoteService,
     BlogsService,
     WorkspaceService,
-    TimelineService,
     $filter,
     $http,
     $ionicLoading,
     $q,
-    $timeout,
-    OAuthService,
-    $location
+    OAuthService
   ) {
     $scope.showGridMenu = false;
 
@@ -635,25 +626,6 @@ angular
           $state.go(state);
         }
       };
-
-      // $scope.actuButton = function() {
-      //   $scope.gridButton();
-      // };
-
-      // $scope.blogButton = function() {
-      //   $state.go("app.blog");
-      //   $scope.gridButton();
-      // };
-
-      // $scope.docuButton = function() {
-      //   // $state.go("app.workspace");
-      //   $scope.gridButton();
-      // };
-
-      // $scope.pronoteButton = function() {
-      //   $state.go("app.pronote");
-      //   $rootScope.showGridMenu = !$rootScope.showGridMenu;
-      // };
 
       $scope.clickTimelineNotif = function(type, resource, params) {
         console.log(type);
@@ -1232,6 +1204,220 @@ angular
           });
         }
       ]
+    };
+  })
+
+  .directive("xiti", function(
+    RequestService,
+    domainENT,
+    $rootScope,
+    xitiIndex,
+    UserFactory
+  ) {
+    return {
+      restrict: "E",
+      replace: false,
+      scope: false,
+      compile: function(element, attributes) {
+        return function(scope) {
+          scope.xitiConf = {
+            //Springboard constants
+            ID_COLLECTIVITE: "",
+            ID_PLATEFORME: "",
+            ID_PROJET: "",
+
+            //Structure var
+            ID_ETAB: "",
+
+            //App vars
+            ID_SERVICE: "",
+            LIB_SERVICE: "Page_ENT",
+
+            //User vars
+            ID_PERSO: "",
+            ID_PROFIL: 6
+          };
+
+          //Profile id map
+          scope.profileMap = {
+            Student: 1,
+            Teacher: 2,
+            Relative: 3,
+            Personnel: 4
+          };
+
+          //Service map
+          scope.serviceMap = xitiIndex;
+
+          /////////////
+          /// Tools ///
+          var getOrElse = function(map, item, elseItem) {
+            if (map && item && map[item]) return map[item];
+            return elseItem;
+          };
+
+          var convertStringId = function(stringId) {
+            var buffer = "";
+            for (var i = 0; i < stringId.length; i++) {
+              buffer += stringId.charCodeAt(i);
+            }
+            return buffer;
+          };
+
+          var checkData = function() {
+            var result = true;
+            for (var key in scope.xitiConf) {
+              result = result && !!scope.xitiConf[key];
+            }
+            return result;
+          };
+          ///        ///
+          //////////////
+
+          var loadScript = function(callback) {
+            if (scope.script) {
+              callback(scope.script);
+            } else {
+              var request = new XMLHttpRequest();
+              request.open("GET", "./xiti/xtfirst_ENT.js");
+              request.onload = function() {
+                if (request.status === 200) {
+                  try {
+                    scope.script = new Function(request.responseText);
+                    callback(scope.script);
+                  } catch (e) {
+                    console.log(e);
+                  }
+                }
+              };
+              request.send(null);
+            }
+          };
+
+          //Final action - populates xiti vars & launches the script
+          var fillWindowData = function() {
+            if (!checkData()) {
+              return;
+            }
+
+            xt_multc =
+              "&x1=" +
+              scope.xitiConf.ID_SERVICE +
+              "&x2=" +
+              scope.xitiConf.ID_PROFIL +
+              "&x3=" +
+              scope.xitiConf.ID_PROJET +
+              "&x4=" +
+              scope.xitiConf.ID_PLATEFORME;
+
+            xtcode = "";
+            xt_at = scope.xitiConf.ID_PERSO;
+            xtidc = scope.xitiConf.ID_PERSO;
+            xt_ac = scope.xitiConf.ID_PROFIL;
+
+            window.xtparam = xt_multc + "&ac=" + xt_ac + "&at=" + xt_at;
+
+            xtnv = document;
+            xtsd = "https://logs";
+            xtsite = scope.xitiConf.ID_COLLECTIVITE;
+            xtn2 = scope.xitiConf.ID_ETAB;
+            xtpage = scope.xitiConf.LIB_SERVICE;
+            xtdi = "";
+
+            loadScript(script => script());
+          };
+
+          //Retrieves application dependent vars
+          var getAppsInfos = function(state) {
+            return new Promise((resolve, reject) => {
+              var service = scope.serviceMap[state];
+
+              scope.xitiConf.ID_SERVICE = service ? service.index : 0;
+              scope.xitiConf.LIB_SERVICE = service ? service.label : "Page_ENT";
+
+              resolve();
+            });
+          };
+
+          //Retrieves structure mapping & platform dependant vars
+          var getXitiConfig = function(userStructures) {
+            return new Promise((resolve, reject) => {
+              RequestService.get(`${domainENT}/xiti/config`).then(
+                ({ data }) => {
+                  //If XiTi is disabled
+                  if (!data.active) {
+                    reject();
+                  }
+
+                  scope.xitiConf.ID_PLATEFORME = data.ID_PLATEFORME;
+                  scope.xitiConf.ID_PROJET = data.ID_PROJET;
+
+                  scope.xitiConf.ID_ETAB =
+                    scope.user.structures.length > 0
+                      ? data.structureMap[scope.user.structures[0]].id
+                      : 0;
+                  scope.xitiConf.ID_COLLECTIVITE =
+                    scope.user.structures.length > 0
+                      ? data.structureMap[scope.user.structures[0]]
+                          .collectiviteId
+                      : 0;
+                  resolve();
+                },
+                reject
+              );
+            });
+          };
+
+          var getUserInfo = function() {
+            return new Promise((resolve, reject) => {
+              UserFactory.getCurrentUser().then(({ data }) => {
+                scope.user = data;
+                scope.xitiConf.ID_PERSO = convertStringId(scope.user.userId);
+                scope.xitiConf.ID_PROFIL = getOrElse(
+                  scope.profileMap,
+                  scope.user.type,
+                  6
+                );
+                resolve();
+              }, reject);
+            });
+          };
+
+          $rootScope.$on("$stateChangeSuccess", function(
+            evt,
+            toState,
+            toParams,
+            fromState
+          ) {
+            getUserInfo().then(() => {
+              if (
+                (fromState.name == "authLoading" &&
+                  toState.name == "timeline_list") ||
+                (fromState.name == "login" &&
+                  toState.name == "app.timeline_list")
+              ) {
+                Promise.all([getXitiConfig(), getAppsInfos("login")]).then(
+                  () => {
+                    fillWindowData();
+                  },
+                  console.log
+                );
+              } else if (toState.xitiIndex) {
+                Promise.all([
+                  getXitiConfig(),
+                  getAppsInfos(toState.xitiIndex)
+                ]).then(() => {
+                  fillWindowData();
+                }, console.log);
+              }
+            });
+          });
+
+          scope.$on("$destroy", function() {
+            element.off();
+          });
+        };
+      }
     };
   });
 
