@@ -1,6 +1,6 @@
 {
   "name": "ApplicationMobile",
-  "version": "0.7.1",
+  "version": "1.0.0.",
   "description": "ENT mobile: An Ionic project",
   "scripts": {
     "android": "ionic cordova run android --device"

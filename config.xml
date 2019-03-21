@@ -1,12 +1,11 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget android-packageName="%ANDROID_APPNAME%" ios-CFBundleIdentifier="%IOS_APPNAME%" version="0.7.1" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget android-packageName="%ANDROID_APPNAME%" ios-CFBundleIdentifier="%IOS_APPNAME%" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>%APPNAME%</name>
     <description>%APPDESCRIPTION%</description>
     <author email="simon.ledunois@cgi.com">
     CGI
   </author>
     <content src="index.html" />
-    <access origin="*" />
     <allow-navigation href="*" />
     <preference name="Orientation" value="portrait" />
     <preference name="fullscreen" value="false" />
