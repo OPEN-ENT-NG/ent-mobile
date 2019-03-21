@@ -300,6 +300,7 @@ angular
       })
 
       .state("authLoading", {
+        url: "/auth-loading",
         templateUrl: "authLoader/authLoader.html",
         controller: "AuthLoaderCtrl"
       });
