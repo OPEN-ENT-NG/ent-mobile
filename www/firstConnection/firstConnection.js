@@ -2,6 +2,7 @@ angular
   .module("ent.firstConnection", [])
 
   .controller("FirstConnectionCtrl", function(
+    $ionicHistory,
     $timeout,
     $ionicPlatform,
     $scope,

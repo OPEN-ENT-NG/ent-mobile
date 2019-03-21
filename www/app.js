@@ -1390,28 +1390,29 @@ angular
             toParams,
             fromState
           ) {
-            getUserInfo().then(() => {
-              if (
-                (fromState.name == "authLoading" &&
-                  toState.name == "timeline_list") ||
-                (fromState.name == "login" &&
-                  toState.name == "app.timeline_list")
-              ) {
+            if (
+              (fromState.name == "authLoading" &&
+                toState.name == "app.timeline_list") ||
+              (fromState.name == "login" && toState.name == "app.timeline_list")
+            ) {
+              getUserInfo().then(() => {
                 Promise.all([getXitiConfig(), getAppsInfos("login")]).then(
                   () => {
                     fillWindowData();
                   },
                   console.log
                 );
-              } else if (toState.xitiIndex) {
+              });
+            } else if (toState.xitiIndex) {
+              getUserInfo().then(() => {
                 Promise.all([
                   getXitiConfig(),
                   getAppsInfos(toState.xitiIndex)
                 ]).then(() => {
                   fillWindowData();
                 }, console.log);
-              }
-            });
+              });
+            }
           });
 
           scope.$on("$destroy", function() {

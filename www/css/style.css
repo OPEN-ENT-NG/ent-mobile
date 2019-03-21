@@ -122,6 +122,18 @@ ion-popover-view.fit ion-content {
   color: #c4c4c4;
 }
 
+#firstco .title {
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 10px;
+  display: block;
+  color: white;
+}
+
+#firstco i.fa {
+  margin: 15px;
+}
+
 .button-login,
 .button-firstco {
   color: #fff;
@@ -461,7 +473,7 @@ ion-popover-view.fit ion-content {
 
 .menu-bar .grid-item > i.ent-link::before {
   content: " ";
-  background-image: url(%ENT_ICON%);
+  background-image: url(../img/pcn-badge.png);
   background-size: 19px;
   height: 25px;
   display: block;
