@@ -1265,13 +1265,6 @@ angular
             return buffer;
           };
 
-          var checkData = function() {
-            var result = true;
-            for (var key in scope.xitiConf) {
-              result = result && !!scope.xitiConf[key];
-            }
-            return result;
-          };
           ///        ///
           //////////////
 
@@ -1297,10 +1290,6 @@ angular
 
           //Final action - populates xiti vars & launches the script
           var fillWindowData = function() {
-            if (!checkData()) {
-              return;
-            }
-
             xt_multc =
               "&x1=" +
               scope.xitiConf.ID_SERVICE +
