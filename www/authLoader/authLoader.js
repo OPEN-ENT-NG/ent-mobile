@@ -15,6 +15,7 @@ angular
           refreshToken: localStorage.getItem("refresh").toString()
         }).then(
           () => {
+            $scope.$emit("loggedIn");
             $state.go("app.timeline_list");
           },
           () => {

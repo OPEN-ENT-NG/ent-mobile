@@ -60,8 +60,10 @@ angular
     $rootScope,
     $http
   ) {
-    getUser();
-    TranslationService.getAllTraductions();
+    $rootScope.$on("loggedIn", () => {
+      getUser();
+      TranslationService.getAllTraductions();
+    });
 
     function getUser() {
       UserFactory.getCurrentUser().then(

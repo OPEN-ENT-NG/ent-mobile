@@ -98,6 +98,7 @@ angular
             localStorage.setItem("refresh", response.refresh);
             OAuthService.setFcmToken();
           }
+          $scope.$emit("loggedIn");
           $state.go("app.timeline_list");
         },
         function errorCallback() {

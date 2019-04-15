@@ -489,7 +489,9 @@ angular
         getTraductionBlogs(),
         getTraductionWorkspace()
       ]).then(function() {
-        window.plugins.intent.setNewIntentHandler(intentHandler);
+        if (!ionic.Platform.isIOS()) {
+          window.plugins.intent.setNewIntentHandler(intentHandler);
+        }
       });
 
       function manageNotification(data) {
@@ -666,26 +668,6 @@ angular
             );
         }
       };
-
-      $scope.$watch(
-        function() {
-          return $ionicSideMenuDelegate.getOpenRatio();
-        },
-        function(ratio) {
-          if (ratio == 1) {
-            MessagerieServices.getCountUnread(["INBOX"]).then(
-              function(response) {
-                $scope.badgeMessagerie = response[0].count;
-              },
-              function(err) {
-                $scope.showAlertError(err);
-              }
-            );
-          } else if (ratio == 0) {
-            $scope.closeApp = false;
-          }
-        }
-      );
 
       $ionicPlatform.registerBackButtonAction(function(e) {
         if ($scope.closeApp) {
@@ -1373,26 +1355,16 @@ angular
             });
           };
 
-          $rootScope.$on("$stateChangeSuccess", function(
-            evt,
-            toState,
-            toParams,
-            fromState
-          ) {
-            if (
-              (fromState.name == "authLoading" &&
-                toState.name == "app.timeline_list") ||
-              (fromState.name == "login" && toState.name == "app.timeline_list")
-            ) {
-              getUserInfo().then(() => {
-                Promise.all([getXitiConfig(), getAppsInfos("login")]).then(
-                  () => {
-                    fillWindowData();
-                  },
-                  console.log
-                );
-              });
-            } else if (toState.xitiIndex) {
+          $rootScope.$on("loggedIn", () => {
+            getUserInfo().then(() => {
+              Promise.all([getXitiConfig(), getAppsInfos("login")]).then(() => {
+                fillWindowData();
+              }, console.log);
+            });
+          });
+
+          $rootScope.$on("$stateChangeSuccess", function(evt, toState) {
+            if (toState.xitiIndex) {
               getUserInfo().then(() => {
                 Promise.all([
                   getXitiConfig(),
