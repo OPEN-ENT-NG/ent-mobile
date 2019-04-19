@@ -122,10 +122,6 @@ angular
   ) {
     $httpProvider.defaults.withCredentials = true;
 
-    if (!ionic.Platform.isIOS()) {
-      $ionicConfigProvider.scrolling.jsScrolling(false);
-    }
-
     $ionicConfigProvider.views.swipeBackEnabled(false);
     $ionicConfigProvider.backButton.text("").previousTitleText(false);
 
@@ -668,22 +664,6 @@ angular
             );
         }
       };
-
-      $ionicPlatform.registerBackButtonAction(function(e) {
-        if ($scope.closeApp) {
-          //navigator.app.exitApp();
-        } else if ($ionicSideMenuDelegate.isOpenLeft()) {
-          $ionicSideMenuDelegate.toggleLeft();
-        } else if (
-          $ionicHistory.backView() &&
-          $ionicHistory.currentView().backViewId != "ion1"
-        ) {
-          $ionicHistory.goBack();
-        } else if (!$ionicSideMenuDelegate.isOpenLeft()) {
-          $ionicSideMenuDelegate.toggleLeft();
-          $scope.closeApp = true;
-        }
-      }, 1000);
     });
 
     $rootScope.downloadFile = function(fileName, urlFile) {

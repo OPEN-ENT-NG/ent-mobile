@@ -3,14 +3,12 @@ angular
 
   .controller("ActualitesCtrl", function(
     $ionicPlatform,
-    $ionicScrollDelegate,
     $location,
     $scope,
     $state,
     $rootScope,
     ActualitesService,
-    $ionicLoading,
-    $anchorScroll
+    $ionicLoading
   ) {
     $rootScope.notification = $rootScope.notification || {};
 

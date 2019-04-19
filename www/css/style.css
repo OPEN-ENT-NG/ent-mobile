@@ -6,6 +6,10 @@ ion-popover-view.fit ion-content {
   position: relative !important;
 }
 
+.has-footer {
+  bottom: 52px;
+}
+
 .scroll {
   height: 100% !important;
 }

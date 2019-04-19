@@ -12,6 +12,7 @@ angular
     $cordovaVibration,
     $ionicHistory,
     $ionicPopover,
+    $ionicScrollDelegate,
     MoveMessagesPopupFactory,
     DeleteMessagesPopupFactory,
     $ionicListDelegate
@@ -179,6 +180,7 @@ angular
       $scope.extraFolders.unshift(getExtraFolders());
       $scope.$broadcast("scroll.refreshComplete");
       $scope.$apply();
+      $ionicScrollDelegate.resize();
     };
 
     function getMessagesAndFolders() {
