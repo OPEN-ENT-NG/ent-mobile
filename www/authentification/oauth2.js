@@ -69,7 +69,8 @@ angular
     $state,
     OAuthService,
     $rootScope,
-    $stateParams
+    $stateParams,
+    $ionicScrollDelegate
   ) {
     $scope.user = {};
 
@@ -100,6 +101,7 @@ angular
           }
           $scope.$emit("loggedIn");
           $state.go("app.timeline_list");
+          $ionicScrollDelegate.resize();
         },
         function errorCallback() {
           $scope.wrongLogin = true;

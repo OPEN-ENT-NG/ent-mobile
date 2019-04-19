@@ -538,20 +538,16 @@ ion-popover-view.fit ion-content {
   border-radius: 50%;
 }
 
-.profile .tabs-top > .tabs {
-  top: 0 !important;
+.profile .tabs {
+  top: 0px !important;
 }
 
-.profile .tabs-top > ion-scroll .scroll > div {
-  margin-top: 50px !important;
+.profile ion-content.has-tabs-top {
+  top: 50px;
 }
 
-.profile .tabs-top > ion-scroll .scroll > div.bottom-margin {
-  margin-bottom: 75px;
-}
-
-.profile .actions-list {
-  padding: 0;
+.profile ion-content.has-footer {
+  bottom: 52px;
 }
 
 .profile .actions-list .item.item-divider h4 {
