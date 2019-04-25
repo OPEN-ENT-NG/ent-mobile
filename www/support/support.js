@@ -82,7 +82,7 @@ angular
           }).then(
             res => {
               $ionicLoading.hide();
-              $scope
+              getPopupFactory
                 .getAlertPopupNoTitle(
                   `Demande N°${
                     res.data.id

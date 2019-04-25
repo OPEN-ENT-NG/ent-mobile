@@ -20,7 +20,7 @@
         }}</span>
         <select
           ng-model="ticket.category"
-          ng-options="app.address as getTranslation(app) for app in apps"
+          ng-options="app.address as getTranslation(app) for app in apps | orderBy:getTranslation"
         >
         </select>
       </label>
