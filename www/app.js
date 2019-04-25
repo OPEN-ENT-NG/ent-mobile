@@ -313,7 +313,6 @@ angular
     $sce,
     $state,
     $ionicPlatform,
-    $ionicSideMenuDelegate,
     $cordovaFile,
     $cordovaFileOpener2,
     domainENT,
@@ -372,7 +371,7 @@ angular
           // href: "#/app/workspace"
         },
         {
-          name: "Accéder à l'ENT",
+          name: "Accès ENT Web",
           icon: "ent-link",
           state: domainENT
         },
@@ -386,7 +385,7 @@ angular
       PronoteService.getAllAccounts().then(function(resp) {
         if (resp.length > 0) {
           $rootScope.listMenu.unshift({
-            name: "Pronote",
+            name: "Version mobile",
             icon: "custom-pronote pronote-1icon-",
             state: "app.listPronotes"
             // href: "#/app/listPronotes"
