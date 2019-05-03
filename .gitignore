@@ -8,3 +8,5 @@ plugins/
 bower_components/
 config/
 .gradle/
+config_PROD
+config_DEV

@@ -4,6 +4,9 @@ makesed () {
     sed -i '' -e "s|%PLATFORM_ADDRESS%|${PLATFORM_ADDRESS}|g" $1
     sed -i '' -e "s|%APPNAME%|${APPNAME}|g" $1
     sed -i '' -e "s|%APPDESCRIPTION%|${APPDESCRIPTION}|g" $1
+    sed -i '' -e "s|%APPVERSION%|${APPVERSION}|g" $1
+    sed -i '' -e "s|%APPVERSIONCODE%|${APPVERSIONCODE}|g" $1
+
     sed -i '' -e "s|%ENT_ICON%|${ENT_ICON}|g" $1
     sed -i '' -e "s|%ENT_BANNER%|${ENT_BANNER}|g" $1
     sed -i '' -e "s|%RESOURCE_ROOT%|${RESOURCE_ROOT}|g" $1
