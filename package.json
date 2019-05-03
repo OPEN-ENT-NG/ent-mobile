@@ -1,6 +1,6 @@
 {
   "name": "ApplicationMobile",
-  "version": "1.0.0.",
+  "version": "1.0.1",
   "description": "ENT mobile: An Ionic project",
   "scripts": {
     "android": "ionic cordova run android --device"
@@ -44,7 +44,7 @@
     "gulp-minify-css": "^1.2.4",
     "gulp-rename": "^1.4.0",
     "gulp-sass": "^4.0.2",
-    "gulp-util": "^2.2.14",
+    "gulp-util": "^2.2.20",
     "lodash": "^4.17.4",
     "shelljs": "^0.8.3"
   },
