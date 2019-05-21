@@ -160,6 +160,10 @@ angular
 
       .state("app.new_message", {
         cache: false,
+        params: {
+          prevMessage: null,
+          action: null
+        },
         templateUrl: "messagerie/new_message.html",
         controller: "NewMessageCtrl"
       })

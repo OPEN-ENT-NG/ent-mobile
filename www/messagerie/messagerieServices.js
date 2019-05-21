@@ -5,7 +5,8 @@ angular
     $q,
     domainENT,
     RequestService,
-    $http
+    $http,
+    $rootScope
   ) {
     this.postAttachment = function(messageId, attachment) {
       return $http.post(
@@ -106,36 +107,49 @@ angular
         { id: ids }
       );
     };
-    this.getContactsService = function() {
-      return RequestService.get(domainENT + "/conversation/visible", {
-        timeout: 10000
-      });
+
+    this.getContactsService = function(name) {
+      if (name != null) {
+        return RequestService.get(
+          `${domainENT}/conversation/visible?search=${name}`
+        );
+      } else {
+        return $q.reject("empty string");
+      }
     };
 
-    this.saveWithId = function(id, mailData) {
-      return RequestService.put(
-        domainENT + "/conversation/draft/" + id,
-        mailData
+    this.saveDraft = function(mail) {
+      return RequestService.post(
+        `${domainENT}/conversation/draft/${mail.id}`,
+        getMailData(mail)
       );
     };
 
-    this.saveNewDraft = function(mailData) {
-      return RequestService.post(domainENT + "/conversation/draft", mailData);
-    };
-
-    this.sendMail = function(mailData) {
+    this.saveDraftResponse = function(mail) {
       return RequestService.post(
-        domainENT + "/conversation/send?id=" + mailData.id,
-        mailData,
-        { timeout: 10000 }
+        `${domainENT}/conversation/draft?In-Reply-To=${mail.replyTo}`,
+        getMailData(mail)
       );
     };
 
-    this.sendReplyOne = function(mailData) {
+    this.saveNewDraft = function(mail) {
       return RequestService.post(
-        domainENT + "/conversation/send?In-Reply-To=" + mailData.id,
-        mailData,
-        { timeout: 10000 }
+        `${domainENT}/conversation/draft`,
+        getMailData(mail)
+      );
+    };
+
+    this.sendMail = function(mail) {
+      return RequestService.post(
+        `${domainENT}/conversation/send?id=${mail.id}`,
+        getMailData(mail)
+      );
+    };
+
+    this.sendReply = function(mail) {
+      return RequestService.post(
+        `${domainENT}/conversation/send?In-Reply-To=${mail.replyTo}`,
+        getMailData(mail)
       );
     };
 
@@ -171,6 +185,26 @@ angular
     this.getStatusRedactionMessage = function() {
       return ["DRAFT", "REPLY_ONE", "REPLY_ALL", "FORWARD"];
     };
+
+    function getMailData(mail) {
+      let newMail = {
+        subject:
+          mail.subject || $rootScope.translationConversation["nosubject"],
+        body: "<p>" + mail.body.replace(/\n/g, "<br/>") + "</p>",
+        to: mail.to.map(obj => obj.id),
+        cc: mail.cc.map(obj => obj.id),
+        from: $rootScope.myUser.id
+      };
+      if (mail.prevMessage) {
+        newMail.body += mail.prevMessage;
+      }
+      newMail.body;
+      if (mail.id) {
+        newMail.id = mail.id;
+      }
+
+      return newMail;
+    }
   })
 
   .factory("MoveMessagesPopupFactory", function(
@@ -221,6 +255,7 @@ angular
       getPopup: getPopup
     };
   })
+
   .factory("DeleteMessagesPopupFactory", function($ionicPopup, $rootScope) {
     function getPopup() {
       return $ionicPopup.confirm({
@@ -234,6 +269,7 @@ angular
       getPopup: getPopup
     };
   })
+
   .factory("AlertMessagePopupFactory", function($ionicPopup) {
     function getPopup(titre, message) {
       return $ionicPopup.alert({

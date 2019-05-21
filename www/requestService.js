@@ -2,7 +2,7 @@ angular
   .module("ent.request", ["ent.workspace_service", "ent"])
 
   .service("RequestService", function($http, $q, $state, $ionicLoading) {
-    var timeout = 5000;
+    var timeout = 30000;
 
     function onError(reject, error) {
       $ionicLoading.hide();

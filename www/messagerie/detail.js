@@ -101,9 +101,7 @@ angular
 
     $scope.editMail = function(action) {
       $scope.closePopover();
-      $scope.mail.action = action;
-      $rootScope.historyMail = $scope.mail;
-      $state.go("app.new_message");
+      $state.go("app.new_message", { prevMessage: $scope.mail, action });
     };
 
     $scope.$on("$ionicView.beforeEnter", function() {
@@ -124,13 +122,13 @@ angular
         $rootScope.popover = popover;
       });
 
-    function goToNewMail() {
-      $rootScope.historyMail = $scope.mail;
-      console.log($scope.mail);
+    // function goToNewMail() {
+    //   $rootScope.historyMail = $scope.mail;
+    //   console.log($scope.mail);
 
-      console.log($rootScope.historyMail);
-      $state.go("app.new_message");
-    }
+    //   console.log($rootScope.historyMail);
+    //   $state.go("app.new_message");
+    // }
 
     $scope.downloadAttachment = function(id) {
       var attachmentUrl =

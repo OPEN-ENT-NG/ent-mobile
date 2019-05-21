@@ -10,7 +10,7 @@
     </label>
     <button
       class="button button-icon button-clear ion-android-send"
-      ng-click="sendMail()"
+      ng-click="sendMail(email)"
     ></button>
     <button
       class="button button-icon button-clear ion-android-more-vertical buttonActionBar"
@@ -18,9 +18,9 @@
     ></button>
   </ion-nav-buttons>
   <ion-content>
-    <div class="item listeDestinataires">
+    <div class="item listeDestinataires" style="z-index: 4">
       <ion-list>
-        <div ng-repeat="destinataire in email.destinatairesTo track by $index">
+        <div ng-repeat="destinataire in email.to track by $index">
           <div class="destinataireMessagerie item-text-wrap">
             <h2>{{ destinataire.displayName }}</h2>
             <i
@@ -31,24 +31,14 @@
         </div>
       </ion-list>
       <filter-box
-        filtertext="searchTo"
         placeholder="{{ translationConversation['transfer.to'] }}"
+        destinataires="email.to"
       ></filter-box>
-      <ion-list>
-        <ion-item
-          ng-show="searchTo.value.length != 0"
-          ng-repeat="contact in contacts | filter: {displayName: searchTo.value} | limitTo: 5"
-          ng-click="addContactTo(searchTo, contact)"
-          ng-if="verifiedEmailDestinataire(false,contact)"
-        >
-          <h3 style="color: #008B8B">{{ contact.displayName }}</h3>
-        </ion-item>
-      </ion-list>
     </div>
 
-    <div class="item listeDestinataires">
+    <div class="item listeDestinataires" style="z-index: 3">
       <ion-list>
-        <div ng-repeat="destinataire in email.destinatairesCc track by $index">
+        <div ng-repeat="destinataire in email.cc track by $index">
           <div class="destinataireMessagerie item-text-wrap">
             <h2>{{ destinataire.displayName }}</h2>
             <i
@@ -59,25 +49,15 @@
         </div>
       </ion-list>
       <filter-box
-        filtertext="searchCc"
         placeholder="{{ translationConversation['transfer.cc'] }}"
+        destinataires="email.cc"
       ></filter-box>
-      <ion-list>
-        <ion-item
-          ng-show="searchCc.value.length != 0"
-          ng-repeat="contact in contacts | filter: {displayName: searchCc.value} | limitTo: 5"
-          ng-click="addContactCc(searchCc, contact)"
-          ng-if="verifiedEmailDestinataire(true,contact)"
-        >
-          <h3 style="color: #008B8B">{{ contact.displayName }}</h3>
-        </ion-item>
-      </ion-list>
     </div>
 
     <label class="item item-input">
       <input
         type="text"
-        ng-model="email.sujet"
+        ng-model="email.subject"
         placeholder="{{
           translationConversation['sniplet.ml.subject.placeholder']
         }}"
@@ -87,7 +67,7 @@
     <label class="item-input item borderBottomItemDismissed">
       <textarea
         id="textMessage"
-        ng-model="email.newMessage"
+        ng-model="email.body"
         ng-keyup="expandText()"
         ng-keydown="expandText()"
         placeholder="{{
@@ -121,9 +101,9 @@
 
     <div
       class="item-text-wrap item borderTopItemDismissed htmlEntContent"
-      ng-if="email.corps.length!=0"
+      ng-if="email.prevMessage.length!=0"
       overflow-scroll="true"
-      render-html="{{ email.corps }}"
+      render-html="{{ email.prevMessage }}"
     ></div>
   </ion-content>
 </ion-view>

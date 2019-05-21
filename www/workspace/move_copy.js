@@ -91,9 +91,7 @@ angular
           "OK"
         )
         .then(function() {
-          WorkspaceService.copyDocuments($stateParams["items"], item.id, {
-            timeout: 10000
-          }).then(
+          WorkspaceService.copyDocuments($stateParams["items"], item.id).then(
             () => $ionicHistory.goBack(),
             err => $scope.showAlertError(err)
           );

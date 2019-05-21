@@ -73,8 +73,6 @@ angular
     };
 
     $rootScope.newMail = function() {
-      $rootScope.historyMail = "";
-      console.log("in content");
       $state.go("app.new_message");
     };
 

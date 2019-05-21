@@ -28,7 +28,7 @@
 }
 
 .float-button {
-  background-color: #FF8500;
+  background-color: #ff8500;
   opacity: 0.9;
   color: white;
   border-radius: 50%;
@@ -60,15 +60,16 @@
 
 .listeDestinataires {
   padding-bottom: 2px;
+  overflow: visible;
 }
 
 .inputDestinataire {
-  width: 100%
+  width: 100%;
 }
 
 .destinataireMessagerie {
   display: inline-flex;
-  background-color: #4BAFD5;
+  background-color: #4bafd5;
   margin-bottom: 5px;
 }
 
@@ -78,7 +79,7 @@
 
 .destinataireMessagerie h2 {
   color: white;
-  margin: 5px
+  margin: 5px;
 }
 
 .header-mail h2.ng-binding {
@@ -103,7 +104,7 @@
 }
 
 .unreadMessage i {
-  color: #CCC;
+  color: #ccc;
   float: right;
   font-weight: bold;
   font-size: 12px;
@@ -115,7 +116,7 @@
 }
 
 .message i {
-  color: #CCC;
+  color: #ccc;
   float: right;
   font-size: 12px;
 }
@@ -125,19 +126,19 @@
 }
 
 .right {
-  color: #387EF5;
+  color: #387ef5;
   float: right;
   font-size: 12px;
 }
 
 .item h3.ng-binding {
   font-size: 12px;
-  color: #CCC;
+  color: #ccc;
 }
 
 .ajoutPJ {
   display: inline-flex;
-  background-color: #F0F0F0;
+  background-color: #f0f0f0;
   margin-bottom: 5px;
   width: 100%;
   padding: 2%;
@@ -145,7 +146,7 @@
 
 .ajoutPJ p {
   width: 70%;
-  padding: 2%
+  padding: 2%;
 }
 
 .ajoutPJ i {

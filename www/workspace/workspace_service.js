@@ -20,8 +20,7 @@ angular
       let foldersOrFiles = isFolder ? "/folders/list" : "/documents";
 
       return RequestService.get(
-        `${domainENT}/workspace${foldersOrFiles}?${urlParameters}`,
-        { timeout: 10000 }
+        `${domainENT}/workspace${foldersOrFiles}?${urlParameters}`
       );
     };
 

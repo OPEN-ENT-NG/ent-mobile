@@ -1,0 +1,18 @@
+<div>
+  <ion-input
+    ><input
+      type="search"
+      ng-model="search"
+      placeholder="{{ placeholder }}"
+      class="inputDestinataire"
+  /></ion-input>
+  <ion-list style="position: absolute; z-Index: 10; width: 100%">
+    <ion-item
+      ng-show="search.length != 0"
+      ng-repeat="contact in contacts | filter: {displayName: search} | limitTo: 5"
+      ng-click="addContact(contact)"
+    >
+      <h3 style="color: #008B8B">{{ contact.displayName }}</h3>
+    </ion-item>
+  </ion-list>
+</div>
