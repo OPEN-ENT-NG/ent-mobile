@@ -4,7 +4,7 @@ angular
   .controller("ForgotLoginPwdCtrl", function(
     $scope,
     ForgotLoginPwdService,
-    getPopupFactory,
+    PopupFactory,
     $ionicHistory,
     $ionicLoading
   ) {
@@ -116,6 +116,6 @@ angular
     };
 
     var showPopup = function(mode) {
-      getPopupFactory.getAlertPopupNoTitle(mode);
+      PopupFactory.getAlertPopupNoTitle(mode);
     };
   });

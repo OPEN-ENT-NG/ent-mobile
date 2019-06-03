@@ -6,6 +6,7 @@ angular
     $rootScope,
     $ionicPopover,
     $state,
+    $stateParams,
     domainENT,
     MessagerieServices,
     $ionicLoading,
@@ -14,8 +15,7 @@ angular
     MoveMessagesPopupFactory,
     AlertMessagePopupFactory
   ) {
-    getMessage();
-    delete $rootScope.notification;
+    getMessage($stateParams.idMessage);
 
     $rootScope.getRealName = function(id, displayNames) {
       var returnName = "Inconnu";
@@ -28,21 +28,17 @@ angular
     };
 
     $scope.isDraft = function() {
-      return "draft" === $rootScope.nameFolder;
+      return "draft" === $stateParams.nameFolder;
     };
 
     $scope.isInbox = function() {
-      return ["outbox", "draft", "trash"].indexOf($rootScope.nameFolder) === -1;
+      return (
+        ["outbox", "draft", "trash"].indexOf($stateParams.nameFolder) === -1
+      );
     };
 
     $scope.isTrash = function() {
-      return "trash" === $rootScope.nameFolder;
-    };
-
-    $rootScope.isPersonnalFolder = function(nameFolder) {
-      var nonPersonnalFolders = ["inbox", "outbox", "draft", "trash"];
-      console.log(nonPersonnalFolders.indexOf(nameFolder) != -1);
-      return nonPersonnalFolders.indexOf(nameFolder) == -1;
+      return "trash" === $stateParams.nameFolder;
     };
 
     $scope.trash = function() {
@@ -53,7 +49,7 @@ angular
           });
           MessagerieServices.deleteSelectedMessages(
             [$scope.mail],
-            $rootScope.nameFolder
+            $stateParams.nameFolder
           ).then(
             function() {
               $ionicLoading.hide();
@@ -122,14 +118,6 @@ angular
         $rootScope.popover = popover;
       });
 
-    // function goToNewMail() {
-    //   $rootScope.historyMail = $scope.mail;
-    //   console.log($scope.mail);
-
-    //   console.log($rootScope.historyMail);
-    //   $state.go("app.new_message");
-    // }
-
     $scope.downloadAttachment = function(id) {
       var attachmentUrl =
         domainENT +
@@ -137,21 +125,20 @@ angular
         $scope.mail.id +
         "/attachment/" +
         id;
-      var attachment = findElementById($scope.mail.attachments, id);
+      var attachment = $scope.mail.attachments.find(att => att.id == id);
       $rootScope.downloadFile(attachment.filename, attachmentUrl);
     };
 
-    function getMessage() {
+    function getMessage(idMessage) {
       $ionicLoading.show({
         template: '<ion-spinner icon="android"/>'
       });
-      MessagerieServices.getMessage($state.params.idMessage).then(
+      MessagerieServices.getMessage(idMessage).then(
         function(res) {
           $scope.mail = res.data;
           $scope.mail.from = getArrayNames([res.data.from], res.data);
           $scope.mail.to = getArrayNames(res.data.to, res.data);
           $scope.mail.cc = getArrayNames(res.data.cc, res.data);
-          console.log($scope.mail);
           $ionicLoading.hide();
         },
         function() {

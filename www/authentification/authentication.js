@@ -1,8 +1,13 @@
 angular
-  .module("ent.oauth2", [])
+  .module("ent.authentication", [])
 
-  .service("OAuthService", function(domainENT, OAuth2Params, RequestService) {
-    this.doAuthent = function(params) {
+  .service("AuthenticationService", function(
+    domainENT,
+    OAuth2Params,
+    RequestService,
+    $rootScope
+  ) {
+    this.doAuthent = params => {
       var data =
         "client_id=" +
         OAuth2Params.clientId +
@@ -30,36 +35,30 @@ angular
       return RequestService.post(url, data, {
         headers: { Authorization: "Basic " + base64Value }
       }).then(function(result) {
-        return RequestService.setDefaultAuth({
+        let response = {
           access: result.data.access_token,
           refresh: result.data.refresh_token
-        });
+        };
+        RequestService.setDefaultAuth(response);
+        $rootScope.$emit("LoggedIn");
+        return response;
       });
     };
 
-    this.setFcmToken = function() {
-      window.FirebasePlugin.getToken(function(token) {
-        if (token == null) {
-          setTimeout(this.setFcmToken, 1000);
-          return;
-        }
-        var url = domainENT + "/timeline/pushNotif/fcmToken?fcmToken=" + token;
-        RequestService.put(url).then(
-          function(response) {
-            localStorage.setItem("fcmToken", token);
-          },
-          function(error) {
-            throw error;
-          }
-        );
-      });
-    }.bind(this);
-
-    this.deleteFcmToken = function() {
-      var fcmToken = localStorage.getItem("fcmToken");
-      if (fcmToken == null) return;
-      var url = domainENT + "/timeline/pushNotif/fcmToken?fcmToken=" + fcmToken;
-      return RequestService.delete(url);
+    this.relog = (success, failure) => {
+      if (
+        localStorage.getItem("RememberMe") &&
+        localStorage.getItem("refresh") != null
+      ) {
+        this.doAuthent({
+          refreshToken: localStorage.getItem("refresh").toString()
+        }).then(success, () => {
+          localStorage.setItem("RememberMe", "false");
+          failure();
+        });
+      } else {
+        failure();
+      }
     };
   })
 
@@ -67,15 +66,15 @@ angular
     $ionicPlatform,
     $scope,
     $state,
-    OAuthService,
+    AuthenticationService,
     $rootScope,
     $stateParams,
-    $ionicScrollDelegate
+    $ionicScrollDelegate,
+    NotificationService
   ) {
     $scope.user = {};
 
     $ionicPlatform.ready(function() {
-      $rootScope.navigator = navigator;
       if ($stateParams.hasOwnProperty("prefill") && $stateParams["prefill"]) {
         $scope.user = {
           username: localStorage.getItem("username"),
@@ -86,7 +85,7 @@ angular
     });
 
     $scope.doLogin = function() {
-      OAuthService.doAuthent({
+      AuthenticationService.doAuthent({
         username: $scope.user.username,
         password: $scope.user.password
       }).then(
@@ -97,9 +96,12 @@ angular
           if ($scope.user.rememberMe == true) {
             localStorage.setItem("RememberMe", "true");
             localStorage.setItem("refresh", response.refresh);
-            OAuthService.setFcmToken();
+            if (!localStorage.getItem("fcmToken")) {
+              window.FirebasePlugin.getToken(token => {
+                NotificationService.setFcmToken(token);
+              });
+            }
           }
-          $scope.$emit("loggedIn");
           $state.go("app.timeline_list");
           $ionicScrollDelegate.resize();
         },

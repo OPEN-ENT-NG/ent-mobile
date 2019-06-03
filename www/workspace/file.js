@@ -13,7 +13,7 @@ angular
     $ionicPopover,
     $state,
     RenamePopUpFactory,
-    getPopupFactory
+    PopupFactory
   ) {
     var myUserRights = [];
     var isOwner = false;
@@ -84,7 +84,7 @@ angular
               },
               function(err) {
                 $ionicLoading.hide();
-                $scope.showAlertError(err);
+                PopupFactory.getCommonAlertPopup(err);
               }
             );
           }
@@ -106,7 +106,7 @@ angular
             },
             function(err) {
               $ionicLoading.hide();
-              $scope.showAlertError(err);
+              PopupFactory.getCommonAlertPopup(err);
             }
           );
         }
@@ -114,31 +114,29 @@ angular
     };
 
     $scope.trashDoc = function(doc) {
-      getPopupFactory
-        .getConfirmPopup(
-          $rootScope.translationWorkspace["workspace.delete"],
-          $rootScope.translationWorkspace["confirm.remove"],
-          $rootScope.translationWorkspace["cancel"],
-          $rootScope.translationWorkspace["confirm"]
-        )
-        .then(function(res) {
-          if (res) {
-            $ionicLoading.show({
-              template: '<ion-spinner icon="android"/>'
-            });
-            WorkspaceService.trashDoc($scope.doc._id).then(
-              function() {
-                $ionicLoading.hide();
-                $ionicHistory.clearCache();
-                $ionicHistory.goBack();
-              },
-              function(err) {
-                $ionicLoading.hide();
-                $scope.showAlertError(err);
-              }
-            );
-          }
-        });
+      PopupFactory.getConfirmPopup(
+        $rootScope.translationWorkspace["workspace.delete"],
+        $rootScope.translationWorkspace["confirm.remove"],
+        $rootScope.translationWorkspace["cancel"],
+        $rootScope.translationWorkspace["confirm"]
+      ).then(function(res) {
+        if (res) {
+          $ionicLoading.show({
+            template: '<ion-spinner icon="android"/>'
+          });
+          WorkspaceService.trashDoc($scope.doc._id).then(
+            function() {
+              $ionicLoading.hide();
+              $ionicHistory.clearCache();
+              $ionicHistory.goBack();
+            },
+            function(err) {
+              $ionicLoading.hide();
+              PopupFactory.getCommonAlertPopup(err);
+            }
+          );
+        }
+      });
     };
 
     $scope.moveDoc = function() {
@@ -149,7 +147,7 @@ angular
       });
     };
 
-    $scope.moveDoc = function() {
+    $scope.copyDoc = function() {
       $scope.closePopover();
       $state.go("app.workspace_movecopy", {
         items: WorkspaceHelper.getCheckedItemsId($scope.doc),
@@ -226,7 +224,6 @@ angular
     };
 
     $scope.isRightToMove = function() {
-      var isRight = false;
       if (isOwner) {
         return true;
       } else {
@@ -261,7 +258,6 @@ angular
     };
 
     $scope.isRightToComment = function() {
-      var isRight = false;
       if (isOwner) {
         return true;
       } else {

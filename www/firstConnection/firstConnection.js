@@ -8,7 +8,7 @@ angular
     $scope,
     FirstConnectionService,
     $rootScope,
-    OAuthService,
+    AuthenticationService,
     $state,
     domainENT,
     $sce
@@ -47,7 +47,7 @@ angular
     };
 
     var doLogin = function(username, password) {
-      OAuthService.doAuthent({
+      AuthenticationService.doAuthent({
         username,
         password
       }).then(

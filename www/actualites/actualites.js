@@ -3,24 +3,14 @@ angular
 
   .controller("ActualitesCtrl", function(
     $ionicPlatform,
-    $location,
     $scope,
     $state,
     $rootScope,
     ActualitesService,
     $ionicLoading
   ) {
-    $rootScope.notification = $rootScope.notification || {};
-
     $ionicPlatform.ready(function() {
-      $scope.$on("$ionicView.loaded", function() {
-        setTimeout(function() {
-          navigator.splashscreen.hide();
-        }, 100);
-      });
-
       $scope.$on("$ionicView.enter", function() {
-        $rootScope.navigator = navigator;
         getActualites();
       });
     });
@@ -42,10 +32,6 @@ angular
       }
     };
 
-    /*
-     * if given group is the selected group, deselect it
-     * else, select the given group
-     */
     $scope.toggleComments = function(info) {
       if ($scope.areCommentsShown(info)) {
         $scope.shownComments = null;
@@ -106,7 +92,7 @@ angular
       $scope.threads = [];
       var threadIds = [];
 
-      ActualitesService.getAllInfos().then(
+      return ActualitesService.getAllInfos().then(
         function(resp) {
           for (var i = 0; i < resp.data.length; i++) {
             if (resp.data[i].status == 3) {
@@ -139,19 +125,8 @@ angular
               }
             }
           }
-          $ionicLoading.hide();
 
-          setTimeout(function() {
-            console.error($rootScope.notification);
-            if (
-              $rootScope.notification.hasOwnProperty("id") &&
-              $rootScope.notification.state === "app.actualites"
-            ) {
-              console.log("Scrolling to news " + $rootScope.notification.id);
-              $location.hash($rootScope.notification.id);
-              $rootScope.notification = {};
-            }
-          }, 100);
+          $ionicLoading.hide();
         },
         function() {
           $ionicLoading.hide();

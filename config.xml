@@ -64,6 +64,9 @@
         <config-file parent="./application" target="AndroidManifest.xml">
             <meta-data android:name="google_analytics_adid_collection_enabled" android:value="false" />
         </config-file>
+        <edit-config file="AndroidManifest.xml" mode="merge" target="./application">
+            <application android:allowBackup="false" />
+        </edit-config>
         <preference name="AndroidLaunchMode" value="singleTask" />
     </platform>
     <platform name="ios">
@@ -112,9 +115,8 @@
     <plugin name="cordova-plugin-file" spec="^6.0.1" />
     <plugin name="cordova-plugin-local-notification" spec="^0.9.0-beta.2" />
     <plugin name="cordova-plugin-network-information" spec="~2.0.1" />
-    <plugin name="com.bez4pieci.cookies" spec="https://github.com/bez4pieci/Phonegap-Cookies-Plugin.git" />
+    <plugin name="cordova-plugin-firebase" spec="https://github.com/dpa99c/cordova-plugin-firebase#GH-1057-April-05-android-build-issue" />
     <plugin name="com.napolitano.cordova.plugin.intent" spec="https://github.com/napolitano/cordova-plugin-intent" />
-    <plugin name="cordova-plugin-firebase" spec="2.0.5" />
-    <engine name="ios" spec="4.5.4" />
     <engine name="android" spec="7.1.4" />
+    <engine name="ios" spec="4.5.5" />
 </widget>

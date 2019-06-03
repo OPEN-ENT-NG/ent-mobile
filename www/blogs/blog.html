@@ -1,4 +1,4 @@
-<ion-view view-title="{{ nameBlog }}">
+<ion-view view-title="{{ blog.title }}">
   <ion-content scroll="false">
     <ion-scroll class="scroll" direction="y" has-bouncing="true">
       <ion-refresher pulling-text="Actualiser" on-refresh="doRefreshPosts()">
@@ -6,6 +6,7 @@
 
       <ion-list>
         <ion-item
+          id="{{ post._id }}"
           ng-repeat="post in filteredPosts=(posts | orderBy: 'modified.$date' : true) track by $index"
           class="card"
         >

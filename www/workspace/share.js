@@ -107,7 +107,7 @@ angular
       };
 
       if (!isGroup) {
-        data.profile = TranslationService.getTraduction(contact.profile);
+        data.profile = $rootScope.translationUser[contact.profile];
       }
 
       $scope.contactShared.push(data);

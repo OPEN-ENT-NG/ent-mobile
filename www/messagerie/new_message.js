@@ -10,7 +10,7 @@ angular
     $ionicHistory,
     MessagerieServices,
     $ionicLoading,
-    getPopupFactory,
+    PopupFactory,
     domainENT,
     $filter,
     AlertMessagePopupFactory,
@@ -71,7 +71,7 @@ angular
           $state.go("app.messagerie");
         });
       } else {
-        getPopupFactory.getAlertPopupNoTitle("Impossible d'envoyer le message");
+        PopupFactory.getAlertPopupNoTitle("Impossible d'envoyer le message");
       }
     };
 
@@ -129,7 +129,7 @@ angular
         $scope.email.id +
         "/attachment/" +
         id;
-      var attachment = findElementById($scope.email.attachments, id);
+      var attachment = $scope.mail.attachments.find(att => att.id == id);
       $rootScope.downloadFile(attachment.filename, attachmentUrl);
     };
 

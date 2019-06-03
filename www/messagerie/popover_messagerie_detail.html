@@ -2,23 +2,34 @@
   <ion-content>
     <ion-list>
       <!-- edition -->
-      <a class="item" ng-show=isDraft() ng-click=editMail('DRAFT')>{{translationConversation["modify"]}}</a>
+      <a class="item" ng-show="isDraft()" ng-click="editMail('DRAFT')">{{
+        translationConversation["modify"]
+      }}</a>
 
       <!-- reply all -->
-      <a class="item" ng-show=isInbox() ng-click=editMail('REPLY_ALL')>{{translationConversation["replyall"]}}</a>
+      <a class="item" ng-show="isInbox()" ng-click="editMail('REPLY_ALL')">{{
+        translationConversation["replyall"]
+      }}</a>
 
       <!-- reply all -->
-      <a class="item" ng-show="!isDraft()"  ng-click=editMail('FORWARD')>{{translationConversation["transfer"]}}</a>
+      <a class="item" ng-show="!isDraft()" ng-click="editMail('FORWARD')">{{
+        translationConversation["transfer"]
+      }}</a>
 
       <!-- déplacer -->
-      <a class="item"  ng-hide="isTrash()" ng-click=moveMessage(mail)>{{translationConversation["move.inside.folder"]}}</a>
+      <a class="item" ng-hide="isTrash()" ng-click="moveMessage(mail)">{{
+        translationConversation["move.inside.folder"]
+      }}</a>
 
       <!-- supprimer -->
-      <a class="item"  ng-hide="isTrash()" ng-click=trash(mail)>{{translationConversation["delete"]}}</a>
+      <a class="item" ng-hide="isTrash()" ng-click="trash(mail)">{{
+        translationConversation["delete"]
+      }}</a>
 
       <!-- restaurer -->
-      <a class="item" ng-show="isTrash()" ng-click="restoreMessage(mail)">{{translationConversation["restore"]}}</a>
-
+      <a class="item" ng-show="isTrash()" ng-click="restoreMessage(mail)">{{
+        translationConversation["restore"]
+      }}</a>
     </ion-list>
   </ion-content>
 </ion-popover-view>

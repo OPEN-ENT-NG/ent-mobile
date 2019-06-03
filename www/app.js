@@ -2,124 +2,30 @@ angular
   .module("ent", [
     "ionic",
     "ngCordova",
-    "ngCookies",
     "ngSanitize",
     "ngRoute",
     "ent.actualites",
     "ent.blog",
     "ent.blog-list",
-    "ent.oauth2",
+    "ent.authentication",
     "ent.messagerie",
     "ent.workspace",
     "ent.user",
     "ent.pronotes",
     "ent.support",
-    "angularMoment",
     "ng-mfb",
     "ui.router",
     "ent.timeline",
     "angular.img",
     "ent.request",
     "ent.firstConnection",
-    "ent.firstConnectionService",
     "ent.forgotLoginPwd",
     "ent.forgotLoginPwdService",
-    "ent.authLoader",
-    "ent.profile"
+    "ent.profile",
+    "ent.notificationService"
   ])
 
-  .run(function(
-    $ionicPlatform,
-    $rootScope,
-    $cordovaGlobalization,
-    amMoment,
-    RequestService
-  ) {
-    $ionicPlatform.ready(function() {
-      RequestService.setDefaultHeaders();
-      //window.FirebasePlugin.setBadgeNumber(0);
-      cordova.plugins.notification.badge.clear();
-
-      if (window.StatusBar) {
-        StatusBar.styleLightContent();
-        StatusBar.overlaysWebView(false);
-      }
-
-      cordova.getAppVersion.getVersionNumber(function(version) {
-        $rootScope.version = version;
-      });
-
-      cordova.getAppVersion.getAppName(function(name) {
-        $rootScope.appName = name;
-      });
-
-      if (!ionic.Platform.isIOS()) {
-        cordova.plugins.diagnostic.requestRuntimePermissions(
-          function(status) {
-            console.log(status);
-            switch (status) {
-              case cordova.plugins.diagnostic.permissionStatus.NOT_REQUESTED:
-                console.log("Permission not requested");
-                break;
-              case cordova.plugins.diagnostic.permissionStatus.DENIED:
-                console.log("Permission denied");
-                break;
-              case cordova.plugins.diagnostic.permissionStatus.GRANTED:
-                console.log("Permission granted always");
-                break;
-              case cordova.plugins.diagnostic.permissionStatus
-                .GRANTED_WHEN_IN_USE:
-                console.log("Permission granted only when in use");
-                break;
-            }
-          },
-          function(error) {
-            console.error(error);
-          },
-          cordova.plugins.diagnostic.runtimePermissionGroups.STORAGE
-        );
-      } else {
-        console.log("IOS : Granted permission");
-        window.FirebasePlugin.grantPermission(function() {
-          console.log("IOS: Permission granted");
-          window.FirebasePlugin.hasPermission(function(data) {
-            console.log("IOS: has firebase permission ? " + data.isEnabled);
-          });
-        });
-      }
-
-      $cordovaGlobalization.getPreferredLanguage().then(
-        function(result) {
-          localStorage.setItem("preferredLanguage", result.value);
-          amMoment.changeLocale(result.value);
-        },
-        function(error) {
-          console.log(error);
-        }
-      );
-
-      window.requestFileSystem =
-        window.requestFileSystem || window.webkitRequestFileSystem;
-      window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFS, fail);
-
-      $rootScope.$on("$cordovaNetwork:offline", function() {
-        console.log("offline");
-        $rootScope.status = "offline";
-      });
-
-      $rootScope.$on("$cordovaNetwork:online", function() {
-        console.log("online");
-        $rootScope.status = $rootScope.status == undefined ? null : "online";
-      });
-    });
-  })
-
-  .config(function(
-    $stateProvider,
-    $urlRouterProvider,
-    $ionicConfigProvider,
-    $httpProvider
-  ) {
+  .config(function($stateProvider, $ionicConfigProvider, $httpProvider) {
     $httpProvider.defaults.withCredentials = true;
 
     $ionicConfigProvider.views.swipeBackEnabled(false);
@@ -176,14 +82,15 @@ angular
 
       .state("app.blog", {
         params: {
-          nameBlog: "",
-          idBlog: ""
+          idBlog: "",
+          idPost: ""
         },
         templateUrl: "blogs/blog.html",
         controller: "BlogCtrl"
       })
 
       .state("app.timeline_list", {
+        cache: false,
         templateUrl: "timeline/timeline.html",
         controller: "TimelineCtrl"
       })
@@ -195,6 +102,10 @@ angular
 
       .state("app.actualites", {
         xitiIndex: "actualites",
+        cache: false,
+        params: {
+          idActu: null
+        },
         templateUrl: "actualites/actualites.html",
         controller: "ActualitesCtrl"
       })
@@ -224,7 +135,8 @@ angular
         params: {
           filter: null,
           folderId: null,
-          folderName: null
+          folderName: null,
+          idDoc: null
         },
         controller: "WorkspaceFolderContentCtlr",
         templateUrl: "workspace/tree.html"
@@ -297,21 +209,230 @@ angular
       .state("forgotLoginPwd", {
         templateUrl: "forgotLoginPwd/forgotLoginPwd.html",
         controller: "ForgotLoginPwdCtrl"
-      })
-
-      .state("authLoading", {
-        url: "/auth-loading",
-        templateUrl: "authLoader/authLoader.html",
-        controller: "AuthLoaderCtrl"
       });
 
-    // if none of the above states are matched, use this as the fallback
-    $urlRouterProvider.otherwise("/auth-loading");
-    // $urlRouterProvider.otherwise('/app/workspace/documents');
+    // .state("authLoading", {
+    //   url: "/auth-loading",
+    //   templateUrl: "authLoader/authLoader.html",
+    //   controller: "AuthLoaderCtrl"
+    // });
+  })
+
+  .run(function(
+    $ionicPlatform,
+    $rootScope,
+    RequestService,
+    $state,
+    AuthenticationService,
+    $timeout,
+    UserService,
+    NotificationService,
+    TraductionService,
+    WorkspaceService,
+    PronoteService
+  ) {
+    function intentHandler(intent) {
+      if (
+        intent &&
+        intent.hasOwnProperty("action") &&
+        intent.action == "android.intent.action.SEND"
+      ) {
+        var image = intent.extras["android.intent.extra.STREAM"];
+
+        $ionicLoading.show({
+          template: '<ion-spinner icon="android"/>'
+        });
+
+        window.plugins.intent.getRealPathFromContentUrl(
+          image,
+          function(filepath) {
+            window.resolveLocalFileSystemURL(
+              "file://" + filepath,
+              function(entry) {
+                entry.file(function(file) {
+                  if (
+                    $rootScope.translationWorkspace &&
+                    file.size > $rootScope.translationWorkspace["max.file.size"]
+                  ) {
+                    PopupFactory.getAlertPopupNoTitle(
+                      $rootScope.translationWorkspace["file.too.large.limit"] +
+                        $scope.getSizeFile(
+                          parseInt(
+                            $rootScope.translationWorkspace["max.file.size"]
+                          )
+                        )
+                    );
+                  } else {
+                    var reader = new FileReader();
+
+                    reader.onloadend = function() {
+                      var formData = new FormData();
+                      formData.append(
+                        "file",
+                        new Blob([this.result], { type: file.type }),
+                        file.name
+                      );
+
+                      WorkspaceService.uploadDoc(formData).then(
+                        function() {
+                          $state.go("app.workspace_tree", {
+                            filter: "owner"
+                          });
+                          $ionicLoading.hide();
+                        },
+                        function(err) {
+                          $ionicLoading.hide();
+                          console.log("upload failed");
+                          $ionicLoading.hide();
+                          PopupFactory.getCommonAlertPopup(err);
+                        }
+                      );
+                    };
+                    reader.readAsArrayBuffer(file);
+                  }
+                });
+              },
+              function(errdata) {
+                console.log(errdata);
+                $ionicLoading.hide();
+              }
+            );
+          },
+          function(errdata) {
+            console.log(errdata);
+            $ionicLoading.hide();
+          }
+        );
+      }
+    }
+
+    $ionicPlatform.ready(function() {
+      RequestService.setDefaultHeaders();
+
+      if (window.StatusBar) {
+        StatusBar.styleLightContent();
+        StatusBar.overlaysWebView(false);
+      }
+
+      cordova.getAppVersion.getVersionNumber(function(version) {
+        $rootScope.version = version;
+      });
+
+      cordova.getAppVersion.getAppName(function(name) {
+        $rootScope.appName = name;
+      });
+
+      if (!ionic.Platform.isIOS()) {
+        cordova.plugins.diagnostic.requestRuntimePermissions(
+          function(status) {
+            console.log(status);
+            switch (status) {
+              case cordova.plugins.diagnostic.permissionStatus.NOT_REQUESTED:
+                console.log("Permission not requested");
+                break;
+              case cordova.plugins.diagnostic.permissionStatus.DENIED:
+                console.log("Permission denied");
+                break;
+              case cordova.plugins.diagnostic.permissionStatus.GRANTED:
+                console.log("Permission granted always");
+                break;
+              case cordova.plugins.diagnostic.permissionStatus
+                .GRANTED_WHEN_IN_USE:
+                console.log("Permission granted only when in use");
+                break;
+            }
+          },
+          function(error) {
+            console.error(error);
+          },
+          cordova.plugins.diagnostic.runtimePermissionGroups.STORAGE
+        );
+      } else {
+        NotificationService.setPermission(() => true);
+        // console.log("IOS : Granted permission");
+        // window.FirebasePlugin.grantPermission(function() {
+        //   console.log("IOS: Permission granted");
+        //   window.FirebasePlugin.hasPermission(function(data) {
+        //     console.log("IOS: has firebase permission ? " + data.isEnabled);
+        //   });
+        // });
+      }
+
+      window.requestFileSystem =
+        window.requestFileSystem || window.webkitRequestFileSystem;
+      window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFS, fail);
+
+      $rootScope.$on("$cordovaNetwork:offline", function() {
+        console.log("offline");
+        $rootScope.status = "offline";
+      });
+
+      $rootScope.$on("$cordovaNetwork:online", function() {
+        console.log("online");
+        $rootScope.status = $rootScope.status == undefined ? null : "online";
+      });
+
+      $rootScope.$on("LoggedIn", () => {
+        PronoteService.getAllAccounts().then(function(resp) {
+          if (resp.length > 0) {
+            $rootScope.listMenu.unshift({
+              name: "Version mobile",
+              icon: "custom-pronote pronote-1icon-",
+              state: "app.listPronotes"
+              // href: "#/app/listPronotes"
+            });
+          }
+        });
+
+        TraductionService.getAllTranslation().then(
+          () => {
+            if (!ionic.Platform.isIOS()) {
+              window.plugins.intent.setNewIntentHandler(intentHandler);
+            }
+            UserService.getUser().then(result => {
+              console.log(result);
+              $rootScope.myUser = result;
+            });
+          },
+          err => PopupFactory.getCommonAlertPopup(err)
+        );
+
+        window.FirebasePlugin.onTokenRefresh(token => {
+          NotificationService.setFcmToken(token);
+        });
+
+        cordova.plugins.notification.local.on("click", notification => {
+          NotificationService.pushNotificationHandler(notification.data);
+        });
+
+        window.FirebasePlugin.onNotificationOpen(data => {
+          if (data.tap) {
+            NotificationService.pushNotificationHandler(data);
+          } else {
+            cordova.plugins.notification.local.schedule({
+              text: data.body,
+              title: data.title,
+              data
+            });
+          }
+        });
+      });
+
+      AuthenticationService.relog(
+        () => {
+          console.log("redirecting");
+          $state.go("app.timeline_list");
+          $timeout(navigator.splashscreen.hide, 500);
+        },
+        () => {
+          $state.go("login");
+          $timeout(navigator.splashscreen.hide);
+        }
+      );
+    });
   })
 
   .controller("AppCtrl", function(
-    PronoteService,
     $scope,
     $rootScope,
     $sce,
@@ -321,353 +442,113 @@ angular
     $cordovaFileOpener2,
     domainENT,
     $ionicHistory,
-    $ionicPopup,
-    ActualitesService,
-    MessagerieServices,
-    PronoteService,
-    BlogsService,
-    WorkspaceService,
     $filter,
     $http,
     $ionicLoading,
-    $q,
-    OAuthService
+    PopupFactory,
+    NotificationService
   ) {
     $scope.showGridMenu = false;
 
-    $rootScope.locationPath = $state.current.url;
+    $rootScope.filterThreads = [];
 
-    $rootScope.$on("$stateChangeStart", function(event, toState) {
-      $scope.showGridMenu = false;
-    });
-
-    document.addEventListener("click", function(event) {
-      var regexp = /menu-grid|item-content/;
-      if (
-        !regexp.test(event.target.className) &&
-        event.target.className.indexOf("apps-menu-button") === -1
-      ) {
-        $scope.showGridMenu = false;
-        $scope.$apply();
+    $rootScope.listMenu = [
+      {
+        name: "Actualites",
+        icon: "custom-newspaper newspapericon-",
+        state: "app.actualites"
+        // href: "#/app/actualites"
+      },
+      {
+        name: "Blog",
+        icon: "custom-bullhorn bullhornicon-",
+        state: "app.blog-list"
+        // href: "#/app/blog-list"
+      },
+      {
+        name: "Documents",
+        icon: "custom-folder foldericon-",
+        state: "app.workspace"
+        // href: "#/app/workspace"
+      },
+      {
+        name: "Accès ENT Web",
+        icon: "ent-link",
+        state: domainENT
+      },
+      {
+        name: "Assistance ENT",
+        icon: "custom-help-circled help-circledicon-",
+        state: "app.support"
       }
-    });
+    ];
 
-    $ionicPlatform.ready(function() {
-      $rootScope.filterThreads = [];
+    $scope.hasBackView = () => {
+      return !!$ionicHistory.backView();
+    };
 
-      $rootScope.listMenu = [
-        {
-          name: "Actualites",
-          icon: "custom-newspaper newspapericon-",
-          state: "app.actualites"
-          // href: "#/app/actualites"
-        },
-        {
-          name: "Blog",
-          icon: "custom-bullhorn bullhornicon-",
-          state: "app.blog-list"
-          // href: "#/app/blog-list"
-        },
-        {
-          name: "Documents",
-          icon: "custom-folder foldericon-",
-          state: "app.workspace"
-          // href: "#/app/workspace"
-        },
-        {
-          name: "Accès ENT Web",
-          icon: "ent-link",
-          state: domainENT
-        },
-        {
-          name: "Assistance ENT",
-          icon: "custom-help-circled help-circledicon-",
-          state: "app.support"
-        }
-      ];
-
-      PronoteService.getAllAccounts().then(function(resp) {
-        if (resp.length > 0) {
-          $rootScope.listMenu.unshift({
-            name: "Version mobile",
-            icon: "custom-pronote pronote-1icon-",
-            state: "app.listPronotes"
-            // href: "#/app/listPronotes"
-          });
-        }
-      });
-
-      //SkinFactory.getSkin().then(function(res) {
-      localStorage.setItem("skin", "/assets/themes/paris/skins/default/");
-      //localStorage.setItem('skin', res.data.skin);
-      //} , function(err){
-      //  $scope.showAlertError(err);
-      //});
-
-      var intentHandler = function(intent) {
-        if (
-          intent &&
-          intent.hasOwnProperty("action") &&
-          intent.action == "android.intent.action.SEND"
-        ) {
-          var image = intent.extras["android.intent.extra.STREAM"];
-
-          $ionicLoading.show({
-            template: '<ion-spinner icon="android"/>'
-          });
-
-          window.plugins.intent.getRealPathFromContentUrl(
-            image,
-            function(filepath) {
-              window.resolveLocalFileSystemURL(
-                "file://" + filepath,
-                function(entry) {
-                  entry.file(function(file) {
-                    if (
-                      $rootScope.translationWorkspace &&
-                      file.size >
-                        $rootScope.translationWorkspace["max.file.size"]
-                    ) {
-                      getPopupFactory.getAlertPopupNoTitle(
-                        $rootScope.translationWorkspace[
-                          "file.too.large.limit"
-                        ] +
-                          $scope.getSizeFile(
-                            parseInt(
-                              $rootScope.translationWorkspace["max.file.size"]
-                            )
-                          )
-                      );
-                    } else {
-                      var reader = new FileReader();
-
-                      reader.onloadend = function() {
-                        var formData = new FormData();
-                        formData.append(
-                          "file",
-                          new Blob([this.result], { type: file.type }),
-                          file.name
-                        );
-
-                        WorkspaceService.uploadDoc(formData).then(
-                          function() {
-                            $state.go("app.workspace_tree", {
-                              filter: "owner"
-                            });
-                            $ionicLoading.hide();
-                          },
-                          function(err) {
-                            $ionicLoading.hide();
-                            console.log("upload failed");
-                            $ionicLoading.hide();
-                            $scope.showAlertError(err);
-                          }
-                        );
-                      };
-                      reader.readAsArrayBuffer(file);
-                    }
-                  });
-                },
-                function(errdata) {
-                  console.log(errdata);
-                  $ionicLoading.hide();
-                }
-              );
-            },
-            function(errdata) {
-              console.log(errdata);
-              $ionicLoading.hide();
-            }
-          );
-        }
-      };
-
-      $q.all([
-        getTranslationActualites(),
-        getTranslationConversation(),
-        getTraductionBlogs(),
-        getTraductionWorkspace()
-      ]).then(function() {
-        if (!ionic.Platform.isIOS()) {
-          window.plugins.intent.setNewIntentHandler(intentHandler);
-        }
-      });
-
-      function manageNotification(data) {
-        //window.FirebasePlugin.getBadgeNumber(function(n) {
-        //  window.FirebasePlugin.setBadgeNumber(n - 1);
-        //});
-        //cordova.plugins.notification.badge.decrease(1, function (badge) {
-        // badge is now 9 (11 - 2)
-        //});
-        if (data.params) {
-          var params = JSON.parse(data.params);
-          var module = /\/([\w]+)\W?/g.exec(params.resourceUri)[1];
-
-          $rootScope.notification = {};
-          switch (module) {
-            case "blog": {
-              $rootScope.notification.state = "app.blog";
-              $rootScope.notification.id = params.postUri.split("/").pop();
-              $state.go("app.blog", {
-                nameBlog: params.blogTitle,
-                idBlog: params.blogUri.split("/").pop()
-              });
-              break;
-            }
-            case "workspace": {
-              $state.go("app.workspace_tree", {
-                filer: "shared"
-              });
-              break;
-            }
-            case "conversation": {
-              $rootScope.notification.state = "app.message_detail";
-              $rootScope.notification.id = params.messageUri.split("/").pop();
-              $rootScope.nameFolder = "inbox";
-              $state.go("app.message_detail", {
-                nameFolder: "INBOX",
-                idMessage: $rootScope.notification.id
-              });
-              break;
-            }
-            case "actualites": {
-              $rootScope.notification.state = "app.actualites";
-              $rootScope.notification.id = params.resourceUri.split("/").pop();
-              $state.go("app.actualites");
-              break;
-            }
-            default: {
-              window.open(
-                domainENT +
-                  "/auth/login?callBack=" +
-                  encodeURIComponent(domainENT + params.resourceUri),
-                "_system"
-              );
-            }
-          }
-        }
+    $scope.doCustomBack = () => {
+      if ($ionicHistory.backView()) {
+        $ionicHistory.goBack();
+      } else {
+        $state.go("app.timeline_list");
       }
+    };
 
-      window.FirebasePlugin.onNotificationOpen(function(data) {
-        cordova.plugins.notification.badge.increase(1, function(badge) {
-          // badge is now 11 (10 + 1)
-        });
-        if (data.tap) {
-          manageNotification(data);
-        } else {
-          // window.FirebasePlugin.getBadgeNumber(function(n) {
-          //   window.FirebasePlugin.setBadgeNumber(n + 1);
-          // });
+    $scope.displayBar = function() {
+      let regexp = RegExp("^app.*$");
+      return regexp.test($state.current.name);
+    };
 
-          data.text = data.body;
-          data.foreground = true;
-          cordova.plugins.notification.local.schedule(data);
-          cordova.plugins.notification.local.on("click", function(
-            notification
-          ) {
-            manageNotification(notification);
-          });
-        }
-      });
+    $scope.isHomeActive = function() {
+      return $state.is("app.timeline_list") || $state.is("app.timeline_prefs");
+    };
 
-      $scope.displayBar = function() {
-        let regexp = RegExp("^app.*$");
-        return regexp.test($state.current.name);
-      };
+    $scope.isMessagerieActive = function() {
+      return (
+        $state.is("app.messagerie") ||
+        $state.is("app.message_folder") ||
+        $state.is("app.message_detail") ||
+        $state.is("app.new_message")
+      );
+    };
 
-      $scope.isHomeActive = function() {
-        return (
-          $state.current.name == "app.timeline_list" ||
-          $state.current.name == "app.timeline_prefs"
-        );
-      };
+    $scope.isGridActive = function() {
+      return (
+        $state.is("app.blog-list") ||
+        $state.is("app.blog") ||
+        $state.is("app.actualites") ||
+        $state.is("app.threads") ||
+        $state.is("app.listPronotes") ||
+        $state.is("app.pronote") ||
+        $state.is("app.workspace") ||
+        $state.is("app.workspace_tree") ||
+        $state.is("app.workspace_file") ||
+        $state.is("app.workspace_movecopy") ||
+        $state.is("app.workspace_share") ||
+        $state.is("app.support")
+      );
+    };
 
-      $scope.isMessagerieActive = function() {
-        return (
-          $state.current.name == "app.messagerie" ||
-          $state.current.name == "app.message_folder" ||
-          $state.current.name == "app.message_detail" ||
-          $state.current.name == "app.new_message"
-        );
-      };
+    $scope.isProfileActive = function() {
+      return $state.is("app.profile");
+    };
 
-      $scope.isGridActive = function() {
-        return (
-          $state.current.name == "app.blog-list" ||
-          $state.current.name == "app.blog" ||
-          $state.current.name == "app.actualites" ||
-          $state.current.name == "app.threads" ||
-          $state.current.name == "app.listPronotes" ||
-          $state.current.name == "app.pronote" ||
-          $state.current.name == "app.workspace" ||
-          $state.current.name == "app.workspace_tree" ||
-          $state.current.name == "app.workspace_file" ||
-          $state.current.name == "app.workspace_movecopy" ||
-          $state.current.name == "app.workspace_share" ||
-          $state.current.name == "app.support"
-        );
-      };
+    $scope.triggerGrid = function() {
+      $scope.showGridMenu = !$scope.showGridMenu;
+    };
 
-      $scope.isProfileActive = function() {
-        return $state.current.name == "app.profile";
-      };
+    $scope.isGridHidden = function() {
+      return !$scope.showGridMenu;
+    };
 
-      $scope.triggerGrid = function() {
-        $scope.showGridMenu = !$scope.showGridMenu;
-      };
-
-      $scope.isGridHidden = function() {
-        return !$scope.showGridMenu;
-      };
-
-      $scope.gridButton = function(state) {
-        if (state.includes("http")) {
-          $scope.openUrl(state);
-        } else {
-          $state.go(state);
-        }
-      };
-
-      $scope.clickTimelineNotif = function(type, resource, params) {
-        console.log(type);
-        switch (type) {
-          case "MESSAGERIE":
-            $state.go("app.message_detail", {
-              nameFolder: "INBOX",
-              idMessage: resource
-            });
-            break;
-          case "NEWS":
-            $rootScope.notification = params;
-            $rootScope.notification.state = "app.actualites";
-            $rootScope.notification.id = params.resourceUri.split("/").pop();
-            $state.go("app.actualites");
-            break;
-          case "BLOG":
-            $rootScope.notificationParam = params;
-            $state.go("app.blog", {
-              nameBlog: params.blogTitle,
-              idBlog: params.blogUri.split("/").pop()
-            });
-            break;
-          case "WORKSPACE":
-            $state.go("app.workspace_tree", {
-              filter: "shared"
-            });
-            break;
-          default:
-            window.open(
-              domainENT +
-                "/auth/login?callBack=" +
-                encodeURIComponent(
-                  domainENT + (params.resourceUri || params.uri)
-                ),
-              "_system"
-            );
-        }
-      };
-    });
+    $scope.gridButton = function(state) {
+      if (state.includes("http")) {
+        $scope.openUrl(state);
+      } else {
+        $state.go(state);
+      }
+    };
 
     $rootScope.downloadFile = function(fileName, urlFile) {
       $ionicLoading.show({
@@ -679,7 +560,7 @@ angular
         : cordova.file.externalRootDirectory + "Download/";
 
       var failure = function(err) {
-        $scope.showAlertError(err);
+        PopupFactory.getCommonAlertPopup(err);
         $ionicLoading.hide();
       };
 
@@ -762,7 +643,7 @@ angular
     $scope.openLocalFile = function(targetPath, fileMIMEType) {
       $cordovaFileOpener2.open(targetPath, fileMIMEType, {
         error: function(error) {
-          $scope.showAlertError(error);
+          PopupFactory.getCommonAlertPopup(error);
         },
         success: function() {
           console.log("File displayed");
@@ -804,8 +685,8 @@ angular
       return result;
     };
 
-    var getDateAsMoment = function(date) {
-      var momentDate;
+    $scope.formatDate = function(date) {
+      let momentDate;
       if (moment.isMoment(date)) {
         momentDate = date;
       } else if (date.$date) {
@@ -815,11 +696,7 @@ angular
       } else {
         momentDate = moment(date);
       }
-      return momentDate;
-    };
 
-    $scope.formatDate = function(date) {
-      var momentDate = getDateAsMoment(date);
       return moment(momentDate).calendar();
     };
 
@@ -850,86 +727,16 @@ angular
     };
 
     $scope.logout = function() {
-      OAuthService.deleteFcmToken();
-      localStorage.clear();
-      $ionicHistory.clearHistory();
-      $ionicHistory.clearCache();
-      //navigator.splashscreen.show();
-      window.FirebasePlugin.unregister();
-      $state.go("login");
-      window.cookies.clear(function() {
-        console.log("Cookies cleared!");
+      window.FirebasePlugin.unregister(() => {
+        NotificationService.deleteFcmToken().then(() => {
+          localStorage.clear();
+          $ionicHistory.clearHistory();
+          $ionicHistory.clearCache();
+          $state.go("login");
+          location.reload();
+        });
       });
-
-      // var success = function(status) {
-      //   console.log('Message: ' + status);
-      // }
-      //
-      // var error = function(status) {
-      //   console.log('Error: ' + status);
-      // }
-      //
-      // window.cache.clear( success, error );
-      // window.cache.cleartemp(); //
-      // ionic.Platform.exitApp(); // stops the app
-      location.reload();
     };
-
-    function getTranslationActualites() {
-      return ActualitesService.getTranslation().then(
-        function(resp) {
-          $rootScope.translationActus = resp.data;
-        },
-        function(err) {
-          $scope.showAlertError(err);
-        }
-      );
-    }
-
-    function getTranslationConversation() {
-      return (
-        MessagerieServices.getTranslation().then(function(resp) {
-          $rootScope.translationConversation = resp.data;
-        }),
-        function(err) {
-          $scope.showAlertError(err);
-        }
-      );
-    }
-
-    function getTraductionBlogs() {
-      return (
-        BlogsService.getTraduction().then(function(resp) {
-          $rootScope.translationBlog = resp.data;
-          $rootScope.translationBlog[
-            "filters.drafts"
-          ] = $rootScope.translationBlog["filters.drafts"].substring(
-            0,
-            $rootScope.translationBlog["filters.drafts"].indexOf("(") - 1
-          );
-          $rootScope.translationBlog[
-            "filters.submitted"
-          ] = $rootScope.translationBlog["filters.submitted"].substring(
-            0,
-            $rootScope.translationBlog["filters.submitted"].indexOf("(") - 1
-          );
-        }),
-        function(err) {
-          $scope.showAlertError(err);
-        }
-      );
-    }
-
-    function getTraductionWorkspace() {
-      return (
-        WorkspaceService.getTranslation().then(function(resp) {
-          $rootScope.translationWorkspace = resp.data;
-        }),
-        function(err) {
-          $scope.showAlertError(err);
-        }
-      );
-    }
 
     $scope.openPopover = function($event) {
       $rootScope.popover.show($event);
@@ -939,12 +746,120 @@ angular
       $rootScope.popover.hide();
     };
 
-    //Cleanup the popover when we're done with it!
-    $scope.$on("$destroy", function() {
-      $rootScope.popover.remove();
+    $ionicPlatform.ready(function() {
+      $rootScope.$on("$stateChangeStart", function(event, toState) {
+        $scope.showGridMenu = false;
+      });
+
+      document.addEventListener("click", function(event) {
+        var regexp = /menu-grid|item-content/;
+        if (
+          !regexp.test(event.target.className) &&
+          event.target.className.indexOf("apps-menu-button") === -1
+        ) {
+          $scope.showGridMenu = false;
+          $scope.$apply();
+        }
+      });
+
+      //SkinFactory.getSkin().then(function(res) {
+      // localStorage.setItem("skin", "/assets/themes/paris/skins/default/");
+      //localStorage.setItem('skin', res.data.skin);
+      //} , function(err){
+      //  PopupFactory.getCommonAlertPopup(err);
+      //});
     });
-    // An alert dialog
-    $scope.showAlertError = function(error) {
+  })
+
+  .service("TraductionService", function(
+    $rootScope,
+    $q,
+    ActualitesService,
+    MessagerieServices,
+    BlogsService,
+    WorkspaceService,
+    UserService
+  ) {
+    function getTranslationActualites() {
+      return ActualitesService.getTranslation().then(
+        ({ data }) => ($rootScope.translationActus = data)
+      );
+    }
+
+    function getTranslationUser() {
+      return UserService.getTranslation().then(
+        ({ data }) => ($rootScope.translationUser = data)
+      );
+    }
+
+    function getTranslationConversation() {
+      return MessagerieServices.getTranslation().then(
+        ({ data }) => ($rootScope.translationConversation = data)
+      );
+    }
+
+    function getTraductionBlogs() {
+      return BlogsService.getTraduction().then(function(resp) {
+        $rootScope.translationBlog = resp.data;
+        $rootScope.translationBlog[
+          "filters.drafts"
+        ] = $rootScope.translationBlog["filters.drafts"].substring(
+          0,
+          $rootScope.translationBlog["filters.drafts"].indexOf("(") - 1
+        );
+        $rootScope.translationBlog[
+          "filters.submitted"
+        ] = $rootScope.translationBlog["filters.submitted"].substring(
+          0,
+          $rootScope.translationBlog["filters.submitted"].indexOf("(") - 1
+        );
+      });
+    }
+
+    function getTraductionWorkspace() {
+      return WorkspaceService.getTranslation().then(
+        ({ data }) => ($rootScope.translationWorkspace = data)
+      );
+    }
+
+    this.getAllTranslation = function() {
+      return $q.all([
+        getTranslationActualites(),
+        getTranslationUser(),
+        getTranslationConversation(),
+        getTraductionBlogs(),
+        getTraductionWorkspace()
+      ]);
+    };
+  })
+
+  .factory("PopupFactory", function($ionicHistory, $ionicPopup) {
+    this.getConfirmPopup = function(title, template, cancelText, okText) {
+      return $ionicPopup.confirm({
+        title: title,
+        template: template,
+        cancelText: cancelText,
+        okText: okText
+      });
+    };
+
+    this.getAlertPopup = function(title, template) {
+      return $ionicPopup.alert({
+        title: title,
+        template: template,
+        okText: "OK"
+      });
+    };
+
+    this.getAlertPopupNoTitle = function(template) {
+      return $ionicPopup.alert({
+        template: template,
+        cssClass: "dismiss-title", // Hide title
+        okText: "OK"
+      });
+    };
+
+    this.getCommonAlertPopup = function(error) {
       console.log(error);
       var isPermissions = false;
       var title = "Erreur de connexion";
@@ -971,7 +886,7 @@ angular
           }
         }
 
-        var alertPopup = $ionicPopup.alert({
+        let alertPopup = $ionicPopup.alert({
           title: title,
           template: template
         });
@@ -1012,37 +927,6 @@ angular
         });
       }
     };
-  })
-
-  .factory("getPopupFactory", function($ionicPopup) {
-    this.getConfirmPopup = function(title, template, cancelText, okText) {
-      return $ionicPopup.confirm({
-        title: title,
-        template: template,
-        cancelText: cancelText,
-        okText: okText
-      });
-    };
-
-    this.getAlertPopup = function(title, template) {
-      return $ionicPopup.alert({
-        title: title,
-        template: template,
-        okText: "OK"
-      });
-    };
-
-    this.getAlertPopupNoTitle = function(template) {
-      return $ionicPopup.alert({
-        template: template,
-        cssClass: "dismiss-title", // Hide title
-        okText: "OK"
-      });
-    };
-
-    // this.killPopop = function() {
-    //   return $ionicPopup.
-    // }
 
     return this;
   })
@@ -1175,10 +1059,11 @@ angular
 
   .directive("xiti", function(
     RequestService,
+    $rootScope,
     domainENT,
     $rootScope,
     xitiIndex,
-    UserFactory
+    UserService
   ) {
     return {
       restrict: "E",
@@ -1284,18 +1169,16 @@ angular
 
           //Retrieves application dependent vars
           var getAppsInfos = function(state) {
-            return new Promise((resolve, reject) => {
-              var service = scope.serviceMap[state];
+            var service = scope.serviceMap[state];
 
-              scope.xitiConf.ID_SERVICE = service ? service.index : 0;
-              scope.xitiConf.LIB_SERVICE = service ? service.label : "Page_ENT";
+            scope.xitiConf.ID_SERVICE = service ? service.index : 0;
+            scope.xitiConf.LIB_SERVICE = service ? service.label : "Page_ENT";
 
-              resolve();
-            });
+            return Promise.resolve();
           };
 
           //Retrieves structure mapping & platform dependant vars
-          var getXitiConfig = function(userStructures) {
+          var getXitiConfig = function() {
             return new Promise((resolve, reject) => {
               RequestService.get(`${domainENT}/xiti/config`).then(
                 ({ data }) => {
@@ -1308,12 +1191,12 @@ angular
                   scope.xitiConf.ID_PROJET = data.ID_PROJET;
 
                   scope.xitiConf.ID_ETAB =
-                    scope.user.structures.length > 0
-                      ? data.structureMap[scope.user.structures[0]].id
+                    scope.user.schools.length > 0
+                      ? data.structureMap[scope.user.schools[0].id].id
                       : 0;
                   scope.xitiConf.ID_COLLECTIVITE =
-                    scope.user.structures.length > 0
-                      ? data.structureMap[scope.user.structures[0]]
+                    scope.user.schools.length > 0
+                      ? data.structureMap[scope.user.schools[0].id]
                           .collectiviteId
                       : 0;
                   resolve();
@@ -1324,26 +1207,23 @@ angular
           };
 
           var getUserInfo = function() {
-            return new Promise((resolve, reject) => {
-              UserFactory.getCurrentUser().then(({ data }) => {
-                scope.user = data;
-                scope.xitiConf.ID_PERSO = convertStringId(scope.user.userId);
-                scope.xitiConf.ID_PROFIL = getOrElse(
-                  scope.profileMap,
-                  scope.user.type,
-                  6
-                );
-                resolve();
-              }, reject);
+            return UserService.getUser().then(me => {
+              scope.user = me;
+              scope.xitiConf.ID_PERSO = convertStringId(scope.user.userId);
+              scope.xitiConf.ID_PROFIL = getOrElse(
+                scope.profileMap,
+                scope.user.type,
+                6
+              );
             });
           };
 
-          $rootScope.$on("loggedIn", () => {
+          $rootScope.$on("LoggedIn", () => {
             getUserInfo().then(() => {
               Promise.all([getXitiConfig(), getAppsInfos("login")]).then(() => {
                 fillWindowData();
               }, console.log);
-            });
+            }, console.log);
           });
 
           $rootScope.$on("$stateChangeSuccess", function(evt, toState) {
@@ -1355,7 +1235,7 @@ angular
                 ]).then(() => {
                   fillWindowData();
                 }, console.log);
-              });
+              }, console.log);
             }
           });
 
@@ -1373,15 +1253,6 @@ function setProfileImage(regularPath, userId) {
     regularPath != "no-avatar.jpg"
     ? regularPath
     : "/userbook/avatar/" + userId;
-}
-
-function findElementById(arraytosearch, valuetosearch) {
-  for (var i = 0; i < arraytosearch.length; i++) {
-    if (arraytosearch[i].id == valuetosearch) {
-      return arraytosearch[i];
-    }
-  }
-  return null;
 }
 
 function fail() {

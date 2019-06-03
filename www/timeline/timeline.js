@@ -7,25 +7,17 @@ angular
     $rootScope,
     $ionicLoading,
     domainENT,
-    $state
+    $state,
+    NotificationService
   ) {
     $scope.types = [];
     $scope.timeline = [];
 
     $ionicPlatform.ready(function() {
-      $scope.$on("$ionicView.loaded", function() {
-        setTimeout(function() {
-          navigator.splashscreen.hide();
-        }, 100);
-      });
-
       $scope.$on("$ionicView.enter", function() {
-        if ($state.current.name === "app.timeline_list") {
-          $rootScope.navigator = navigator;
-          $scope.totalDisplayed = 10;
-
+        if ($state.is("app.timeline_list")) {
           getTimeline();
-        } else if ($state.current.name === "app.timeline_prefs") {
+        } else if ($state.is("app.timeline_prefs")) {
           getPreferences();
         } else {
           $state.go("app.timeline_list");
@@ -44,6 +36,36 @@ angular
 
     $scope.goPrefs = function() {
       $state.go("app.timeline_prefs");
+    };
+
+    $scope.clickTimelineNotif = function(type, resource, params) {
+      let serviceParams = {};
+
+      switch (type) {
+        case "MESSAGERIE": {
+          serviceParams.idMessage = resource;
+          break;
+        }
+        case "NEWS": {
+          serviceParams.idActu = params.resourceUri.split("/").pop();
+          break;
+        }
+        case "BLOG": {
+          let ids = params.resourceUri.split("/");
+          serviceParams.idPost = ids.pop();
+          serviceParams.idBlog = ids.pop();
+          break;
+        }
+        case "WORKSPACE": {
+          break;
+        }
+        default: {
+          serviceParams.uri = params.resourceUri || params.uri;
+          break;
+        }
+      }
+
+      NotificationService.notificationHandler(type, serviceParams);
     };
 
     function getPreferences() {

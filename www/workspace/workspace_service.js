@@ -176,7 +176,6 @@ angular
   })
 
   .factory("CreateNewFolderPopUpFactory", function(
-    WorkspaceService,
     $ionicPopup,
     $rootScope
   ) {
@@ -272,6 +271,65 @@ angular
   // })
 
   .factory("MimeTypeFactory", function($rootScope) {
+    var mimeTypesArray = [
+      {
+        thumbnail: "word.png",
+        // "thumbnail": "img/word.png",
+        mimetypes: [
+          "application/msword",
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.template",
+          "application/vnd.ms-word.document.macroEnabled.12",
+          "application/vnd.ms-word.template.macroEnabled.12"
+        ]
+      },
+      {
+        thumbnail: "excel.png",
+        // "thumbnail": "img/excel.png",
+        mimetypes: [
+          "application/vnd.ms-excel",
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.template",
+          "application/vnd.ms-excel.sheet.macroEnabled.12",
+          "application/vnd.ms-excel.addin.macroEnabled.12",
+          "application/vnd.ms-excel.sheet.binary.macroEnabled.12"
+        ]
+      },
+      {
+        // "thumbnail": "img/word.png",
+        thumbnail: "powerpoint.png",
+        mimetypes: [
+          "application/vnd.ms-powerpoint",
+          "application/vnd.ms-powerpoint",
+          "application/vnd.ms-powerpoint",
+          "application/vnd.ms-powerpoint",
+          "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+          "application/vnd.openxmlformats-officedocument.presentationml.template",
+          "application/vnd.openxmlformats-officedocument.presentationml.slideshow",
+          "application/vnd.ms-powerpoint.addin.macroEnabled.12",
+          "application/vnd.ms-powerpoint.presentation.macroEnabled.12",
+          "application/vnd.ms-powerpoint.template.macroEnabled.12",
+          "application/vnd.ms-powerpoint.slideshow.macroEnabled.12"
+        ]
+      },
+      {
+        // "thumbnail": "img/pdf.png",
+        thumbnail: "pdf.png",
+        mimetypes: ["application/pdf"]
+      },
+      {
+        thumbnail: "audio.png",
+        // "thumbnail": "img/audio.png",
+        mimetypes: [
+          "audio/mpeg",
+          "audio/x-ms-wma",
+          "audio/vnd.rn-realaudio",
+          "audio/x-wav",
+          "audio/mp3"
+        ]
+      }
+    ];
+
     function getThumbnailByMimeType(mimeType) {
       var thumbnail = "unknown-large.png";
       for (var i = 0; i < mimeTypesArray.length; i++) {
@@ -314,62 +372,3 @@ angular
       setIcons: setIcons
     };
   });
-
-var mimeTypesArray = [
-  {
-    thumbnail: "word.png",
-    // "thumbnail": "img/word.png",
-    mimetypes: [
-      "application/msword",
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.template",
-      "application/vnd.ms-word.document.macroEnabled.12",
-      "application/vnd.ms-word.template.macroEnabled.12"
-    ]
-  },
-  {
-    thumbnail: "excel.png",
-    // "thumbnail": "img/excel.png",
-    mimetypes: [
-      "application/vnd.ms-excel",
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.template",
-      "application/vnd.ms-excel.sheet.macroEnabled.12",
-      "application/vnd.ms-excel.addin.macroEnabled.12",
-      "application/vnd.ms-excel.sheet.binary.macroEnabled.12"
-    ]
-  },
-  {
-    // "thumbnail": "img/word.png",
-    thumbnail: "powerpoint.png",
-    mimetypes: [
-      "application/vnd.ms-powerpoint",
-      "application/vnd.ms-powerpoint",
-      "application/vnd.ms-powerpoint",
-      "application/vnd.ms-powerpoint",
-      "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-      "application/vnd.openxmlformats-officedocument.presentationml.template",
-      "application/vnd.openxmlformats-officedocument.presentationml.slideshow",
-      "application/vnd.ms-powerpoint.addin.macroEnabled.12",
-      "application/vnd.ms-powerpoint.presentation.macroEnabled.12",
-      "application/vnd.ms-powerpoint.template.macroEnabled.12",
-      "application/vnd.ms-powerpoint.slideshow.macroEnabled.12"
-    ]
-  },
-  {
-    // "thumbnail": "img/pdf.png",
-    thumbnail: "pdf.png",
-    mimetypes: ["application/pdf"]
-  },
-  {
-    thumbnail: "audio.png",
-    // "thumbnail": "img/audio.png",
-    mimetypes: [
-      "audio/mpeg",
-      "audio/x-ms-wma",
-      "audio/vnd.rn-realaudio",
-      "audio/x-wav",
-      "audio/mp3"
-    ]
-  }
-];

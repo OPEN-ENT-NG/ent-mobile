@@ -20,7 +20,7 @@ angular
     $cordovaVibration,
     $ionicPopover,
     RenamePopUpFactory,
-    getPopupFactory
+    PopupFactory
   ) {
     $scope.$on("$ionicView.beforeEnter", function() {
       $scope.checkable = false;
@@ -136,7 +136,7 @@ angular
       var newDoc = ele.files[0];
 
       if (newDoc.size > $rootScope.translationWorkspace["max.file.size"]) {
-        getPopupFactory.getAlertPopupNoTitle(
+        PopupFactory.getAlertPopupNoTitle(
           $rootScope.translationWorkspace["file.too.large.limit"] +
             $scope.getSizeFile(
               parseInt($rootScope.translationWorkspace["max.file.size"])
@@ -156,7 +156,7 @@ angular
           },
           function(err) {
             $ionicLoading.hide();
-            $scope.showAlertError(err);
+            PopupFactory.getCommonAlertPopup(err);
           }
         );
       }
@@ -215,7 +215,7 @@ angular
         },
         error => {
           $ionicLoading.hide();
-          $scope.showAlertError(error);
+          PopupFactory.getCommonAlertPopup(error);
         }
       );
     };
@@ -236,7 +236,7 @@ angular
         },
         err => {
           $ionicLoading.hide();
-          $scope.showAlertError(err);
+          PopupFactory.getCommonAlertPopup(err);
         }
       );
     };
@@ -258,7 +258,7 @@ angular
             },
             function(err) {
               $ionicLoading.hide();
-              $scope.showAlertError(err);
+              PopupFactory.getCommonAlertPopup(err);
             }
           );
         });
@@ -305,36 +305,38 @@ angular
         $rootScope.popover = popover;
       });
 
-    function getData() {
+    function getData(filter, parentId) {
       $ionicLoading.show({
         template: '<ion-spinner icon="android"/>'
       });
 
-      let parameters = {
-        filter: $stateParams["filter"],
-        parentId: $stateParams["folderId"]
-      };
+      filter = filter || $stateParams["filter"];
+      parentId = parentId || $stateParams["folderId"];
 
-      let folders = WorkspaceService.getFolders(parameters).then(res => {
-        $scope.folders = [];
-        for (var i = 0; i < res.data.length; i++) {
-          $scope.folders.push({ ...res.data[i], checked: false });
+      let folders = WorkspaceService.getFolders({ filter, parentId }).then(
+        res => {
+          $scope.folders = [];
+          for (var i = 0; i < res.data.length; i++) {
+            $scope.folders.push({ ...res.data[i], checked: false });
+          }
         }
-      });
+      );
 
-      let docs = WorkspaceService.getFiles(parameters).then(result => {
-        $scope.documents = [];
-        for (var i = 0; i < result.data.length; i++) {
-          $scope.documents.push({
-            ...MimeTypeFactory.setIcons(result.data[i]),
-            checked: false
-          });
+      let docs = WorkspaceService.getFiles({ filter, parentId }).then(
+        result => {
+          $scope.documents = [];
+          for (var i = 0; i < result.data.length; i++) {
+            $scope.documents.push({
+              ...MimeTypeFactory.setIcons(result.data[i]),
+              checked: false
+            });
+          }
         }
-      });
+      );
 
-      Promise.all([folders, docs]).then($ionicLoading.hide, err => {
+      return Promise.all([folders, docs]).then($ionicLoading.hide, err => {
         $ionicLoading.hide();
-        $scope.showAlertError(err);
+        PopupFactory.getCommonAlertPopup(err);
       });
     }
 

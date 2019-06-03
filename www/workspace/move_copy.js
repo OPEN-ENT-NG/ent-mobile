@@ -9,7 +9,7 @@ angular
     $stateParams,
     $ionicPopup,
     CreateNewFolderPopUpFactory,
-    getPopupFactory
+    PopupFactory
   ) {
     choosenFolder = null;
     getData();
@@ -67,35 +67,31 @@ angular
     };
 
     function moveItem(item) {
-      getPopupFactory
-        .getConfirmPopup(
-          $rootScope.translationWorkspace["move"],
-          "Voulez-vous déplacer ce document dans le dossier " + item.name + "?",
-          $rootScope.translationWorkspace["cancel"],
-          "OK"
-        )
-        .then(function() {
-          WorkspaceService.moveDocuments($stateParams["items"], item.id).then(
-            () => $ionicHistory.goBack(),
-            err => $scope.showAlertError(err)
-          );
-        });
+      PopupFactory.getConfirmPopup(
+        $rootScope.translationWorkspace["move"],
+        "Voulez-vous déplacer ce document dans le dossier " + item.name + "?",
+        $rootScope.translationWorkspace["cancel"],
+        "OK"
+      ).then(function() {
+        WorkspaceService.moveDocuments($stateParams["items"], item.id).then(
+          () => $ionicHistory.goBack(),
+          err => PopupFactory.getCommonAlertPopup(err)
+        );
+      });
     }
 
     function copyItem(item) {
-      getPopupFactory
-        .getConfirmPopup(
-          $rootScope.translationWorkspace["workspace.copy"],
-          "Voulez-vous copier ce document dans le dossier " + item.name + "?",
-          $rootScope.translationWorkspace["cancel"],
-          "OK"
-        )
-        .then(function() {
-          WorkspaceService.copyDocuments($stateParams["items"], item.id).then(
-            () => $ionicHistory.goBack(),
-            err => $scope.showAlertError(err)
-          );
-        });
+      PopupFactory.getConfirmPopup(
+        $rootScope.translationWorkspace["workspace.copy"],
+        "Voulez-vous copier ce document dans le dossier " + item.name + "?",
+        $rootScope.translationWorkspace["cancel"],
+        "OK"
+      ).then(function() {
+        WorkspaceService.copyDocuments($stateParams["items"], item.id).then(
+          () => $ionicHistory.goBack(),
+          err => PopupFactory.getCommonAlertPopup(err)
+        );
+      });
     }
 
     $scope.getTitle = function() {
