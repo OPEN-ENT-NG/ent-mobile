@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "%ANDROID_MOBILESDK_APP_ID%",
         "android_client_info": {
-          "package_name": "fr.openent.mdp.alpha"
+          "package_name": "%ANDROID_APPNAME%"
         }
       },
       "oauth_client": [

@@ -17,7 +17,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>fr.openent</string>
+	<string>%IOS_APPNAME%</string>
 	<key>PROJECT_ID</key>
 	<string>%IOS_PROJET_ID%</string>
 	<key>STORAGE_BUCKET</key>
