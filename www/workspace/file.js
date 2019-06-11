@@ -4,7 +4,6 @@ angular
   .controller("WorkspaceFileCtlr", function(
     $scope,
     $rootScope,
-    $ionicPopup,
     domainENT,
     WorkspaceService,
     $ionicLoading,
@@ -12,7 +11,6 @@ angular
     $ionicHistory,
     $ionicPopover,
     $state,
-    RenamePopUpFactory,
     PopupFactory
   ) {
     var myUserRights = [];
@@ -49,30 +47,11 @@ angular
       $scope.data = {};
 
       if ($scope.isRightToComment()) {
-        var myPopup = $ionicPopup.show({
-          template: '<input type="text" ng-model="data.comment">',
-          title: $rootScope.translationWorkspace["workspace.comment"],
-          scope: $scope,
-          buttons: [
-            { text: $rootScope.translationWorkspace["cancel"] },
-            {
-              text:
-                "<b>" +
-                $rootScope.translationWorkspace["workspace.comment"] +
-                "</b>",
-              type: "button-positive",
-              onTap: function(e) {
-                if (!$scope.data.comment) {
-                  e.preventDefault();
-                } else {
-                  return $scope.data.comment;
-                }
-              }
-            }
-          ]
-        });
-
-        myPopup.then(function(res) {
+        PopupFactory.getPromptPopup(
+          $rootScope.translationWorkspace["workspace.comment"],
+          null,
+          "<b>" + $rootScope.translationWorkspace["workspace.comment"] + "</b>"
+        ).then(function(res) {
           if (res) {
             $ionicLoading.show({
               template: '<ion-spinner icon="android"/>'
@@ -93,7 +72,10 @@ angular
     };
 
     $scope.renameDoc = function() {
-      RenamePopUpFactory.getPopup($scope, $scope.doc).then(function(res) {
+      PopupFactory.getPromptPopup(
+        $rootScope.translationWorkspace["folder.new.title"],
+        $rootScope.translationWorkspace["folder.new"]
+      ).then(function(res) {
         console.log(res);
         if (res) {
           $ionicLoading.show({

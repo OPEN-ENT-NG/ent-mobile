@@ -13,7 +13,6 @@ angular
     PopupFactory,
     domainENT,
     $filter,
-    AlertMessagePopupFactory,
     $ionicPlatform
   ) {
     $ionicPlatform.ready(function() {
@@ -78,7 +77,7 @@ angular
     $scope.saveAsDraft = function(mail) {
       MessagerieServices.saveDraft(mail).then(function(resp) {
         $scope.closePopover();
-        AlertMessagePopupFactory.getPopup(
+        PopupFactory.getAlertPopup(
           $rootScope.translationConversation["save"],
           $rootScope.translationConversation["draft.saved"]
         ).then(function() {

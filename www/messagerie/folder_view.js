@@ -11,10 +11,7 @@ angular
     $state,
     $rootScope,
     MessagerieServices,
-    $ionicLoading,
-    $cordovaVibration,
-    $ionicPlatform,
-    $ionicHistory
+    $ionicLoading
   ) {
     getFolders();
 
@@ -46,51 +43,36 @@ angular
       $ionicLoading.show({
         template: '<ion-spinner icon="android"/>'
       });
-
-      $scope.checkable = false;
       $scope.folders = [];
       $scope.folders = MessagerieServices.getNonPersonalFolders();
       $scope.folders.push({
         id: "0",
         name: ""
       });
-      MessagerieServices.getCustomFolders()
-        .then(function(resp) {
-          for (var i = 0; i < resp.data.length; i++) {
-            $scope.folders.push({
-              id: resp.data[i].id,
-              name: resp.data[i].name
-            });
-          }
-        })
-        .then(
-          function() {
-            var folderIds = [];
-            angular.forEach($scope.folders, function(folder) {
-              folderIds.push(folder.id);
-            });
-            MessagerieServices.getCountUnread(folderIds).then(function(
-              response
-            ) {
-              for (var i = 0; i < response.length; i++) {
-                console.log($scope.folders[i].name);
-                console.log(response[i].count);
-                $scope.folders[i].count = response[i].count;
-              }
-              initCheckedValue();
-              console.log($scope.folders);
+      MessagerieServices.getFolders().then(
+        ({ data }) => {
+          $scope.folders = [...$scope.folders, ...data];
+          Promise.all(
+            $scope.folders.map(folder => {
+              return MessagerieServices.getCount(
+                folder.id,
+                folder.id.toUpperCase() != "DRAFT"
+              ).then(({ data }) => (folder.count = data.count));
+            })
+          ).then(
+            () => {
               $ionicLoading.hide();
-            });
-          },
-          function() {
-            $ionicLoading.hide();
-          }
-        );
-    }
-
-    function initCheckedValue() {
-      angular.forEach($scope.folders, function(folder) {
-        folder.checked = false;
-      });
+            },
+            err => {
+              console.log(err);
+              $ionicLoading.hide();
+            }
+          );
+        },
+        err => {
+          console.log(err);
+          $ionicLoading.hide();
+        }
+      );
     }
   });

@@ -3,13 +3,13 @@ angular
 
   .controller("BlogCtrl", function(
     $scope,
-    $ionicPopup,
     $ionicPlatform,
     BlogsService,
     $stateParams,
     $rootScope,
     $ionicLoading,
-    $location
+    $location,
+    PopupFactory
   ) {
     $ionicPlatform.ready(function() {
       $scope.$on("$ionicView.enter", function() {
@@ -56,25 +56,11 @@ angular
       $scope.data = {};
 
       if ($scope.isRightToComment()) {
-        var myPopup = $ionicPopup.show({
-          template: '<input type="text" ng-model="data.comment">',
-          title: $rootScope.translationBlog["blog.comment"],
-          scope: $scope,
-          buttons: [
-            { text: $rootScope.translationBlog["cancel"] },
-            {
-              text: "<b>" + $rootScope.translationBlog["blog.comment"] + "</b>",
-              type: "button-positive",
-              onTap: function(e) {
-                if (!$scope.data.comment) {
-                  e.preventDefault();
-                } else {
-                  return $scope.data.comment;
-                }
-              }
-            }
-          ]
-        });
+        let myPopup = PopupFactory.getPromptPopup(
+          $rootScope.translationBlog["blog.comment"],
+          null,
+          "<b>" + $rootScope.translationBlog["blog.comment"] + "</b>"
+        );
 
         $ionicPlatform.registerBackButtonAction(function(e) {
           myPopup.close();

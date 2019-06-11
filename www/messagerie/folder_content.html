@@ -1,13 +1,13 @@
 <ion-view
   view-title="{{
-    checkable ? getCountOfCheckedMessages() : getNameFolder(nameFolder)
+    isCheckEnabled() ? getCheckedNumber() : getNameFolder(nameFolder)
   }}"
 >
   <ion-nav-buttons side="right">
     <button
       class="button button-icon button-clear ion-android-more-vertical buttonActionBar"
       ng-click="openPopover($event)"
-      ng-show="checkable"
+      ng-show="isCheckEnabled()"
     ></button>
   </ion-nav-buttons>
 
@@ -37,22 +37,24 @@
     <ion-list>
       <ion-item
         ng-repeat="message in messages track by $index"
-        ng-click="doAction($index)"
-        on-hold="enableCheckMessages($index)"
+        ng-click="isCheckEnabled()
+        ? (message.checked = !message.checked)
+        : goToMessage(message);"
+        on-hold="message.checked = true"
       >
         <div ng-if="!message.unread" class="message">
           <input
             type="checkbox"
             ng-model="message.checked"
             ng-checked="message.checked"
-            ng-show="checkable"
+            ng-show="isCheckEnabled()"
             style="vertical-align: -webkit-baseline-middle;"
           />
 
           <div
             class="item-text-wrap"
             style="float: right; width: 90%;"
-            ng-if="checkable"
+            ng-if="isCheckEnabled()"
           >
             <span class="right">{{ formatDateLocale(message.date) }}</span>
             {{ getRealName(message.from, message.displayNames) }}
@@ -63,7 +65,7 @@
           <div
             class="item-text-wrap"
             style="float: right; width: 100%;"
-            ng-if="!checkable"
+            ng-if="!isCheckEnabled()"
           >
             <span class="right">{{ formatDateLocale(message.date) }}</span>
             {{ getRealName(message.from, message.displayNames) }}
@@ -77,12 +79,12 @@
             type="checkbox"
             ng-model="message.checked"
             ng-checked="message.checked"
-            ng-show="checkable"
+            ng-show="isCheckEnabled()"
           />
           <div
             class="item-text-wrap"
             style="float: right; width: 90%;"
-            ng-if="checkable"
+            ng-if="isCheckEnabled()"
           >
             <span class="right">{{ formatDateLocale(message.date) }}</span>
             {{ getRealName(message.from, message.displayNames) }}
@@ -93,7 +95,7 @@
           <div
             class="item-text-wrap"
             style="float: right; width: 100%;"
-            ng-if="!checkable"
+            ng-if="!isCheckEnabled()"
           >
             <span class="right">{{ formatDateLocale(message.date) }}</span>
             {{ getRealName(message.from, message.displayNames) }}
@@ -104,11 +106,17 @@
 
         <ion-option-button
           class="button-assertive"
-          ng-click="deleteMessage(message)"
+          ng-click="deleteMessages(message)"
         >
           {{ translationConversation["delete"] }}
         </ion-option-button>
       </ion-item>
+      <ion-infinite-scroll
+        ng-if="!endReached"
+        immediate-check="false"
+        on-infinite="loadMore()"
+        distance="10%"
+      ></ion-infinite-scroll>
     </ion-list>
     <div
       ng-if="extraFolders.length==0 && messages.length==0"

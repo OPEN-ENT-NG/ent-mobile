@@ -15,11 +15,8 @@ angular
     WorkspaceHelper,
     $ionicLoading,
     MimeTypeFactory,
-    CreateNewFolderPopUpFactory,
-    $ionicPopup,
     $cordovaVibration,
     $ionicPopover,
-    RenamePopUpFactory,
     PopupFactory
   ) {
     $scope.$on("$ionicView.beforeEnter", function() {
@@ -117,16 +114,18 @@ angular
     };
 
     $scope.newFolder = function() {
-      CreateNewFolderPopUpFactory.getPopup($scope).then(name => {
+      PopupFactory.getPromptPopup(
+        $rootScope.translationWorkspace["folder.new.title"],
+        null,
+        $rootScope.translationWorkspace["folder.new"]
+      ).then(name => {
         WorkspaceService.createFolder(name, $stateParams["folderId"]).then(
           getData(),
           err => {
-            var title = "Erreur de connexion";
-            var template = $rootScope.translationWorkspace[err];
-            return $ionicPopup.alert({
-              title: title,
-              template: template
-            });
+            PopupFactory.getAlertPopup(
+              "Erreur de connexion",
+              $rootScope.translationWorkspace[err]
+            );
           }
         );
       });
@@ -248,7 +247,11 @@ angular
       );
       if (item.length === 1) {
         item = item[0];
-        RenamePopUpFactory.getPopup($scope, item).then(function(resp) {
+
+        PopupFactory.getPromptPopup(
+          $rootScope.translationWorkspace["folder.new.title"],
+          $rootScope.translationWorkspace["folder.new"]
+        ).then(function(resp) {
           WorkspaceService.renameDocument(item, resp).then(
             function(response) {
               console.log(response);

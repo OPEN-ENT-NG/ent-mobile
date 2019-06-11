@@ -11,9 +11,8 @@ angular
     MessagerieServices,
     $ionicLoading,
     $ionicHistory,
-    DeleteMessagesPopupFactory,
     MoveMessagesPopupFactory,
-    AlertMessagePopupFactory
+    PopupFactory
   ) {
     getMessage($stateParams.idMessage);
 
@@ -42,7 +41,10 @@ angular
     };
 
     $scope.trash = function() {
-      DeleteMessagesPopupFactory.getPopup().then(function(res) {
+      PopupFactory.getConfirmPopup(
+        $rootScope.translationConversation["delete"],
+        "Êtes-vous sûr(e) de vouloir supprimer ce(s) message(s) ?"
+      ).then(function(res) {
         if (res) {
           $ionicLoading.show({
             template: '<ion-spinner icon="android"/>'
@@ -53,7 +55,7 @@ angular
           ).then(
             function() {
               $ionicLoading.hide();
-              AlertMessagePopupFactory.getPopup(
+              PopupFactory.getAlertPopup(
                 $rootScope.translationConversation["delete"],
                 "Message(s) supprimé(s)"
               ).then(function() {
@@ -109,14 +111,6 @@ angular
           $rootScope.popover = popover;
         });
     });
-
-    $ionicPopover
-      .fromTemplateUrl("messagerie/popover_messagerie_detail.html", {
-        scope: $scope
-      })
-      .then(function(popover) {
-        $rootScope.popover = popover;
-      });
 
     $scope.downloadAttachment = function(id) {
       var attachmentUrl =

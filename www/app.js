@@ -39,7 +39,6 @@ angular
       })
 
       .state("app.messagerie", {
-        cache: false,
         xitiIndex: "messagerie",
         templateUrl: "messagerie/folder_view.html",
         controller: "MessagerieFoldersCtrl"
@@ -229,7 +228,8 @@ angular
     NotificationService,
     TraductionService,
     WorkspaceService,
-    PronoteService
+    PronoteService,
+    PopupFactory
   ) {
     function intentHandler(intent) {
       if (
@@ -846,16 +846,22 @@ angular
     this.getAlertPopup = function(title, template) {
       return $ionicPopup.alert({
         title: title,
-        template: template,
-        okText: "OK"
+        template: template
       });
     };
 
     this.getAlertPopupNoTitle = function(template) {
       return $ionicPopup.alert({
         template: template,
-        cssClass: "dismiss-title", // Hide title
-        okText: "OK"
+        cssClass: "dismiss-title" // Hide title
+      });
+    };
+
+    this.getPromptPopup = function(title, subtitle, okText) {
+      return $ionicPopup.prompt({
+        title,
+        subtitle,
+        okText
       });
     };
 

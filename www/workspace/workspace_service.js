@@ -175,69 +175,6 @@ angular
     // }
   })
 
-  .factory("CreateNewFolderPopUpFactory", function(
-    $ionicPopup,
-    $rootScope
-  ) {
-    function getPopup(scope) {
-      scope.data = {};
-      return $ionicPopup.show({
-        template: '<input type="text" ng-model="data.name">',
-        title: $rootScope.translationWorkspace["folder.new.title"],
-        subtitle: $rootScope.translationWorkspace["folder.new"],
-        scope,
-        buttons: [
-          { text: $rootScope.translationWorkspace["cancel"] },
-          {
-            text: "<b>OK</b>",
-            type: "button-positive",
-            onTap: function(e) {
-              if (!scope.data.name) {
-                e.preventDefault();
-              } else {
-                return scope.data.name;
-              }
-            }
-          }
-        ]
-      });
-    }
-    return {
-      getPopup: getPopup
-    };
-  })
-
-  .factory("RenamePopUpFactory", function($ionicPopup, $rootScope) {
-    function getPopup(scope, model) {
-      scope.item = model;
-      return $ionicPopup.show({
-        template: '<input type="text" ng-model="item.name">',
-        title: $rootScope.translationWorkspace["workspace.rename"],
-        scope: scope,
-        buttons: [
-          { text: $rootScope.translationWorkspace["cancel"] },
-          {
-            text:
-              "<b>" +
-              $rootScope.translationWorkspace["workspace.rename"] +
-              "</b>",
-            type: "button-positive",
-            onTap: function(e) {
-              if (!scope.item.name) {
-                e.preventDefault();
-              } else {
-                return scope.item.name;
-              }
-            }
-          }
-        ]
-      });
-    }
-    return {
-      getPopup: getPopup
-    };
-  })
-
   // .factory("VersionsDocPopupFactory", function($ionicPopup, $rootScope) {
   //   function getPopup() {
   //     return $ionicPopup.confirm({

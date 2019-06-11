@@ -19,50 +19,23 @@ angular
       );
     };
 
-    this.getMessagesFolder = function(url) {
-      return RequestService.get(url);
-    };
-
-    this.getCustomFolders = function() {
-      return RequestService.get(domainENT + "/conversation/folders/list");
-    };
-
-    this.getExtraFolders = function(locationId) {
-      var urlEnd = locationId == "TRASH" ? "trash" : "parentId=" + locationId;
-      console.log(domainENT + "/conversation/folders/list?" + urlEnd);
+    this.getMessages = function(idFolder, page) {
       return RequestService.get(
-        domainENT + "/conversation/folders/list?" + urlEnd
+        `${domainENT}/conversation/list/${idFolder}?page=${page}`
       );
     };
 
-    this.getCountUnread = function(folders) {
-      var promises = [];
-      var deferredCombinedItems = $q.defer();
-      var combinedItems = [];
-      angular.forEach(folders, function(folderId, folderIndex) {
-        var deferredItemList = $q.defer();
-        var toRequest =
-          domainENT + "/conversation/count/" + folderId + "?unread=";
-        if (folderId == "DRAFT") toRequest += "false";
-        else toRequest += "true";
-        if (
-          folderId != "INBOX" &&
-          folderId != "OUTBOX" &&
-          folderId != "DRAFT" &&
-          folderId != "THRASH"
-        )
-          toRequest += "&restrain";
-        RequestService.get(toRequest).then(function(resp) {
-          combinedItems[folderIndex] = resp.data;
-          deferredItemList.resolve();
-        });
-        promises.push(deferredItemList.promise);
-      });
+    this.getFolders = function(parentId) {
+      let parent = parentId ? `?parentId=${parentId}` : "";
+      return RequestService.get(
+        `${domainENT}/conversation/folders/list${parent}`
+      );
+    };
 
-      $q.all(promises).then(function() {
-        deferredCombinedItems.resolve(combinedItems);
-      });
-      return deferredCombinedItems.promise;
+    this.getCount = function(folderId, status) {
+      return RequestService.get(
+        `${domainENT}/conversation/count/${folderId}?unread=${status}`
+      );
     };
 
     this.restoreSelectedMessages = function(arrayMessages) {
@@ -178,14 +151,6 @@ angular
       ];
     };
 
-    this.getPersonalFolderIds = function() {
-      return ["INBOX", "OUTBOX", "DRAFT", "TRASH"];
-    };
-
-    this.getStatusRedactionMessage = function() {
-      return ["DRAFT", "REPLY_ONE", "REPLY_ALL", "FORWARD"];
-    };
-
     function getMailData(mail) {
       let newMail = {
         subject:
@@ -214,7 +179,7 @@ angular
   ) {
     function getPopup(scope) {
       scope.choice = "";
-      MessagerieServices.getCustomFolders().then(
+      MessagerieServices.getFolders().then(
         function(resp) {
           scope.folders = resp.data;
         },
@@ -248,33 +213,6 @@ angular
             }
           }
         ]
-      });
-    }
-
-    return {
-      getPopup: getPopup
-    };
-  })
-
-  .factory("DeleteMessagesPopupFactory", function($ionicPopup, $rootScope) {
-    function getPopup() {
-      return $ionicPopup.confirm({
-        title: $rootScope.translationConversation["delete"],
-        template: "Êtes-vous sûr(e) de vouloir supprimer ce(s) message(s) ?",
-        cancelText: $rootScope.translationConversation["cancel"]
-      });
-    }
-
-    return {
-      getPopup: getPopup
-    };
-  })
-
-  .factory("AlertMessagePopupFactory", function($ionicPopup) {
-    function getPopup(titre, message) {
-      return $ionicPopup.alert({
-        title: titre,
-        template: message
       });
     }
 

@@ -7,8 +7,6 @@ angular
     WorkspaceService,
     $ionicHistory,
     $stateParams,
-    $ionicPopup,
-    CreateNewFolderPopUpFactory,
     PopupFactory
   ) {
     choosenFolder = null;
@@ -51,16 +49,18 @@ angular
     });
 
     $scope.newFolder = function() {
-      CreateNewFolderPopUpFactory.getPopup($scope).then(name => {
+      PopupFactory.getPromptPopup(
+        $rootScope.translationWorkspace["folder.new.title"],
+        null,
+        $rootScope.translationWorkspace["folder.new"]
+      ).then(name => {
         WorkspaceService.createFolder(name, $stateParams["folderId"]).then(
           getData,
           err => {
-            var title = "Erreur de connexion";
-            var template = $rootScope.translationWorkspace[err];
-            return $ionicPopup.alert({
-              title: title,
-              template: template
-            });
+            PopupFactory.getAlertPopup(
+              "Erreur de connexion",
+              $rootScope.translationWorkspace[err]
+            );
           }
         );
       });
