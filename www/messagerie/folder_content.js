@@ -99,6 +99,8 @@ angular
               finalFct();
             }
           );
+        } else {
+          finalFct();
         }
       });
     };

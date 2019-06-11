@@ -8,8 +8,11 @@
     "font-awesome": "fontawesome#~4.4.0",
     "moment": "~2.11.2",
     "ng-material-floating-button": "ng-mfb#~0.6.2",
-    "ngCordova": "^0.1.27-alpha",
     "angular-img-http-src": "^1.0.1",
-    "jquery": "^3.3.1"
+    "jquery": "^3.3.1",
+    "ion-tree-list": "^0.0.11"
+  },
+  "resolutions": {
+    "angular": ">= 1.2.23"
   }
 }

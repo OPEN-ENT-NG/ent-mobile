@@ -10,3 +10,4 @@ config/
 .gradle/
 config_PROD
 config_DEV
+jsconfig.json

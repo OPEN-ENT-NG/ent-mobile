@@ -2,8 +2,6 @@ angular
   .module("ent", [
     "ionic",
     "ngCordova",
-    "ngSanitize",
-    "ngRoute",
     "ent.actualites",
     "ent.blog",
     "ent.blog-list",
@@ -14,7 +12,6 @@ angular
     "ent.pronotes",
     "ent.support",
     "ng-mfb",
-    "ui.router",
     "ent.timeline",
     "angular.img",
     "ent.request",
@@ -322,32 +319,7 @@ angular
         $rootScope.appName = name;
       });
 
-      if (!ionic.Platform.isIOS()) {
-        cordova.plugins.diagnostic.requestRuntimePermissions(
-          function(status) {
-            console.log(status);
-            switch (status) {
-              case cordova.plugins.diagnostic.permissionStatus.NOT_REQUESTED:
-                console.log("Permission not requested");
-                break;
-              case cordova.plugins.diagnostic.permissionStatus.DENIED:
-                console.log("Permission denied");
-                break;
-              case cordova.plugins.diagnostic.permissionStatus.GRANTED:
-                console.log("Permission granted always");
-                break;
-              case cordova.plugins.diagnostic.permissionStatus
-                .GRANTED_WHEN_IN_USE:
-                console.log("Permission granted only when in use");
-                break;
-            }
-          },
-          function(error) {
-            console.error(error);
-          },
-          cordova.plugins.diagnostic.runtimePermissionGroups.STORAGE
-        );
-      } else {
+      if (ionic.Platform.isIOS()) {
         NotificationService.setPermission(() => true);
         // console.log("IOS : Granted permission");
         // window.FirebasePlugin.grantPermission(function() {
@@ -365,11 +337,13 @@ angular
       $rootScope.$on("$cordovaNetwork:offline", function() {
         console.log("offline");
         $rootScope.status = "offline";
+        $rootScope.$apply();
       });
 
       $rootScope.$on("$cordovaNetwork:online", function() {
         console.log("online");
         $rootScope.status = $rootScope.status == undefined ? null : "online";
+        $rootScope.$apply();
       });
 
       $rootScope.$on("LoggedIn", () => {
@@ -611,7 +585,27 @@ angular
         );
       };
 
-      checkFile();
+      if (!ionic.Platform.isIOS()) {
+        cordova.plugins.diagnostic.isExternalStorageAuthorized(bool => {
+          if (bool) {
+            checkFile();
+          } else {
+            cordova.plugins.diagnostic.requestExternalStorageAuthorization(
+              result => {
+                if (
+                  result == cordova.plugins.diagnostic.permissionStatus.GRANTED
+                ) {
+                  checkFile();
+                } else {
+                  console.log("Permission Denied");
+                }
+              }
+            );
+          }
+        }, console.log);
+      } else {
+        checkFile();
+      }
     };
 
     $scope.openUrl = function(url) {

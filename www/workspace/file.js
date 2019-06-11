@@ -24,17 +24,7 @@ angular
 
     $scope.downloadDoc = function() {
       var docUrl = domainENT + "/workspace/document/" + $scope.doc._id;
-      console.log(cordova.plugins.diagnostic);
-      cordova.plugins.diagnostic.getPermissionsAuthorizationStatus(
-        function(statuses) {
-          console.log(statuses);
-          $rootScope.downloadFile($scope.doc.metadata.filename, docUrl);
-        },
-        function(error) {
-          console.log(error);
-        },
-        cordova.plugins.diagnostic.runtimePermissionGroups.STORAGE
-      );
+      $rootScope.downloadFile($scope.doc.metadata.filename, docUrl);
     };
 
     $scope.goShare = function() {
