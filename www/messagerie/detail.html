@@ -1,6 +1,4 @@
-<ion-view
-  view-title="{{ getNameFolder(nameFolder) }}"
->
+<ion-view view-title="{{ getNameFolder(nameFolder) }}">
   <ion-nav-buttons side="right">
     <button
       class="button button-icon button-clear ion-reply"
@@ -13,65 +11,67 @@
     ></button>
   </ion-nav-buttons>
 
-  <ion-content scroll="false">
-    <ion-scroll class="scroll" direction="y" has-bouncing="true">
-      <div class="item">
-        <h2>{{ mail.subject }}</h2>
-      </div>
+  <ion-content>
+    <div class="item">
+      <h2>{{ mail.subject }}</h2>
+    </div>
 
-      <div class="item-text-wrap">
-        <div class="header-mail item">
-          <h2>
-            {{ translationConversation["transfer.from"] }}
-            {{ mail.from[0].displayName }}
-          </h2>
+    <div class="header-mail item">
+      <h2>
+        <b>{{ translationConversation["from"] }} :</b>
+        {{ mail.from[0].displayName }}
+      </h2>
 
-          <h2>
-            <span>{{ translationConversation["transfer.to"] }}</span>
-            <span ng-repeat="personTo in mail.to track by personTo.entId"
-              >{{ personTo.displayName }}<br
-            /></span>
-          </h2>
-
-          <h2 ng-show="mail.cc.length != 0">
-            <span>{{ translationConversation["transfer.cc"] }}</span>
-            <span ng-repeat="personCc in mail.cc track by personCc.entId"
-              >{{ personCc.displayName }}<br
-            /></span>
-          </h2>
-
-          <h2>
-            <span>{{ translationConversation["transfer.date"] }}</span>
-            <span>{{ mail.date | date: "dd/MM/yyyy H:mm" }}<br /></span>
-          </h2>
-        </div>
-
-        <div
-          class="item-text-wrap item corpsMessage htmlEntContent"
-          ng-if="mail.body"
-          overflow-scroll="true"
-          render-html="{{ mail.body }}"
-        ></div>
-
-        <div
-          class="item borderBottomItemDismissed borderTopItemDismissed"
-          ng-show="mail.attachments.length!=0"
+      <h2>
+        <b>{{ translationConversation["to"] }} : </b>
+        <span ng-repeat="personTo in mail.to track by personTo.entId"
+          >{{ personTo.displayName }}<span ng-if="!$last">, </span></span
         >
-          <ion-list>
-            <div ng-repeat="attachment in mail.attachments track by $index">
-              <div class="ajoutPJ item-text-wrap">
-                <i
-                  class="downloadicon-"
-                  ng-click="downloadAttachment(attachment.id)"
-                ></i>
-                <p>
-                  {{ attachment.filename }} ({{ getSizeFile(attachment.size) }})
-                </p>
-              </div>
-            </div>
-          </ion-list>
+      </h2>
+
+      <h2 ng-show="mail.cc.length != 0">
+        <b>{{ translationConversation["cc"] }} : </b>
+        <span ng-repeat="personCc in mail.cc track by personCc.entId"
+          >{{ personCc.displayName }}<span ng-if="!$last">, </span></span
+        >
+      </h2>
+
+      <h2 ng-show="mail.cci.length != 0">
+        <b>{{ translationConversation["cci"] }} : </b>
+        <span ng-repeat="personCci in mail.cci track by personCci.entId"
+          >{{ personCci.displayName }}<span ng-if="!$last">, </span></span
+        >
+      </h2>
+
+      <h2>
+        <b>{{ translationConversation["date"] }} : </b>
+        <span>{{ mail.date | date: "dd/MM/yyyy H:mm" }}</span>
+      </h2>
+    </div>
+
+    <div
+      class="item-text-wrap item corpsMessage htmlEntContent"
+      ng-if="mail.body"
+      render-html="{{ mail.body }}"
+    ></div>
+
+    <div
+      class="item borderBottomItemDismissed"
+      ng-show="mail.attachments.length!=0"
+    >
+      <ion-list>
+        <div ng-repeat="attachment in mail.attachments track by $index">
+          <div class="ajoutPJ item-text-wrap">
+            <i
+              class="downloadicon-"
+              ng-click="downloadAttachment(attachment.id)"
+            ></i>
+            <p>
+              {{ attachment.filename }} ({{ getSizeFile(attachment.size) }})
+            </p>
+          </div>
         </div>
-      </div>
-    </ion-scroll>
+      </ion-list>
+    </div>
   </ion-content>
 </ion-view>

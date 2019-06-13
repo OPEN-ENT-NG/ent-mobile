@@ -56,6 +56,11 @@ angular
       $scope.email.cc.splice(index, 1);
     };
 
+    $scope.deleteFromDestinataireCci = function(destinataire) {
+      var index = $scope.email.cci.indexOf(destinataire);
+      $scope.email.cci.splice(index, 1);
+    };
+
     $scope.sendMail = function(mail) {
       if (mail.to.length > 0) {
         $ionicLoading.show({
@@ -132,15 +137,11 @@ angular
       $rootScope.downloadFile(attachment.filename, attachmentUrl);
     };
 
-    $scope.expandText = function() {
-      var element = document.getElementById("textMessage");
-      element.style.height = element.scrollHeight + "px";
-    };
-
     function prefillNewMessage(action, prevMessage) {
       let returnMessage = {
         to: [],
         cc: [],
+        cci: [],
         subject: "",
         body: "",
         attachments: []
@@ -152,6 +153,9 @@ angular
         );
         prevMessage.cc = prevMessage.cc.filter(
           cc => $rootScope.myUser.id != cc.id
+        );
+        prevMessage.cci = prevMessage.cci.filter(
+          cci => $rootScope.myUser.id != cci.id
         );
       }
 
@@ -194,6 +198,7 @@ angular
           returnMessage.id = prevMessage.id;
           returnMessage.to = prevMessage.to;
           returnMessage.cc = prevMessage.cc;
+          returnMessage.cci = prevMessage.cci;
           returnMessage.subject = prevMessage.subject;
           returnMessage.body = prevMessage.body
             .toString()
@@ -216,9 +221,11 @@ angular
         to += prevMessage.to[i].displayName + " ";
       }
 
-      var cc = "";
-      for (var i = 0; i < prevMessage.cc.length; i++) {
-        cc += prevMessage.cc[i].displayName + " ";
+      if (prevMessage.cc.length > 0) {
+        var cc = "";
+        for (var i = 0; i < prevMessage.cc.length; i++) {
+          cc += prevMessage.cc[i].displayName + " ";
+        }
       }
 
       var header =
@@ -226,27 +233,36 @@ angular
         '<hr class="ng-scope">' +
         '<p class="ng-scope"></p>' +
         '<p class="medium-text ng-scope">' +
-        '<span translate="" key="transfer.from"><span class="no-style ng-scope">De : </span></span><em class="ng-binding">' +
+        '<span translate="" key="transfer.from"><span class="no-style ng-scope">De : </span></span>' +
+        '<em class="ng-binding">' +
         from +
         "</em>" +
         "<br>" +
-        '<span class="medium-importance" translate="" key="transfer.date"><span class="no-style ng-scope">Date: </span></span><em' +
-        'class="ng-binding">' +
+        '<span class="medium-importance" translate="" key="transfer.date"><span class="no-style ng-scope">Date: </span></span>' +
+        '<em class="ng-binding">' +
         date +
-        "</em> <br>" +
-        '<span class="medium-importance" translate="" key="transfer.subject"><span class="no-style ng-scope">Objet : </span></span><em' +
-        'class="ng-binding">' +
+        "</em>" +
+        "<br>" +
+        '<span class="medium-importance" translate="" key="transfer.subject"><span class="no-style ng-scope">Objet : </span></span>' +
+        '<em class="ng-binding">' +
         subject +
         "</em>" +
         "<br>" +
         '<span class="medium-importance" translate="" key="transfer.to"><span class="no-style ng-scope">A : </span></span>' +
         '<em class="medium-importance">' +
         to +
-        "</em>" +
-        "<br>" +
-        '<span class="medium-importance" translate="" key="transfer.cc"><span class="no-style ng-scope">Copie à : </span></span>' +
-        '<em class="medium-importance ng-scope">' +
-        cc +
+        "</em>";
+
+      if (prevMessage.cc.length > 0) {
+        header +=
+          "<br>" +
+          '<span class="medium-importance" translate="" key="transfer.cc"><span class="no-style ng-scope">Copie à : </span></span>' +
+          '<em class="medium-importance ng-scope">' +
+          cc +
+          "</em>";
+      }
+
+      header +=
         '</p><blockquote class="ng-scope">' +
         '<p class="ng-scope" style="font-size: 24px; line-height: 24px;">';
 

@@ -158,6 +158,7 @@ angular
         body: "<p>" + mail.body.replace(/\n/g, "<br/>") + "</p>",
         to: mail.to.map(obj => obj.id),
         cc: mail.cc.map(obj => obj.id),
+        cci: mail.cci.map(obj => obj.id),
         from: $rootScope.myUser.id
       };
       if (mail.prevMessage) {

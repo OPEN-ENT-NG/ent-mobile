@@ -6,7 +6,7 @@
       placeholder="{{ placeholder }}"
       class="inputDestinataire"
   /></ion-input>
-  <ion-list style="position: absolute; z-Index: 10; width: 100%">
+  <ion-list style="position: absolute; width: 100%">
     <ion-item
       ng-show="search.length != 0"
       ng-repeat="contact in contacts | filter: {displayName: search} | limitTo: 5"

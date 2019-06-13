@@ -16,16 +16,6 @@ angular
   ) {
     getMessage($stateParams.idMessage);
 
-    $rootScope.getRealName = function(id, displayNames) {
-      var returnName = "Inconnu";
-      for (var i = 0; i < displayNames.length; i++) {
-        if (id == displayNames[i][0]) {
-          returnName = displayNames[i][1];
-        }
-      }
-      return returnName;
-    };
-
     $scope.isDraft = function() {
       return "draft" === $stateParams.nameFolder;
     };
@@ -133,6 +123,7 @@ angular
           $scope.mail.from = getArrayNames([res.data.from], res.data);
           $scope.mail.to = getArrayNames(res.data.to, res.data);
           $scope.mail.cc = getArrayNames(res.data.cc, res.data);
+          $scope.mail.cci = getArrayNames(res.data.cci, res.data);
           $ionicLoading.hide();
         },
         function() {
@@ -147,10 +138,20 @@ angular
       for (var i = 0; i < ids.length; i++) {
         names.push({
           id: ids[i],
-          displayName: $rootScope.getRealName(ids[i], mail.displayNames),
+          displayName: getRealName(ids[i], mail.displayNames),
           entId: i
         });
       }
       return names;
+    }
+
+    function getRealName(id, displayNames) {
+      let returnName = "Inconnu";
+      for (var i = 0; i < displayNames.length; i++) {
+        if (id == displayNames[i][0]) {
+          returnName = displayNames[i][1];
+        }
+      }
+      return returnName;
     }
   });

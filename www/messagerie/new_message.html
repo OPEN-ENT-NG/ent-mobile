@@ -17,6 +17,7 @@
       ng-click="openPopover($event)"
     ></button>
   </ion-nav-buttons>
+
   <ion-content>
     <div class="item listeDestinataires" style="z-index: 4">
       <ion-list>
@@ -31,7 +32,7 @@
         </div>
       </ion-list>
       <filter-box
-        placeholder="{{ translationConversation['transfer.to'] }}"
+        placeholder="{{ translationConversation['to'] }}"
         destinataires="email.to"
       ></filter-box>
     </div>
@@ -49,12 +50,30 @@
         </div>
       </ion-list>
       <filter-box
-        placeholder="{{ translationConversation['transfer.cc'] }}"
+        placeholder="{{ translationConversation['cc'] }}"
         destinataires="email.cc"
       ></filter-box>
     </div>
 
-    <label class="item item-input">
+    <div class="item listeDestinataires" style="z-index: 2">
+      <ion-list>
+        <div ng-repeat="destinataire in email.cci track by $index">
+          <div class="destinataireMessagerie item-text-wrap">
+            <h2>{{ destinataire.displayName }}</h2>
+            <i
+              class="cancel-circledicon-"
+              ng-click="deleteFromDestinataireCci(destinataire)"
+            ></i>
+          </div>
+        </div>
+      </ion-list>
+      <filter-box
+        placeholder="{{ translationConversation['cci'] }}"
+        destinataires="email.cci"
+      ></filter-box>
+    </div>
+
+    <label class="item item-input" style="z-index: 1">
       <input
         type="text"
         ng-model="email.subject"
@@ -64,21 +83,20 @@
       />
     </label>
 
-    <label class="item-input item borderBottomItemDismissed">
+    <div class="item-input item borderBottomItemDismissed" style="z-index: 0">
       <textarea
         id="textMessage"
         ng-model="email.body"
-        ng-keyup="expandText()"
-        ng-keydown="expandText()"
         placeholder="{{
           translationConversation['sniplet.ml.content.placeholder']
         }}"
       ></textarea>
-    </label>
+    </div>
 
     <div
       class="item borderTopItemDismissed borderBottomItemDismissed"
       ng-show="email.attachments.length>0"
+      style="z-index: 0"
     >
       <ion-list>
         <div ng-repeat="attachment in email.attachments track by $index">
@@ -100,10 +118,10 @@
     </div>
 
     <div
-      class="item-text-wrap item borderTopItemDismissed htmlEntContent"
+      class="item-text-wrap item borderTopItemDismissed borderBottomItemDismissed htmlEntContent"
       ng-if="email.prevMessage.length!=0"
-      overflow-scroll="true"
       render-html="{{ email.prevMessage }}"
+      style="z-index: 0"
     ></div>
   </ion-content>
 </ion-view>
