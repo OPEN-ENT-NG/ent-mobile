@@ -16,6 +16,7 @@ angular
     "angular.img",
     "ent.request",
     "ent.firstConnection",
+    "ent.firstConnectionService",
     "ent.forgotLoginPwd",
     "ent.forgotLoginPwdService",
     "ent.profile",
