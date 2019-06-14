@@ -102,6 +102,9 @@
         <config-file mode="add" parent="firebase_analytics_collection_deactivated" target="*-Info.plist">
             <true />
         </config-file>
+        <config-file parent="NSCameraUsageDescription" platform="ios" target="*-Info.plist">
+            <string>Capture photos or videos and upload them in the app</string>
+        </config-file>
     </platform>
     <plugin name="cordova-plugin-app-version" spec="^0.1.9" />
     <plugin name="cordova-plugin-file-opener2" spec="^2.0.19" />
