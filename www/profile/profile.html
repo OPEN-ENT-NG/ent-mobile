@@ -1,12 +1,15 @@
 <ion-view hide-back-button="true" view-title="Profil">
   <ion-nav-buttons side="right">
-    <button class="button icon-right ion-log-out" ng-click="logout()"></button>
+    <button
+      class="button button-icon button-clear ion-android-more-vertical buttonActionBar"
+      ng-click="openPopover($event)"
+    ></button>
   </ion-nav-buttons>
   <ion-content class="profile">
     <ion-tabs class="tabs-positive tabs-top">
       <ion-tab title="Utilisateur">
         <ion-view>
-          <ion-content class="has-footer">
+          <ion-content class="profileView has-footer">
             <div style="display:table">
               <img
                 http-src="{{ getImageUrl(myUser.photo) }}"
@@ -14,38 +17,82 @@
               />
               <h4 class="profile-title">{{ myUser.displayName }}</h4>
             </div>
-            <h2 class="profile-sub">Identifiant</h2>
-            <h2 class="profile-info">{{ myUser.login }}</h2>
-
-            <h2 class="profile-sub">Prénom</h2>
-            <h2 class="profile-info">{{ user.data.firstName }}</h2>
-
-            <h2 class="profile-sub">Nom</h2>
-            <h2 class="profile-info">{{ user.data.lastName }}</h2>
-
-            <h2 class="profile-sub">Email</h2>
-            <h2 class="profile-info">{{ user.data.email }}</h2>
-
-            <h2 class="profile-sub">Mobile</h2>
-            <h2 class="profile-info" ng-if="user.data.mobile">
-              {{ user.data.mobile }}
-            </h2>
-            <h2 class="profile-info" ng-if="!user.data.mobile">-</h2>
-
-            <h2 class="profile-sub">Date de naissance</h2>
-            <h2 class="profile-info">{{ birthdate }}</h2>
 
             <h2 class="profile-sub">
-              Établissement<span ng-if="user.data.structureNodes.length > 1"
-                >s</span
+              {{ translationUser["userBook.profile.login"] }}
+            </h2>
+            <h2 ng-if="!editable" class="profile-info">{{ myUser.login }}</h2>
+            <input
+              type="text"
+              class="profile-edit"
+              ng-if="editable"
+              ng-model="tempProfile.login"
+              spellcheck="false"
+            />
+
+            <h2 class="profile-sub">
+              {{ translationUser["userBook.profile.firstName"] }}
+            </h2>
+            <h2 class="profile-info">{{ myUser.firstName }}</h2>
+
+            <h2 class="profile-sub">
+              {{ translationUser["userBook.profile.lastName"] }}
+            </h2>
+            <h2 class="profile-info">{{ myUser.lastName }}</h2>
+
+            <h2 class="profile-sub">
+              {{ translationUser["userBook.profile.displayName"] }}
+            </h2>
+            <h2 ng-if="!editable" class="profile-info">
+              {{ myUser.displayName }}
+            </h2>
+            <input
+              type="text"
+              class="profile-edit"
+              ng-if="editable"
+              ng-model="tempProfile.displayName"
+              spellcheck="false"
+            />
+
+            <h2 class="profile-sub">
+              {{ translationUser["userBook.profile.email"] }}
+            </h2>
+            <h2 ng-if="!editable" class="profile-info">{{ myUser.email }}</h2>
+            <input
+              type="text"
+              class="profile-edit"
+              ng-if="editable"
+              ng-model="tempProfile.email"
+              spellcheck="false"
+            />
+
+            <h2 class="profile-sub">
+              {{ translationUser["userBook.profile.mobilePhone"] }}
+            </h2>
+            <h2 ng-if="!editable" class="profile-info">
+              {{ myUser.mobile || "-" }}
+            </h2>
+            <input
+              type="tel"
+              class="profile-edit"
+              ng-if="editable"
+              ng-model="tempProfile.mobile"
+              spellcheck="false"
+            />
+
+            <h2 class="profile-sub">
+              {{ translationUser["userBook.profile.birthdate"] }}
+            </h2>
+            <h2 class="profile-info">{{ formatDate(myUser.birthDate) }}</h2>
+
+            <h2 class="profile-sub">
+              {{ translationUser["userBook.profile.schools"] }}
               >
             </h2>
-            <h2
-              class="profile-info"
-              ng-repeat="structure in user.data.structureNodes"
-            >
+            <h2 class="profile-info" ng-repeat="structure in myUser.schools">
               {{ structure.name }}
             </h2>
+
             <h2 class="profile-sub">Version de l'application</h2>
             <h2 class="profile-info">{{ version }}</h2>
           </ion-content>

@@ -8,7 +8,6 @@ angular
     "ent.authentication",
     "ent.messagerie",
     "ent.workspace",
-    "ent.user",
     "ent.pronotes",
     "ent.support",
     "ng-mfb",
@@ -222,7 +221,7 @@ angular
     $state,
     AuthenticationService,
     $timeout,
-    UserService,
+    UserFactory,
     NotificationService,
     TraductionService,
     WorkspaceService,
@@ -348,6 +347,8 @@ angular
       });
 
       $rootScope.$on("LoggedIn", () => {
+        UserFactory.getUser().then(user => ($rootScope.myUser = user));
+
         PronoteService.getAllAccounts().then(function(resp) {
           if (resp.length > 0) {
             $rootScope.listMenu.unshift({
@@ -364,10 +365,6 @@ angular
             if (!ionic.Platform.isIOS()) {
               window.plugins.intent.setNewIntentHandler(intentHandler);
             }
-            UserService.getUser().then(result => {
-              console.log(result);
-              $rootScope.myUser = result;
-            });
           },
           err => PopupFactory.getCommonAlertPopup(err)
         );
@@ -523,6 +520,31 @@ angular
       } else {
         $state.go(state);
       }
+    };
+
+    $rootScope.pick = function(object, keys) {
+      var result = {};
+
+      for (key of keys) {
+        result[key] = object[key];
+      }
+      return result;
+    };
+
+    $rootScope.extend = function(dest, ...args) {
+      for (let src of args) {
+        var keys = $rootScope.allKeys(src);
+        for (let key of keys) {
+          dest[key] = src[key];
+        }
+      }
+      return dest;
+    };
+
+    $rootScope.allKeys = function(obj) {
+      var keys = [];
+      for (var key in obj) keys.push(key);
+      return keys;
     };
 
     $rootScope.downloadFile = function(fileName, urlFile) {
@@ -682,7 +704,9 @@ angular
 
     $scope.formatDate = function(date) {
       let momentDate;
-      if (moment.isMoment(date)) {
+      if(date == null) {
+        return ""
+      } else if (moment.isMoment(date)) {
         momentDate = date;
       } else if (date.$date) {
         momentDate = moment(date.$date);
@@ -773,7 +797,7 @@ angular
     MessagerieServices,
     BlogsService,
     WorkspaceService,
-    UserService
+    ProfileService
   ) {
     function getTranslationActualites() {
       return ActualitesService.getTranslation().then(
@@ -782,7 +806,7 @@ angular
     }
 
     function getTranslationUser() {
-      return UserService.getTranslation().then(
+      return ProfileService.getTranslation().then(
         ({ data }) => ($rootScope.translationUser = data)
       );
     }
@@ -1064,7 +1088,7 @@ angular
     domainENT,
     $rootScope,
     xitiIndex,
-    UserService
+    UserFactory
   ) {
     return {
       restrict: "E",
@@ -1208,7 +1232,7 @@ angular
           };
 
           var getUserInfo = function() {
-            return UserService.getUser().then(me => {
+            return UserFactory.getUser().then(me => {
               scope.user = me;
               scope.xitiConf.ID_PERSO = convertStringId(scope.user.userId);
               scope.xitiConf.ID_PROFIL = getOrElse(

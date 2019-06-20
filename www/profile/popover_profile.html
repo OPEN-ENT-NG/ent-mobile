@@ -1,0 +1,28 @@
+<ion-popover-view class="fit">
+  <ion-content>
+    <ion-list ng-click="popover.hide()">
+      <a
+        class="item"
+        ng-if="!editModeEnabled()"
+        ng-click="toggleEditProfile(true)"
+        >{{ translationUser["directory.modify"] }}</a
+      >
+
+      <a
+        class="item"
+        ng-if="editModeEnabled() && checkEditMade(myUser, tempProfile)"
+        ng-click="toggleEditProfile(false)"
+        >{{ translationUser["cancel"] }}</a
+      >
+
+      <a
+        class="item"
+        ng-if="editModeEnabled() && !checkEditMade(myUser, tempProfile)"
+        ng-click="saveProfile()"
+        >{{ translationUser["directory.save"] }}</a
+      >
+
+      <a class="item" ng-click="logout()">Déconnexion</a>
+    </ion-list>
+  </ion-content>
+</ion-popover-view>

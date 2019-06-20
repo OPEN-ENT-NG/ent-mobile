@@ -10,4 +10,8 @@ config/
 .gradle/
 config_PROD
 config_DEV
+config
 jsconfig.json
+keyAndroidENT.jks
+keystorePCNPROD.jks
+build.json
