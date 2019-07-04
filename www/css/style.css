@@ -7,7 +7,7 @@ ion-popover-view.fit ion-content {
 }
 
 .has-footer {
-  bottom: 52px;
+  bottom: 52px !important;
 }
 
 .scroll {
@@ -513,7 +513,7 @@ ion-popover-view.fit ion-content {
 }
 
 .profileView {
-  padding: 20px;
+  padding: 0px 20px;
 }
 
 .profile-edit {
@@ -555,10 +555,6 @@ ion-popover-view.fit ion-content {
 
 .profile ion-content.has-tabs-top {
   top: 50px;
-}
-
-.profile ion-content.has-footer {
-  bottom: 52px;
 }
 
 .profile .actions-list .item.item-divider h4 {
