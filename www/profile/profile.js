@@ -58,7 +58,7 @@ angular
 
     $scope.checkEditMade = function(originalProfile, edittedProfile) {
       return (
-        originalProfile.login == edittedProfile.login &&
+        originalProfile.loginAlias == edittedProfile.loginAlias &&
         originalProfile.displayName == edittedProfile.displayName &&
         originalProfile.email == edittedProfile.email &&
         originalProfile.mobile == edittedProfile.mobile
@@ -66,15 +66,34 @@ angular
     };
 
     $scope.saveProfile = function() {
+      var checkProfileValidity = function(profile) {
+        let mailRegexp = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/g;
+        let phoneRegexp = /^(00|\+)?([0-9][ \-\.]*){6,15}$/g;
+
+        if (!!profile.email && !mailRegexp.test(profile.email)) {
+          return "Adresse email invalide";
+        } else if (!!profile.mobile && !phoneRegexp.test(profile.mobile)) {
+          return "Numéro de mobile";
+        } else {
+          return null;
+        }
+      };
+
       $scope.editable = false;
-      $ionicLoading.show({
-        template: '<ion-spinner icon="android"/>'
-      });
-      ProfileService.saveProfile($scope.tempProfile)
-        .then(() => UserFactory.getUser(true))
-        .then(user => ($rootScope.myUser = user))
-        .catch(PopupFactory.getCommonAlertPopup)
-        .finally($ionicLoading.hide);
+      let errorTitle = checkProfileValidity($scope.tempProfile);
+
+      if (errorTitle) {
+        PopupFactory.getAlertPopup(errorTitle, "Format invalide");
+      } else {
+        ProfileService.saveProfile($scope.tempProfile)
+          .then(() => UserFactory.getUser(true))
+          .then(user => ($rootScope.myUser = user))
+          .catch(err => PopupFactory.getAlertPopupNoTitle(err.data.error))
+          .finally($ionicLoading.hide);
+        $ionicLoading.show({
+          template: '<ion-spinner icon="android"/>'
+        });
+      }
     };
 
     function getUserApp() {

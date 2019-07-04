@@ -23,6 +23,10 @@ angular
       });
     };
 
+    this.getDirectoryUser = function(userId) {
+      return RequestService.get(`${domainENT}/directory/user/${userId}`);
+    };
+
     this.getApplications = function() {
       return RequestService.get(domainENT + "/timeline/notifications-defaults");
     };
@@ -32,24 +36,21 @@ angular
     };
 
     function formatProfile(unformattedProfile) {
-      var keys = [
-        "displayName",
-        "firstName",
-        "lastName",
-        "address",
-        "email",
-        "homePhone",
-        "mobile",
-        "birthDate"
-      ];
-      let result = $rootScope.pick(unformattedProfile, keys);
-      result.birthDate = moment(result.birthDate).format("YYYY-MM-D");
-      return result;
+      var keys = ["displayName", "email", "mobile", "loginAlias"];
+      return $rootScope.pick(unformattedProfile, keys);
     }
   })
 
   .factory("UserFactory", function($rootScope, ProfileService) {
     var user = null;
+
+    var foundRightEditLogin = function(authorizedActions) {
+      return !!authorizedActions.find(
+        right =>
+          right.name ==
+          "org.entcore.directory.controllers.UserController|allowLoginUpdate"
+      );
+    };
 
     var getUser = function(reset) {
       if (user && !reset) {
@@ -58,35 +59,45 @@ angular
         return Promise.all([
           ProfileService.getUserbookProfile(),
           ProfileService.getOAuthUser()
-        ]).then(results => {
-          let userbookProfile = $rootScope.pick(results[0].data.result[0], [
-            "userId",
-            "login",
-            "displayName",
-            "photo",
-            "type",
-            "schools",
-            "address",
-            "email",
-            "tel",
-            "mobile"
-          ]);
-          console.log("userbookProfile", userbookProfile);
-          let oauthProfile = $rootScope.pick(results[1].data, [
-            "groupsIds",
-            "birthDate",
-            "firstName",
-            "lastName"
-          ]);
-          console.log("oauthProfile", oauthProfile);
+        ])
+          .then(results => {
+            let userbookProfile = $rootScope.pick(results[0].data.result[0], [
+              "userId",
+              "login",
+              "displayName",
+              "photo",
+              "type",
+              "schools",
+              "address",
+              "email",
+              "mobile"
+            ]);
+            let oauthProfile = $rootScope.pick(results[1].data, [
+              "groupsIds",
+              "birthDate",
+              "firstName",
+              "lastName"
+            ]);
 
-          user = $rootScope.extend({}, userbookProfile, oauthProfile);
-          console.log("user", user);
-
-          user.photo = setProfileImage(user.photo, user.id);
-          user.type = user.type[0];
-          return user;
-        });
+            user = $rootScope.extend({}, userbookProfile, oauthProfile);
+            user.photo = setProfileImage(user.photo, user.id);
+            user.type = user.type[0];
+            user.allowedLoginUpdate = foundRightEditLogin(
+              results[1].data.authorizedActions
+            );
+            return user;
+          })
+          .then(user =>
+            Promise.all([
+              Promise.resolve(user),
+              ProfileService.getDirectoryUser(user.userId)
+            ])
+          )
+          .then(result => {
+            let user = result[0];
+            user.loginAlias = result[1].data.loginAlias;
+            return user;
+          });
       }
     };
 
