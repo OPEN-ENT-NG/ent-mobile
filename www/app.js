@@ -704,8 +704,8 @@ angular
 
     $scope.formatDate = function(date) {
       let momentDate;
-      if(date == null) {
-        return ""
+      if (date == null) {
+        return "";
       } else if (moment.isMoment(date)) {
         momentDate = date;
       } else if (date.$date) {
@@ -947,7 +947,13 @@ angular
               cordova.plugins.diagnostic.runtimePermissionGroups.STORAGE
             );
           } else {
-            $ionicHistory.goBack();
+            if (
+              !!$ionicHistory.backView() &&
+              $ionicHistory.backView().stateName != "login" &&
+              $ionicHistory.backView().stateName != "firstConnection"
+            ) {
+              $ionicHistory.goBack();
+            }
           }
         });
       }

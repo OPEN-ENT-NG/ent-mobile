@@ -6,10 +6,10 @@ angular
     $ionicPlatform,
     ProfileService,
     TimelineService,
-    $ionicPopover,
     $ionicLoading,
     PopupFactory,
-    UserFactory
+    UserFactory,
+    $timeout
   ) {
     $ionicPlatform.ready(function() {
       $scope.$on("$ionicView.enter", function() {
@@ -20,8 +20,6 @@ angular
         $scope.settings = {
           app: undefined
         };
-
-        $scope.editable = false;
       });
 
       $scope.$on("$ionicView.beforeEnter", function() {
@@ -29,14 +27,6 @@ angular
           template: '<ion-spinner icon="android"/>'
         });
         getUserApp().finally($ionicLoading.hide);
-
-        $ionicPopover
-          .fromTemplateUrl("profile/popover_profile.html", {
-            scope: $scope
-          })
-          .then(function(popover) {
-            $rootScope.popover = popover;
-          });
       });
     });
 
@@ -47,54 +37,84 @@ angular
       });
     };
 
-    $scope.editModeEnabled = function() {
-      return $scope.editable;
+    $scope.isFieldToggled = function(field) {
+      return $scope.editting == field;
     };
 
-    $scope.toggleEditProfile = function(value) {
-      if (value) $scope.tempProfile = $rootScope.extend({}, $rootScope.myUser);
-      $scope.editable = value;
+    $scope.toggleField = function(field) {
+      function initTempProfile() {
+        $scope.tempProfile = $rootScope.extend({}, $rootScope.myUser);
+        $scope.tempProfile.loginAlias =
+          $rootScope.myUser.loginAlias || $rootScope.myUser.login;
+      }
+
+      if (field) {
+        initTempProfile();
+        $scope.editting = field;
+        $timeout(() => document.getElementById(field).focus());
+      } else {
+        delete $scope.editting;
+      }
     };
 
-    $scope.checkEditMade = function(originalProfile, edittedProfile) {
-      return (
-        originalProfile.loginAlias == edittedProfile.loginAlias &&
-        originalProfile.displayName == edittedProfile.displayName &&
-        originalProfile.email == edittedProfile.email &&
-        originalProfile.mobile == edittedProfile.mobile
-      );
-    };
+    $scope.saveField = function(field) {
+      let mailRegexp = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/g;
+      let phoneRegexp = /^(00|\+)?([0-9][ \-\.]*){6,15}$/g;
+      let errorTitle = null;
 
-    $scope.saveProfile = function() {
-      var checkProfileValidity = function(profile) {
-        let mailRegexp = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/g;
-        let phoneRegexp = /^(00|\+)?([0-9][ \-\.]*){6,15}$/g;
-
-        if (!!profile.email && !mailRegexp.test(profile.email)) {
-          return "Adresse email invalide";
-        } else if (!!profile.mobile && !phoneRegexp.test(profile.mobile)) {
-          return "Numéro de mobile";
-        } else {
-          return null;
+      switch (field) {
+        case "loginAlias": {
+          changeMade = $rootScope.myUser.loginAlias
+            ? $scope.tempProfile.loginAlias != $rootScope.myUser.loginAlias
+            : $scope.tempProfile.loginAlias != $rootScope.myUser.login;
+          break;
         }
-      };
+        case "email": {
+          changeMade = $scope.tempProfile.email != $rootScope.myUser.email;
+          if (
+            !!$scope.tempProfile.email &&
+            !mailRegexp.test($scope.tempProfile.email)
+          )
+            errorTitle = "Adresse email invalide";
+          break;
+        }
+        case "mobile": {
+          changeMade = $scope.tempProfile.mobile != $rootScope.myUser.mobile;
+          if (
+            !!$scope.tempProfile.mobile &&
+            !phoneRegexp.test($scope.tempProfile.mobile)
+          )
+            errorTitle = "Adresse email invalide";
 
-      $scope.editable = false;
-      let errorTitle = checkProfileValidity($scope.tempProfile);
+          break;
+        }
+        case "displayName": {
+          changeMade =
+            $scope.tempProfile.displayName != $rootScope.myUser.displayName;
+          break;
+        }
+      }
 
       if (errorTitle) {
         PopupFactory.getAlertPopup(errorTitle, "Format invalide");
-      } else {
-        ProfileService.saveProfile($scope.tempProfile)
-          .then(() => UserFactory.getUser(true))
-          .then(user => ($rootScope.myUser = user))
-          .catch(err => PopupFactory.getAlertPopupNoTitle(err.data.error))
-          .finally($ionicLoading.hide);
-        $ionicLoading.show({
-          template: '<ion-spinner icon="android"/>'
-        });
+      } else if (changeMade) {
+        saveProfile($rootScope.pick($scope.tempProfile, [field]));
       }
+      $scope.toggleField();
     };
+
+    function saveProfile(profile) {
+      $ionicLoading.show({
+        template: '<ion-spinner icon="android"/>'
+      });
+      ProfileService.saveProfile(profile)
+        .then(() => UserFactory.getUser(true))
+        .then(user => ($rootScope.myUser = user))
+        .catch(err => {
+          PopupFactory.getAlertPopupNoTitle(err.data.error);
+        })
+        .finally($ionicLoading.hide);
+    }
 
     function getUserApp() {
       return ProfileService.getApplications().then(function(applications) {

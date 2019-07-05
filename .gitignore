@@ -14,3 +14,9 @@ jsconfig.json
 keyAndroidENT.jks
 keystorePCNPROD.jks
 build.json
+.vscode/typings/ionic/ionic.d.ts
+.vscode/plugins.json
+.vscode/typings/angularjs/angular.d.ts
+.vscode/typings/cordova/cordova.d.ts
+.vscode/typings/jquery/jquery.d.ts
+typings/cordova-typings.d.ts

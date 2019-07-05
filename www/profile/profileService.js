@@ -5,7 +5,7 @@ angular
     this.saveProfile = function(profile) {
       return RequestService.put(
         `${domainENT}/directory/user/${$rootScope.myUser.userId}`,
-        formatProfile(profile)
+        profile
       );
     };
 
@@ -34,11 +34,6 @@ angular
     this.getI18nNotifications = function() {
       return RequestService.get(domainENT + "/timeline/i18nNotifications");
     };
-
-    function formatProfile(unformattedProfile) {
-      var keys = ["displayName", "email", "mobile", "loginAlias"];
-      return $rootScope.pick(unformattedProfile, keys);
-    }
   })
 
   .factory("UserFactory", function($rootScope, ProfileService) {

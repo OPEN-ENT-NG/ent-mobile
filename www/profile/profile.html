@@ -1,9 +1,6 @@
 <ion-view hide-back-button="true" view-title="Profil">
   <ion-nav-buttons side="right">
-    <button
-      class="button button-icon button-clear ion-android-more-vertical buttonActionBar"
-      ng-click="openPopover($event)"
-    ></button>
+    <button class="button icon-right ion-log-out" ng-click="logout()"></button>
   </ion-nav-buttons>
   <ion-content class="profile">
     <ion-tabs class="tabs-positive tabs-top">
@@ -21,18 +18,28 @@
             <h2 class="profile-sub">
               {{ translationUser["userBook.profile.login"] }}
             </h2>
-            <h2
-              ng-if="!editable || !myUser.allowedLoginUpdate"
-              class="profile-info"
+            <div
+              style="display: flex"
+              ng-if="!isFieldToggled('loginAlias') || !myUser.allowedLoginUpdate"
             >
-              {{ myUser.loginAlias || myUser.login }}
-            </h2>
+              <h2 class="profile-info" style="flex: 1">
+                {{ myUser.loginAlias || myUser.login }}
+              </h2>
+              <i
+                class="fa fa-pencil"
+                style="flex: 0"
+                ng-click="myUser.allowedLoginUpdate && toggleField('loginAlias')"
+              ></i>
+            </div>
             <input
               type="text"
               class="profile-edit"
-              ng-if="editable && myUser.allowedLoginUpdate"
+              id="loginAlias"
+              ng-if="isFieldToggled('loginAlias')"
               ng-model="tempProfile.loginAlias"
               spellcheck="false"
+              autocapitalize="off"
+              ng-blur="saveField('loginAlias')"
             />
 
             <h2 class="profile-sub">
@@ -48,40 +55,71 @@
             <h2 class="profile-sub">
               {{ translationUser["userBook.profile.displayName"] }}
             </h2>
-            <h2 ng-if="!editable" class="profile-info">
-              {{ myUser.displayName }}
-            </h2>
+            <div style="display: flex" ng-if="!isFieldToggled('displayName')">
+              <h2 class="profile-info" style="flex: 1">
+                {{ myUser.displayName }}
+              </h2>
+              <i
+                class="fa fa-pencil"
+                style="flex: 0"
+                ng-click="toggleField('displayName')"
+              ></i>
+            </div>
             <input
               type="text"
               class="profile-edit"
-              ng-if="editable"
+              id="displayName"
+              ng-if="isFieldToggled('displayName')"
               ng-model="tempProfile.displayName"
               spellcheck="false"
+              autocapitalize="off"
+              ng-blur="saveField('displayName')"
             />
 
             <h2 class="profile-sub">
               {{ translationUser["userBook.profile.email"] }}
             </h2>
-            <h2 ng-if="!editable" class="profile-info">{{ myUser.email }}</h2>
+            <div style="display: flex" ng-if="!isFieldToggled('email')">
+              <h2 class="profile-info" style="flex: 1">
+                {{ myUser.email }}
+              </h2>
+              <i
+                class="fa fa-pencil"
+                style="flex: 0"
+                ng-click="toggleField('email')"
+              ></i>
+            </div>
             <input
               type="mail"
               class="profile-edit"
-              ng-if="editable"
+              id="email"
+              ng-if="isFieldToggled('email')"
               ng-model="tempProfile.email"
               spellcheck="false"
+              autocapitalize="off"
+              ng-blur="saveField('email')"
             />
 
             <h2 class="profile-sub">
               {{ translationUser["userBook.profile.mobilePhone"] }}
             </h2>
-            <h2 ng-if="!editable" class="profile-info">
-              {{ myUser.mobile || "-" }}
-            </h2>
+            <div style="display: flex" ng-if="!isFieldToggled('mobile')">
+              <h2 class="profile-info" style="flex: 1">
+                {{ myUser.mobile || "-" }}
+              </h2>
+              <i
+                class="fa fa-pencil"
+                style="flex: 0"
+                ng-click="toggleField('mobile')"
+              ></i>
+            </div>
             <input
               type="tel"
               class="profile-edit"
-              ng-if="editable"
+              id="mobile"
+              ng-if="isFieldToggled('mobile')"
               ng-model="tempProfile.mobile"
+              ng-blur="saveField('mobile')"
             />
 
             <h2 class="profile-sub">
@@ -92,7 +130,10 @@
             <h2 class="profile-sub">
               {{ translationUser["userBook.profile.schools"] }}
             </h2>
-            <h2 class="profile-info" ng-repeat="structure in myUser.schools">
+            <h2
+              class="profile-info"
+              ng-repeat="structure in myUser.schools | orderBy:'name'"
+            >
               {{ structure.name }}
             </h2>
 
