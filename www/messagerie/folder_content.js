@@ -181,6 +181,15 @@ angular
       return getSelectedMessages().length;
     };
 
+    $scope.checkAllMessages = function() {
+      let allChecked = $scope.allChecked();
+      $scope.messages.forEach(msg => (msg.checked = !allChecked));
+    };
+
+    $scope.allChecked = function() {
+      return $scope.messages.every(msg => msg.checked == true);
+    };
+
     function getSelectedMessages() {
       return $scope.messages
         ? $scope.messages.filter(mess => mess.checked)

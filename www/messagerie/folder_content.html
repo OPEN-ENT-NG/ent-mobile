@@ -35,6 +35,21 @@
 
     <div class="item item-divider" ng-show="extraFolders.length!=0"></div>
     <ion-list>
+      <ion-item ng-if="isCheckEnabled()" ng-click="checkAllMessages()">
+        <div class="message">
+          <input
+            type="checkbox"
+            ng-model="all.checked"
+            ng-checked="allChecked()"
+            style="vertical-align: -webkit-baseline-middle;"
+          />
+
+          <div class="item-text-wrap" style="float: right; width: 90%;">
+            Sélectionner tout
+          </div>
+        </div></ion-item
+      >
+
       <ion-item
         ng-repeat="message in messages track by $index"
         ng-click="isCheckEnabled()
