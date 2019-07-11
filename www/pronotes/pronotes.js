@@ -2,13 +2,11 @@ angular
   .module("ent.pronotes", ["ent.pronotes_service"])
 
   .controller("PronoteCtrl", function(
-    domainENT,
     $scope,
     $rootScope,
-    $window,
     PronoteService,
     $ionicPlatform,
-    $http,
+    $stateParams,
     $sce,
     $state,
     $ionicLoading,
@@ -25,28 +23,29 @@ angular
       };
       if (
         Object.keys(profileMap).indexOf(
-          $rootScope.myUser.userType.toUpperCase()
+          $rootScope.myUser.type.toUpperCase()
         ) !== -1
       ) {
         link +=
           "mobile." +
-          profileMap[$rootScope.myUser.userType.toUpperCase()] +
+          profileMap[$rootScope.myUser.type.toUpperCase()] +
           ".html?";
       }
-      $rootScope.link = $sce.trustAsResourceUrl(link);
-      $state.go("app.pronote");
+      $state.go("app.pronote", { link: $sce.trustAsResourceUrl(link) });
     };
 
     $ionicPlatform.ready(function() {
       $scope.$on("$ionicView.enter", function() {
         $scope.pronotes = [];
 
-        if ($state.is("app.pronote")) {
+        if ($state.is("app.pronote") && $stateParams.hasOwnProperty("link")) {
           $ionicLoading.show({
             template: '<ion-spinner icon="android"/>'
           });
 
-          RequestService.get($sce.getTrustedResourceUrl($rootScope.link)).then(
+          RequestService.get(
+            $sce.getTrustedResourceUrl($stateParams.link)
+          ).then(
             function success(response) {
               $scope.link = $sce.trustAsResourceUrl(
                 response.headers()["location"]
@@ -64,6 +63,8 @@ angular
           PronoteService.getAllAccounts().then(function(resp) {
             $scope.pronotes = resp || [];
           });
+        } else {
+          $state.go("app.listPronotes");
         }
       });
     });

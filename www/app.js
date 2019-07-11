@@ -118,6 +118,7 @@ angular
 
       .state("app.pronote", {
         xitiIndex: "pronotes",
+        params: { link: "" },
         templateUrl: "pronotes/pronote.html",
         controller: "PronoteCtrl"
       })
