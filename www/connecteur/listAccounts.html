@@ -1,0 +1,24 @@
+<ion-view hide-back-button="true" view-title="{{ accountListName }}">
+  <ion-content>
+    <ion-scroll
+      ng-if="accountList.length > 0"
+      class="scroll"
+      direction="y"
+      has-bouncing="true"
+    >
+      <ion-refresher pulling-text="Actualiser" on-refresh="getAllAccounts()">
+      </ion-refresher>
+      <ion-list>
+        <div ng-repeat="account in accountList">
+          <ion-item ng-click="showConnecteur(account.address,account.name)">
+            {{ account.name }}
+          </ion-item>
+        </div>
+      </ion-list>
+    </ion-scroll>
+
+    <div ng-if="accountList.length==0" class="empty-content">
+      {{ noAccountError }}
+    </div>
+  </ion-content>
+</ion-view>

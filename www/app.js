@@ -9,6 +9,7 @@ angular
     "ent.messagerie",
     "ent.workspace",
     "ent.pronotes",
+    "ent.lvs",
     "ent.support",
     "ng-mfb",
     "ent.timeline",
@@ -111,16 +112,27 @@ angular
         controller: "ActualitesCtrl"
       })
 
-      .state("app.listPronotes", {
-        templateUrl: "pronotes/listPronotes.html",
+      .state("app.listPronote", {
+        templateUrl: "connecteur/listAccounts.html",
         controller: "PronoteCtrl"
       })
 
       .state("app.pronote", {
         xitiIndex: "pronotes",
-        params: { link: "" },
-        templateUrl: "pronotes/pronote.html",
+        params: { link: "", name: "" },
+        templateUrl: "connecteur/connecteur.html",
         controller: "PronoteCtrl"
+      })
+
+      .state("app.listLVS", {
+        templateUrl: "connecteur/listAccounts.html",
+        controller: "lvsCtrl"
+      })
+
+      .state("app.lvs", {
+        params: { link: "", name: "" },
+        templateUrl: "connecteur/connecteur.html",
+        controller: "lvsCtrl"
       })
 
       .state("app.workspace", {
@@ -226,7 +238,6 @@ angular
     NotificationService,
     TraductionService,
     WorkspaceService,
-    PronoteService,
     PopupFactory
   ) {
     function intentHandler(intent) {
@@ -348,15 +359,21 @@ angular
       });
 
       $rootScope.$on("LoggedIn", () => {
-        UserFactory.getUser().then(user => ($rootScope.myUser = user));
-
-        PronoteService.getAllAccounts().then(function(resp) {
-          if (resp.length > 0) {
+        UserFactory.getUser().then(user => {
+          $rootScope.myUser = user;
+          if (UserFactory.hasPronoteAccount()) {
             $rootScope.listMenu.unshift({
               name: "Version mobile",
               icon: "custom-pronote pronote-1icon-",
-              state: "app.listPronotes"
-              // href: "#/app/listPronotes"
+              state: "app.listPronote"
+            });
+          }
+
+          if (UserFactory.hasLVSAccount()) {
+            $rootScope.listMenu.unshift({
+              name: "LVS",
+              icon: "fa fa-graduation-cap",
+              state: "app.listLVS"
             });
           }
         });
@@ -492,14 +509,16 @@ angular
         $state.is("app.blog") ||
         $state.is("app.actualites") ||
         $state.is("app.threads") ||
-        $state.is("app.listPronotes") ||
+        $state.is("app.listPronote") ||
         $state.is("app.pronote") ||
         $state.is("app.workspace") ||
         $state.is("app.workspace_tree") ||
         $state.is("app.workspace_file") ||
         $state.is("app.workspace_movecopy") ||
         $state.is("app.workspace_share") ||
-        $state.is("app.support")
+        $state.is("app.support") ||
+        $state.is("app.listLVS") ||
+        $state.is("app.lvs")
       );
     };
 

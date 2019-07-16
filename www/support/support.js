@@ -1,5 +1,3 @@
-/* 			return app.address && app.name && app.address.length > 0 && app.name.length > 0;
- */
 angular
   .module("ent.support", ["ionic", "ent.support_service"])
   .controller("SupportCtrl", function(
@@ -9,14 +7,127 @@ angular
     $ionicLoading,
     $state,
     SupportService,
-    PopupFactory
+    PopupFactory,
+    UserFactory
   ) {
     $ionicPlatform.ready(function() {
-      $scope.$on("$ionicView.enter", function() {
+      $scope.$on("$ionicView.beforeEnter", function() {
         delete $scope.ticket;
-        SupportService.getAllApps().then(function(applications) {
-          let apps = SupportService.filterModules(
-            applications.data.apps.filter(function(app) {
+
+        $ionicLoading.show({
+          template: '<ion-spinner icon="android"/>'
+        });
+
+        let applicationsPromise = getAllApps().then(apps => {
+          $scope.apps = sort(apps, "displayName");
+          $scope.schools = sort($rootScope.myUser.schools, "name");
+
+          $scope.ticket = {
+            category: $scope.apps[0].address,
+            school_id: $scope.schools[0].id,
+            subject: "",
+            description: ""
+          };
+        });
+
+        let translationPromise = SupportService.getTranslation().then(function(
+          translation
+        ) {
+          $scope.translation = translation.data;
+        });
+
+        Promise.all([applicationsPromise, translationPromise]).finally(
+          $ionicLoading.hide
+        );
+      });
+    });
+
+    $scope.getTranslation = function(app) {
+      return (
+        (!!$scope.translation && $scope.translation[app.displayName]) ||
+        app.name
+      );
+    };
+
+    $scope.addAttachment = function() {
+      PopupFactory.getAlertPopup(
+        "Non disponible",
+        "Cette fonctionnalité n'est pas encore disponible."
+      );
+    };
+
+    $scope.saveTicket = function() {
+      let error = checkTicket($scope.ticket);
+      if (error) {
+        PopupFactory.getAlertPopup(
+          "Erreur dans le formulaire",
+          $scope.translation[error]
+        );
+      } else {
+        $ionicLoading.show({
+          template: '<ion-spinner icon="android"/>'
+        });
+        var subject =
+          `${ionic.Platform.platform()} ${ionic.Platform.version()} / App v${
+            $rootScope.version
+          } / ` + $scope.ticket.subject;
+
+        var category = `mobile;${$scope.ticket.category}`;
+
+        SupportService.createTicket({
+          ...$scope.ticket,
+          category: category,
+          subject: subject
+        }).then(
+          res => {
+            $ionicLoading.hide();
+            PopupFactory.getAlertPopupNoTitle(
+              `Demande N°${
+                res.data.id
+              } créée avec succès. Retrouvez le suivi sur la version web du module Aide et support.`
+            ).then(() => {
+              $state.go("app.timeline_list");
+            });
+          },
+          () => {
+            $ionicLoading.hide();
+            PopupFactory.getAlertPopup(
+              "Echec",
+              "La création de la demande a échoué."
+            );
+          }
+        );
+      }
+    };
+
+    function getAllApps() {
+      var filterModules = appList => {
+        var appModules = [
+          "timeline",
+          "support",
+          "workspace",
+          "conversation",
+          "actualites",
+          "blog",
+          "pronote",
+          "lvs"
+        ];
+
+        return appList.filter(app =>
+          appModules.some(appMod => {
+            if (appMod == "pronote" || appMod == "lvs") {
+              return !!app.type && app.type.toLowerCase() == appMod;
+            } else if (app.prefix) {
+              return app.prefix.toLowerCase() === "/" + appMod.toLowerCase();
+            }
+          })
+        );
+      };
+
+      return UserFactory.getApplicationsList()
+        .then(userApps => {
+          let apps = filterModules(
+            userApps.filter(function(app) {
               return (
                 app.address &&
                 app.name &&
@@ -30,97 +141,33 @@ angular
             address: "support.category.other",
             displayName: "support.category.other"
           });
-          $scope.apps = sort(apps, "displayName");
-          $scope.schools = sort($rootScope.myUser.schools, "name");
-
-          $scope.ticket = {
-            category: $scope.apps[0].address,
-            school_id: $scope.schools[0].id,
-            subject: "",
-            description: ""
-          };
+          return apps;
+        })
+        .catch(err => {
+          console.log(err);
+          return [];
         });
+    }
 
-        SupportService.getTranslation().then(function(translation) {
-          $scope.translation = translation.data;
-        });
+    function sort(collection, key) {
+      return collection.sort(function(a, b) {
+        let valA = a[key];
+        let valB = b[key];
+        return valB < valA ? 1 : valB > valA ? -1 : 0;
       });
+    }
 
-      $scope.getTranslation = function(app) {
-        return $scope.translation[app.displayName] || app.name;
-      };
-
-      $scope.addAttachment = function() {
-        PopupFactory.getAlertPopup(
-          "Non disponible",
-          "Cette fonctionnalité n'est pas encore disponible."
-        );
-      };
-
-      $scope.saveTicket = function() {
-        let error = checkTicket($scope.ticket);
-        if (error) {
-          PopupFactory.getAlertPopup(
-            "Erreur dans le formulaire",
-            $scope.translation[error]
-          );
-        } else {
-          $ionicLoading.show({
-            template: '<ion-spinner icon="android"/>'
-          });
-          var subject =
-            `${ionic.Platform.platform()} ${ionic.Platform.version()} / App v${
-              $rootScope.version
-            } / ` + $scope.ticket.subject;
-
-          var category = `mobile;${$scope.ticket.category}`;
-
-          SupportService.createTicket({
-            ...$scope.ticket,
-            category: category,
-            subject: subject
-          }).then(
-            res => {
-              $ionicLoading.hide();
-              PopupFactory.getAlertPopupNoTitle(
-                `Demande N°${
-                  res.data.id
-                } créée avec succès. Retrouvez le suivi sur la version web du module Aide et support.`
-              ).then(() => {
-                $state.go("app.timeline_list");
-              });
-            },
-            () => {
-              $ionicLoading.hide();
-              PopupFactory.getAlertPopup(
-                "Echec",
-                "La création de la demande a échoué."
-              );
-            }
-          );
-        }
-      };
-
-      function sort(collection, key) {
-        return collection.sort(function(a, b) {
-          let valA = a[key];
-          let valB = b[key];
-          return valB < valA ? 1 : valB > valA ? -1 : 0;
-        });
+    function checkTicket(ticket) {
+      let result;
+      if (!ticket.subject) {
+        result = "support.ticket.validation.error.subject.is.empty";
+      } else if (ticket.subject.length > 255) {
+        result = "support.ticket.validation.error.subject.too.long";
+      } else if (!ticket.description) {
+        result = "support.ticket.validation.error.description.is.empty";
+      } else {
+        result = false;
       }
-
-      function checkTicket(ticket) {
-        let result;
-        if (!ticket.subject) {
-          result = "support.ticket.validation.error.subject.is.empty";
-        } else if (ticket.subject.length > 255) {
-          result = "support.ticket.validation.error.subject.too.long";
-        } else if (!ticket.description) {
-          result = "support.ticket.validation.error.description.is.empty";
-        } else {
-          result = false;
-        }
-        return result;
-      }
-    });
+      return result;
+    }
   });

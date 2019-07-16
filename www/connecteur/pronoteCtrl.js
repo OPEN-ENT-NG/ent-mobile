@@ -1,10 +1,10 @@
 angular
-  .module("ent.pronotes", ["ent.pronotes_service"])
+  .module("ent.pronotes", [])
 
   .controller("PronoteCtrl", function(
     $scope,
     $rootScope,
-    PronoteService,
+    UserFactory,
     $ionicPlatform,
     $stateParams,
     $sce,
@@ -12,10 +12,10 @@ angular
     $ionicLoading,
     RequestService
   ) {
-    $scope.pronotes = [];
+    $scope.noAccountError = "Pas de compte Pronote disponible";
+    $scope.accountListName = "Liste des comptes Pronote";
 
-    $scope.showPronote = function(link, namePronote) {
-      $rootScope.pronoteName = namePronote;
+    $scope.showConnecteur = function(link, name) {
       var profileMap = {
         TEACHER: "professeur",
         STUDENT: "eleve",
@@ -31,13 +31,17 @@ angular
           profileMap[$rootScope.myUser.type.toUpperCase()] +
           ".html?";
       }
-      $state.go("app.pronote", { link: $sce.trustAsResourceUrl(link) });
+      $state.go("app.pronote", { link: $sce.trustAsResourceUrl(link), name });
+    };
+
+    $scope.getAllAccounts = function() {
+      UserFactory.getApplicationsList().then(() => {
+        $scope.accountList = UserFactory.getPronoteAccount();
+      });
     };
 
     $ionicPlatform.ready(function() {
       $scope.$on("$ionicView.enter", function() {
-        $scope.pronotes = [];
-
         if ($state.is("app.pronote") && $stateParams.hasOwnProperty("link")) {
           $ionicLoading.show({
             template: '<ion-spinner icon="android"/>'
@@ -50,6 +54,7 @@ angular
               $scope.link = $sce.trustAsResourceUrl(
                 response.headers()["location"]
               );
+              $scope.name = $stateParams.name;
 
               document.querySelector("#iframe").onload = function() {
                 $ionicLoading.hide();
@@ -59,12 +64,10 @@ angular
               $ionicLoading.hide();
             }
           );
-        } else if ($state.is("app.listPronotes")) {
-          PronoteService.getAllAccounts().then(function(resp) {
-            $scope.pronotes = resp || [];
-          });
+        } else if ($state.is("app.listPronote")) {
+          $scope.accountList = UserFactory.getPronoteAccount();
         } else {
-          $state.go("app.listPronotes");
+          $state.go("app.listPronote");
         }
       });
     });
