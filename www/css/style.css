@@ -687,3 +687,14 @@ ion-popover-view.fit ion-content {
 .share .spinner-container svg {
   stroke: #ff8500;
 }
+
+.flash-message.flash-message {
+  font-weight: bold;
+  border-radius: 4px;
+  font-size: medium;
+  color: white;
+  margin: 10px;
+  border: none;
+  display: flex;
+  white-space: normal
+}

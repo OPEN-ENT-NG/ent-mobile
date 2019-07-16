@@ -4,19 +4,22 @@ angular
     $scope,
     $ionicPlatform,
     TimelineService,
-    $rootScope,
     $ionicLoading,
     domainENT,
     $state,
+    $sce,
+    PopupFactory,
     NotificationService
   ) {
     $scope.types = [];
     $scope.timeline = [];
+    $scope.flashMsg = [];
 
     $ionicPlatform.ready(function() {
       $scope.$on("$ionicView.enter", function() {
         if ($state.is("app.timeline_list")) {
           getTimeline();
+          getFlashMsg();
         } else if ($state.is("app.timeline_prefs")) {
           getPreferences();
         } else {
@@ -151,4 +154,39 @@ angular
 
       TimelineService.updatePreferences($scope.preferences);
     };
+
+    $scope.markAsRead = function(id) {
+      $ionicLoading.show({
+        template: '<ion-spinner icon="android"/>'
+      });
+      TimelineService.markAsRead(id)
+        .then(getFlashMsg)
+        .catch(PopupFactory.getCommonAlertPopup)
+        .finally($ionicLoading.hide);
+    };
+
+    function getFlashMsg() {
+      var scssVariables = {
+        red: "#e13a3a",
+        orange: "#FF8500",
+        green: "#46bfaf",
+        blue: "#0c3848"
+      };
+
+      $ionicLoading.show({
+        template: '<ion-spinner icon="android"/>'
+      });
+      TimelineService.getFlashMsg()
+        .then(({ data }) => {
+          $scope.flashMsg = data.map(msg => {
+            msg.contents = msg.contents.fr;
+            msg.customColor = msg.color
+              ? scssVariables[msg.color]
+              : msg.customColor;
+            return msg;
+          });
+        })
+        .catch(PopupFactory.getCommonAlertPopup)
+        .finally($ionicLoading.hide);
+    }
   });

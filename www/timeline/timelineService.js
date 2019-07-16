@@ -32,4 +32,14 @@ angular
         preferences
       );
     };
+
+    this.getFlashMsg = function() {
+      return RequestService.get(`${domainENT}/timeline/flashmsg/listuser`);
+    };
+
+    this.markAsRead = function(id) {
+      return RequestService.put(
+        `${domainENT}/timeline/flashmsg/${id}/markasread`
+      );
+    };
   });

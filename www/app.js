@@ -1059,8 +1059,12 @@ angular
             `ng-click="downloadFile('$2', '${domainENT}$1')"><div class="download"></div>$2</a>`
           );
           data = data.replace(
-            /href=(["'])(.*?)\1/g,
+            /href=(["'])(http.*?)\1/g,
             "ng-click=\"openUrl('$2')\""
+          );
+          data = data.replace(
+            /href=(["'])(.*?)\1/g,
+            `ng-click=\"openUrl('${domainENT}$2')\"`
           );
           data = data.replace(
             /<img src="(http(s?):\/\/[\S]+)"/g,
