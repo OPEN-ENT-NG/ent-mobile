@@ -372,7 +372,7 @@ angular
           if (UserFactory.hasLVSAccount()) {
             $rootScope.listMenu.unshift({
               name: "LVS",
-              icon: "fa fa-graduation-cap",
+              icon: "custom-lvs lvsicon-",
               state: "app.listLVS"
             });
           }

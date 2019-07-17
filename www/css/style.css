@@ -26,6 +26,10 @@ ion-popover-view.fit ion-content {
   color: #763294;
 }
 
+.custom-lvs {
+  color: #e1418f;
+}
+
 .custom-mail {
   color: #ecbe30;
 }
@@ -696,5 +700,5 @@ ion-popover-view.fit ion-content {
   margin: 10px;
   border: none;
   display: flex;
-  white-space: normal
+  white-space: normal;
 }
