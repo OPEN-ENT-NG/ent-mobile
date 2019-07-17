@@ -117,7 +117,8 @@ angular
       PopupFactory.getPromptPopup(
         $rootScope.translationWorkspace["folder.new.title"],
         null,
-        $rootScope.translationWorkspace["folder.new"]
+        $rootScope.translationWorkspace["cancel"],
+        $rootScope.translationWorkspace["workspace.folder.create"]
       ).then(name => {
         WorkspaceService.createFolder(name, $stateParams["folderId"]).then(
           getData(),
@@ -249,8 +250,10 @@ angular
         item = item[0];
 
         PopupFactory.getPromptPopup(
-          $rootScope.translationWorkspace["folder.new.title"],
-          $rootScope.translationWorkspace["folder.new"]
+          $rootScope.translationWorkspace["workspace.rename"],
+          null,
+          $rootScope.translationWorkspace["cancel"],
+          $rootScope.translationWorkspace["confirm"]
         ).then(function(resp) {
           WorkspaceService.renameDocument(item, resp).then(
             function(response) {

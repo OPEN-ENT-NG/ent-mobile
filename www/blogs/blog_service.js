@@ -72,4 +72,17 @@ angular
         { comment: comment }
       );
     };
+
+    this.editComment = function(idBlog, idPost, idComment, comment) {
+      return RequestService.put(
+        `${domainENT}/blog/comment/${idBlog}/${idPost}/${idComment}`,
+        { comment }
+      );
+    };
+
+    this.deleteComment = function(idBlog, idPost, idComment) {
+      return RequestService.delete(
+        `${domainENT}/blog/comment/${idBlog}/${idPost}/${idComment}`
+      );
+    };
   });

@@ -896,10 +896,11 @@ angular
       });
     };
 
-    this.getPromptPopup = function(title, subtitle, okText) {
+    this.getPromptPopup = function(title, subtitle, cancelText, okText) {
       return $ionicPopup.prompt({
         title,
         subtitle,
+        cancelText,
         okText
       });
     };

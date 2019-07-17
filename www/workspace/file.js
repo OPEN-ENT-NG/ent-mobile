@@ -34,13 +34,12 @@ angular
     };
 
     $scope.commentDoc = function() {
-      $scope.data = {};
-
       if ($scope.isRightToComment()) {
         PopupFactory.getPromptPopup(
-          $rootScope.translationWorkspace["workspace.comment"],
+          $rootScope.translationWorkspace["workspace.document.comment"],
           null,
-          "<b>" + $rootScope.translationWorkspace["workspace.comment"] + "</b>"
+          $rootScope.translationWorkspace["cancel"],
+          $rootScope.translationWorkspace["workspace.comment"]
         ).then(function(res) {
           if (res) {
             $ionicLoading.show({
@@ -63,8 +62,10 @@ angular
 
     $scope.renameDoc = function() {
       PopupFactory.getPromptPopup(
-        $rootScope.translationWorkspace["folder.new.title"],
-        $rootScope.translationWorkspace["folder.new"]
+        $rootScope.translationWorkspace["workspace.rename"],
+        null,
+        $rootScope.translationWorkspace["cancel"],
+        $rootScope.translationWorkspace["confirm"]
       ).then(function(res) {
         console.log(res);
         if (res) {

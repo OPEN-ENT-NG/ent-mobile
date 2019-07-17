@@ -9,7 +9,9 @@ angular
     $rootScope,
     $ionicLoading,
     $location,
-    PopupFactory
+    PopupFactory,
+    $ionicPopup,
+    $ionicScrollDelegate
   ) {
     $ionicPlatform.ready(function() {
       $scope.$on("$ionicView.enter", function() {
@@ -41,11 +43,8 @@ angular
      * else, select the given group
      */
     $scope.toggleComments = function(post) {
-      if ($scope.areCommentsShown(post)) {
-        $scope.shownComments = null;
-      } else {
-        $scope.shownComments = post;
-      }
+      $scope.shownComments = $scope.areCommentsShown(post) ? null : post;
+      $ionicScrollDelegate.resize();
     };
 
     $scope.areCommentsShown = function(post) {
@@ -53,51 +52,102 @@ angular
     };
 
     $scope.commentPost = function(post) {
-      $scope.data = {};
+      let myPopup = PopupFactory.getPromptPopup(
+        $rootScope.translationBlog["blog.comment"],
+        null,
+        $rootScope.translationBlog["cancel"],
+        $rootScope.translationBlog["blog.comment"]
+      );
 
-      if ($scope.isRightToComment()) {
-        let myPopup = PopupFactory.getPromptPopup(
-          $rootScope.translationBlog["blog.comment"],
-          null,
-          "<b>" + $rootScope.translationBlog["blog.comment"] + "</b>"
-        );
+      myPopup.then(function(res) {
+        if (res) {
+          $ionicLoading.show({
+            template: '<ion-spinner icon="android"/>'
+          });
+          BlogsService.commentPostById($scope.blog._id, post._id, res)
+            .then(() => {
+              BlogsService.getPostCommentsById($scope.blog._id, post._id)
+                .then(res => (post.comments = res.data))
+                .catch(() => (post.comments = []));
+            })
+            .finally($ionicLoading.hide);
+        }
+      });
+    };
 
-        $ionicPlatform.registerBackButtonAction(function(e) {
-          myPopup.close();
-        }, 1001);
+    $scope.editComment = (post, comment) => {
+      let scope = $scope.$new(true);
+      scope.data = { response: comment.comment };
+      $ionicPopup
 
-        myPopup.then(function(res) {
+        .show({
+          title: $rootScope.translationBlog["blog.comment"],
+          scope,
+          template: '<textarea rows="10" ng-model="data.response">',
+          buttons: [
+            {
+              text: $rootScope.translationBlog["cancel"],
+              type: "button-default",
+              onTap: function() {}
+            },
+            {
+              text: $rootScope.translationBlog["blog.comment"],
+              type: "button-positive",
+              onTap: function() {
+                return scope.data.response || "";
+              }
+            }
+          ]
+        })
+        .then(function(res) {
           if (res) {
             $ionicLoading.show({
               template: '<ion-spinner icon="android"/>'
             });
-            BlogsService.commentPostById($scope.blog._id, post._id, res).then(
-              function(result) {
-                BlogsService.getPostCommentsById(
-                  $scope.blog._id,
-                  post._id
-                ).then(
-                  function(res) {
-                    post.comments = res.data;
-                    $ionicLoading.hide();
-                  },
-                  function(err) {
-                    post.comments = [];
-                    $ionicLoading.hide();
-                  }
-                );
-                $ionicLoading.hide();
-              },
-              function() {
-                $ionicLoading.hide();
-              }
-            );
+            BlogsService.editComment($scope.blog._id, post._id, comment.id, res)
+              .then(() => {
+                BlogsService.getPostCommentsById($scope.blog._id, post._id)
+                  .then(res => (post.comments = res.data))
+                  .catch(() => (post.comments = []));
+              })
+              .catch(PopupFactory.getCommonAlertPopup)
+              .finally($ionicLoading.hide);
           }
         });
-      }
     };
 
-    $scope.isRightToComment = function() {
+    $scope.deleteComment = (post, comment) => {
+      $ionicLoading.show({
+        template: '<ion-spinner icon="android"/>'
+      });
+      BlogsService.deleteComment($scope.blog._id, post._id, comment.id)
+        .then(() => {
+          BlogsService.getPostCommentsById($scope.blog._id, post._id)
+            .then(res => (post.comments = res.data))
+            .catch(() => (post.comments = []));
+        })
+        .finally($ionicLoading.hide);
+    };
+
+    $scope.hasRightToDeleteComment = function(comment) {
+      var manageBlog = () => {
+        let rights = $scope.blog.shared.find(
+          share => share.userId == $rootScope.myUser.userId
+        );
+        return (
+          !!rights &&
+          rights["org-entcore-blog-controllers-BlogController|delete"]
+        );
+      };
+
+      return (
+        comment.author.userId == $rootScope.myUser.userId ||
+        $scope.blog.author.userId == $rootScope.myUser.userId ||
+        manageBlog()
+      );
+    };
+
+    $scope.hasRightToComment = function() {
       if ($scope.blog.author.userId == $rootScope.myUser.userId) {
         return true;
       } else {
@@ -133,28 +183,18 @@ angular
       $ionicLoading.show({
         template: '<ion-spinner icon="android"/>'
       });
-      return BlogsService.getPostContentById($scope.blog._id, post._id).then(
-        function(res) {
+      return BlogsService.getPostContentById($scope.blog._id, post._id)
+        .then(res => {
           post.content = res.data.content;
-          return BlogsService.getPostCommentsById(
-            $scope.blog._id,
-            post._id
-          ).then(
-            function(res) {
-              post.comments = res.data;
-              $ionicLoading.hide();
-            },
-            function() {
-              post.comments = [];
-              $ionicLoading.hide();
-            }
-          );
-        },
-        function() {
-          post.content = null;
+          return BlogsService.getPostCommentsById($scope.blog._id, post._id)
+            .then(({ data }) => (post.comments = data))
+            .catch(() => (post.comments = []));
+        })
+        .catch(() => (post.content = null))
+        .finally(() => {
           $ionicLoading.hide();
-        }
-      );
+          $ionicScrollDelegate.resize();
+        });
     };
 
     function getPosts(id) {

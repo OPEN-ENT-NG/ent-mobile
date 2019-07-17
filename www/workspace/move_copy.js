@@ -52,7 +52,8 @@ angular
       PopupFactory.getPromptPopup(
         $rootScope.translationWorkspace["folder.new.title"],
         null,
-        $rootScope.translationWorkspace["folder.new"]
+        $rootScope.translationWorkspace["cancel"],
+        $rootScope.translationWorkspace["workspace.folder.create"]
       ).then(name => {
         WorkspaceService.createFolder(name, $stateParams["folderId"]).then(
           getData,
