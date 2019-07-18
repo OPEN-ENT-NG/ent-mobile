@@ -9,7 +9,6 @@ angular
     $rootScope,
     MessagerieServices,
     $ionicLoading,
-    $cordovaVibration,
     $ionicPopover,
     $ionicScrollDelegate,
     MoveMessagesPopupFactory,
@@ -172,7 +171,7 @@ angular
       () => $scope.isCheckEnabled(),
       () => {
         if ($scope.isCheckEnabled()) {
-          $cordovaVibration.vibrate(100); // Vibrate 100ms
+          navigator.vibrate(100); // Vibrate 100ms
         }
       }
     );

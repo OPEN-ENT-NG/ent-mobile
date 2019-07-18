@@ -15,7 +15,6 @@ angular
     WorkspaceHelper,
     $ionicLoading,
     MimeTypeFactory,
-    $cordovaVibration,
     $ionicPopover,
     PopupFactory
   ) {
@@ -98,7 +97,7 @@ angular
 
     $scope.enableCheck = function(item) {
       if (!$scope.checkable) {
-        $cordovaVibration.vibrate(100); // Vibrate 100ms
+        navigator.vibrate(100); // Vibrate 100ms
         $scope.checkable = true;
         item.checked = true;
       }
