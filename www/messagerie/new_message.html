@@ -83,19 +83,19 @@
       />
     </label>
 
-    <div class="item-input item borderBottomItemDismissed" style="z-index: 0">
-      <textarea
-        id="textMessage"
-        ng-model="email.body"
-        placeholder="{{
-          translationConversation['sniplet.ml.content.placeholder']
-        }}"
-      ></textarea>
-    </div>
+    <textarea
+      class="item-input item borderBottomItemDismissed"
+      style="z-index: 0; white-space: unset; text-overflow: unset; width: 100%; overflow: unset; height: unset; padding: 20px"
+      id="textMessage"
+      ng-model="email.body"
+      placeholder="{{
+        translationConversation['sniplet.ml.content.placeholder']
+      }}"
+    ></textarea>
 
     <div
       class="item borderTopItemDismissed borderBottomItemDismissed"
-      ng-show="email.attachments.length>0"
+      ng-if="email.attachments.length>0"
       style="z-index: 0"
     >
       <ion-list>

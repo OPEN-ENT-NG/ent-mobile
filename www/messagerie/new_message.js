@@ -25,7 +25,7 @@ angular
       if ($stateParams.action == null) {
         saveDraft = MessagerieServices.saveNewDraft;
       } else if ($stateParams.action != "DRAFT") {
-        saveDraft = MessagerieServices.saveDraftResponse;
+        saveDraft = MessagerieServices.saveNewDraftResponse;
       }
 
       if (saveDraft) {
@@ -85,10 +85,17 @@ angular
         PopupFactory.getAlertPopup(
           $rootScope.translationConversation["save"],
           $rootScope.translationConversation["draft.saved"]
-        ).then(function() {
-          $ionicHistory.clearCache();
-          $ionicHistory.goBack();
-        });
+        )
+          .then(function() {
+            $ionicHistory.clearCache();
+            $ionicHistory.goBack();
+          })
+          .catch(() => {
+            PopupFactory.getAlertPopup(
+              $rootScope.translationConversation["save"],
+              $rootScope.translationConversation["message.save.fail"]
+            );
+          });
       });
     };
 
@@ -138,7 +145,7 @@ angular
     };
 
     function prefillNewMessage(action, prevMessage) {
-      let returnMessage = {
+      const defaultMessage = {
         to: [],
         cc: [],
         cci: [],
@@ -147,68 +154,95 @@ angular
         attachments: []
       };
 
-      if (prevMessage) {
-        prevMessage.to = prevMessage.to.filter(
-          to => $rootScope.myUser.id != to.id
-        );
-        prevMessage.cc = prevMessage.cc.filter(
-          cc => $rootScope.myUser.id != cc.id
-        );
-        prevMessage.cci = prevMessage.cci.filter(
-          cci => $rootScope.myUser.id != cci.id
-        );
-      }
+      const deleteMyself = function(prevMessage) {
+        const filter = array =>
+          array.filter(user => $rootScope.myUser.id != user.id);
 
-      switch (action) {
-        case "REPLY_ONE": {
-          returnMessage.replyTo = prevMessage.id;
-          returnMessage.to = prevMessage.from;
-          returnMessage.subject =
-            $rootScope.translationConversation["reply.re"] +
-            prevMessage.subject;
-          returnMessage.prevMessage =
-            headerReponse(prevMessage) + prevMessage.body;
-          break;
+        return {
+          ...prevMessage,
+          to: filter(prevMessage.to),
+          cc: filter(prevMessage.cc),
+          cci: filter(prevMessage.cci)
+        };
+      };
+
+      const deleteHtmlContent = function(text) {
+        const regexp = /<([a-z]+)[^>]*>(.*?)<\/\1>/g;
+
+        if (regexp.test(text)) {
+          return deleteHtmlContent(text.replace(regexp, "$2"));
+        } else {
+          return text;
         }
+      };
 
-        case "REPLY_ALL": {
-          returnMessage.replyTo = prevMessage.id;
-          returnMessage.to = prevMessage.from.concat(prevMessage.to);
-          returnMessage.cc = prevMessage.cc;
-          returnMessage.subject =
+      const replyToOneAdapter = function(prevMessage) {
+        return {
+          ...defaultMessage,
+          replyTo: prevMessage.id,
+          to: prevMessage.from,
+          subject:
             $rootScope.translationConversation["reply.re"] +
-            prevMessage.subject;
-          returnMessage.prevMessage =
-            headerReponse(prevMessage) + prevMessage.body;
-          break;
-        }
+            prevMessage.subject,
+          prevMessage: headerReponse(prevMessage) + prevMessage.body
+        };
+      };
 
-        case "FORWARD": {
-          returnMessage.replyTo = prevMessage.id;
-          returnMessage.subject =
+      const replyToAllAdapter = function(prevMessage) {
+        return {
+          ...defaultMessage,
+          replyTo: prevMessage.id,
+          to: prevMessage.from.concat(prevMessage.to),
+          subject:
+            $rootScope.translationConversation["reply.re"] +
+            prevMessage.subject,
+          prevMessage: headerReponse(prevMessage) + prevMessage.body
+        };
+      };
+
+      const forwardAdapter = function(prevMessage) {
+        return {
+          ...defaultMessage,
+          replyTo: prevMessage.id,
+          subject:
             $rootScope.translationConversation["reply.fw"] +
-            prevMessage.subject;
-          returnMessage.prevMessage =
-            headerReponse(prevMessage) + prevMessage.body;
-          returnMessage.attachments = prevMessage.attachments;
-          break;
-        }
+            prevMessage.subject,
+          prevMessage: headerReponse(prevMessage) + prevMessage.body
+        };
+      };
 
-        case "DRAFT": {
-          returnMessage.id = prevMessage.id;
-          returnMessage.to = prevMessage.to;
-          returnMessage.cc = prevMessage.cc;
-          returnMessage.cci = prevMessage.cci;
-          returnMessage.subject = prevMessage.subject;
-          returnMessage.body = prevMessage.body
-            .toString()
-            .replace(/\<br\/\>/g, "\n");
-          returnMessage.attachments = prevMessage.attachments;
-          break;
-        }
-      }
+      const draftAdapter = function(prevMessage) {
+        return {
+          ...defaultMessage,
+          ...prevMessage,
+          body: prevMessage.body.toString().replace(/\<br\/\>/g, "\n")
+        };
+      };
 
-      return returnMessage;
+      const findAdapter = function(action) {
+        switch (action) {
+          case "REPLY_ONE": {
+            return replyToOneAdapter;
+          }
+          case "REPLY_ALL": {
+            return replyToAllAdapter;
+          }
+          case "FORWARD": {
+            return forwardAdapter;
+          }
+          case "DRAFT": {
+            return draftAdapter;
+          }
+          default: {
+            return () => defaultMessage;
+          }
+        }
+      };
+
+      return findAdapter(action)({
+        ...deleteMyself(prevMessage),
+        body: deleteHtmlContent(prevMessage.body)
+      });
     }
 
     function headerReponse(prevMessage) {
@@ -268,6 +302,21 @@ angular
 
       return header;
     }
+  })
+
+  .directive("textarea", function() {
+    return {
+      restrict: "E",
+      link: function(scope, element, attr) {
+        var update = function() {
+          element.css("height", "auto");
+          element.css("height", element[0].scrollHeight + "px");
+        };
+        scope.$watch(attr.ngModel, function() {
+          update();
+        });
+      }
+    };
   })
 
   .directive("filterBox", function($ionicLoading, MessagerieServices) {

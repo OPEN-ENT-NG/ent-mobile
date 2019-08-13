@@ -43,7 +43,7 @@ angular
 
     $scope.toggleField = function(field) {
       function initTempProfile() {
-        $scope.tempProfile = $rootScope.extend({}, $rootScope.myUser);
+        $scope.tempProfile = Object.assign({}, $rootScope.myUser);
         $scope.tempProfile.loginAlias =
           $rootScope.myUser.loginAlias || $rootScope.myUser.login;
       }

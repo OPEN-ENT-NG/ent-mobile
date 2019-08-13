@@ -8,33 +8,29 @@ angular
     $rootScope
   ) {
     this.doAuthent = params => {
-      var data =
-        "client_id=" +
-        OAuth2Params.clientId +
-        "&client_secret=" +
-        OAuth2Params.secret +
-        "&scope=" +
-        OAuth2Params.scope;
-      if (params.refreshToken) {
-        data +=
-          "&grant_type=refresh_token&refresh_token=" + params.refreshToken;
-      } else {
-        data +=
-          "&grant_type=password&username=" +
-          params.username +
-          "&password=" +
-          params.password;
-      }
+      let token = !!params.refreshToken
+        ? `grant_type=refresh_token&refresh_token=${params.refreshToken}`
+        : `grant_type=password&username=${params.username}&password=${
+            params.password
+          }`;
+      var data = `client_id=${OAuth2Params.clientId}&client_secret=${
+        OAuth2Params.secret
+      }&scope=${OAuth2Params.scope}&${token}`;
 
       // getting the token
       var base64Value = btoa(
         OAuth2Params.clientId.concat(":").concat(OAuth2Params.secret)
       );
 
-      var url = domainENT + "/auth/oauth2/token";
-      return RequestService.post(url, data, {
-        headers: { Authorization: "Basic " + base64Value }
-      }).then(function(result) {
+      var url = `${domainENT}/auth/oauth2/token`;
+      let urlParams = {
+        headers: {
+          Authorization: "Basic " + base64Value
+        }
+      };
+      urlParams.headers["Content-Type"] =
+        "application/x-www-form-urlencoded; charset=UTF-8";
+      return RequestService.post(url, data, urlParams).then(function(result) {
         let response = {
           access: result.data.access_token,
           refresh: result.data.refresh_token

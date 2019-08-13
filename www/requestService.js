@@ -21,21 +21,18 @@ angular
       }
     }
 
-    function getConfig(config = {}) {
-      config.timeout = config.timeout || timeout;
-      config.headers = Object.assign(
-        Object.assign({}, $http.defaults.headers.common),
-        config.headers || {}
-      );
-      return config;
-    }
+    // function getConfig(config = { timeout, headers: {} }) {
+    //   config.headers = { ...$http.defaults.headers.common, ...config.headers };
+    //   console.log("getConfig", config);
+    //   return config;
+    // }
 
-    this.setDefaultHeaders = function() {
-      $http.defaults.headers.common["Content-Type"] =
-        "application/x-www-form-urlencoded; charset=UTF-8";
-      $http.defaults.headers.common["Accept"] =
-        "application/json;charset=UTF-8";
-    };
+    // this.setDefaultHeaders = function() {
+    //   $http.defaults.headers.common["Content-Type"] =
+    //     "application/x-www-form-urlencoded; charset=UTF-8";
+    //   $http.defaults.headers.common["Accept"] =
+    //     "application/json;charset=UTF-8";
+    // };
 
     this.setDefaultAuth = function(tokens) {
       $http.defaults.headers.common["Authorization"] =
@@ -44,7 +41,7 @@ angular
     };
 
     this.get = function(url, config) {
-      config = getConfig(config);
+      // config = getConfig(config);
       return $q(function(resolve, reject) {
         $http.get(url, config).then(
           function(response) {
@@ -58,7 +55,7 @@ angular
     };
 
     this.delete = function(url, data, config) {
-      config = getConfig({ ...config, data });
+      // config = getConfig({ ...config, data });
       return $q(function(resolve, reject) {
         $http.delete(url, config).then(
           function(response) {
@@ -72,7 +69,7 @@ angular
     };
 
     this.put = function(url, data, config) {
-      config = getConfig(config);
+      // config = getConfig(config);
       return $q(function(resolve, reject) {
         $http.put(url, data, config).then(
           function(response) {
@@ -86,7 +83,8 @@ angular
     };
 
     this.post = function(url, data, config, avoidRedirect) {
-      config = getConfig(config);
+      // console.log("post", config);
+      // config = getConfig(config);
       return $q(function(resolve, reject) {
         $http.post(url, data, config).then(
           function(response) {

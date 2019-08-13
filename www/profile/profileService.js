@@ -152,7 +152,7 @@ angular
               "lastName"
             ]);
 
-            user = $rootScope.extend({}, userbookProfile, oauthProfile);
+            user = Object.assign({}, userbookProfile, oauthProfile);
             user.photo = setProfileImage(user.photo, user.id);
             user.type = user.type[0];
             user.allowedLoginUpdate = foundRightEditLogin(

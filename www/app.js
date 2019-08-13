@@ -29,6 +29,10 @@ angular
     $ionicConfigProvider.views.swipeBackEnabled(false);
     $ionicConfigProvider.backButton.text("").previousTitleText(false);
 
+    if (ionic.Platform.isAndroid()) {
+      $ionicConfigProvider.scrolling.jsScrolling(false);
+    }
+
     $stateProvider
       .state("app", {
         abstract: true,
@@ -316,7 +320,7 @@ angular
     }
 
     $ionicPlatform.ready(function() {
-      RequestService.setDefaultHeaders();
+      // RequestService.setDefaultHeaders();
 
       if (window.StatusBar) {
         StatusBar.styleLightContent();
@@ -549,22 +553,6 @@ angular
         result[key] = object[key];
       }
       return result;
-    };
-
-    $rootScope.extend = function(dest, ...args) {
-      for (let src of args) {
-        var keys = $rootScope.allKeys(src);
-        for (let key of keys) {
-          dest[key] = src[key];
-        }
-      }
-      return dest;
-    };
-
-    $rootScope.allKeys = function(obj) {
-      var keys = [];
-      for (var key in obj) keys.push(key);
-      return keys;
     };
 
     $rootScope.downloadFile = function(fileName, urlFile) {

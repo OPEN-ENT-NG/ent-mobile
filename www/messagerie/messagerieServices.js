@@ -92,13 +92,13 @@ angular
     };
 
     this.saveDraft = function(mail) {
-      return RequestService.post(
+      return RequestService.put(
         `${domainENT}/conversation/draft/${mail.id}`,
         getMailData(mail)
       );
     };
 
-    this.saveDraftResponse = function(mail) {
+    this.saveNewDraftResponse = function(mail) {
       return RequestService.post(
         `${domainENT}/conversation/draft?In-Reply-To=${mail.replyTo}`,
         getMailData(mail)
@@ -155,7 +155,7 @@ angular
       let newMail = {
         subject:
           mail.subject || $rootScope.translationConversation["nosubject"],
-        body: "<p>" + mail.body.replace(/\n/g, "<br/>") + "</p>",
+        body: mail.body.replace(/\n/g, "<br/>"),
         to: mail.to.map(obj => obj.id),
         cc: mail.cc.map(obj => obj.id),
         cci: mail.cci.map(obj => obj.id),
@@ -163,10 +163,6 @@ angular
       };
       if (mail.prevMessage) {
         newMail.body += mail.prevMessage;
-      }
-      newMail.body;
-      if (mail.id) {
-        newMail.id = mail.id;
       }
 
       return newMail;
