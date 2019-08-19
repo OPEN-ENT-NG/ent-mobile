@@ -8,7 +8,6 @@
   "dependencies": {
     "angular-moment": "^0.10.3",
     "bower": "^1.8.8",
-    "com.napolitano.cordova.plugin.intent": "https://github.com/napolitano/cordova-plugin-intent",
     "cordova": "^8.1.1",
     "cordova-android": "8.0.0",
     "cordova-ios": "4.5.5",
@@ -59,7 +58,6 @@
       "cordova-plugin-file": {},
       "cordova-plugin-network-information": {},
       "cordova-plugin-local-notification": {},
-      "com.napolitano.cordova.plugin.intent": {},
       "cordova.plugins.diagnostic": {
         "ANDROID_SUPPORT_VERSION": "28.+"
       },
@@ -67,7 +65,8 @@
       "cordova-plugin-firebase": {},
       "cordova-plugin-androidx": {},
       "cordova-plugin-androidx-adapter": {},
-      "cordova-plugin-vibration": {}
+      "cordova-plugin-vibration": {},
+      "com.napolitano.cordova.plugin.intent": {}
     },
     "platforms": [
       "ios",

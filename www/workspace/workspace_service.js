@@ -132,7 +132,18 @@ angular
     };
   })
 
-  .service("WorkspaceHelper", function() {
+  .service("WorkspaceHelper", function($rootScope) {
+    this.isFileTooBig = function(file) {
+      const maxFileSize = 104857600;
+      return $rootScope.translationWorkspace
+        ? file.size > $rootScope.translationWorkspace["max.file.size"]
+        : file.size > maxFileSize;
+    };
+
+    this.getFileSize = function(file) {
+      return $filter("bytes")(file.size);
+    };
+
     this.getCheckedItems = function() {
       return getChecked(getCollection(arguments));
     };
@@ -206,6 +217,20 @@ angular
   //     }
   //   };
   // })
+
+  .filter("bytes", function() {
+    return function(bytes, precision) {
+      if (isNaN(parseFloat(bytes)) || !isFinite(bytes)) return "-";
+      if (typeof precision === "undefined") precision = 1;
+      var units = ["bytes", "kB", "MB", "GB", "TB", "PB"],
+        number = Math.floor(Math.log(bytes) / Math.log(1024));
+      return (
+        (bytes / Math.pow(1024, Math.floor(number))).toFixed(precision) +
+        " " +
+        units[number]
+      );
+    };
+  })
 
   .factory("MimeTypeFactory", function($rootScope) {
     var mimeTypesArray = [

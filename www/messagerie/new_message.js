@@ -156,7 +156,7 @@ angular
 
       const deleteMyself = function(prevMessage) {
         const filter = array =>
-          array.filter(user => $rootScope.myUser.id != user.id);
+          array.filter(user => $rootScope.myUser.userId != user.id);
 
         return {
           ...prevMessage,

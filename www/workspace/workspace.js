@@ -20,7 +20,15 @@ angular
   ) {
     $scope.$on("$ionicView.beforeEnter", function() {
       $scope.checkable = false;
-      getData();
+
+      if ($stateParams.hasIntent) {
+        WorkspaceService.getTranslation().then(({ data }) => {
+          $rootScope.translationWorkspace = data;
+          getData($stateParams.hasIntent);
+        });
+      } else {
+        getData();
+      }
     });
 
     $scope.isMyDocuments = function() {
@@ -70,10 +78,14 @@ angular
       );
       if (itemsChecked && itemsChecked.length > 0) {
         for (let item of itemsChecked) {
-          if (item.owner === $rootScope.myUser.id) {
+          if (item.owner === $rootScope.myUser.userId) {
             return true;
           } else if (
-            !checkIdInShares(item.shared, [$rootScope.myUser.id], rightKey) &&
+            !checkIdInShares(
+              item.shared,
+              [$rootScope.myUser.userId],
+              rightKey
+            ) &&
             !checkIdInShares(item.shared, $rootScope.myUser.groupsIds, rightKey)
           ) {
             return false;
@@ -310,13 +322,13 @@ angular
         $rootScope.popover = popover;
       });
 
-    function getData(filter, parentId) {
+    function getData(hasIntent) {
       $ionicLoading.show({
         template: '<ion-spinner icon="android"/>'
       });
 
-      filter = filter || $stateParams["filter"];
-      parentId = parentId || $stateParams["folderId"];
+      filter = $stateParams["filter"];
+      parentId = $stateParams["folderId"];
 
       let folders = WorkspaceService.getFolders({ filter, parentId }).then(
         res => {
@@ -339,10 +351,11 @@ angular
         }
       );
 
-      return Promise.all([folders, docs]).then($ionicLoading.hide, err => {
-        $ionicLoading.hide();
-        PopupFactory.getCommonAlertPopup(err);
-      });
+      return Promise.all([folders, docs])
+        .catch(PopupFactory.getCommonAlertPopup)
+        .finally(() => {
+          if (!hasIntent) $ionicLoading.hide();
+        });
     }
 
     $scope.isDocImage = function(metadata) {
@@ -354,4 +367,8 @@ angular
       }
       return "false";
     };
+
+    $rootScope.$on("FileUploaded", () => {
+      getData();
+    });
   });

@@ -149,7 +149,8 @@ angular
           filter: null,
           folderId: null,
           folderName: null,
-          idDoc: null
+          idDoc: null,
+          hasIntent: false
         },
         controller: "WorkspaceFolderContentCtlr",
         templateUrl: "workspace/tree.html"
@@ -234,89 +235,112 @@ angular
   .run(function(
     $ionicPlatform,
     $rootScope,
-    RequestService,
+    $ionicLoading,
     $state,
     AuthenticationService,
     $timeout,
+    WorkspaceHelper,
     UserFactory,
     NotificationService,
     TraductionService,
     WorkspaceService,
     PopupFactory
   ) {
-    function intentHandler(intent) {
-      if (
+    function intentHandler(intent, isColdStart) {
+      const isIntentProper =
         intent &&
         intent.hasOwnProperty("action") &&
-        intent.action == "android.intent.action.SEND"
-      ) {
-        var image = intent.extras["android.intent.extra.STREAM"];
+        intent.action == "android.intent.action.SEND";
 
-        $ionicLoading.show({
-          template: '<ion-spinner icon="android"/>'
-        });
-
-        window.plugins.intent.getRealPathFromContentUrl(
-          image,
-          function(filepath) {
-            window.resolveLocalFileSystemURL(
-              "file://" + filepath,
-              function(entry) {
-                entry.file(function(file) {
-                  if (
-                    $rootScope.translationWorkspace &&
-                    file.size > $rootScope.translationWorkspace["max.file.size"]
-                  ) {
-                    PopupFactory.getAlertPopupNoTitle(
-                      $rootScope.translationWorkspace["file.too.large.limit"] +
-                        $scope.getSizeFile(
-                          parseInt(
-                            $rootScope.translationWorkspace["max.file.size"]
-                          )
-                        )
-                    );
-                  } else {
-                    var reader = new FileReader();
-
-                    reader.onloadend = function() {
-                      var formData = new FormData();
-                      formData.append(
-                        "file",
-                        new Blob([this.result], { type: file.type }),
-                        file.name
-                      );
-
-                      WorkspaceService.uploadDoc(formData).then(
-                        function() {
-                          $state.go("app.workspace_tree", {
-                            filter: "owner"
-                          });
-                          $ionicLoading.hide();
-                        },
-                        function(err) {
-                          $ionicLoading.hide();
-                          console.log("upload failed");
-                          $ionicLoading.hide();
-                          PopupFactory.getCommonAlertPopup(err);
-                        }
-                      );
-                    };
-                    reader.readAsArrayBuffer(file);
-                  }
-                });
-              },
-              function(errdata) {
-                console.log(errdata);
-                $ionicLoading.hide();
-              }
-            );
-          },
-          function(errdata) {
-            console.log(errdata);
-            $ionicLoading.hide();
-          }
-        );
+      if (!isIntentProper) {
+        return;
       }
+
+      const getPath = function(intent) {
+        return new Promise((resolve, reject) => {
+          window.plugins.intent.getRealPathFromContentUrl(
+            intent,
+            resolve,
+            reject
+          );
+        });
+      };
+
+      const isFileTooBig = function(file) {
+        return new Promise((resolve, reject) => {
+          if (WorkspaceHelper.isFileTooBig(file)) {
+            reject(
+              $rootScope.translationWorkspace["file.too.large.limit"] +
+                WorkspaceHelper.getFileSize(
+                  parseInt($rootScope.translationWorkspace["max.file.size"])
+                )
+            );
+          } else {
+            resolve(file);
+          }
+        });
+      };
+
+      const getFileEntry = function(filePath) {
+        return new Promise((resolve, reject) => {
+          window.resolveLocalFileSystemURL(
+            "file://" + filePath,
+            function(entry) {
+              entry.file(resolve);
+            },
+            reject
+          );
+        });
+      };
+
+      const readFile = file => {
+        return new Promise((resolve, reject) => {
+          var reader = new FileReader();
+
+          reader.onloadend = function() {
+            var formData = new FormData();
+            formData.append(
+              "file",
+              new Blob([this.result], { type: file.type }),
+              file.name
+            );
+            resolve(formData);
+          };
+
+          if (!!file) {
+            reader.readAsArrayBuffer(file);
+          } else {
+            reject("No file found");
+          }
+        });
+      };
+
+      $state.go("app.workspace_tree", {
+        filter: "owner",
+        hasIntent: true
+      });
+
+      if (isColdStart) {
+        $timeout(navigator.splashscreen.hide, 500);
+      }
+
+      $ionicLoading.show({
+        template: '<ion-spinner icon="android"/>'
+      });
+
+      return getPath(intent.extras["android.intent.extra.STREAM"])
+        .then(getFileEntry)
+        .then(isFileTooBig)
+        .then(readFile)
+        .then(WorkspaceService.uploadDoc)
+        .then(() => {
+          $rootScope.$emit("FileUploaded");
+        })
+        .catch(err => {
+          console.log(err);
+          PopupFactory.getCommonAlertPopup(err);
+        })
+        .finally($ionicLoading.hide);
     }
 
     $ionicPlatform.ready(function() {
@@ -382,13 +406,12 @@ angular
           }
         });
 
-        TraductionService.getAllTranslation().then(
-          () => {
-            if (!ionic.Platform.isIOS()) {
-              window.plugins.intent.setNewIntentHandler(intentHandler);
-            }
-          },
-          err => PopupFactory.getCommonAlertPopup(err)
+        if (!ionic.Platform.isIOS()) {
+          window.plugins.intent.setNewIntentHandler(intentHandler, false);
+        }
+
+        TraductionService.getAllTranslation().catch(
+          PopupFactory.getCommonAlertPopup
         );
 
         window.FirebasePlugin.onTokenRefresh(token => {
@@ -414,9 +437,24 @@ angular
 
       AuthenticationService.relog(
         () => {
-          console.log("redirecting");
-          $state.go("app.timeline_list");
-          $timeout(navigator.splashscreen.hide, 500);
+          if (!ionic.Platform.isIOS()) {
+            window.plugins.intent.getCordovaIntent(intent => {
+              let isColdStartIntent =
+                intent &&
+                intent.hasOwnProperty("action") &&
+                intent.action !== "android.intent.action.MAIN";
+
+              if (isColdStartIntent) {
+                intentHandler(intent, true);
+              } else {
+                $state.go("app.timeline_list");
+                $timeout(navigator.splashscreen.hide, 500);
+              }
+            });
+          } else {
+            $state.go("app.timeline_list");
+            $timeout(navigator.splashscreen.hide, 500);
+          }
         },
         () => {
           $state.go("login");
@@ -436,7 +474,7 @@ angular
     $cordovaFileOpener2,
     domainENT,
     $ionicHistory,
-    $filter,
+    WorkspaceHelper,
     $http,
     $ionicLoading,
     PopupFactory,
@@ -445,6 +483,7 @@ angular
     $scope.showGridMenu = false;
 
     $rootScope.filterThreads = [];
+    $rootScope.translationWorkspace = {};
 
     $rootScope.listMenu = [
       {
@@ -749,10 +788,6 @@ angular
       return moment(date).format("L");
     };
 
-    $scope.getSizeFile = function(size) {
-      return $filter("bytes")(size);
-    };
-
     $scope.logout = function() {
       window.FirebasePlugin.unregister(() => {
         NotificationService.deleteFcmToken().then(() => {
@@ -772,6 +807,8 @@ angular
     $scope.closePopover = function() {
       $rootScope.popover.hide();
     };
+
+    $scope.getSizeFile = WorkspaceHelper.getFileSize;
 
     $ionicPlatform.ready(function() {
       $rootScope.$on("$stateChangeStart", function(event, toState) {
@@ -1020,20 +1057,6 @@ angular
           }
         });
       }
-    };
-  })
-
-  .filter("bytes", function() {
-    return function(bytes, precision) {
-      if (isNaN(parseFloat(bytes)) || !isFinite(bytes)) return "-";
-      if (typeof precision === "undefined") precision = 1;
-      var units = ["bytes", "kB", "MB", "GB", "TB", "PB"],
-        number = Math.floor(Math.log(bytes) / Math.log(1024));
-      return (
-        (bytes / Math.pow(1024, Math.floor(number))).toFixed(precision) +
-        " " +
-        units[number]
-      );
     };
   })
 

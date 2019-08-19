@@ -159,7 +159,7 @@ angular
         to: mail.to.map(obj => obj.id),
         cc: mail.cc.map(obj => obj.id),
         cci: mail.cci.map(obj => obj.id),
-        from: $rootScope.myUser.id
+        from: $rootScope.myUser.userId
       };
       if (mail.prevMessage) {
         newMail.body += mail.prevMessage;
