@@ -21,12 +21,12 @@
   <ion-content>
     <div class="item listeDestinataires" style="z-index: 4">
       <ion-list>
-        <div ng-repeat="destinataire in email.to track by $index">
+        <div ng-repeat="destinataire in email.to">
           <div class="destinataireMessagerie item-text-wrap">
             <h2>{{ destinataire.displayName }}</h2>
             <i
               class="cancel-circledicon-"
-              ng-click="deleteFromDestinataireTo(destinataire)"
+              ng-click="deleteUser(destinataire,email.to)"
             ></i>
           </div>
         </div>
@@ -39,12 +39,12 @@
 
     <div class="item listeDestinataires" style="z-index: 3">
       <ion-list>
-        <div ng-repeat="destinataire in email.cc track by $index">
+        <div ng-repeat="destinataire in email.cc">
           <div class="destinataireMessagerie item-text-wrap">
             <h2>{{ destinataire.displayName }}</h2>
             <i
               class="cancel-circledicon-"
-              ng-click="deleteFromDestinataireCc(destinataire)"
+              ng-click="deleteUser(destinataire,email.cc)"
             ></i>
           </div>
         </div>
@@ -57,12 +57,12 @@
 
     <div class="item listeDestinataires" style="z-index: 2">
       <ion-list>
-        <div ng-repeat="destinataire in email.cci track by $index">
+        <div ng-repeat="destinataire in email.cci">
           <div class="destinataireMessagerie item-text-wrap">
             <h2>{{ destinataire.displayName }}</h2>
             <i
               class="cancel-circledicon-"
-              ng-click="deleteFromDestinataireCci(destinataire)"
+              ng-click="deleteUser(destinataire,email.cci)"
             ></i>
           </div>
         </div>
@@ -110,7 +110,7 @@
             </p>
             <i
               class="cancel-circledicon-"
-              ng-click="deleteAttachment($index)"
+              ng-click="deleteAttachment(attachment.id)"
             ></i>
           </div>
         </div>

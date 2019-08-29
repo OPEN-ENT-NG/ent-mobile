@@ -5,17 +5,22 @@ angular
     $q,
     domainENT,
     RequestService,
-    $http,
     $rootScope
   ) {
     this.postAttachment = function(messageId, attachment) {
-      return $http.post(
-        domainENT + "/conversation/message/" + messageId + "/attachment",
+      return RequestService.post(
+        `${domainENT}/conversation/message/${messageId}/attachment`,
         attachment,
         {
           transformRequest: angular.identity,
           headers: { "Content-Type": undefined }
         }
+      );
+    };
+
+    this.deleteAttachment = function(messageId, attachmentId) {
+      return RequestService.delete(
+        `${domainENT}/conversation/message/${messageId}/attachment/${attachmentId}`
       );
     };
 
@@ -152,15 +157,15 @@ angular
     };
 
     function getMailData(mail) {
-      let newMail = {
+      const newMail = {
         subject:
           mail.subject || $rootScope.translationConversation["nosubject"],
         body: mail.body.replace(/\n/g, "<br/>"),
         to: mail.to.map(obj => obj.id),
         cc: mail.cc.map(obj => obj.id),
-        cci: mail.cci.map(obj => obj.id),
-        from: $rootScope.myUser.userId
+        cci: mail.cci.map(obj => obj.id)
       };
+
       if (mail.prevMessage) {
         newMail.body += mail.prevMessage;
       }

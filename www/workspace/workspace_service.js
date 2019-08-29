@@ -132,7 +132,7 @@ angular
     };
   })
 
-  .service("WorkspaceHelper", function($rootScope) {
+  .service("WorkspaceHelper", function($filter, $rootScope) {
     this.isFileTooBig = function(file) {
       const maxFileSize = 104857600;
       return $rootScope.translationWorkspace
@@ -141,7 +141,7 @@ angular
     };
 
     this.getFileSize = function(file) {
-      return $filter("bytes")(file.size);
+      return $filter("bytes")(file);
     };
 
     this.getCheckedItems = function() {

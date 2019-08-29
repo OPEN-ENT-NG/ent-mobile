@@ -113,45 +113,19 @@ angular
       $rootScope.downloadFile(attachment.filename, attachmentUrl);
     };
 
+    $scope.getRealName = id => {
+      if (id) {
+        const foundUser = $scope.mail.displayNames.find(user => id == user[0]);
+        return foundUser ? foundUser[1] : "Inconnu";
+      }
+    };
+
     function getMessage(idMessage) {
       $ionicLoading.show({
         template: '<ion-spinner icon="android"/>'
       });
-      MessagerieServices.getMessage(idMessage).then(
-        function(res) {
-          $scope.mail = res.data;
-          $scope.mail.from = getArrayNames([res.data.from], res.data);
-          $scope.mail.to = getArrayNames(res.data.to, res.data);
-          $scope.mail.cc = getArrayNames(res.data.cc, res.data);
-          $scope.mail.cci = getArrayNames(res.data.cci, res.data);
-          $ionicLoading.hide();
-        },
-        function() {
-          $ionicLoading.hide();
-        }
-      );
-    }
-
-    function getArrayNames(ids, mail) {
-      var names = [];
-
-      for (var i = 0; i < ids.length; i++) {
-        names.push({
-          id: ids[i],
-          displayName: getRealName(ids[i], mail.displayNames),
-          entId: i
-        });
-      }
-      return names;
-    }
-
-    function getRealName(id, displayNames) {
-      let returnName = "Inconnu";
-      for (var i = 0; i < displayNames.length; i++) {
-        if (id == displayNames[i][0]) {
-          returnName = displayNames[i][1];
-        }
-      }
-      return returnName;
+      MessagerieServices.getMessage(idMessage)
+        .then(({ data }) => ($scope.mail = data))
+        .finally($ionicLoading.hide);
     }
   });

@@ -21,19 +21,6 @@ angular
       }
     }
 
-    // function getConfig(config = { timeout, headers: {} }) {
-    //   config.headers = { ...$http.defaults.headers.common, ...config.headers };
-    //   console.log("getConfig", config);
-    //   return config;
-    // }
-
-    // this.setDefaultHeaders = function() {
-    //   $http.defaults.headers.common["Content-Type"] =
-    //     "application/x-www-form-urlencoded; charset=UTF-8";
-    //   $http.defaults.headers.common["Accept"] =
-    //     "application/json;charset=UTF-8";
-    // };
-
     this.setDefaultAuth = function(tokens) {
       $http.defaults.headers.common["Authorization"] =
         "Bearer " + tokens.access;
@@ -41,63 +28,58 @@ angular
     };
 
     this.get = function(url, config) {
-      // config = getConfig(config);
       return $q(function(resolve, reject) {
-        $http.get(url, config).then(
-          function(response) {
+        $http
+          .get(url, { timeout, ...config })
+          .then(response => {
             onResolve(resolve, response);
-          },
-          function(err) {
+          })
+          .catch(err => {
             onError(reject, err);
-          }
-        );
+          });
       });
     };
 
     this.delete = function(url, data, config) {
-      // config = getConfig({ ...config, data });
       return $q(function(resolve, reject) {
-        $http.delete(url, config).then(
-          function(response) {
+        $http
+          .delete(url, { timeout, data, ...config })
+          .then(response => {
             onResolve(resolve, response);
-          },
-          function(err) {
+          })
+          .catch(err => {
             onError(reject, err);
-          }
-        );
+          });
       });
     };
 
     this.put = function(url, data, config) {
-      // config = getConfig(config);
       return $q(function(resolve, reject) {
-        $http.put(url, data, config).then(
-          function(response) {
+        $http
+          .put(url, data, { timeout, ...config })
+          .then(response => {
             onResolve(resolve, response);
-          },
-          function(err) {
+          })
+          .catch(err => {
             onError(reject, err);
-          }
-        );
+          });
       });
     };
 
     this.post = function(url, data, config, avoidRedirect) {
-      // console.log("post", config);
-      // config = getConfig(config);
       return $q(function(resolve, reject) {
-        $http.post(url, data, config).then(
-          function(response) {
+        $http
+          .post(url, data, { timeout, ...config })
+          .then(response => {
             if (avoidRedirect) {
               resolve(response);
             } else {
               onResolve(resolve, response);
             }
-          },
-          function(err) {
+          })
+          .catch(err => {
             onError(reject, err);
-          }
-        );
+          });
       });
     };
   });

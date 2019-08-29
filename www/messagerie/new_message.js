@@ -46,19 +46,9 @@ angular
         $rootScope.popover = popover;
       });
 
-    $scope.deleteFromDestinataireTo = function(destinataire) {
-      var index = $scope.email.to.indexOf(destinataire);
-      $scope.email.to.splice(index, 1);
-    };
-
-    $scope.deleteFromDestinataireCc = function(destinataire) {
-      var index = $scope.email.cc.indexOf(destinataire);
-      $scope.email.cc.splice(index, 1);
-    };
-
-    $scope.deleteFromDestinataireCci = function(destinataire) {
-      var index = $scope.email.cci.indexOf(destinataire);
-      $scope.email.cci.splice(index, 1);
+    $scope.deleteUser = function(destinataire, collection) {
+      var index = collection.indexOf(destinataire);
+      collection.splice(index, 1);
     };
 
     $scope.sendMail = function(mail) {
@@ -104,33 +94,41 @@ angular
         template: '<ion-spinner icon="android"/>'
       });
       var attachment = ele.files[0];
-      console.log(attachment);
 
       var formData = new FormData();
       formData.append("file", attachment);
 
-      MessagerieServices.postAttachment($scope.email.id, formData).then(
-        function(result) {
-          console.log(result);
-          $ionicLoading.hide();
+      MessagerieServices.postAttachment($scope.email.id, formData)
+        .then(result => {
           $scope.email.attachments.push({
-            contentType: attachment.type,
             filename: attachment.name,
             size: attachment.size,
-            id: result.data.id,
-            name: "file"
+            id: result.data.id
           });
-          $scope.$apply();
-        },
-        function() {
-          $ionicLoading.hide();
-        }
-      );
+        })
+        .catch(() =>
+          PopupFactory.getAlertPopupNoTitle(
+            "Echec dans l'ajout de la piece jointe"
+          )
+        )
+        .finally($ionicLoading.hide);
     };
 
-    $scope.deleteAttachment = function(index) {
-      $scope.email.attachments.splice(index, 1);
-      $scope.$apply();
+    $scope.deleteAttachment = function(attachmentId) {
+      MessagerieServices.deleteAttachment($scope.email.id, attachmentId)
+        .then(() => {
+          const attachmentIndex = $scope.email.attachments.findIndex(
+            attachment => attachment.id == attachmentId
+          );
+          if (Number.isInteger(attachmentIndex))
+            $scope.email.attachments.splice(attachmentIndex, 1);
+        })
+        .catch(() =>
+          PopupFactory.getAlertPopupNoTitle(
+            "Echec dans la suppression de la piece jointe"
+          )
+        )
+        .finally($ionicLoading.hide);
     };
 
     $scope.downloadAttachment = function(id) {
@@ -140,7 +138,7 @@ angular
         $scope.email.id +
         "/attachment/" +
         id;
-      var attachment = $scope.mail.attachments.find(att => att.id == id);
+      var attachment = $scope.email.attachments.find(att => att.id == id);
       $rootScope.downloadFile(attachment.filename, attachmentUrl);
     };
 
@@ -154,72 +152,137 @@ angular
         attachments: []
       };
 
-      const deleteMyself = function(prevMessage) {
-        const filter = array =>
-          array.filter(user => $rootScope.myUser.userId != user.id);
+      const getDisplayNames = message => {
+        const getDisplayNamesForArray = users =>
+          users.map(id => {
+            const foundUser = prevMessage.displayNames.find(
+              displayName => displayName[0] == id
+            );
+            const displayName = foundUser ? foundUser[1] : "Inconnu";
+            return {
+              displayName,
+              id
+            };
+          });
 
         return {
-          ...prevMessage,
-          to: filter(prevMessage.to),
-          cc: filter(prevMessage.cc),
-          cci: filter(prevMessage.cci)
+          ...message,
+          to: getDisplayNamesForArray(message.to || []),
+          cc: getDisplayNamesForArray(message.cc || []),
+          cci: getDisplayNamesForArray(message.cci || [])
         };
       };
 
-      const deleteHtmlContent = function(text) {
-        const regexp = /<([a-z]+)[^>]*>(.*?)<\/\1>/g;
+      const findAdapter = function(action) {
+        const removeMyself = message => {
+          const filter = array =>
+            array.filter(user => $rootScope.myUser.userId != user.id);
 
-        if (regexp.test(text)) {
-          return deleteHtmlContent(text.replace(regexp, "$2"));
-        } else {
-          return text;
-        }
-      };
+          return {
+            ...message,
+            to: filter(message.to || []),
+            cc: filter(message.cc || []),
+            cci: filter(message.cci || [])
+          };
+        };
 
-      const replyToOneAdapter = function(prevMessage) {
-        return {
+        const headerReponse = () => {
+          var from = prevMessage.from[0].displayName;
+          var date = $filter("date")(prevMessage.date, "dd/MM/yyyy H:mm");
+          var subject = prevMessage.subject;
+
+          var to = "";
+          for (var i = 0; i < prevMessage.to.length; i++) {
+            to += prevMessage.to[i].displayName + " ";
+          }
+
+          if (prevMessage.cc.length > 0) {
+            var cc = "";
+            for (var i = 0; i < prevMessage.cc.length; i++) {
+              cc += prevMessage.cc[i].displayName + " ";
+            }
+          }
+
+          var header =
+            '<p class="row ng-scope"></p>' +
+            '<hr class="ng-scope">' +
+            '<p class="ng-scope"></p>' +
+            '<p class="medium-text ng-scope">' +
+            '<span translate="" key="transfer.from"><span class="no-style ng-scope">De : </span></span>' +
+            '<em class="ng-binding">' +
+            from +
+            "</em>" +
+            "<br>" +
+            '<span class="medium-importance" translate="" key="transfer.date"><span class="no-style ng-scope">Date: </span></span>' +
+            '<em class="ng-binding">' +
+            date +
+            "</em>" +
+            "<br>" +
+            '<span class="medium-importance" translate="" key="transfer.subject"><span class="no-style ng-scope">Objet : </span></span>' +
+            '<em class="ng-binding">' +
+            subject +
+            "</em>" +
+            "<br>" +
+            '<span class="medium-importance" translate="" key="transfer.to"><span class="no-style ng-scope">A : </span></span>' +
+            '<em class="medium-importance">' +
+            to +
+            "</em>";
+
+          if (prevMessage.cc.length > 0) {
+            header += `<br><span class="medium-importance" translate="" key="transfer.cc">
+            <span class="no-style ng-scope">Copie à : </span>
+            </span><em class="medium-importance ng-scope">${cc}</em>`;
+          }
+
+          header +=
+            '</p><blockquote class="ng-scope">' +
+            '<p class="ng-scope" style="font-size: 24px; line-height: 24px;">';
+
+          return header;
+        };
+
+        const deleteHtmlContent = function(text) {
+          const regexp = /<(\S+)[^>]*>(.*)<\/\1>/gs;
+
+          if (regexp.test(text)) {
+            return deleteHtmlContent(text.replace(regexp, "$2"));
+          } else {
+            return text.replace(/\<br\/\>/g, "\n").replace(/&nbsp/g, "");
+          }
+        };
+
+        const replyToOneAdapter = removeMyself({
           ...defaultMessage,
           replyTo: prevMessage.id,
-          to: prevMessage.from,
+          to: [prevMessage.from],
           subject:
             $rootScope.translationConversation["reply.re"] +
             prevMessage.subject,
-          prevMessage: headerReponse(prevMessage) + prevMessage.body
-        };
-      };
+          prevMessage:
+            headerReponse(getDisplayNames(prevMessage)) + prevMessage.body
+        });
 
-      const replyToAllAdapter = function(prevMessage) {
-        return {
-          ...defaultMessage,
-          replyTo: prevMessage.id,
-          to: prevMessage.from.concat(prevMessage.to),
-          subject:
-            $rootScope.translationConversation["reply.re"] +
-            prevMessage.subject,
-          prevMessage: headerReponse(prevMessage) + prevMessage.body
-        };
-      };
+        const replyToAllAdapter = removeMyself({
+          ...replyToOneAdapter,
+          to: prevMessage.to.concat(prevMessage.from)
+        });
 
-      const forwardAdapter = function(prevMessage) {
-        return {
+        const forwardAdapter = removeMyself({
           ...defaultMessage,
           replyTo: prevMessage.id,
           subject:
             $rootScope.translationConversation["reply.fw"] +
             prevMessage.subject,
-          prevMessage: headerReponse(prevMessage) + prevMessage.body
-        };
-      };
+          prevMessage:
+            headerReponse(getDisplayNames(prevMessage)) + prevMessage.body
+        });
 
-      const draftAdapter = function(prevMessage) {
-        return {
+        const draftAdapter = {
           ...defaultMessage,
           ...prevMessage,
-          body: prevMessage.body.toString().replace(/\<br\/\>/g, "\n")
+          body: deleteHtmlContent(prevMessage.body)
         };
-      };
 
-      const findAdapter = function(action) {
         switch (action) {
           case "REPLY_ONE": {
             return replyToOneAdapter;
@@ -233,74 +296,14 @@ angular
           case "DRAFT": {
             return draftAdapter;
           }
-          default: {
-            return () => defaultMessage;
-          }
         }
       };
 
-      return findAdapter(action)({
-        ...deleteMyself(prevMessage),
-        body: deleteHtmlContent(prevMessage.body)
-      });
-    }
-
-    function headerReponse(prevMessage) {
-      var from = prevMessage.from[0].displayName;
-      var date = $filter("date")(prevMessage.date, "dd/MM/yyyy H:mm");
-      var subject = prevMessage.subject;
-
-      var to = "";
-      for (var i = 0; i < prevMessage.to.length; i++) {
-        to += prevMessage.to[i].displayName + " ";
+      if (action) {
+        return getDisplayNames(findAdapter(action));
+      } else {
+        return defaultMessage;
       }
-
-      if (prevMessage.cc.length > 0) {
-        var cc = "";
-        for (var i = 0; i < prevMessage.cc.length; i++) {
-          cc += prevMessage.cc[i].displayName + " ";
-        }
-      }
-
-      var header =
-        '<p class="row ng-scope"></p>' +
-        '<hr class="ng-scope">' +
-        '<p class="ng-scope"></p>' +
-        '<p class="medium-text ng-scope">' +
-        '<span translate="" key="transfer.from"><span class="no-style ng-scope">De : </span></span>' +
-        '<em class="ng-binding">' +
-        from +
-        "</em>" +
-        "<br>" +
-        '<span class="medium-importance" translate="" key="transfer.date"><span class="no-style ng-scope">Date: </span></span>' +
-        '<em class="ng-binding">' +
-        date +
-        "</em>" +
-        "<br>" +
-        '<span class="medium-importance" translate="" key="transfer.subject"><span class="no-style ng-scope">Objet : </span></span>' +
-        '<em class="ng-binding">' +
-        subject +
-        "</em>" +
-        "<br>" +
-        '<span class="medium-importance" translate="" key="transfer.to"><span class="no-style ng-scope">A : </span></span>' +
-        '<em class="medium-importance">' +
-        to +
-        "</em>";
-
-      if (prevMessage.cc.length > 0) {
-        header +=
-          "<br>" +
-          '<span class="medium-importance" translate="" key="transfer.cc"><span class="no-style ng-scope">Copie à : </span></span>' +
-          '<em class="medium-importance ng-scope">' +
-          cc +
-          "</em>";
-      }
-
-      header +=
-        '</p><blockquote class="ng-scope">' +
-        '<p class="ng-scope" style="font-size: 24px; line-height: 24px;">';
-
-      return header;
     }
   })
 
@@ -337,18 +340,17 @@ angular
           scope.search = "";
         };
 
-        function verifiedEmailDestinataire(destToCheck) {
-          for (let destinataire of scope.destinataires) {
-            if (destinataire.id == destToCheck.id) {
-              return false;
+        function pushContact(isUser, contact) {
+          const verifiedEmailDestinataire = destToCheck => {
+            for (let destinataire of scope.destinataires) {
+              if (destinataire.id == destToCheck.id) {
+                return false;
+              }
             }
-          }
-          return true;
-        }
-
-        function pushContact(isUser, contact, contacts) {
+            return true;
+          };
           if (verifiedEmailDestinataire(contact)) {
-            contacts.push({
+            scope.contacts.push({
               id: contact.id,
               displayName: isUser ? contact.displayName : contact.name
             });
@@ -356,27 +358,24 @@ angular
         }
 
         scope.$watch("search", function(newValue, oldValue) {
+          scope.contacts = [];
           if (
             newValue.length > oldValue.length &&
-            newValue.length == attrs.minLength
+            newValue.length >= attrs.minLength
           ) {
             $ionicLoading.show({
               template: '<ion-spinner icon="android"/>'
             });
-            MessagerieServices.getContactsService(newValue).then(function(
-              resp
-            ) {
-              for (let contact of resp.data.groups) {
-                pushContact(false, contact, scope.contacts);
-              }
-              for (let contact of resp.data.users) {
-                pushContact(true, contact, scope.contacts);
-              }
-              $ionicLoading.hide();
-            },
-            $ionicLoading.hide);
-          } else {
-            scope.contacts = [];
+            MessagerieServices.getContactsService(newValue)
+              .then(function(resp) {
+                for (let contact of resp.data.groups) {
+                  pushContact(false, contact);
+                }
+                for (let contact of resp.data.users) {
+                  pushContact(true, contact);
+                }
+              })
+              .finally($ionicLoading.hide);
           }
         });
       },
