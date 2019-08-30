@@ -26,10 +26,7 @@ angular
           $rootScope.myUser.type.toUpperCase()
         ) !== -1
       ) {
-        link +=
-          "mobile." +
-          profileMap[$rootScope.myUser.type.toUpperCase()] +
-          ".html?";
+          link += `${link.charAt(link.length - 1) == '/' ? "" : '/'}mobile.${profileMap[$rootScope.myUser.type.toUpperCase()]}.html?`;
       }
       $state.go("app.pronote", { link: $sce.trustAsResourceUrl(link), name });
     };
