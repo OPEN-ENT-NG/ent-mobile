@@ -1,4 +1,4 @@
 export APPNAME=Paris\ Classe\ Numérique
 export APPDESCRIPTION=Application\ Mobile\ OpenENT\ pour\ la\ mairie\ de\ Paris
-export APPVERSION=2.1.2
-export APPVERSIONCODE=21020
+export APPVERSION=2.1.3
+export APPVERSIONCODE=21030
