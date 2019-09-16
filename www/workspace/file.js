@@ -11,6 +11,7 @@ angular
     $ionicHistory,
     $ionicPopover,
     $state,
+    WorkspaceHelper,
     PopupFactory
   ) {
     var myUserRights = [];
@@ -115,7 +116,7 @@ angular
     $scope.moveDoc = function() {
       $scope.closePopover();
       $state.go("app.workspace_movecopy", {
-        items: WorkspaceHelper.getCheckedItemsId($scope.doc),
+        items: WorkspaceHelper.getCheckedItemsId([$scope.doc]),
         action: "move"
       });
     };
@@ -123,7 +124,7 @@ angular
     $scope.copyDoc = function() {
       $scope.closePopover();
       $state.go("app.workspace_movecopy", {
-        items: WorkspaceHelper.getCheckedItemsId($scope.doc),
+        items: WorkspaceHelper.getCheckedItemsId([$scope.doc]),
         action: "copy"
       });
     };
