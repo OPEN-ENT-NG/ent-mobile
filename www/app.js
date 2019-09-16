@@ -800,14 +800,6 @@ angular
       });
     };
 
-    $scope.openPopover = function($event) {
-      $rootScope.popover.show($event);
-    };
-
-    $scope.closePopover = function() {
-      $rootScope.popover.hide();
-    };
-
     $scope.getSizeFile = WorkspaceHelper.getFileSize;
 
     $ionicPlatform.ready(function() {

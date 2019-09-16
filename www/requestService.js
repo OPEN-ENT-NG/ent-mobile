@@ -4,6 +4,8 @@ angular
   .service("RequestService", function($http, $q, $state, $ionicLoading) {
     var timeout = 30000;
 
+    $http.defaults.headers.post["Content-Type"] ="application/x-www-form-urlencoded; charset=UTF-8"
+
     function onError(reject, error) {
       $ionicLoading.hide();
       reject(error);

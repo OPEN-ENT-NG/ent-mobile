@@ -16,35 +16,39 @@ angular
     $ionicPlatform
   ) {
     $ionicPlatform.ready(function() {
-      $scope.email = prefillNewMessage(
-        $stateParams.action,
-        $stateParams.prevMessage
-      );
+      $scope.$on("$ionicView.beforeEnter", function() {
+        $ionicPopover
+          .fromTemplateUrl("messagerie/popover_messagerie_new.html", {
+            scope: $scope
+          })
+          .then(function(popover) {
+            $scope.popover = popover;
+          });
 
-      let saveDraft = null;
-      if ($stateParams.action == null) {
-        saveDraft = MessagerieServices.saveNewDraft;
-      } else if ($stateParams.action != "DRAFT") {
-        saveDraft = MessagerieServices.saveNewDraftResponse;
-      }
+        $scope.email = prefillNewMessage(
+          $stateParams.action,
+          $stateParams.prevMessage
+        );
 
-      if (saveDraft) {
-        saveDraft($scope.email).then(({ data }) => ($scope.email.id = data.id));
-      }
+        let saveDraft = null;
+        if ($stateParams.action == null) {
+          saveDraft = MessagerieServices.saveNewDraft;
+        } else if ($stateParams.action != "DRAFT") {
+          saveDraft = MessagerieServices.saveNewDraftResponse;
+        }
+
+        if (saveDraft) {
+          saveDraft($scope.email).then(
+            ({ data }) => ($scope.email.id = data.id)
+          );
+        }
+      });
     });
 
     $scope.goToMessagerie = function() {
-      $scope.closePopover();
+      $scope.popover.hide();
       $state.go("app.messagerie");
     };
-
-    $ionicPopover
-      .fromTemplateUrl("messagerie/popover_messagerie_new.html", {
-        scope: $scope
-      })
-      .then(function(popover) {
-        $rootScope.popover = popover;
-      });
 
     $scope.deleteUser = function(destinataire, collection) {
       var index = collection.indexOf(destinataire);
@@ -71,7 +75,7 @@ angular
 
     $scope.saveAsDraft = function(mail) {
       MessagerieServices.saveDraft(mail).then(function(resp) {
-        $scope.closePopover();
+        $scope.popover.hide();
         PopupFactory.getAlertPopup(
           $rootScope.translationConversation["save"],
           $rootScope.translationConversation["draft.saved"]

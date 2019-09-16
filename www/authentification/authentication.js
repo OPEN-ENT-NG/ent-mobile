@@ -28,8 +28,6 @@ angular
           Authorization: "Basic " + base64Value
         }
       };
-      urlParams.headers["Content-Type"] =
-        "application/x-www-form-urlencoded; charset=UTF-8";
       return RequestService.post(url, data, urlParams).then(function(result) {
         let response = {
           access: result.data.access_token,

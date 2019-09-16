@@ -36,7 +36,7 @@ angular
             scope: $scope
           })
           .then(function(popover) {
-            $rootScope.popover = popover;
+            $scope.popover = popover;
           });
       });
     });

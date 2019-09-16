@@ -122,9 +122,9 @@ angular
       );
     };
 
-    this.createFolder = function(name, parentId) {
-      let data = `name=${name}` + (parentId ? `parentId=${parentId}` : "");
-      return RequestService.post(`${domainENT}/workspace/folder?`, data);
+    this.createFolder = function(name, parentFolderId) {
+      let data = `name=${name}${parentFolderId ? "&parentFolderId=" + parentFolderId : ""}`;
+      return RequestService.post(`${domainENT}/workspace/folder`, data);
     };
 
     this.getTranslation = function() {
