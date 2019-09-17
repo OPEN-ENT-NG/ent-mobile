@@ -25,8 +25,13 @@ angular
     };
 
     this.getMessages = function(idFolder, page) {
+      let restrain = this.getNonPersonalFolders()
+        .map(folder => folder.id)
+        .includes(idFolder)
+        ? ""
+        : `&restrain=`;
       return RequestService.get(
-        `${domainENT}/conversation/list/${idFolder}?page=${page}`
+        `${domainENT}/conversation/list/${idFolder}?page=${page}${restrain}`
       );
     };
 
@@ -38,8 +43,13 @@ angular
     };
 
     this.getCount = function(folderId, status) {
+      let restrain = this.getNonPersonalFolders()
+        .map(folder => folder.id)
+        .includes(folderId)
+        ? ""
+        : `&restrain=`;
       return RequestService.get(
-        `${domainENT}/conversation/count/${folderId}?unread=${status}`
+        `${domainENT}/conversation/count/${folderId}?unread=${status}${restrain}`
       );
     };
 
