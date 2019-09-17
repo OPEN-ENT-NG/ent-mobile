@@ -11,8 +11,7 @@ angular
   .controller("ShareItemController", function(
     $scope,
     $stateParams,
-    WorkspaceService,
-    TranslationService
+    WorkspaceService
   ) {
     var items = {};
     $scope.contactShared = [];
@@ -136,7 +135,7 @@ angular
               $scope.contacts.push({
                 ...user,
                 isGroup: false,
-                profile: TranslationService.getTraduction(user.profile),
+                profile: $rootScope.translationWorkspace[user.profile],
                 displayName: user.username
               });
             }

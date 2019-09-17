@@ -62,7 +62,7 @@ angular
       return deferredCombinedItemsAuthors.promise;
     };
 
-    this.getTraduction = function() {
+    this.getTranslation = function() {
       return RequestService.get(domainENT + "/blog/i18n");
     };
 

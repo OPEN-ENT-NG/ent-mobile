@@ -855,7 +855,7 @@ angular
     }
 
     function getTraductionBlogs() {
-      return BlogsService.getTraduction().then(function(resp) {
+      return BlogsService.getTranslation().then(function(resp) {
         $rootScope.translationBlog = resp.data;
         $rootScope.translationBlog[
           "filters.drafts"
