@@ -128,7 +128,7 @@ angular
       $scope.moveDoc = function() {
         $scope.popover.hide();
         $state.go("app.workspace_movecopy", {
-          items: WorkspaceHelper.getCheckedItemsId([$scope.doc]),
+          items: [$scope.doc._id],
           action: "move"
         });
       };
@@ -136,7 +136,7 @@ angular
       $scope.copyDoc = function() {
         $scope.popover.hide();
         $state.go("app.workspace_movecopy", {
-          items: WorkspaceHelper.getCheckedItemsId([$scope.doc]),
+          items: [$scope.doc._id],
           action: "copy"
         });
       };
