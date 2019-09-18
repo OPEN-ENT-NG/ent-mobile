@@ -157,9 +157,10 @@ angular
 
       .state("app.workspace_file", {
         params: {
-          filter: null,
           file: null,
-          folderName: null
+          parentId: null,
+          parentName: null,
+          filter: null
         },
         controller: "WorkspaceFileCtlr",
         templateUrl: "workspace/file.html"

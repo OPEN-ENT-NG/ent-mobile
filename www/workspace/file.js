@@ -46,6 +46,10 @@ angular
         }
       };
 
+      $scope.getTitle = function() {
+        return $stateParams["parentName"];
+      }
+
       $scope.commentDoc = function() {
         if ($scope.isRightToComment()) {
           PopupFactory.getPromptPopup(
@@ -58,16 +62,10 @@ angular
               $ionicLoading.show({
                 template: '<ion-spinner icon="android"/>'
               });
-              WorkspaceService.commentDocById($scope.doc._id, res).then(
-                function(result) {
-                  updateDoc($scope.doc);
-                  $ionicLoading.hide();
-                },
-                function(err) {
-                  $ionicLoading.hide();
-                  PopupFactory.getCommonAlertPopup(err);
-                }
-              );
+              WorkspaceService.commentDocById($scope.doc._id, res)
+                .then(() => updateDoc($scope.doc))
+                .catch(PopupFactory.getCommonAlertPopup)
+                .finally($ionicLoading.hide);
             }
           });
         }
@@ -259,10 +257,10 @@ angular
       };
 
       function updateDoc(doc) {
-        WorkspaceService.getFiles(
-          $stateParams["folderName"],
-          $scope.doc.eParent
-        ).then(function(res) {
+        WorkspaceService.getFiles({
+          filter: $stateParams["filter"],
+          parentId: $stateParams["parentId"]
+        }).then(function(res) {
           for (var i = 0; i < res.data.length; i++) {
             if (res.data[i]._id == doc._id) {
               $scope.doc = res.data[i];

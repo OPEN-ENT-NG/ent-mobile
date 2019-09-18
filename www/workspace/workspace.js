@@ -58,11 +58,11 @@ angular
       };
 
       $scope.hasOnlyOneItemSelected = function() {
-        return WorkspaceHelper.getCheckedItems(
-          $scope.documents,
-          $scope.folders
-        ).length == 1;
-      }
+        return (
+          WorkspaceHelper.getCheckedItems($scope.documents, $scope.folders)
+            .length == 1
+        );
+      };
 
       $scope.hasRight = function(right) {
         let rightKey = "";
@@ -233,7 +233,9 @@ angular
       $scope.goToFile = function(doc) {
         $state.go("app.workspace_file", {
           file: doc,
-          folderName: $stateParams["folderName"]
+          parentId: $stateParams["folderId"],
+          parentName: $scope.getTitle(),
+          filter: $stateParams["filter"]
         });
       };
 
