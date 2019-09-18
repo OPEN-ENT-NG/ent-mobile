@@ -41,6 +41,7 @@ angular
             checked: false
           }
         ];
+        choosenFolder = null
       });
     }
 
@@ -55,15 +56,17 @@ angular
         $rootScope.translationWorkspace["cancel"],
         $rootScope.translationWorkspace["workspace.folder.create"]
       ).then(name => {
-        WorkspaceService.createFolder(name, $stateParams["folderId"]).then(
-          getData,
-          err => {
-            PopupFactory.getAlertPopup(
-              "Erreur de connexion",
-              $rootScope.translationWorkspace[err]
-            );
-          }
-        );
+        if (name) {
+          WorkspaceService.createFolder(name, choosenFolder.id).then(
+            getData,
+            err => {
+              PopupFactory.getAlertPopup(
+                "Erreur de connexion",
+                $rootScope.translationWorkspace[err]
+              );
+            }
+          );
+        }
       });
     };
 
@@ -73,11 +76,13 @@ angular
         "Voulez-vous déplacer ce document dans le dossier " + item.name + "?",
         $rootScope.translationWorkspace["cancel"],
         "OK"
-      ).then(function() {
-        WorkspaceService.moveDocuments($stateParams["items"], item.id).then(
-          () => $ionicHistory.goBack(),
-          err => PopupFactory.getCommonAlertPopup(err)
-        );
+      ).then(answer => {
+        if (answer) {
+          WorkspaceService.moveDocuments($stateParams["items"], item.id).then(
+            () => $ionicHistory.goBack(),
+            err => PopupFactory.getCommonAlertPopup(err)
+          );
+        }
       });
     }
 
@@ -87,11 +92,13 @@ angular
         "Voulez-vous copier ce document dans le dossier " + item.name + "?",
         $rootScope.translationWorkspace["cancel"],
         "OK"
-      ).then(function() {
-        WorkspaceService.copyDocuments($stateParams["items"], item.id).then(
-          () => $ionicHistory.goBack(),
-          err => PopupFactory.getCommonAlertPopup(err)
-        );
+      ).then(answer => {
+        if (answer) {
+          WorkspaceService.copyDocuments($stateParams["items"], item.id).then(
+            () => $ionicHistory.goBack(),
+            err => PopupFactory.getCommonAlertPopup(err)
+          );
+        }
       });
     }
 
