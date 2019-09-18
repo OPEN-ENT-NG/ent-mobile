@@ -57,6 +57,13 @@ angular
         return $stateParams["filter"] === "trash";
       };
 
+      $scope.hasOnlyOneItemSelected = function() {
+        return WorkspaceHelper.getCheckedItems(
+          $scope.documents,
+          $scope.folders
+        ).length == 1;
+      }
+
       $scope.hasRight = function(right) {
         let rightKey = "";
         switch (right) {
@@ -149,15 +156,17 @@ angular
           $rootScope.translationWorkspace["cancel"],
           $rootScope.translationWorkspace["workspace.folder.create"]
         ).then(name => {
-          WorkspaceService.createFolder(name, $stateParams["folderId"]).then(
-            getData(),
-            err => {
-              PopupFactory.getAlertPopup(
-                "Erreur de connexion",
-                $rootScope.translationWorkspace[err]
-              );
-            }
-          );
+          if (name) {
+            WorkspaceService.createFolder(name, $stateParams["folderId"]).then(
+              getData(),
+              err => {
+                PopupFactory.getAlertPopup(
+                  "Erreur de connexion",
+                  $rootScope.translationWorkspace[err]
+                );
+              }
+            );
+          }
         });
       };
 
@@ -288,18 +297,20 @@ angular
             $rootScope.translationWorkspace["cancel"],
             $rootScope.translationWorkspace["confirm"]
           ).then(function(resp) {
-            WorkspaceService.renameDocument(item, resp).then(
-              function(response) {
-                console.log(response);
-                $scope.popover.hide();
-                $scope.checkable = false;
-                getData();
-              },
-              function(err) {
-                $ionicLoading.hide();
-                PopupFactory.getCommonAlertPopup(err);
-              }
-            );
+            if (resp) {
+              WorkspaceService.renameDocument(item, resp).then(
+                function(response) {
+                  console.log(response);
+                  $scope.popover.hide();
+                  $scope.checkable = false;
+                  getData();
+                },
+                function(err) {
+                  $ionicLoading.hide();
+                  PopupFactory.getCommonAlertPopup(err);
+                }
+              );
+            }
           });
         }
       };
