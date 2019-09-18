@@ -49,6 +49,10 @@ angular
         return $stateParams["filter"] === "shared";
       };
 
+      $scope.isApplis = function() {
+        return $stateParams["filter"] === "protected";
+      };
+
       $scope.isTrash = function() {
         return $stateParams["filter"] === "trash";
       };
@@ -203,6 +207,8 @@ angular
           return $stateParams["folderName"];
         } else if ($scope.isMyDocuments()) {
           return $rootScope.translationWorkspace["documents"];
+        } else if ($scope.isApplis()) {
+          return $rootScope.translationWorkspace["appDocuments"];
         } else {
           return $rootScope.translationWorkspace[$stateParams["filter"]];
         }
@@ -341,17 +347,19 @@ angular
         filter = $stateParams["filter"];
         parentId = $stateParams["folderId"];
 
-        let folders = WorkspaceService.getFolders({ filter, parentId }).then(
-          res => {
+        const promises = [];
+
+        promises.push(
+          WorkspaceService.getFolders({ filter, parentId }).then(res => {
             $scope.folders = [];
             for (var i = 0; i < res.data.length; i++) {
               $scope.folders.push({ ...res.data[i], checked: false });
             }
-          }
+          })
         );
 
-        let docs = WorkspaceService.getFiles({ filter, parentId }).then(
-          result => {
+        promises.push(
+          WorkspaceService.getFiles({ filter, parentId }).then(result => {
             $scope.documents = [];
             for (var i = 0; i < result.data.length; i++) {
               $scope.documents.push({
@@ -359,10 +367,10 @@ angular
                 checked: false
               });
             }
-          }
+          })
         );
 
-        return Promise.all([folders, docs])
+        return Promise.all(promises)
           .catch(PopupFactory.getCommonAlertPopup)
           .finally(() => {
             if (!hasIntent) $ionicLoading.hide();
