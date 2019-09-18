@@ -3,8 +3,18 @@ angular
 
   .service("RequestService", function($http, $q, $state, $ionicLoading) {
     var timeout = 30000;
+    var headers = {
+      Authorization: "",
+      "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+    };
 
-    $http.defaults.headers.post["Content-Type"] ="application/x-www-form-urlencoded; charset=UTF-8"
+    function getConfig(config = {}) {
+      return {
+        timeout,
+        ...config,
+        headers: { ...headers, ...(config.headers ? config.headers : {}) }
+      };
+    }
 
     function onError(reject, error) {
       $ionicLoading.hide();
@@ -23,16 +33,16 @@ angular
       }
     }
 
-    this.setDefaultAuth = function(tokens) {
-      $http.defaults.headers.common["Authorization"] =
-        "Bearer " + tokens.access;
+    this.setDefaultAuth = (tokens) => {
+      headers["Authorization"] = "Bearer " + tokens.access;
       return tokens;
     };
 
     this.get = function(url, config) {
+      config = getConfig(config);
       return $q(function(resolve, reject) {
         $http
-          .get(url, { timeout, ...config })
+          .get(url, config)
           .then(response => {
             onResolve(resolve, response);
           })
@@ -43,9 +53,11 @@ angular
     };
 
     this.delete = function(url, data, config) {
+      config = getConfig(config);
+
       return $q(function(resolve, reject) {
         $http
-          .delete(url, { timeout, data, ...config })
+          .delete(url, { ...config, ...data })
           .then(response => {
             onResolve(resolve, response);
           })
@@ -56,9 +68,11 @@ angular
     };
 
     this.put = function(url, data, config) {
+      config = getConfig(config);
+
       return $q(function(resolve, reject) {
         $http
-          .put(url, data, { timeout, ...config })
+          .put(url, data, config)
           .then(response => {
             onResolve(resolve, response);
           })
@@ -69,9 +83,11 @@ angular
     };
 
     this.post = function(url, data, config, avoidRedirect) {
+      config = getConfig(config);
+
       return $q(function(resolve, reject) {
         $http
-          .post(url, data, { timeout, ...config })
+          .post(url, data, config)
           .then(response => {
             if (avoidRedirect) {
               resolve(response);
