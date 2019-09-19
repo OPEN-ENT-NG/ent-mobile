@@ -475,9 +475,9 @@ angular
     domainENT,
     $ionicHistory,
     WorkspaceHelper,
-    $http,
     $ionicLoading,
     PopupFactory,
+    RequestService,
     NotificationService
   ) {
     $scope.showGridMenu = false;
@@ -629,14 +629,13 @@ angular
       };
 
       var downloadFile = function() {
-        var config = {
-          method: "GET",
-          url: $sce.getTrustedResourceUrl($sce.trustAsResourceUrl(urlFile)),
+        let config = {
           responseType: "arraybuffer",
           cache: true
         };
+        let url = $sce.getTrustedResourceUrl($sce.trustAsResourceUrl(urlFile))
 
-        $http(config).then(
+        RequestService.get(url, config).then(
           result => {
             if (result.status === 200 && result.data) {
               $cordovaFile
