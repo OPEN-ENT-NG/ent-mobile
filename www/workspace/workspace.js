@@ -328,10 +328,12 @@ angular
         filter = $stateParams["filter"];
         parentId = $stateParams["folderId"];
 
+        let params= { filter, parentId, directShared: filter == "shared" ? true : null }
+
         const promises = [];
 
         promises.push(
-          WorkspaceService.getFolders({ filter, parentId }).then(res => {
+          WorkspaceService.getFolders(params).then(res => {
             for (var i = 0; i < res.data.length; i++) {
               $scope.folders.push({ ...res.data[i], checked: false });
             }
@@ -339,7 +341,7 @@ angular
         );
 
         promises.push(
-          WorkspaceService.getFiles({ filter, parentId }).then(result => {
+          WorkspaceService.getFiles(params).then(result => {
             for (var i = 0; i < result.data.length; i++) {
               $scope.documents.push({
                 ...MimeTypeFactory.setIcons(result.data[i]),
