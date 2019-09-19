@@ -157,15 +157,10 @@ angular
           $rootScope.translationWorkspace["workspace.folder.create"]
         ).then(name => {
           if (name) {
-            WorkspaceService.createFolder(name, $stateParams["folderId"]).then(
-              getData(),
-              err => {
-                PopupFactory.getAlertPopup(
-                  "Erreur de connexion",
-                  $rootScope.translationWorkspace[err]
-                );
-              }
-            );
+            WorkspaceService.createFolder(name, $stateParams["folderId"])
+              .then(getData)
+              .catch(PopupFactory.getCommonAlertPopup)
+              .finally($ionicLoading.hide);
           }
         });
       };
@@ -187,16 +182,10 @@ angular
 
           var formData = new FormData();
           formData.append("file", newDoc);
-          WorkspaceService.uploadDoc(formData, $stateParams["folderId"]).then(
-            function() {
-              getData();
-              $ionicLoading.hide();
-            },
-            function(err) {
-              $ionicLoading.hide();
-              PopupFactory.getCommonAlertPopup(err);
-            }
-          );
+          WorkspaceService.uploadDoc(formData, $stateParams["folderId"])
+            .then(getData)
+            .catch(PopupFactory.getCommonAlertPopup)
+            .finally($ionicLoading.hide);
         }
       };
 
@@ -249,19 +238,10 @@ angular
           ? WorkspaceService.deleteDocuments
           : WorkspaceService.trashDocuments;
 
-        fct(
-          WorkspaceHelper.getCheckedItemsId($scope.folders, $scope.documents)
-        ).then(
-          result => {
-            console.log(result);
-            getData();
-            $scope.checkable = false;
-          },
-          error => {
-            $ionicLoading.hide();
-            PopupFactory.getCommonAlertPopup(error);
-          }
-        );
+        fct(WorkspaceHelper.getCheckedItemsId($scope.folders, $scope.documents))
+          .then(getData)
+          .catch(PopupFactory.getCommonAlertPopup)
+          .finally($ionicLoading.hide);
       };
 
       $scope.restoreSelectedItems = function() {
@@ -271,18 +251,10 @@ angular
         $scope.popover.hide();
         WorkspaceService.restoreDocuments(
           WorkspaceHelper.getCheckedItemsId($scope.folders, $scope.documents)
-        ).then(
-          res => {
-            console.log(res);
-            $scope.checkable = false;
-            getData();
-            $ionicLoading.hide();
-          },
-          err => {
-            $ionicLoading.hide();
-            PopupFactory.getCommonAlertPopup(err);
-          }
-        );
+        )
+          .then(getData)
+          .catch(PopupFactory.getCommonAlertPopup)
+          .finally($ionicLoading.hide);
       };
 
       $scope.renameItem = function() {
@@ -300,18 +272,10 @@ angular
             $rootScope.translationWorkspace["confirm"]
           ).then(function(resp) {
             if (resp) {
-              WorkspaceService.renameDocument(item, resp).then(
-                function(response) {
-                  console.log(response);
-                  $scope.popover.hide();
-                  $scope.checkable = false;
-                  getData();
-                },
-                function(err) {
-                  $ionicLoading.hide();
-                  PopupFactory.getCommonAlertPopup(err);
-                }
-              );
+              WorkspaceService.renameDocument(item, resp)
+                .then(getData)
+                .catch(PopupFactory.getCommonAlertPopup)
+                .finally($ionicLoading.hide);
             }
           });
         }
@@ -357,6 +321,10 @@ angular
           template: '<ion-spinner icon="android"/>'
         });
 
+        $scope.checkable = false;
+        $scope.documents = [];
+        $scope.folders = [];
+
         filter = $stateParams["filter"];
         parentId = $stateParams["folderId"];
 
@@ -364,7 +332,6 @@ angular
 
         promises.push(
           WorkspaceService.getFolders({ filter, parentId }).then(res => {
-            $scope.folders = [];
             for (var i = 0; i < res.data.length; i++) {
               $scope.folders.push({ ...res.data[i], checked: false });
             }
@@ -373,7 +340,6 @@ angular
 
         promises.push(
           WorkspaceService.getFiles({ filter, parentId }).then(result => {
-            $scope.documents = [];
             for (var i = 0; i < result.data.length; i++) {
               $scope.documents.push({
                 ...MimeTypeFactory.setIcons(result.data[i]),
