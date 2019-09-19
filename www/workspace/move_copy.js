@@ -7,10 +7,16 @@ angular
     WorkspaceService,
     $ionicHistory,
     $stateParams,
-    PopupFactory
+    PopupFactory,
+    $ionicPlatform,
+    $ionicLoading
   ) {
-    choosenFolder = null;
-    getData();
+    $ionicPlatform.ready(function() {
+      $scope.$on("$ionicView.beforeEnter", function() {
+        $scope.choosenFolder = null;
+        handleAction(getData);
+      });
+    });
 
     function getData() {
       var buildRecursiveTree = (parent, folders) => {
@@ -29,10 +35,12 @@ angular
         return result;
       };
 
-      WorkspaceService.getFolders({
+      return WorkspaceService.getFolders({
         filter: "owner",
         hierarchical: true
       }).then(res => {
+        choosenFolder = null;
+
         $scope.tasks = [
           {
             id: null,
@@ -41,12 +49,12 @@ angular
             checked: false
           }
         ];
-        choosenFolder = null
+        return $scope.tasks;
       });
     }
 
     $scope.$on("$ionTreeList:ItemClicked", function(event, item) {
-      choosenFolder = item;
+      $scope.choosenFolder = item;
     });
 
     $scope.newFolder = function() {
@@ -57,49 +65,70 @@ angular
         $rootScope.translationWorkspace["workspace.folder.create"]
       ).then(name => {
         if (name) {
-          WorkspaceService.createFolder(name, choosenFolder.id).then(
-            getData,
-            err => {
-              PopupFactory.getAlertPopup(
-                "Erreur de connexion",
-                $rootScope.translationWorkspace[err]
-              );
-            }
+          handleAction(
+            () => WorkspaceService.createFolder(name, $scope.choosenFolder.id),
+            getData
           );
         }
       });
     };
 
-    function moveItem(item) {
+    function moveItem(choosenFolder) {
       PopupFactory.getConfirmPopup(
         $rootScope.translationWorkspace["move"],
-        "Voulez-vous déplacer ce document dans le dossier " + item.name + "?",
+        "Voulez-vous déplacer ce document dans le dossier " +
+          choosenFolder.name +
+          "?",
         $rootScope.translationWorkspace["cancel"],
         "OK"
       ).then(answer => {
         if (answer) {
-          WorkspaceService.moveDocuments($stateParams["items"], item.id).then(
-            () => $ionicHistory.goBack(),
-            err => PopupFactory.getCommonAlertPopup(err)
+          handleAction(
+            () =>
+              WorkspaceService.moveDocuments(
+                $stateParams["items"],
+                choosenFolder.id || "root"
+              ),
+            () => $ionicHistory.goBack()
           );
         }
       });
     }
 
-    function copyItem(item) {
+    function copyItem(choosenFolder) {
       PopupFactory.getConfirmPopup(
         $rootScope.translationWorkspace["workspace.copy"],
-        "Voulez-vous copier ce document dans le dossier " + item.name + "?",
+        "Voulez-vous copier ce document dans le dossier " +
+          choosenFolder.name +
+          "?",
         $rootScope.translationWorkspace["cancel"],
         "OK"
       ).then(answer => {
         if (answer) {
-          WorkspaceService.copyDocuments($stateParams["items"], item.id).then(
-            () => $ionicHistory.goBack(),
-            err => PopupFactory.getCommonAlertPopup(err)
+          handleAction(
+            () =>
+              WorkspaceService.copyDocuments(
+                $stateParams["items"],
+                choosenFolder.id || "root"
+              ),
+            () => $ionicHistory.goBack()
           );
         }
       });
+    }
+
+    function handleAction(service, successCallback) {
+      if (successCallback == null) {
+        successCallback = () => true;
+      }
+
+      $ionicLoading.show({
+        template: '<ion-spinner icon="android"/>'
+      });
+      service()
+        .then(successCallback)
+        .catch(PopupFactory.getCommonAlertPopup)
+        .finally($ionicLoading.hide);
     }
 
     $scope.getTitle = function() {
@@ -111,10 +140,10 @@ angular
     $scope.selectFolder = function() {
       switch ($stateParams.action) {
         case "move":
-          moveItem(choosenFolder);
+          moveItem($scope.choosenFolder);
           break;
         case "copy":
-          copyItem(choosenFolder);
+          copyItem($scope.choosenFolder);
           break;
         default:
           break;
