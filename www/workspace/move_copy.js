@@ -39,7 +39,7 @@ angular
         filter: "owner",
         hierarchical: true
       }).then(res => {
-        choosenFolder = null;
+        $scope.choosenFolder = null;
 
         $scope.tasks = [
           {
@@ -49,6 +49,8 @@ angular
             checked: false
           }
         ];
+
+        $scope.choosenFolder = $scope.tasks.find(item => item.id == null)
         return $scope.tasks;
       });
     }
@@ -57,7 +59,7 @@ angular
       $scope.choosenFolder = item;
     });
 
-    $scope.newFolder = function() {
+    $scope.newFolder = function(choosenFolder) {
       PopupFactory.getPromptPopup(
         $rootScope.translationWorkspace["folder.new.title"],
         null,
@@ -66,7 +68,7 @@ angular
       ).then(name => {
         if (name) {
           handleAction(
-            () => WorkspaceService.createFolder(name, $scope.choosenFolder.id),
+            () => WorkspaceService.createFolder(name, choosenFolder.id),
             getData
           );
         }
@@ -137,13 +139,13 @@ angular
       ];
     };
 
-    $scope.selectFolder = function() {
+    $scope.selectFolder = function(choosenFolder) {
       switch ($stateParams.action) {
         case "move":
-          moveItem($scope.choosenFolder);
+          moveItem(choosenFolder);
           break;
         case "copy":
-          copyItem($scope.choosenFolder);
+          copyItem(choosenFolder);
           break;
         default:
           break;
