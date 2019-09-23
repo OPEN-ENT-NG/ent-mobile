@@ -53,6 +53,10 @@ angular
 
     $scope.getUnreadMessage = mail => {
       return mail.unread &&
+        (mail.from != $rootScope.myUser.userId ||
+          mail.cc.includes($rootScope.myUser.userId) ||
+          mail.cci.includes($rootScope.myUser.userId) ||
+          mail.to.includes($rootScope.myUser.userId)) &&
         $stateParams.idFolder != "OUTBOX" &&
         $stateParams.idFolder != "DRAFT"
         ? { unreadMessage: true }
