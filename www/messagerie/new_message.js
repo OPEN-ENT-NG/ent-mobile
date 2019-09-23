@@ -45,9 +45,28 @@ angular
       });
     });
 
-    $scope.goToMessagerie = function() {
-      $scope.popover.hide();
-      $state.go("app.messagerie");
+    $scope.deleteDraft = function(mail) {
+      $ionicLoading.show({
+        template: '<ion-spinner icon="android"/>'
+      });
+      MessagerieServices.deleteSelectedMessages([mail], "DRAFT")
+        .then(() => {
+          $scope.popover.hide();
+          PopupFactory.getAlertPopup(
+            $rootScope.translationConversation["delete"],
+            "Brouillon supprimer avec succès."
+          ).then(function() {
+            $ionicHistory.clearCache();
+            $state.go("app.messagerie");
+          });
+        })
+        .catch(() => {
+          PopupFactory.getAlertPopup(
+            $rootScope.translationConversation["delete"],
+            "Echec de la suppression du brouillon."
+          );
+        })
+        .finally($ionicLoading.hide);
     };
 
     $scope.deleteUser = function(destinataire, collection) {
@@ -74,23 +93,27 @@ angular
     };
 
     $scope.saveAsDraft = function(mail) {
-      MessagerieServices.saveDraft(mail).then(function(resp) {
-        $scope.popover.hide();
-        PopupFactory.getAlertPopup(
-          $rootScope.translationConversation["save"],
-          $rootScope.translationConversation["draft.saved"]
-        )
-          .then(function() {
+      $ionicLoading.show({
+        template: '<ion-spinner icon="android"/>'
+      });
+      MessagerieServices.saveDraft(mail)
+        .then(() => {
+          $scope.popover.hide();
+          PopupFactory.getAlertPopup(
+            $rootScope.translationConversation["save"],
+            $rootScope.translationConversation["draft.saved"]
+          ).then(function() {
             $ionicHistory.clearCache();
             $ionicHistory.goBack();
-          })
-          .catch(() => {
-            PopupFactory.getAlertPopup(
-              $rootScope.translationConversation["save"],
-              $rootScope.translationConversation["message.save.fail"]
-            );
           });
-      });
+        })
+        .catch(() => {
+          PopupFactory.getAlertPopup(
+            $rootScope.translationConversation["save"],
+            $rootScope.translationConversation["message.save.fail"]
+          );
+        })
+        .finally($ionicLoading.hide);
     };
 
     $scope.addAttachment = function(ele) {
