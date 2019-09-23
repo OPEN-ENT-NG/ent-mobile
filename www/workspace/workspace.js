@@ -328,7 +328,7 @@ angular
         filter = $stateParams["filter"];
         parentId = $stateParams["folderId"];
 
-        let params= { filter, parentId, directShared: filter == "shared" ? true : null }
+        let params= { filter, parentId, directShared: (filter == "shared" && parentId == null) ? true : null }
 
         const promises = [];
 
