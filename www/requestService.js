@@ -57,7 +57,7 @@ angular
 
       return $q(function(resolve, reject) {
         $http
-          .delete(url, { ...config, ...data })
+          .delete(url, { ...config, data })
           .then(response => {
             onResolve(resolve, response);
           })
