@@ -53,7 +53,7 @@ angular
         ({ data }) => {
           $scope.folders = [...$scope.folders, ...data];
           Promise.all(
-            $scope.folders.map(folder => {
+            $scope.folders.filter(folder => folder.id != "DRAFT" && folder.id != "OUTBOX").map(folder => {
               return MessagerieServices.getCount(
                 folder.id,
                 folder.id.toUpperCase() != "DRAFT"
