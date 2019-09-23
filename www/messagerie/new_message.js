@@ -214,19 +214,19 @@ angular
         };
 
         const headerReponse = () => {
-          var from = prevMessage.from[0].displayName;
+          var from = prevMessage.displayNames.find(user => user[0] == prevMessage.from)[1];
           var date = $filter("date")(prevMessage.date, "dd/MM/yyyy H:mm");
           var subject = prevMessage.subject;
 
           var to = "";
           for (var i = 0; i < prevMessage.to.length; i++) {
-            to += prevMessage.to[i].displayName + " ";
+            to += prevMessage.displayNames.find(user => user[0] == prevMessage.to)[1] + ", ";
           }
 
           if (prevMessage.cc.length > 0) {
             var cc = "";
             for (var i = 0; i < prevMessage.cc.length; i++) {
-              cc += prevMessage.cc[i].displayName + " ";
+              cc += prevMessage.displayNames.find(user => user[0] == prevMessage.cc)[1] + ", ";
             }
           }
 
