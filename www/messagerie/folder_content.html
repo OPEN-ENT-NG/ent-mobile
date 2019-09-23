@@ -25,7 +25,7 @@
     <ion-list>
       <ion-item
         ng-repeat="extraFolder in extraFolders"
-        ui-sref="message_folder({nameFolder: extraFolder.name, idFolder: extraFolder.id})"
+        ui-sref="app.message_folder({nameFolder: extraFolder.name, idFolder: extraFolder.id})"
       >
         <i class="folder-open-2icon-"></i>
         {{ getNameFolder(extraFolder.name) }}
@@ -57,39 +57,7 @@
         : goToMessage(message);"
         on-hold="message.checked = true"
       >
-        <div ng-if="!message.unread" class="message">
-          <input
-            type="checkbox"
-            ng-model="message.checked"
-            ng-checked="message.checked"
-            ng-show="isCheckEnabled()"
-            style="vertical-align: -webkit-baseline-middle;"
-          />
-
-          <div
-            class="item-text-wrap"
-            style="float: right; width: 90%;"
-            ng-if="isCheckEnabled()"
-          >
-            <span class="right">{{ formatDateLocale(message.date) }}</span>
-            {{ getRealName(message.from, message.displayNames) }}
-            <i class="attachicon-" ng-show="message.hasAttachment"></i>
-            <h3>{{ message.subject }}</h3>
-          </div>
-
-          <div
-            class="item-text-wrap"
-            style="float: right; width: 100%;"
-            ng-if="!isCheckEnabled()"
-          >
-            <span class="right">{{ formatDateLocale(message.date) }}</span>
-            {{ getRealName(message.from, message.displayNames) }}
-            <i class="attachicon-" ng-show="message.hasAttachment"></i>
-            <h3>{{ message.subject }}</h3>
-          </div>
-        </div>
-
-        <div ng-if="message.unread" class="unreadMessage">
+        <div ng-class="getUnreadMessage(message)">
           <input
             type="checkbox"
             ng-model="message.checked"

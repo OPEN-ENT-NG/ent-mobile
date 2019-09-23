@@ -51,6 +51,14 @@ angular
       return returnName;
     };
 
+    $scope.getUnreadMessage = mail => {
+      return mail.unread &&
+        $stateParams.idFolder != "OUTBOX" &&
+        $stateParams.idFolder != "DRAFT"
+        ? { unreadMessage: true }
+        : { message: true };
+    };
+
     $scope.restoreMessages = function() {
       let finalFct = () => {
         $ionicListDelegate.closeOptionButtons();
