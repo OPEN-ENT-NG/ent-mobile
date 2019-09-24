@@ -274,14 +274,14 @@ angular
         if ($scope.doc.owner == $rootScope.myUser.userId) {
           $scope.isOwner = true;
         } else {
-          for (var i = 0; i < $scope.doc.shared.length; i++) {
+          for (var i = 0; i < $scope.doc.inheritedShares.length; i++) {
             if (
-              $scope.doc.shared[i].userId == $rootScope.myUser.userId ||
+              $scope.doc.inheritedShares[i].userId == $rootScope.myUser.userId ||
               $rootScope.myUser.groupsIds.some(function(id) {
-                return id == $scope.doc.shared[i]["groupId"];
+                return id == $scope.doc.inheritedShares[i]["groupId"];
               })
             ) {
-              $scope.myUserRights.push($scope.doc.shared[i]);
+              $scope.myUserRights.push($scope.doc.inheritedShares[i]);
               break;
             }
           }
