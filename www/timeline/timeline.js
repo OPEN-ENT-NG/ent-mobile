@@ -28,6 +28,13 @@ angular
       });
     });
 
+    $scope.doRefreshTimeline = function() {
+      getTimeline();
+      getFlashMsg();
+      $scope.$broadcast("scroll.refreshComplete");
+      $scope.$apply();
+    };
+
     $scope.getThumbnail = function(user) {
       return domainENT + "/userbook/avatar/" + user;
     };

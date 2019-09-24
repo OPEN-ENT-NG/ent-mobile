@@ -8,6 +8,9 @@
 
   <ion-content has-bouncing="true">
 
+      <ion-refresher pulling-text="Actualiser" on-refresh="doRefreshTimeline()">
+        </ion-refresher>
+
     <ion-list>
       <ion-item class="flash-message" ng-style="{'background-color' : msg.customColor}" ng-repeat="msg in flashMsg |orderBy:'id'" >
         
