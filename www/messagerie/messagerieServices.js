@@ -187,18 +187,41 @@ angular
   .factory("MoveMessagesPopupFactory", function(
     $ionicPopup,
     MessagerieServices,
-    $rootScope
+    $rootScope,
+    PopupFactory,
+    $ionicLoading
   ) {
+    function handleSubFolders(subfolders) {
+      if (subfolders.length == 0) {
+        return [];
+      } else {
+        return Promise.all(
+          subfolders.map(folder => getFolders(folder.id))
+        ).then(arrayResp => {
+          let result = [];
+          for (let i = 0; i < subfolders.length; i++) {
+            result = [...result, subfolders[i], ...arrayResp[i]];
+          }
+          return result;
+        });
+      }
+    }
+
+    function getFolders(idParent) {
+      return MessagerieServices.getFolders(idParent).then(({ data }) =>
+        handleSubFolders(data)
+      );
+    }
+
     function getPopup(scope) {
       scope.choice = "";
-      MessagerieServices.getFolders().then(
-        function(resp) {
-          scope.folders = resp.data;
-        },
-        function(err) {
-          alert("ERR:" + err);
-        }
-      );
+      $ionicLoading.show({
+        template: '<ion-spinner icon="android"/>'
+      });
+      getFolders()
+        .then(resp => (scope.folders = resp))
+        .catch(PopupFactory.getCommonAlertPopup)
+        .finally($ionicLoading.hide);
 
       scope.selectFolder = function(message) {
         scope.choice = message.id;
