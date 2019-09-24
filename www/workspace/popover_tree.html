@@ -34,7 +34,7 @@
       <a
         class="item"
         ng-click="moveSelectedItems()"
-        ng-show="hasRight('manage') && !isTrash()"
+        ng-show="hasRight('manage') && !isTrash() && !isShared()"
         >{{ translationWorkspace["workspace.move"] }}</a
       >
 
