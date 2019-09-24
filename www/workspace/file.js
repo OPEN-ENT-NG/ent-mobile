@@ -175,7 +175,7 @@ angular
           for (var i = 0; i < $scope.myUserRights.length; i++) {
             if (
               $scope.myUserRights[i][
-                "org-entcore-workspace-service-WorkspaceService|updateDocument"
+                "org-entcore-workspace-controllers-WorkspaceController|updateDocument"
               ]
             ) {
               return true;
@@ -192,7 +192,7 @@ angular
           for (var i = 0; i < $scope.myUserRights.length; i++) {
             if (
               $scope.myUserRights[i][
-                "org-entcore-workspace-service-WorkspaceService|moveTrash"
+                "org-entcore-workspace-controllers-WorkspaceController|moveTrash"
               ]
             ) {
               return true;
@@ -209,7 +209,7 @@ angular
           for (var i = 0; i < $scope.myUserRights.length; i++) {
             if (
               $scope.myUserRights[i][
-                "org-entcore-workspace-service-WorkspaceService|moveDocuments"
+                "org-entcore-workspace-controllers-WorkspaceController|moveDocuments"
               ]
             ) {
               return true;
@@ -226,7 +226,7 @@ angular
           for (var i = 0; i < $scope.myUserRights.length; i++) {
             if (
               $scope.myUserRights[i][
-                "org-entcore-workspace-service-WorkspaceService|shareJson"
+                "org-entcore-workspace-controllers-WorkspaceController|shareJson"
               ]
             ) {
               return true;
@@ -243,10 +243,10 @@ angular
           for (var i = 0; i < $scope.myUserRights.length; i++) {
             if (
               $scope.myUserRights[i][
-                "org-entcore-workspace-service-WorkspaceService|commentDocument"
+                "org-entcore-workspace-controllers-WorkspaceController|commentDocument"
               ] ||
               $scope.myUserRights[i][
-                "org-entcore-workspace-service-WorkspaceService|commentFolder"
+                "org-entcore-workspace-controllers-WorkspaceController|commentFolder"
               ]
             ) {
               return true;
