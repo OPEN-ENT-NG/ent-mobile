@@ -48,7 +48,7 @@ angular
 
       $scope.getTitle = function() {
         return $stateParams["parentName"];
-      }
+      };
 
       $scope.commentDoc = function() {
         if ($scope.isRightToComment()) {
@@ -220,7 +220,9 @@ angular
       };
 
       $scope.isRightToShare = function() {
-        if ($scope.isOwner) {
+        if ($scope.isApplis()) {
+          return false;
+        } else if ($scope.isOwner) {
           return true;
         } else {
           for (var i = 0; i < $scope.myUserRights.length; i++) {
@@ -236,8 +238,14 @@ angular
         return false;
       };
 
+      $scope.isApplis = function() {
+        return $stateParams["filter"] == "protected";
+      };
+
       $scope.isRightToComment = function() {
-        if ($scope.isOwner) {
+        if ($scope.isApplis()) {
+          return false;
+        } else if ($scope.isOwner) {
           return true;
         } else {
           for (var i = 0; i < $scope.myUserRights.length; i++) {
@@ -276,7 +284,8 @@ angular
         } else {
           for (var i = 0; i < $scope.doc.inheritedShares.length; i++) {
             if (
-              $scope.doc.inheritedShares[i].userId == $rootScope.myUser.userId ||
+              $scope.doc.inheritedShares[i].userId ==
+                $rootScope.myUser.userId ||
               $rootScope.myUser.groupsIds.some(function(id) {
                 return id == $scope.doc.inheritedShares[i]["groupId"];
               })

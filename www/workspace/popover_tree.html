@@ -34,7 +34,7 @@
       <a
         class="item"
         ng-click="moveSelectedItems()"
-        ng-show="hasRight('manage') && !isTrash() && !isShared()"
+        ng-show="hasRight('manage') && !isTrash() && !isShared() && !isApplis()"
         >{{ translationWorkspace["workspace.move"] }}</a
       >
 
@@ -42,7 +42,7 @@
       <a
         class="item"
         ng-click="shareSelectedItems()"
-        ng-show="hasRight('share') && !isTrash()"
+        ng-show="hasRight('share') && !isTrash()  && !isApplis()"
         >{{ translationWorkspace["workspace.share"] }}</a
       >
     </ion-list>
