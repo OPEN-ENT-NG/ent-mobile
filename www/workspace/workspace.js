@@ -106,6 +106,15 @@ angular
               item.shared,
               $rootScope.myUser.groupsIds,
               rightKey
+            ) || checkIdInShares(
+              item.inheritedShares,
+              [$rootScope.myUser.userId],
+              rightKey
+            ) ||
+            checkIdInShares(
+              item.inheritedShares,
+              $rootScope.myUser.groupsIds,
+              rightKey
             )
           ) {
             return true;
