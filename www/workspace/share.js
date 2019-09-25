@@ -1,10 +1,3 @@
-var actionsName = {
-  read: 3,
-  contrib: 2,
-  comment: 1,
-  manager: 0
-};
-
 angular
   .module("ent.share_items", ["ent.workspace_service", "ent.message_services"])
 
@@ -18,61 +11,71 @@ angular
   ) {
     $ionicPlatform.ready(function() {
       $scope.$on("$ionicView.beforeEnter", function() {
-        $scope.items = {};
+        $scope.items = $stateParams["files"];
+        $scope.actions = {};
         $scope.contactShared = [];
         $scope.search = "";
+
         $scope.loader = {
           share: false
         };
 
-        getData();
+        if (Object.keys($scope.items).length > 1) {
+          PopupFactory.getAlertPopupNoTitle(
+            "Attention, vous allez modifier des droits de partage sur plusieurs objets : tous les objets sélectionnés seront affectés et disposeront uniquement du nouveau partage."
+          );
+          getData(false);
+        } else {
+          getData(true);
+        }
       });
 
-      function getData() {
-        for (let id of $stateParams["ids"]) {
-          $scope.items[id] = {};
-          WorkspaceService.getSharingItemDatas(id).then(({ data }) => {
+      function getData(shouldLoadShare) {
+        WorkspaceService.getSharingItemDatas($scope.items[0]._id).then(
+          ({ data }) => {
             for (let action of data.actions) {
-              $scope.items[id][action.displayName.split(".")[1]] = action.name;
+              $scope.actions[action.displayName.split(".")[1]] = action.name;
             }
-            if (Object.keys($scope.items).length === 1) {
+
+            if (shouldLoadShare) {
               for (let group of data.groups.visibles) {
                 $scope.addToShared(
                   {
                     ...group,
-                    ...reverseRights($scope.items[id], data.groups.checked[group.id])
+                    ...reverseRights(data.groups.checked[group.id])
                   },
                   true
                 );
               }
+
               for (let user of data.users.visibles) {
                 $scope.addToShared(
                   {
                     ...user,
-                    ...reverseRights($scope.items[id], data.users.checked[user.id])
+                    ...reverseRights(data.users.checked[user.id])
                   },
                   false
                 );
               }
             }
-          });
-        }
+          }
+        );
       }
 
-      var getRights = (actions, share) => {
+      var getRights = contact => {
         let rightForShare = [];
-        for (let action in actions) {
-          if (share.hasOwnProperty(action) && share[action]) {
-            rightForShare = [...rightForShare, ...actions[action]];
+        for (let action in $scope.actions) {
+          if (contact.hasOwnProperty(action) && contact[action]) {
+            rightForShare = [...rightForShare, ...$scope.actions[action]];
           }
         }
         return rightForShare || null;
       };
 
-      var reverseRights = (actions, checked) => {
-        let checkByAction = (action, checked) => {
-          for (let right of action) {
-            if (!checked.includes(right)) {
+      var reverseRights = (userRights) => {
+        let checkByAction = (rights, userRights) => {
+          for (let right of rights) {
+            if (!userRights.includes(right)) {
               return false;
             }
           }
@@ -81,24 +84,15 @@ angular
 
         let result = {};
 
-        for (let action in actions) {
-          result[action] = checkByAction(actions[action], checked);
+        for (let rightName in $scope.actions) {
+          result[rightName] = checkByAction($scope.actions[rightName], userRights);
         }
 
         return result;
       };
 
       $scope.addToShared = (contact, isGroupParam) => {
-        var contactContainsId = id => {
-          for (let share of $scope.contactShared) {
-            if (share.id === id) {
-              return true;
-            }
-          }
-          return false;
-        };
-
-        if (contactContainsId(contact.id)) {
+        if ($scope.contactShared.some(item => item.id == contact.id)) {
           $scope.search = "";
           return;
         }
@@ -123,8 +117,9 @@ angular
         $scope.search = search;
         if ($scope.search.length) {
           $scope.contacts = [];
+
           WorkspaceService.getSharingItemDatas(
-            $stateParams["ids"][0],
+            $scope.items[0]._id,
             $scope.search
           ).then(({ data }) => {
             for (let group of data.groups.visibles) {
@@ -151,14 +146,11 @@ angular
       };
 
       $scope.openSharing = function(contactId) {
-        for (var i = 0; i < $scope.contactShared.length; i++) {
-          if ($scope.contactShared[i].id == contactId) {
-            $scope.contactShared[i].isSharingOpen = !$scope.contactShared[i]
-              .isSharingOpen;
-          } else {
-            $scope.contactShared[i].isSharingOpen = false;
-          }
-        }
+        $scope.contactShared.forEach(
+          contact =>
+            (contact.isSharingOpen =
+              contact.id == contactId ? !contact.isSharingOpen : false)
+        );
       };
 
       $scope.modifyCheckValues = function(contactShared, right) {
@@ -188,22 +180,33 @@ angular
 
       $scope.saveSharing = function() {
         $scope.loader.share = true;
-        for (let id in $scope.items) {
+
+        for (const file of $scope.items) {
           let data = { users: {}, groups: {} };
+
           for (let contactShared of $scope.contactShared) {
             let subdata = contactShared.isGroup ? data.groups : data.users;
-            let rights = getRights($scope.items[id], contactShared);
+            let rights = getRights(contactShared);
             if (rights.length > 0) {
               subdata[contactShared.id] = rights;
             }
           }
 
-          WorkspaceService.updateSharingActions(id, data)
+          if (file.owner !== $rootScope.myUser.userId) {
+            data.users[$rootScope.myUser.userId] = getRights({
+              contrib: true,
+              comment: true,
+              manager: true,
+              read: true
+            });
+          }
+
+          WorkspaceService.updateSharingActions(file._id, data)
             .then(() => {
               $scope.loader.share = false;
               PopupFactory.getAlertPopupNoTitle(
                 "Droits de partage mis à jour avec succès !"
-              )
+              );
             })
             .catch(PopupFactory.getCommonAlertPopup)
             .finally(() => ($scope.loader.share = false));

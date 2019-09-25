@@ -187,8 +187,7 @@ angular
 
       .state("app.workspace_share", {
         params: {
-          filter: null,
-          ids: null
+          files: []
         },
         controller: "ShareItemController",
         templateUrl: "workspace/share.html"

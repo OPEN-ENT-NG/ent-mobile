@@ -309,7 +309,7 @@ angular
         $scope.popover.hide();
         $scope.checkable = false;
         $state.go("app.workspace_share", {
-          ids: WorkspaceHelper.getCheckedItemsId(
+          files: WorkspaceHelper.getCheckedItems(
             $scope.folders,
             $scope.documents
           )

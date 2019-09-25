@@ -42,7 +42,7 @@ angular
 
       $scope.goShare = function() {
         if ($scope.isRightToShare()) {
-          $state.go("app.workspace_share", { ids: [$scope.doc._id] });
+          $state.go("app.workspace_share", { files: [$scope.doc] });
         }
       };
 
