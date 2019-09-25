@@ -82,7 +82,7 @@ angular
           }
         }
 
-        let checkIdInShares = (shares, ids, right) => {
+        const checkIdInShares = (shares, ids, right) => {
           for (let share of shares) {
             for (let id of ids) {
               if ((share.userId == id || share.groupId == id) && share[right]) {
@@ -93,30 +93,33 @@ angular
           return false;
         };
 
+        const hasRight = item => {
+          if (item.owner === $rootScope.myUser.userId) {
+            return true;
+          } else if (
+            checkIdInShares(
+              item.shared,
+              [$rootScope.myUser.userId],
+              rightKey
+            ) ||
+            checkIdInShares(
+              item.shared,
+              $rootScope.myUser.groupsIds,
+              rightKey
+            )
+          ) {
+            return true;
+          } else {
+            return false
+          }
+        }
+
         var itemsChecked = WorkspaceHelper.getCheckedItems(
           $scope.documents,
           $scope.folders
         );
         if (itemsChecked && itemsChecked.length > 0) {
-          for (let item of itemsChecked) {
-            if (item.owner === $rootScope.myUser.userId) {
-              return true;
-            } else if (
-              !checkIdInShares(
-                item.shared,
-                [$rootScope.myUser.userId],
-                rightKey
-              ) &&
-              !checkIdInShares(
-                item.shared,
-                $rootScope.myUser.groupsIds,
-                rightKey
-              )
-            ) {
-              return false;
-            }
-          }
-          return true;
+          return itemsChecked.every(hasRight)
         }
       };
 
