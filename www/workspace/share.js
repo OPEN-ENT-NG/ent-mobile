@@ -42,7 +42,7 @@ angular
                 $scope.addToShared(
                   {
                     ...group,
-                    ...reverseRights(data.groups.checked[group.id])
+                    ...reverseRights(data.groups.checked[group.id] || data.groups.checkedInherited[group.id])
                   },
                   true
                 );
@@ -52,7 +52,7 @@ angular
                 $scope.addToShared(
                   {
                     ...user,
-                    ...reverseRights(data.users.checked[user.id])
+                    ...reverseRights(data.users.checked[user.id] || data.users.checkedInherited[user.id])
                   },
                   false
                 );
@@ -180,6 +180,7 @@ angular
 
       $scope.saveSharing = function() {
         $scope.loader.share = true;
+        const promises = []
 
         for (const file of $scope.items) {
           let data = { users: {}, groups: {} };
@@ -201,16 +202,17 @@ angular
             });
           }
 
-          WorkspaceService.updateSharingActions(file._id, data)
-            .then(() => {
-              $scope.loader.share = false;
-              PopupFactory.getAlertPopupNoTitle(
-                "Droits de partage mis à jour avec succès !"
-              );
-            })
-            .catch(PopupFactory.getCommonAlertPopup)
-            .finally(() => ($scope.loader.share = false));
+          promises.push(WorkspaceService.updateSharingActions(file._id, data))
         }
+
+        Promise.all(promises).then(() => {
+          $scope.loader.share = false;
+          PopupFactory.getAlertPopupNoTitle(
+            "Droits de partage mis à jour avec succès !"
+          );
+        })
+        .catch(PopupFactory.getCommonAlertPopup)
+        .finally(() => ($scope.loader.share = false));
       };
     });
   });
