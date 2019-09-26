@@ -76,7 +76,8 @@ angular
     this.editComment = function(idBlog, idPost, idComment, comment) {
       return RequestService.put(
         `${domainENT}/blog/comment/${idBlog}/${idPost}/${idComment}`,
-        { comment }
+        { comment },
+        { headers: { "content-type": "application/json" } }
       );
     };
 
