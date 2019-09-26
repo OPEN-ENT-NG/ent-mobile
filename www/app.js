@@ -246,7 +246,6 @@ angular
     PopupFactory,
     domainENT
   ) {
-
     const listMenu = [
       {
         name: "Actualites",
@@ -419,7 +418,7 @@ angular
       });
 
       $rootScope.$on("LoggedIn", () => {
-        $rootScope.listMenu = listMenu
+        $rootScope.listMenu = listMenu;
         UserFactory.getUser().then(user => {
           $rootScope.myUser = user;
 
@@ -631,29 +630,38 @@ angular
         });
       };
 
+      var getMimeType = response => {
+        return response.headers("content-type");
+      };
+
+      var getFileName = response => {
+        return /"(.*)"/g.exec(response.headers("content-disposition"))[1];
+      };
+
       var downloadFile = function() {
         let config = {
           responseType: "arraybuffer",
           cache: true
         };
-        let url = $sce.getTrustedResourceUrl($sce.trustAsResourceUrl(urlFile))
+        let url = $sce.getTrustedResourceUrl($sce.trustAsResourceUrl(urlFile));
 
         RequestService.get(url, config).then(
           result => {
             if (result.status === 200 && result.data) {
+              fileName = getFileName(result);
               $cordovaFile
                 .writeFile(
                   filePath,
                   fileName,
                   new Blob([new Uint8Array(result.data)], {
-                    type: result.headers("content-type")
+                    type: getMimeType(result)
                   }),
                   true
                 )
-                .then(() => checkFile(), err => failure(err));
+                .then(checkFile, failure);
             }
           },
-          err => failure(err)
+          failure
         );
       };
 
