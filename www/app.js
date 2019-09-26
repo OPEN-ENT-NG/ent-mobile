@@ -243,8 +243,41 @@ angular
     NotificationService,
     TraductionService,
     WorkspaceService,
-    PopupFactory
+    PopupFactory,
+    domainENT
   ) {
+
+    const listMenu = [
+      {
+        name: "Actualites",
+        icon: "custom-newspaper newspapericon-",
+        state: "app.actualites"
+        // href: "#/app/actualites"
+      },
+      {
+        name: "Blog",
+        icon: "custom-bullhorn bullhornicon-",
+        state: "app.blog-list"
+        // href: "#/app/blog-list"
+      },
+      {
+        name: "Documents",
+        icon: "custom-folder foldericon-",
+        state: "app.workspace"
+        // href: "#/app/workspace"
+      },
+      {
+        name: "Accès ENT Web",
+        icon: "ent-link",
+        state: domainENT
+      },
+      {
+        name: "Assistance ENT",
+        icon: "custom-help-circled help-circledicon-",
+        state: "app.support"
+      }
+    ];
+
     function intentHandler(intent, isColdStart) {
       const isIntentProper =
         intent &&
@@ -386,8 +419,10 @@ angular
       });
 
       $rootScope.$on("LoggedIn", () => {
+        $rootScope.listMenu = listMenu
         UserFactory.getUser().then(user => {
           $rootScope.myUser = user;
+
           if (UserFactory.hasPronoteAccount()) {
             $rootScope.listMenu.unshift({
               name: "Version mobile",
@@ -483,37 +518,6 @@ angular
 
     $rootScope.filterThreads = [];
     $rootScope.translationWorkspace = {};
-
-    $rootScope.listMenu = [
-      {
-        name: "Actualites",
-        icon: "custom-newspaper newspapericon-",
-        state: "app.actualites"
-        // href: "#/app/actualites"
-      },
-      {
-        name: "Blog",
-        icon: "custom-bullhorn bullhornicon-",
-        state: "app.blog-list"
-        // href: "#/app/blog-list"
-      },
-      {
-        name: "Documents",
-        icon: "custom-folder foldericon-",
-        state: "app.workspace"
-        // href: "#/app/workspace"
-      },
-      {
-        name: "Accès ENT Web",
-        icon: "ent-link",
-        state: domainENT
-      },
-      {
-        name: "Assistance ENT",
-        icon: "custom-help-circled help-circledicon-",
-        state: "app.support"
-      }
-    ];
 
     $scope.hasBackView = () => {
       return !!$ionicHistory.backView();
