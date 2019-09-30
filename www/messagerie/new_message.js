@@ -25,8 +25,7 @@ angular
             $scope.popover = popover;
           });
 
-        $scope.email = prefillNewMessage(
-          $stateParams.action,
+        $scope.email = prefillNewMessage($stateParams.action)(
           $stateParams.prevMessage
         );
 
@@ -169,7 +168,7 @@ angular
       $rootScope.downloadFile(attachment.filename, attachmentUrl);
     };
 
-    function prefillNewMessage(action, prevMessage) {
+    function prefillNewMessage(action) {
       const defaultMessage = {
         to: [],
         cc: [],
@@ -179,58 +178,34 @@ angular
         attachments: []
       };
 
-      const getDisplayNames = message => {
-        const getDisplayNamesForArray = users =>
-          users.map(id => {
-            const foundUser = prevMessage.displayNames.find(
-              displayName => displayName[0] == id
-            );
-            const displayName = foundUser ? foundUser[1] : "Inconnu";
-            return {
-              displayName,
-              id
-            };
-          });
+      return prevMessage => {
+        const getDisplayNamesForArray = usersId => usersId.map(getDisplayName);
 
-        return {
-          ...message,
-          to: getDisplayNamesForArray(message.to || []),
-          cc: getDisplayNamesForArray(message.cc || []),
-          cci: getDisplayNamesForArray(message.cci || [])
-        };
-      };
-
-      const findAdapter = function(action) {
-        const removeMyself = message => {
-          const filter = array =>
-            array.filter(user => $rootScope.myUser.userId != user.id);
-
+        const getDisplayName = userId => {
+          const foundUser = prevMessage.displayNames.find(
+            displayName => displayName[0] == userId
+          );
+          const displayName = foundUser ? foundUser[1] : "Inconnu";
           return {
-            ...message,
-            to: filter(message.to || []),
-            cc: filter(message.cc || []),
-            cci: filter(message.cci || [])
+            displayName,
+            userId
           };
         };
 
         const headerReponse = () => {
-          var from = prevMessage.displayNames.find(user => user[0] == prevMessage.from)[1];
+          const getUserArrayToString = users => {
+            let result = "";
+            for (const user of users) {
+              result += getDisplayName(user).displayName + ", ";
+            }
+            return result.substring(0, result.length - 2);
+          };
+
+          var from = getDisplayName(prevMessage.from).displayName;
           var date = $filter("date")(prevMessage.date, "dd/MM/yyyy H:mm");
           var subject = prevMessage.subject;
 
-          var to = "";
-          for (let userTo of prevMessage.to) {
-            to += prevMessage.displayNames.find(user => user[0] == userTo)[1] + ", ";
-          }
-          to = to.substring(0, to.length - 2);
-
-          if (prevMessage.cc.length > 0) {
-            var cc = "";
-            for (let userCc of prevMessage.cc) {
-              cc += prevMessage.displayNames.find(user => user[0] == userCc)[1] + ", ";
-            }
-            cc = cc.substring(0, cc.length - 2);
-          }
+          const to = getUserArrayToString(prevMessage.to);
 
           var header =
             '<p class="row ng-scope"></p>' +
@@ -258,6 +233,8 @@ angular
             "</em>";
 
           if (prevMessage.cc.length > 0) {
+            const cc = getUserArrayToString(prevMessage.cc);
+
             header += `<br><span class="medium-importance" translate="" key="transfer.cc">
             <span class="no-style ng-scope">Copie à : </span>
             </span><em class="medium-importance ng-scope">${cc}</em>`;
@@ -280,61 +257,62 @@ angular
           }
         };
 
-        const replyToOneAdapter = removeMyself({
-          ...defaultMessage,
-          replyTo: prevMessage.id,
-          to: [prevMessage.from],
-          subject:
-            $rootScope.translationConversation["reply.re"] +
-            prevMessage.subject,
-          prevMessage:
-            headerReponse(getDisplayNames(prevMessage)) + prevMessage.body
-        });
-
-        const replyToAllAdapter = removeMyself({
-          ...replyToOneAdapter,
-          to: prevMessage.to
-            .concat(prevMessage.from)
-            .concat(prevMessage.cc)
-        });
-
-        const forwardAdapter = removeMyself({
-          ...defaultMessage,
-          replyTo: prevMessage.id,
-          subject:
-            $rootScope.translationConversation["reply.fw"] +
-            prevMessage.subject,
-          prevMessage:
-            headerReponse(getDisplayNames(prevMessage)) + prevMessage.body
-        });
-
-        const draftAdapter = {
-          ...defaultMessage,
-          ...prevMessage,
-          body: deleteHtmlContent(prevMessage.body)
+        const getAdapter = function(action) {
+          switch (action) {
+            case "REPLY_ONE": {
+              return {
+                ...defaultMessage,
+                replyTo: prevMessage.id,
+                to: getDisplayNamesForArray([prevMessage.from]),
+                subject:
+                  $rootScope.translationConversation["reply.re"] +
+                  prevMessage.subject,
+                prevMessage: headerReponse(prevMessage) + prevMessage.body
+              };
+            }
+            case "REPLY_ALL": {
+              return {
+                ...defaultMessage,
+                replyTo: prevMessage.id,
+                to: getDisplayNamesForArray([
+                  prevMessage.from,
+                  ...prevMessage.to.filter(
+                    user => user != $rootScope.myUser.userId
+                  )
+                ]),
+                cc: getDisplayNamesForArray(prevMessage.cc),
+                subject:
+                  $rootScope.translationConversation["reply.re"] +
+                  prevMessage.subject,
+                prevMessage: headerReponse(prevMessage) + prevMessage.body
+              };
+            }
+            case "FORWARD": {
+              return {
+                ...defaultMessage,
+                replyTo: prevMessage.id,
+                subject:
+                  $rootScope.translationConversation["reply.fw"] +
+                  prevMessage.subject,
+                prevMessage: headerReponse(prevMessage) + prevMessage.body
+              };
+            }
+            case "DRAFT": {
+              return {
+                ...defaultMessage,
+                ...prevMessage,
+                body: deleteHtmlContent(prevMessage.body)
+              };
+            }
+          }
         };
 
-        switch (action) {
-          case "REPLY_ONE": {
-            return replyToOneAdapter;
-          }
-          case "REPLY_ALL": {
-            return replyToAllAdapter;
-          }
-          case "FORWARD": {
-            return forwardAdapter;
-          }
-          case "DRAFT": {
-            return draftAdapter;
-          }
+        if (action) {
+          return getAdapter(action);
+        } else {
+          return defaultMessage;
         }
       };
-
-      if (action) {
-        return getDisplayNames(findAdapter(action));
-      } else {
-        return defaultMessage;
-      }
     }
   })
 
