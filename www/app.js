@@ -418,7 +418,7 @@ angular
       });
 
       $rootScope.$on("LoggedIn", () => {
-        $rootScope.listMenu = listMenu;
+        $rootScope.listMenu = [...listMenu];
         UserFactory.getUser().then(user => {
           $rootScope.myUser = user;
 
