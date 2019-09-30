@@ -219,15 +219,17 @@ angular
           var subject = prevMessage.subject;
 
           var to = "";
-          for (var i = 0; i < prevMessage.to.length; i++) {
-            to += prevMessage.displayNames.find(user => user[0] == prevMessage.to)[1] + ", ";
+          for (let userTo of prevMessage.to) {
+            to += prevMessage.displayNames.find(user => user[0] == userTo)[1] + ", ";
           }
+          to = to.substring(0, to.length - 2);
 
           if (prevMessage.cc.length > 0) {
             var cc = "";
-            for (var i = 0; i < prevMessage.cc.length; i++) {
-              cc += prevMessage.displayNames.find(user => user[0] == prevMessage.cc)[1] + ", ";
+            for (let userCc of prevMessage.cc) {
+              cc += prevMessage.displayNames.find(user => user[0] == userCc)[1] + ", ";
             }
+            cc = cc.substring(0, cc.length - 2);
           }
 
           var header =
@@ -291,7 +293,9 @@ angular
 
         const replyToAllAdapter = removeMyself({
           ...replyToOneAdapter,
-          to: prevMessage.to.concat(prevMessage.from)
+          to: prevMessage.to
+            .concat(prevMessage.from)
+            .concat(prevMessage.cc)
         });
 
         const forwardAdapter = removeMyself({
