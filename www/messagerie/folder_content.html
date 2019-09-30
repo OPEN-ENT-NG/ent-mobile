@@ -12,12 +12,10 @@
   </ion-nav-buttons>
 
   <ion-content
-    class="has-header has-footer"
-    has-bouncing="true"
     ng-show="extraFolders.length>0 || messages.length>0"
   >
     <ion-refresher
-      pulling-text="{{ translationConversation[updating] }}"
+    pulling-text="Actualiser"
       on-refresh="doRefreshMessages()"
     >
     </ion-refresher>

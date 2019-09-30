@@ -6,43 +6,47 @@
     ></button>
   </ion-nav-buttons>
 
-  <ion-content has-bouncing="true">
-
-      <ion-refresher pulling-text="Actualiser" on-refresh="doRefreshTimeline()">
-        </ion-refresher>
+  <ion-content>
+    <ion-refresher pulling-text="Actualiser" on-refresh="doRefreshTimeline()">
+    </ion-refresher>
 
     <ion-list>
-      <ion-item class="flash-message" ng-style="{'background-color' : msg.customColor}" ng-repeat="msg in flashMsg |orderBy:'id'" >
-        
-        <div style="display: inline-block; flex: 1" render-html="{{ msg.contents }}"></div>
+      <ion-item
+        class="flash-message"
+        ng-style="{'background-color' : msg.customColor}"
+        ng-repeat="msg in flashMsg |orderBy:'id'"
+      >
+        <div
+          style="display: inline-block; flex: 1"
+          render-html="{{ msg.contents }}"
+        ></div>
         <i class="icon cancelicon-" ng-click="markAsRead(msg.id)"></i>
       </ion-item>
     </ion-list>
 
-      <ion-list>
-        <ion-item
-          id="{{ timeline._id }}"
-          ng-repeat="timeline in timeline | limitTo:totalDisplayed track by $index"
-          class="card"
+    <ion-list>
+      <ion-item
+        id="{{ timeline._id }}"
+        ng-repeat="timeline in timeline | limitTo:totalDisplayed track by $index"
+        class="card"
+      >
+        <div
+          class="item item-avatar item-text-wrap"
+          ng-click="clickTimelineNotif(timeline.type, timeline.resource, timeline.params)"
         >
-          <div
-            class="item item-avatar item-text-wrap"
-            ng-click="clickTimelineNotif(timeline.type, timeline.resource, timeline.params)"
-          >
-            <img
-              http-src="{{ getThumbnail(timeline.sender) }}"
-              alt="thumbnail"
-            />
-            <div ng-bind-html="alterHTML(timeline.message)"></div>
-          </div>
-        </ion-item>
-      </ion-list>
-      <ion-infinite-scroll
-        on-infinite="loadMore()"
-        distance="10%"
-      ></ion-infinite-scroll>
-    </ion-scroll>
-    <div ng-if="timeline.length == 0 && flashMsg.length == 0" class="empty-content">
+          <img http-src="{{ getThumbnail(timeline.sender) }}" alt="thumbnail" />
+          <div ng-bind-html="alterHTML(timeline.message)"></div>
+        </div>
+      </ion-item>
+    </ion-list>
+    <ion-infinite-scroll
+      on-infinite="loadMore()"
+      distance="10%"
+    ></ion-infinite-scroll>
+    <div
+      ng-if="timeline.length == 0 && flashMsg.length == 0"
+      class="empty-content"
+    >
       Aucune nouveauté trouvée
     </div>
   </ion-content>
