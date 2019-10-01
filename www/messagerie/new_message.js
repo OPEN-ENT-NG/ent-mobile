@@ -188,7 +188,7 @@ angular
           const displayName = foundUser ? foundUser[1] : "Inconnu";
           return {
             displayName,
-            userId
+            id:userId
           };
         };
 
@@ -301,6 +301,9 @@ angular
               return {
                 ...defaultMessage,
                 ...prevMessage,
+                to: getDisplayNamesForArray(prevMessage.to),
+                cc: getDisplayNamesForArray(prevMessage.cc),
+                cci: getDisplayNamesForArray(prevMessage.cci),
                 body: deleteHtmlContent(prevMessage.body)
               };
             }
