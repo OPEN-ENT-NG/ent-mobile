@@ -1,6 +1,6 @@
 {
   "name": "OpenENT_Mobile",
-  "version": "2.1.4",
+  "version": "2.1.8",
   "description": "ENT mobile: An Ionic project",
   "scripts": {
     "android": "ionic cordova run android --device"
@@ -8,6 +8,7 @@
   "dependencies": {
     "angular-moment": "^0.10.3",
     "bower": "^1.8.8",
+    "com.napolitano.cordova.plugin.intent": "https://github.com/napolitano/cordova-plugin-intent",
     "cordova": "^8.1.1",
     "cordova-android": "8.0.0",
     "cordova-ios": "4.5.5",
