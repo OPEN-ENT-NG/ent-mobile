@@ -21,12 +21,19 @@ angular
         STUDENT: "eleve",
         RELATIVE: "parent"
       };
+
+      const getSlash = link => {
+        let service = decodeURIComponent(link)
+        return service.charAt(service.length - 1) == '/' ? "" : '%2F'
+      }
+
       if (
-        Object.keys(profileMap).indexOf(
+        Object.keys(profileMap).includes(
           $rootScope.myUser.type.toUpperCase()
-        ) !== -1
+        )
       ) {
-          link += `${link.charAt(link.length - 1) == '/' ? "" : '/'}mobile.${profileMap[$rootScope.myUser.type.toUpperCase()]}.html?`;
+        let role = profileMap[$rootScope.myUser.type.toUpperCase()]
+          link += `${getSlash(link)}mobile.${role}.html?`;
       }
       $state.go("app.pronote", { link: $sce.trustAsResourceUrl(link), name });
     };
