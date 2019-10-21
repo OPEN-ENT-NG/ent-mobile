@@ -10,6 +10,7 @@ angular
     $sce,
     $state,
     $ionicLoading,
+    PopupFactory,
     RequestService
   ) {
     $scope.noAccountError = "Pas de compte Pronote disponible";
@@ -19,21 +20,20 @@ angular
       var profileMap = {
         TEACHER: "professeur",
         STUDENT: "eleve",
-        RELATIVE: "parent"
+        RELATIVE: "parent",
+        PERSONNEL: "direction"
       };
 
       const getSlash = link => {
-        let service = decodeURIComponent(link)
-        return service.charAt(service.length - 1) == '/' ? "" : '%2F'
-      }
+        let service = decodeURIComponent(link);
+        return service.charAt(service.length - 1) == "/" ? "" : "%2F";
+      };
 
       if (
-        Object.keys(profileMap).includes(
-          $rootScope.myUser.type.toUpperCase()
-        )
+        Object.keys(profileMap).includes($rootScope.myUser.type.toUpperCase())
       ) {
-        let role = profileMap[$rootScope.myUser.type.toUpperCase()]
-          link += `${getSlash(link)}mobile.${role}.html?`;
+        let role = profileMap[$rootScope.myUser.type.toUpperCase()];
+        link += `${getSlash(link)}mobile.${role}.html?`;
       }
       $state.go("app.pronote", { link: $sce.trustAsResourceUrl(link), name });
     };
@@ -60,9 +60,9 @@ angular
               );
               $scope.name = $stateParams.name;
 
-              document.querySelector("#iframe").onload = function() {
-                $ionicLoading.hide();
-              };
+              document.querySelector("#iframe").onload = $ionicLoading.hide
+
+              document.querySelector("#iframe").onerror = PopupFactory.getAlertPopupNoTitle
             },
             function error(err) {
               $ionicLoading.hide();

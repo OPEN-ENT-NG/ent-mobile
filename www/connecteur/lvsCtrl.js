@@ -41,9 +41,9 @@ angular
               $scope.link = $sce.trustAsResourceUrl(response.data.link);
               $scope.name = $stateParams.name;
 
-              document.querySelector("#iframe").onload = function() {
-                $ionicLoading.hide();
-              };
+              document.querySelector("#iframe").onload = $ionicLoading.hide
+
+              document.querySelector("#iframe").onerror = PopupFactory.getAlertPopupNoTitle
             },
             function error(err) {
               $ionicLoading.hide();
