@@ -401,9 +401,9 @@ angular
         // });
       }
 
-      window.requestFileSystem =
-        window.requestFileSystem || window.webkitRequestFileSystem;
-      window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFS, fail);
+      // window.requestFileSystem =
+      //   window.requestFileSystem || window.webkitRequestFileSystem;
+      // window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFS, fail);
 
       $rootScope.$on("$cordovaNetwork:offline", function() {
         console.log("offline");
@@ -468,32 +468,34 @@ angular
         });
       });
 
-      AuthenticationService.relog(
-        () => {
-          if (!ionic.Platform.isIOS()) {
-            window.plugins.intent.getCordovaIntent(intent => {
-              let isColdStartIntent =
-                intent &&
-                intent.hasOwnProperty("action") &&
-                intent.action !== "android.intent.action.MAIN";
+      // AuthenticationService.relog(
+      //   () => {
+      //     if (!ionic.Platform.isIOS()) {
+      //       window.plugins.intent.getCordovaIntent(intent => {
+      //         let isColdStartIntent =
+      //           intent &&
+      //           intent.hasOwnProperty("action") &&
+      //           intent.action !== "android.intent.action.MAIN";
 
-              if (isColdStartIntent) {
-                intentHandler(intent, true);
-              } else {
-                $state.go("app.timeline_list");
-                $timeout(navigator.splashscreen.hide, 500);
-              }
-            });
-          } else {
-            $state.go("app.timeline_list");
-            $timeout(navigator.splashscreen.hide, 500);
-          }
-        },
-        () => {
-          $state.go("login");
-          $timeout(navigator.splashscreen.hide);
-        }
-      );
+      //         if (isColdStartIntent) {
+      //           intentHandler(intent, true);
+      //         } else {
+      //           $state.go("app.timeline_list");
+      //           $timeout(navigator.splashscreen.hide, 500);
+      //         }
+      //       });
+      //     } else {
+      //       $state.go("app.timeline_list");
+      //       $timeout(navigator.splashscreen.hide, 500);
+      //     }
+      //   },
+      //   () => {
+      //     $state.go("login");
+      //     $timeout(navigator.splashscreen.hide);
+      //   }
+      // );
+      $state.go("login");
+      $timeout(navigator.splashscreen.hide);
     });
   })
 

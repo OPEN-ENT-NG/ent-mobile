@@ -61,10 +61,10 @@ angular
     $scope,
     $state,
     AuthenticationService,
-    $rootScope,
     $stateParams,
     $ionicScrollDelegate,
-    NotificationService
+    NotificationService,
+    $window
   ) {
     $scope.user = {};
 
@@ -107,4 +107,22 @@ angular
         }
       );
     };
+
+    $scope.getDownloadAddress = function() {
+      if (ionic.Platform.isAndroid()) {
+        $window.open(
+          "https://play.google.com/store/apps/details?id=com.paris.openent.pcn",
+          "_system"
+        );
+      } else if (ionic.Platform.isIOS()) {
+        $window.open(
+          "https://apps.apple.com/fr/app/paris-classe-numérique/id1458006552",
+          "_system"
+        );
+      }
+    };
+
+    $scope.isPlatformSupported = () => {
+      return ionic.Platform.isIOS() || ionic.Platform.isAndroid()
+    }
   });

@@ -1,0 +1,22 @@
+export PLATFORM_ADDRESS=https://ent.parisclassenumerique.fr
+
+export ENT_ICON=../img/pcn-badge.png
+export ENT_BANNER=img/pcn-banner.png
+export RESOURCE_ROOT=PCN
+
+export CONNECTOR_ID=Application\ Mobile
+export CONNECTOR_SECRET=mdpconnecteursecret
+export CONNECTOR_SCOPE=userbook\ userinfo\ directory\ workspace\ conversation\ document\ blog\ actualites\ avatar\ timeline\ cas\ portal\ support\ xiti\ sso
+
+export ANDROID_APPNAME=fr.openent.mdp.alpha
+export ANDROID_PROJECT_ID=ent-mobile-cgi
+export ANDROID_MOBILESDK_APP_ID=1:250106798274:android:c280b60c4eb49cc1
+export ANDROID_CLIENT_ID=250106798274-q340eaetscv4t4dt4dcv0piirbvvg8i2.apps.googleusercontent.com
+export ANDROID_API_KEY=AIzaSyCDrVROSznSDbDnmFaAdh5jgpduoVEjIaA
+
+export IOS_APPNAME=fr.openent.mdp.alpha
+export IOS_CLIENT_ID=250106798274-9rv7u2nfo4qq06p40efa6im1p4c58arf.apps.googleusercontent.com
+export IOS_REVERSED_CLIENT_ID=com.googleusercontent.apps.250106798274-9rv7u2nfo4qq06p40efa6im1p4c58arf
+export IOS_API_KEY=AIzaSyBNkNrZ8lnLye_a1nADqpgNjMwFJghHZEs
+export IOS_PROJET_ID=ent-mobile-cgi
+export IOS_GOOGLE_APP_ID=1:250106798274:ios:c280b60c4eb49cc1

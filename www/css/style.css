@@ -702,3 +702,12 @@ ion-popover-view.fit ion-content {
   display: flex;
   white-space: normal;
 }
+
+.flex {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex .padding  {
+  padding: 20px
+}
