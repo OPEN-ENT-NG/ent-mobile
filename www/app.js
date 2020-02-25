@@ -455,8 +455,8 @@ angular
           NotificationService.pushNotificationHandler(notification.data);
         });
 
-        window.FirebasePlugin.onNotificationOpen(data => {
-          if (data.tap) {
+        window.FirebasePlugin.onMessageReceived(data => {
+          if (data.tap == "background") {
             NotificationService.pushNotificationHandler(data);
           } else {
             cordova.plugins.notification.local.schedule({
