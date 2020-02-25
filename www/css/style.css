@@ -692,13 +692,29 @@ ion-popover-view.fit ion-content {
   stroke: #ff8500;
 }
 
-.flash-message.flash-message {
-  font-weight: bold;
+ion-item.flash-message {
+  display: flex;
+  flex-direction: row;
+  margin:5px;
   border-radius: 4px;
+}
+
+ion-item.flash-message>* {
+  margin: 5px;
+  color: white;
+}
+
+ion-item.flash-message>div {
+  display: inline-block;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+ion-item.flash-message>div * {
+  font-weight: bold;
   font-size: medium;
   color: white;
-  margin: 10px;
   border: none;
-  display: flex;
   white-space: normal;
 }

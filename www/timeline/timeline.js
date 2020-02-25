@@ -175,9 +175,9 @@ angular
     function getFlashMsg() {
       var scssVariables = {
         red: "#e13a3a",
-        orange: "#FF8500",
+        orange: "#FF9057",
         green: "#46bfaf",
-        blue: "#0c3848"
+        blue: "#2A9CC8"
       };
 
       $ionicLoading.show({

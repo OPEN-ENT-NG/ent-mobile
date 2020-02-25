@@ -16,10 +16,7 @@
         ng-style="{'background-color' : msg.customColor}"
         ng-repeat="msg in flashMsg |orderBy:'id'"
       >
-        <div
-          style="display: inline-block; flex: 1"
-          render-html="{{ msg.contents }}"
-        ></div>
+        <div render-html="{{ msg.contents }}"></div>
         <i class="icon cancelicon-" ng-click="markAsRead(msg.id)"></i>
       </ion-item>
     </ion-list>
