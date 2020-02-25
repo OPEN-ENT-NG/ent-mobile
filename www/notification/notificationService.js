@@ -106,7 +106,7 @@ angular
     };
 
     this.setPermission = callback => {
-      window.FirebasePlugin.hasPermission(({ isEnabled }) => {
+      window.FirebasePlugin.hasPermission(isEnabled => {
         console.log("IOS: has firebase permission ? " + isEnabled);
         if (!isEnabled) {
           window.FirebasePlugin.grantPermission(() => {
