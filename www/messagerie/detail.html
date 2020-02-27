@@ -19,27 +19,27 @@
     <div class="header-mail item">
       <h2>
         <b>{{ translationConversation["from"] }} :</b>
-        {{ getRealName(mail.from) }}
+        {{ getRealName(mail.from, mail.displayNames) }}
       </h2>
 
       <h2>
         <b>{{ translationConversation["to"] }} : </b>
-        <span ng-repeat="personTo in mail.to"
-          >{{ getRealName(personTo) }}<span ng-if="!$last">, </span></span
+        <span ng-repeat="personTo in mail.to track by $index"
+          >{{ getRealName(personTo, mail.displayNames) }}<span ng-if="!$last">, </span></span
         >
       </h2>
 
       <h2 ng-show="mail.cc.length != 0">
         <b>{{ translationConversation["cc"] }} : </b>
-        <span ng-repeat="personCc in mail.cc"
-          >{{ getRealName(personCc) }}<span ng-if="!$last">, </span></span
+        <span ng-repeat="personCc in mail.cc track by $index"
+          >{{ getRealName(personCc, mail.displayNames) }}<span ng-if="!$last">, </span></span
         >
       </h2>
 
       <h2 ng-show="mail.cci.length != 0">
         <b>{{ translationConversation["cci"] }} : </b>
-        <span ng-repeat="personCci in mail.cci"
-          >{{ getRealName(personCci) }}<span ng-if="!$last">, </span></span
+        <span ng-repeat="personCci in mail.cci track by $index"
+          >{{ getRealName(personCci, mail.displayNames) }}<span ng-if="!$last">, </span></span
         >
       </h2>
 
