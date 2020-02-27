@@ -188,7 +188,7 @@ angular
           const displayName = foundUser ? foundUser[1] : "Inconnu";
           return {
             displayName,
-            id:userId
+            id: userId
           };
         };
 
@@ -257,6 +257,8 @@ angular
           }
         };
 
+        const distinct = (value, index, self) => self.indexOf(value) === index;
+
         const getAdapter = function(action) {
           switch (action) {
             case "REPLY_ONE": {
@@ -274,13 +276,15 @@ angular
               return {
                 ...defaultMessage,
                 replyTo: prevMessage.id,
-                to: getDisplayNamesForArray([
-                  prevMessage.from,
-                  ...prevMessage.to.filter(
-                    user => user != $rootScope.myUser.userId
-                  )
-                ]),
-                cc: getDisplayNamesForArray(prevMessage.cc),
+                to: getDisplayNamesForArray(
+                  [
+                    prevMessage.from,
+                    ...prevMessage.to.filter(
+                      user => user != $rootScope.myUser.userId
+                    )
+                  ].filter(distinct)
+                ),
+                cc: getDisplayNamesForArray(prevMessage.cc.filter(id => id !== prevMessage.from)),
                 subject:
                   $rootScope.translationConversation["reply.re"] +
                   prevMessage.subject,
