@@ -41,14 +41,9 @@ angular
       });
     });
 
-    $rootScope.getRealName = function(id, displayNames) {
-      var returnName = "Inconnu";
-      for (var i = 0; i < displayNames.length; i++) {
-        if (id == displayNames[i][0]) {
-          returnName = displayNames[i][1];
-        }
-      }
-      return returnName;
+    $scope.getRealName = (id, displayNames) => {
+      const foundUser = displayNames.find(user => id == user[0]);
+      return foundUser ? foundUser[1] : "Inconnu";
     };
 
     $scope.getUnreadMessage = mail => {

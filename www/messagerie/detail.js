@@ -115,13 +115,9 @@ angular
         $rootScope.downloadFile(attachment.filename, attachmentUrl);
       };
 
-      $scope.getRealName = id => {
-        if (id) {
-          const foundUser = $scope.mail.displayNames.find(
-            user => id == user[0]
-          );
-          return foundUser ? foundUser[1] : "Inconnu";
-        }
+      $scope.getRealName = (id, displayNames) => {
+        const foundUser = displayNames.find(user => id == user[0]);
+        return foundUser ? foundUser[1] : "Inconnu";
       };
 
       function getMessage(idMessage) {
