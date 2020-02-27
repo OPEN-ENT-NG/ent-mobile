@@ -596,31 +596,32 @@ angular
       return result;
     };
 
-    $rootScope.downloadFile = function(fileName, urlFile) {
+    $rootScope.downloadFile = function(originalFileName, urlFile) {
       $ionicLoading.show({
         template: '<ion-spinner icon="android"/>'
       });
 
-      var filePath = ionic.Platform.isIOS()
+      const filePath = ionic.Platform.isIOS()
         ? cordova.file.dataDirectory
         : cordova.file.externalRootDirectory + "Download/";
+
+      let fileName = originalFileName;
 
       var failure = function(err) {
         PopupFactory.getCommonAlertPopup(err);
         $ionicLoading.hide();
       };
 
-      var checkFile = function() {
-        $cordovaFile.checkFile(filePath, fileName).then(
-          fileEntry => openFile(fileEntry),
-          err => {
-            if (err.code === 1) {
-              downloadFile();
-            } else {
-              failure(err);
-            }
+      var checkFile = function(errorCallback) {
+        $cordovaFile.checkFile(filePath, fileName).then(openFile, err => {
+          if (errorCallback != undefined) {
+            errorCallback();
+          } else if (err.code === 1) {
+            downloadFile();
+          } else {
+            failure(err);
           }
-        );
+        });
       };
 
       var openFile = function(fileEntry) {
@@ -634,8 +635,28 @@ angular
         return response.headers("content-type");
       };
 
-      var getFileName = response => {
-        return /"(.*)"/g.exec(response.headers("content-disposition"))[1];
+      var formatFile = fileRequestResult => {
+        RequestService.get("mimeTypes.json").then(mimeTypeMap => {
+          const extension = mimeTypeMap.data[getMimeType(fileRequestResult)];
+          if (!fileName.endsWith(extension)) {
+            fileName = fileName + extension;
+          }
+          const fileData = new Blob([new Uint8Array(fileRequestResult.data)], {
+            type: getMimeType(fileRequestResult)
+          });
+          const file = {
+            filePath,
+            fileName,
+            fileData
+          };
+          checkFile(() => writeFile(file));
+        }, failure);
+      };
+
+      var writeFile = ({ filePath, fileName, fileData }) => {
+        $cordovaFile
+          .writeFile(filePath, fileName, fileData, true)
+          .then(checkFile, failure);
       };
 
       var downloadFile = function() {
@@ -645,24 +666,13 @@ angular
         };
         let url = $sce.getTrustedResourceUrl($sce.trustAsResourceUrl(urlFile));
 
-        RequestService.get(url, config).then(
-          result => {
-            if (result.status === 200 && result.data) {
-              fileName = getFileName(result);
-              $cordovaFile
-                .writeFile(
-                  filePath,
-                  fileName,
-                  new Blob([new Uint8Array(result.data)], {
-                    type: getMimeType(result)
-                  }),
-                  true
-                )
-                .then(checkFile, failure);
-            }
-          },
-          failure
-        );
+        RequestService.get(url, config).then(result => {
+          if (result.status % 200 < 100 && !!result.data) {
+            formatFile(result);
+          } else {
+            failure();
+          }
+        }, failure);
       };
 
       if (!ionic.Platform.isIOS()) {
@@ -1069,8 +1079,8 @@ angular
         let data = angular.copy(attrs.renderHtml);
         if (data != null) {
           data = data.replace(
-            /href="([\/\w\d-]+)"><div class="download"><\/div>(.+)<\/a>/g,
-            `ng-click="downloadFile('$2', '${domainENT}$1')"><div class="download"></div>$2</a>`
+            /<a href="([\/\w\d-]+)"><div class="download"><\/div>([^<>]+)<\/a>/g,
+            `<a ng-click="downloadFile('$2', '${domainENT}$1')">$2</a>`
           );
           data = data.replace(
             /href=(["'])(http.*?)\1/g,
@@ -1078,7 +1088,7 @@ angular
           );
           data = data.replace(
             /href=(["'])(.*?)\1/g,
-            `ng-click=\"openUrl('${domainENT}$2')\"`
+            `ng-click="openUrl('${domainENT}$2')"`
           );
           data = data.replace(
             /<img src="(http(s?):\/\/[\S]+)"/g,
@@ -1086,7 +1096,7 @@ angular
           );
           data = data.replace(
             /<img src="(\/[\S]+)"/g,
-            '<img http-src="' + domainENT + '$1" '
+            `<img http-src="${domainENT}$1"`
           );
           $compile(element.html($sce.trustAsHtml(data)).contents())(scope);
         }
