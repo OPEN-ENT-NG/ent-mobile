@@ -13,8 +13,14 @@
   margin: 3px;
 }
 
-.support .list {
-  height: 100%;
+.support > .scroll > .list {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.support #textarea {
+  flex: 1;
 }
 
 .support .item {
@@ -22,7 +28,7 @@
   overflow: inherit;
 }
 
-.support .list > .item-select {
+.support .list .item-select {
   padding-top: 15px;
   padding-bottom: 17px;
 }
