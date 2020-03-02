@@ -108,6 +108,17 @@ angular
       );
     };
 
+    this.uploadAttachment = function (doc) {
+      return RequestService.post(
+        `${domainENT}/workspace/document?protected=true&application=media-library`,
+        doc,
+        {
+          transformRequest: angular.identity,
+          headers: { "Content-Type": undefined }
+        }
+      );
+    }
+
     this.moveDocuments = function(ids, targetId) {
       return RequestService.put(
         `${domainENT}/workspace/documents/move/${targetId}`,

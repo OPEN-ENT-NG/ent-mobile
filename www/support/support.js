@@ -8,7 +8,8 @@ angular
     $state,
     SupportService,
     PopupFactory,
-    UserFactory
+    UserFactory,
+    WorkspaceService
   ) {
     $ionicPlatform.ready(function() {
       $scope.$on("$ionicView.beforeEnter", function() {
@@ -26,7 +27,8 @@ angular
             category: $scope.apps[0].address,
             school_id: $scope.schools[0].id,
             subject: "",
-            description: ""
+            description: "",
+            attachments: []
           };
         });
 
@@ -49,11 +51,34 @@ angular
       );
     };
 
-    $scope.addAttachment = function() {
-      PopupFactory.getAlertPopup(
-        "Non disponible",
-        "Cette fonctionnalité n'est pas encore disponible."
-      );
+    $scope.addAttachment = function(ele) {
+      $ionicLoading.show({
+        template: '<ion-spinner icon="android"/>'
+      });
+      var attachment = ele.files[0];
+
+      var formData = new FormData();
+      formData.append("file", attachment);
+
+      WorkspaceService.uploadAttachment(formData)
+        .then(({data}) => {
+          $scope.ticket.attachments.push({
+            name: data.metadata.filename,
+            size: data.metadata.size,
+            id: data._id
+          });
+        })
+        .catch(() =>
+          PopupFactory.getAlertPopupNoTitle(
+            "Echec dans l'ajout de la piece jointe"
+          )
+        )
+        .finally($ionicLoading.hide);
+    };
+
+    $scope.deleteAttachment = function(attachmentId) {
+      const newAttachments = $scope.ticket.attachments.filter(att => att.id != attachmentId)
+      $scope.ticket.attachments = newAttachments
     };
 
     $scope.saveTicket = function() {

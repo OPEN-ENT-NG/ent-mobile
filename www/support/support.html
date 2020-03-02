@@ -1,11 +1,11 @@
 <ion-view hide-back-button="true" view-title="Remonter un incident">
   <ion-nav-buttons side="right">
-    <label class="logoAjoutPj" on-touch="addAttachment()">
-      <!-- <input
-          style="display:none;"
-          type="file"
-          onchange="angular.element(this).scope().addAttachment(this)"
-        /> -->
+    <label class="logoAjoutPj">
+      <input
+        style="display:none;"
+        type="file"
+        onchange="angular.element(this).scope().addAttachment(this)"
+      />
       <i class="button button-icon button-clear attachicon-"></i>
     </label>
   </ion-nav-buttons>
@@ -14,10 +14,10 @@
       <label class="item" id="subtitle">
         <span>Uniquement pour les incidents de l’application mobile. </span>
       </label>
-      <label class="item item-input item-select item-stacked-label">
-        <span class="input-label">{{
-          translation["support.ticket.category"]
-        }}</span>
+      <label class="item item-input item-select">
+        <span class="input-label"
+          >{{ translation["support.ticket.category"] }}</span
+        >
         <select
           ng-model="ticket.category"
           ng-options="app.address as getTranslation(app) for app in apps | orderBy:getTranslation"
@@ -25,10 +25,10 @@
         </select>
       </label>
 
-      <label class="item item-input item-select item-stacked-label">
-        <span class="input-label">{{
-          translation["support.ticket.school"]
-        }}</span>
+      <label class="item item-input item-select">
+        <span class="input-label"
+          >{{ translation["support.ticket.school"] }}</span
+        >
         <select
           ng-model="ticket.school_id"
           ng-options="school.id as school.name for school in schools"
@@ -37,9 +37,9 @@
 
       <label class="display-on-keyboard item item-input item-stacked-label">
         <span style="color: red">*</span
-        ><span class="input-label">{{
-          translation["support.ticket.subject"]
-        }}</span>
+        ><span class="input-label"
+          >{{ translation["support.ticket.subject"] }}</span
+        >
         <input type="text" ng-model="ticket.subject" />
       </label>
 
@@ -49,12 +49,33 @@
       >
         <div>
           <span style="color: red">*</span
-          ><span class="input-label">{{
-            translation["support.ticket.description"]
-          }}</span>
+          ><span class="input-label"
+            >{{ translation["support.ticket.description"] }}</span
+          >
         </div>
-        <textarea rows="5" type="text" ng-model="ticket.description"></textarea>
+        <textarea type="text" ng-model="ticket.description"></textarea>
       </label>
+
+      <div id="attachments" class="item" ng-if="ticket.attachments.length>0">
+        <ion-list>
+          <div ng-repeat="attachment in ticket.attachments track by $index">
+            <div class="ajoutPJ item-text-wrap">
+              <i
+                class="downloadicon-"
+                ng-click="downloadAttachment(attachment.id)"
+              ></i>
+              <p>
+                {{ attachment.name }} ({{ getSizeFile(attachment.size) }})
+              </p>
+              <i
+                class="cancel-circledicon-"
+                ng-click="deleteAttachment(attachment.id)"
+              ></i>
+            </div>
+          </div>
+        </ion-list>
+      </div>
+
       <button class="button button-block" ng-click="saveTicket()">
         {{ translation["support.ticket.save"] }}
       </button>
