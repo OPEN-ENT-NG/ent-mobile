@@ -455,6 +455,16 @@ button.item.item-button-right {
   }
 }
 
+.item-button-left.item-button-right{
+   .button{
+     &:first-child {
+      right: auto;
+    }
+     &:last-child {
+      left: auto;
+    }
+   }
+}
 
 // Item Avatar
 // -------------------------------
@@ -811,5 +821,10 @@ button.item.item-button-right {
     &:before{
       margin: 0 auto;
     }
+  }
+
+  ion-option-button:last-child {
+    padding-right: calc(constant(safe-area-inset-right) + #{$button-padding});
+    padding-right: calc(env(safe-area-inset-right) + #{$button-padding});
   }
 }
