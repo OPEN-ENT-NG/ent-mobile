@@ -74,7 +74,8 @@
   padding: 25px;
   font-size: 20px;
   position: fixed;
-  bottom: 5%; /* Adjust height */
+  bottom: calc(constant(safe-area-inset-bottom) + 5%) !important;
+  bottom: calc(env(safe-area-inset-bottom) + 5%) !important;
   right: 5%; /* Adjust position */
   z-index: 1000;
 }
@@ -105,7 +106,8 @@
   padding: 25px;
   font-size: 20px;
   position: fixed;
-  bottom: 8%; /* Adjust height */
+  bottom: calc(constant(safe-area-inset-bottom) + 8%) !important;
+  bottom: calc(env(safe-area-inset-bottom) + 8%) !important;
   right: 5%; /* Adjust position */
   z-index: 1000;
 }
@@ -136,7 +138,7 @@
   padding: 25px;
   font-size: 20px;
   position: fixed;
-  top: 10%; /* Adjust height */
+  top: 7%; /* Adjust height */
   right: 5%; /* Adjust position */
   z-index: 1000;
 }
