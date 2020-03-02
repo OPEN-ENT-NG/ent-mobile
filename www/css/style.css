@@ -659,7 +659,8 @@ ion-popover-view.fit ion-content {
 }
 
 .bar-footer {
-  height: 50px !important;
+  height: calc(constant(safe-area-inset-bottom) + 49px) !important;
+  height: calc(env(safe-area-inset-bottom) + 49px) !important;
 }
 
 .bar-footer .menu-button span.menu-button-text {
@@ -695,26 +696,31 @@ ion-popover-view.fit ion-content {
 ion-item.flash-message {
   display: flex;
   flex-direction: row;
-  margin:5px;
+  margin: 5px;
   border-radius: 4px;
 }
 
-ion-item.flash-message>* {
+ion-item.flash-message > * {
   margin: 5px;
   color: white;
 }
 
-ion-item.flash-message>div {
+ion-item.flash-message > div {
   display: inline-block;
   flex: 1;
   display: flex;
   flex-direction: column;
 }
 
-ion-item.flash-message>div * {
+ion-item.flash-message > div * {
   font-weight: bold;
   font-size: medium;
   color: white;
   border: none;
   white-space: normal;
+}
+
+.tabs-top .tabs {
+  height: 49px !important;
+  padding-bottom: 0px !important;
 }
