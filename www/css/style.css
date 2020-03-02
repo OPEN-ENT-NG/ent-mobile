@@ -7,7 +7,8 @@ ion-popover-view.fit ion-content {
 }
 
 .has-footer {
-  bottom: 52px !important;
+  bottom: calc(constant(safe-area-inset-bottom) + 49px) !important;
+  bottom: calc(env(safe-area-inset-bottom) + 49px) !important;
 }
 
 .scroll {
@@ -422,7 +423,8 @@ ion-popover-view.fit ion-content {
   background-color: #fff;
   width: 50%;
   left: 37%;
-  bottom: 60px;
+  bottom: calc(constant(safe-area-inset-bottom) + 60px) !important;
+  bottom: calc(env(safe-area-inset-bottom) + 60px) !important;
   padding: 5px 15px;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.16), 0 1px 1px rgba(0, 0, 0, 0.23);
   color: #333;

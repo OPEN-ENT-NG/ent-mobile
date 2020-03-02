@@ -7,7 +7,7 @@
     ></button>
   </ion-nav-buttons>
 
-  <ion-content >
+  <ion-content>
     <ion-refresher
       pulling-text="Actualiser"
       on-refresh="doRefresh()"
@@ -130,6 +130,8 @@
   <nav
     id="actionMenu"
     mfb-menu
+    style="bottom: calc(constant(safe-area-inset-bottom) + 5%) !important;
+    bottom: calc(env(safe-area-inset-bottom) + 5%) !important;"
     position="br"
     effect="zoomin"
     active-icon="ion-plus-round"

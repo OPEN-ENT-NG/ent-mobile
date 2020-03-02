@@ -37,7 +37,8 @@
   padding: 25px;
   font-size: 20px;
   position: fixed;
-  bottom: 60px; /* Adjust height */
+  bottom: calc(constant(safe-area-inset-bottom) + 70px) !important;
+  bottom: calc(env(safe-area-inset-bottom) + 70px) !important;
   right: 5%; /* Adjust position */
   z-index: 1000;
 }
