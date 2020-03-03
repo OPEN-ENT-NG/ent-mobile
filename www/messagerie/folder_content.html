@@ -2,6 +2,7 @@
   view-title="{{
     isCheckEnabled() ? getCheckedNumber() : getNameFolder(nameFolder)
   }}"
+  class="folderContent"
 >
   <ion-nav-buttons side="right">
     <button
@@ -11,19 +12,15 @@
     ></button>
   </ion-nav-buttons>
 
-  <ion-content
-    ng-show="extraFolders.length>0 || messages.length>0"
-  >
-    <ion-refresher
-    pulling-text="Actualiser"
-      on-refresh="doRefreshMessages()"
-    >
+  <ion-content ng-show="extraFolders.length>0 || messages.length>0">
+    <ion-refresher pulling-text="Actualiser" on-refresh="doRefreshMessages()">
     </ion-refresher>
 
     <ion-list>
       <ion-item
         ng-repeat="extraFolder in extraFolders"
         ui-sref="app.message_folder({nameFolder: extraFolder.name, idFolder: extraFolder.id})"
+        class="folder"
       >
         <i class="folder-open-2icon-"></i>
         {{ getNameFolder(extraFolder.name) }}
@@ -32,21 +29,20 @@
     </ion-list>
 
     <div class="item item-divider" ng-show="extraFolders.length!=0"></div>
-    <ion-list>
-      <ion-item ng-if="isCheckEnabled()" ng-click="checkAllMessages()">
+    <ion-list class="messages" >
+      <ion-item ng-if="isCheckEnabled()" class="message-container" ng-click="checkAllMessages()">
         <div class="message">
-          <input
-            type="checkbox"
-            ng-model="all.checked"
-            ng-checked="allChecked()"
-            style="vertical-align: -webkit-baseline-middle;"
-          />
-
-          <div class="item-text-wrap" style="float: right; width: 90%;">
-            Sélectionner tout
+          <div class="checkbox checkbox-input-hidden checkbox-square">
+            <input
+              type="checkbox"
+              ng-model="all.checked"
+              ng-checked="allChecked()"
+            /><i class="checkbox-icon"></i>
           </div>
-        </div></ion-item
-      >
+
+          <h2>Sélectionner tout</h2>
+        </div>
+      </ion-item>
 
       <ion-item
         ng-repeat="message in messages track by $index"
@@ -54,34 +50,41 @@
         ? (message.checked = !message.checked)
         : goToMessage(message);"
         on-hold="message.checked = true"
+        class="message-container"
       >
-        <div ng-class="getUnreadMessage(message)">
-          <input
-            type="checkbox"
-            ng-model="message.checked"
-            ng-checked="message.checked"
-            ng-show="isCheckEnabled()"
-          />
+        <div
+          class="message"
+          ng-class="{unreadMessage : getUnreadMessage(message)}"
+        >
           <div
-            class="item-text-wrap"
-            style="float: right; width: 90%;"
+            class="checkbox checkbox-input-hidden checkbox-square"
             ng-if="isCheckEnabled()"
           >
-            <span class="right">{{ formatDateLocale(message.date) }}</span>
-            {{ getRealName(message.from, message.displayNames) }}
-            <i class="attachicon-" ng-show="message.hasAttachment"></i>
-            <h3>{{ message.subject }}</h3>
+            <input
+              type="checkbox"
+              ng-model="message.checked"
+              ng-checked="message.checked"
+            /><i class="checkbox-icon"></i>
           </div>
+          <div class="content">
+            <h2 class="ellipsis">
+              <span ng-repeat="person in getMailTitle(message) track by $index">
+                {{ getRealName(person, message.displayNames) }}<span
+                  ng-if="!$last"
+                  >,
+                </span></span
+              >
+            </h2>
 
-          <div
-            class="item-text-wrap"
-            style="float: right; width: 100%;"
-            ng-if="!isCheckEnabled()"
-          >
-            <span class="right">{{ formatDateLocale(message.date) }}</span>
-            {{ getRealName(message.from, message.displayNames) }}
-            <i class="attachicon-" ng-show="message.hasAttachment"></i>
-            <h3>{{ message.subject }}</h3>
+            <div class="subtitle">
+              <i class="attachicon-" ng-show="message.hasAttachment"></i>
+              <h3 class="ellipsis">
+                {{ message.subject }}
+              </h3>
+              <span class="date right"
+                >{{ formatDateLocale(message.date) }}</span
+              >
+            </div>
           </div>
         </div>
 

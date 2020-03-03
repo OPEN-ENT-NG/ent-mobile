@@ -46,16 +46,40 @@ angular
       return foundUser ? foundUser[1] : "Inconnu";
     };
 
+    $scope.getMailTitle = mail => {
+      if (
+        $stateParams.idFolder !== "OUTBOX" &&
+        (includesUser(mail.to) ||
+        includesUser(mail.cc)) &&
+        mail.state === "SENT"
+      ) {
+        return [mail.from];
+      } else if (
+        ($stateParams.idFolder !== "INBOX" &&
+          mail.from == $rootScope.myUser.userId &&
+          mail.state === "SENT") ||
+        (mail.from === $rootScope.myUser.userId && mail.state === "DRAFT")
+      ) {
+        return mail.to;
+      } else {
+        return [];
+      }
+    };
+
+    const includesUser = collection => {
+      return collection.includes($rootScope.myUser.userId) || $rootScope.myUser.groupsIds.some(groupId => collection.includes(groupId))
+    }
+
     $scope.getUnreadMessage = mail => {
-      return mail.unread &&
+      return (
+        mail.unread &&
         (mail.from != $rootScope.myUser.userId ||
           mail.cc.includes($rootScope.myUser.userId) ||
           mail.cci.includes($rootScope.myUser.userId) ||
           mail.to.includes($rootScope.myUser.userId)) &&
         $stateParams.idFolder != "OUTBOX" &&
         $stateParams.idFolder != "DRAFT"
-        ? { unreadMessage: true }
-        : { message: true };
+      );
     };
 
     $scope.restoreMessages = function() {
