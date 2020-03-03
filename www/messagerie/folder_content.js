@@ -50,7 +50,8 @@ angular
       if (
         $stateParams.idFolder !== "OUTBOX" &&
         (includesUser(mail.to) ||
-        includesUser(mail.cc)) &&
+        includesUser(mail.cc)||
+        includesUser(mail.cci)) &&
         mail.state === "SENT"
       ) {
         return [mail.from];
