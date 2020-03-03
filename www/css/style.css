@@ -545,6 +545,10 @@ ion-popover-view.fit ion-content {
   padding-left: 5px;
 }
 
+.platform-ios.platform-cordova:not(.fullscreen) .tabs-top>.tabs, .platform-ios.platform-cordova:not(.fullscreen) .tabs.tabs-top {
+  top: 0px !important;
+}
+
 .profile-pic {
   width: 70px;
   height: auto;
@@ -553,10 +557,6 @@ ion-popover-view.fit ion-content {
   display: table-cell;
   margin: 15px;
   border-radius: 50%;
-}
-
-.profile .tabs {
-  top: 0px !important;
 }
 
 .profile ion-content.has-tabs-top {
