@@ -2,205 +2,202 @@
   <ion-nav-buttons side="right">
     <button class="button icon-right ion-log-out" ng-click="logout()"></button>
   </ion-nav-buttons>
-  <ion-content class="profile">
+  <ion-content scroll="false" class="profile">
     <ion-tabs class="tabs-positive tabs-top">
       <ion-tab title="Utilisateur">
-        <ion-view>
-          <ion-content class="profileView">
-            <div style="display:table">
-              <img
-                http-src="{{ getImageUrl(myUser.photo) }}"
-                class="profile-pic"
-              />
-              <h4 class="profile-title">{{ myUser.displayName }}</h4>
-            </div>
-
-            <h2 class="profile-sub">
-              {{ translationUser["userBook.profile.login"] }}
-            </h2>
-            <div
-              style="display: flex"
-              ng-if="!isFieldToggled('loginAlias') || !myUser.allowedLoginUpdate"
-            >
-              <h2 class="profile-info" style="flex: 1">
-                {{ myUser.loginAlias || myUser.login }}
-              </h2>
-              <i
-                class="fa fa-pencil"
-                style="flex: 0"
-                ng-click="myUser.allowedLoginUpdate && toggleField('loginAlias')"
-              ></i>
-            </div>
-            <input
-              type="text"
-              class="profile-edit"
-              id="loginAlias"
-              ng-if="isFieldToggled('loginAlias')"
-              ng-model="tempProfile.loginAlias"
-              spellcheck="false"
-              autocapitalize="off"
-              ng-blur="saveField('loginAlias')"
+        <ion-content class="profileView">
+          <div style="display:table">
+            <img
+              http-src="{{ getImageUrl(myUser.photo) }}"
+              class="profile-pic"
             />
+            <h4 class="profile-title">{{ myUser.displayName }}</h4>
+          </div>
 
-            <h2 class="profile-sub">
-              {{ translationUser["userBook.profile.firstName"] }}
+          <h2 class="profile-sub">
+            {{ translationUser["userBook.profile.login"] }}
+          </h2>
+          <div
+            style="display: flex"
+            ng-if="!isFieldToggled('loginAlias') || !myUser.allowedLoginUpdate"
+          >
+            <h2 class="profile-info" style="flex: 1">
+              {{ myUser.loginAlias || myUser.login }}
             </h2>
-            <h2 class="profile-info">{{ myUser.firstName }}</h2>
+            <i
+              class="fa fa-pencil"
+              style="flex: 0"
+              ng-click="myUser.allowedLoginUpdate && toggleField('loginAlias')"
+            ></i>
+          </div>
+          <input
+            type="text"
+            class="profile-edit"
+            id="loginAlias"
+            ng-if="isFieldToggled('loginAlias')"
+            ng-model="tempProfile.loginAlias"
+            spellcheck="false"
+            autocapitalize="off"
+            ng-blur="saveField('loginAlias')"
+          />
 
-            <h2 class="profile-sub">
-              {{ translationUser["userBook.profile.lastName"] }}
-            </h2>
-            <h2 class="profile-info">{{ myUser.lastName }}</h2>
+          <h2 class="profile-sub">
+            {{ translationUser["userBook.profile.firstName"] }}
+          </h2>
+          <h2 class="profile-info">{{ myUser.firstName }}</h2>
 
-            <h2 class="profile-sub">
-              {{ translationUser["userBook.profile.displayName"] }}
-            </h2>
-            <div style="display: flex" ng-if="!isFieldToggled('displayName')">
-              <h2 class="profile-info" style="flex: 1">
-                {{ myUser.displayName }}
-              </h2>
-              <i
-                class="fa fa-pencil"
-                style="flex: 0"
-                ng-click="toggleField('displayName')"
-              ></i>
-            </div>
-            <input
-              type="text"
-              class="profile-edit"
-              id="displayName"
-              ng-if="isFieldToggled('displayName')"
-              ng-model="tempProfile.displayName"
-              spellcheck="false"
-              autocapitalize="off"
-              ng-blur="saveField('displayName')"
-            />
+          <h2 class="profile-sub">
+            {{ translationUser["userBook.profile.lastName"] }}
+          </h2>
+          <h2 class="profile-info">{{ myUser.lastName }}</h2>
 
-            <h2 class="profile-sub">
-              {{ translationUser["userBook.profile.email"] }}
+          <h2 class="profile-sub">
+            {{ translationUser["userBook.profile.displayName"] }}
+          </h2>
+          <div style="display: flex" ng-if="!isFieldToggled('displayName')">
+            <h2 class="profile-info" style="flex: 1">
+              {{ myUser.displayName }}
             </h2>
-            <div style="display: flex" ng-if="!isFieldToggled('email')">
-              <h2 class="profile-info" style="flex: 1">
-                {{ myUser.email }}
-              </h2>
-              <i
-                class="fa fa-pencil"
-                style="flex: 0"
-                ng-click="toggleField('email')"
-              ></i>
-            </div>
-            <input
-              type="mail"
-              class="profile-edit"
-              id="email"
-              ng-if="isFieldToggled('email')"
-              ng-model="tempProfile.email"
-              spellcheck="false"
-              autocapitalize="off"
-              ng-blur="saveField('email')"
-            />
+            <i
+              class="fa fa-pencil"
+              style="flex: 0"
+              ng-click="toggleField('displayName')"
+            ></i>
+          </div>
+          <input
+            type="text"
+            class="profile-edit"
+            id="displayName"
+            ng-if="isFieldToggled('displayName')"
+            ng-model="tempProfile.displayName"
+            spellcheck="false"
+            autocapitalize="off"
+            ng-blur="saveField('displayName')"
+          />
 
-            <h2 class="profile-sub">
-              {{ translationUser["userBook.profile.mobilePhone"] }}
+          <h2 class="profile-sub">
+            {{ translationUser["userBook.profile.email"] }}
+          </h2>
+          <div style="display: flex" ng-if="!isFieldToggled('email')">
+            <h2 class="profile-info" style="flex: 1">
+              {{ myUser.email }}
             </h2>
-            <div style="display: flex" ng-if="!isFieldToggled('mobile')">
-              <h2 class="profile-info" style="flex: 1">
-                {{ myUser.mobile || "-" }}
-              </h2>
-              <i
-                class="fa fa-pencil"
-                style="flex: 0"
-                ng-click="toggleField('mobile')"
-              ></i>
-            </div>
-            <input
-              type="tel"
-              class="profile-edit"
-              id="mobile"
-              ng-if="isFieldToggled('mobile')"
-              ng-model="tempProfile.mobile"
-              ng-blur="saveField('mobile')"
-            />
+            <i
+              class="fa fa-pencil"
+              style="flex: 0"
+              ng-click="toggleField('email')"
+            ></i>
+          </div>
+          <input
+            type="mail"
+            class="profile-edit"
+            id="email"
+            ng-if="isFieldToggled('email')"
+            ng-model="tempProfile.email"
+            spellcheck="false"
+            autocapitalize="off"
+            ng-blur="saveField('email')"
+          />
 
-            <h2 class="profile-sub">
-              {{ translationUser["userBook.profile.birthdate"] }}
+          <h2 class="profile-sub">
+            {{ translationUser["userBook.profile.mobilePhone"] }}
+          </h2>
+          <div style="display: flex" ng-if="!isFieldToggled('mobile')">
+            <h2 class="profile-info" style="flex: 1">
+              {{ myUser.mobile || "-" }}
             </h2>
-            <h2 class="profile-info">{{ formatDate(myUser.birthDate) }}</h2>
+            <i
+              class="fa fa-pencil"
+              style="flex: 0"
+              ng-click="toggleField('mobile')"
+            ></i>
+          </div>
+          <input
+            type="tel"
+            class="profile-edit"
+            id="mobile"
+            ng-if="isFieldToggled('mobile')"
+            ng-model="tempProfile.mobile"
+            ng-blur="saveField('mobile')"
+          />
 
-            <h2 class="profile-sub">
-              {{ translationUser["userBook.profile.schools"] }}
-            </h2>
-            <h2
-              class="profile-info"
-              ng-repeat="structure in myUser.schools | orderBy:'name'"
-            >
-              {{ structure.name }}
-            </h2>
+          <h2 class="profile-sub">
+            {{ translationUser["userBook.profile.birthdate"] }}
+          </h2>
+          <h2 class="profile-info">{{ formatDate(myUser.birthDate) }}</h2>
 
-            <h2 class="profile-sub">Version de l'application</h2>
-            <h2 class="profile-info" style="margin-bottom: 20px">
-              {{ version }}
-            </h2>
-          </ion-content>
-        </ion-view>
+          <h2 class="profile-sub">
+            {{ translationUser["userBook.profile.schools"] }}
+          </h2>
+          <h2
+            class="profile-info"
+            ng-repeat="structure in myUser.schools | orderBy:'name'"
+          >
+            {{ structure.name }}
+          </h2>
+
+          <h2 class="profile-sub">Version de l'application</h2>
+          <h2 class="profile-info" style="margin-bottom: 20px">
+            {{ version }}
+          </h2>
+        </ion-content>
       </ion-tab>
       <ion-tab title="Notifications">
-        <ion-view>
-          <ion-content class="has-footer">
-            <div class="list actions-list">
+        <ion-content class="actions-list">
+          <div
+            ng-repeat="appli in applis | orderBy:'translation' track by $index"
+            ng-if="appli.notifications.length > 0"
+          >
+            <div
+              class="item item-divider action"
+              ng-click="settings.app === $index ? settings.app = undefined : settings.app = $index"
+            >
+              <h4>
+                {{ appli.translation }}
+              </h4>
+              <i
+                class="fa fa-chevron-right"
+                ng-class="{rotate: settings.app === $index}"
+              ></i>
+            </div>
+            <div ng-show="settings.app === $index" class="notifications-list">
               <div
-                ng-repeat="appli in applis | orderBy:'translation' track by $index"
-                ng-if="appli.notifications.length > 0"
+                class="item notification"
+                ng-repeat="action in appli.notifications"
+                ng-show="!!translations[action]"
               >
-                <div
-                  class="item item-divider"
-                  ng-click="settings.app === $index ? settings.app = undefined : settings.app = $index"
-                >
-                  <h4>
-                    {{ appli.translation }}
-                    <i
-                      class="fa fa-chevron-right"
-                      ng-class="{rotate: settings.app === $index}"
-                    ></i>
-                  </h4>
-                </div>
-                <div
-                  ng-show="settings.app === $index"
-                  class="notifications-list"
-                >
-                  <div class="item" ng-repeat="action in appli.notifications">
-                    <label
-                      class="toggle"
-                      ng-init="preferences.config[action]['push-notif'] = preferences.config[action].hasOwnProperty('push-notif')
+                <label
+                  class="toggle"
+                  ng-init="preferences.config[action]['push-notif'] = preferences.config[action].hasOwnProperty('push-notif')
                       ? preferences.config[action]['push-notif'] : appsMapped[action]['push-notif']"
-                    >
-                      <input
-                        type="checkbox"
-                        ng-model="preferences.config[action]['push-notif']"
-                        ng-checked="preferences.config[action]['push-notif']"
-                      />
-                      <div class="track"><div class="handle"></div></div>
-                    </label>
-                    <div class="action-label">{{ translations[action] }}</div>
-                  </div>
-                </div>
+                >
+                  <input
+                    type="checkbox"
+                    ng-model="preferences.config[action]['push-notif']"
+                    ng-checked="preferences.config[action]['push-notif']"
+                  />
+                  <div class="track"><div class="handle"></div></div>
+                </label>
+                <span class="action-label">
+                  {{ translations[action]}}
+                </span>
               </div>
             </div>
+          </div>
 
-            <div class="spinner-container">
-              <ion-spinner icon="android" ng-show="loader.preferences"
-                >&nbsp;</ion-spinner
-              >
-            </div>
-            <button
-              class="button"
-              ng-hide="loader.preferences"
-              ng-click="updatePreferences()"
+          <div class="spinner-container">
+            <ion-spinner icon="android" ng-show="loader.preferences"
+              >&nbsp;</ion-spinner
             >
-              Enregistrer
-            </button>
-          </ion-content>
-        </ion-view>
+          </div>
+          <button
+            class="button"
+            ng-hide="loader.preferences"
+            ng-click="updatePreferences()"
+          >
+            Enregistrer
+          </button>
+        </ion-content>
       </ion-tab>
     </ion-tabs>
   </ion-content>
