@@ -100,41 +100,69 @@
   border-bottom-style: hidden;
 }
 
-.unreadMessage {
+.unreadMessage h2 * {
   font-weight: bold;
 }
 
-.unreadMessage i {
-  color: #ccc;
+.message {
+  display: flex;
+  align-items: center;
+  height: 65px;
+}
+
+.message .content {
+  flex: 1;
+  overflow: auto;
+  margin: 0 10px
+}
+
+.message .content .ellipsis, .message .content .ellipsis * {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.message .content .date {
+  color: #387ef5;
+}
+
+.message .content .right {
   float: right;
-  font-weight: bold;
-  font-size: 12px;
 }
 
-.unreadMessage h2.ng-binding {
-  /*font-size:18px;*/
-  font-weight: bold;
-}
-
-.message i {
-  color: #ccc;
-  float: right;
-  font-size: 12px;
-}
-
-.message h2.ng-binding {
+.message .content h2 {
   font-size: 18px;
 }
 
-.right {
-  color: #387ef5;
-  float: right;
+.message .content h3 {
+  margin: 0;
+  flex: 1;
+  color: #ccc;
+}
+
+.message .subtitle {
+  display: flex;
+  align-items: center;
+}
+
+.message .subtitle * {
+  display: inline-block;
   font-size: 12px;
 }
 
-.item h3.ng-binding {
-  font-size: 12px;
-  color: #ccc;
+.message-container {
+  padding: 0px
+}
+
+.folderContent ion-item .item-content {
+  padding: 0px;
+}
+
+.folderContent .folder .item-content{
+  padding: 16px !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .ajoutPJ {
@@ -166,10 +194,6 @@
 
 .borderTopItemDismissed {
   border-top-style: none;
-}
-
-.writtingZone {
-  height: 10%;
 }
 
 .fillParent {
