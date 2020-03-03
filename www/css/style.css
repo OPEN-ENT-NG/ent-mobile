@@ -569,21 +569,22 @@ ion-popover-view.fit ion-content {
   overflow: visible;
 }
 
-.profile .actions-list .item > label.toggle {
-  display: table-cell;
+.profile .notifications-list .notification {
+  display: flex;
+  align-items: center;
 }
 
-.profile .actions-list .item > .action-label {
-  word-break: initial;
-  word-wrap: break-word;
-  width: calc(75% - 15px);
-  display: table-cell;
-  vertical-align: middle;
-  padding-left: 15px;
+.profile .notifications-list .notification .action-label {
+  padding: 10px;
+  flex: 1;
+  white-space: normal;
 }
 
 .profile .actions-list .item.item-divider {
   background-color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .profile .actions-list .item.item-divider .fa-chevron-right {
