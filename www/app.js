@@ -244,7 +244,8 @@ angular
     TraductionService,
     WorkspaceService,
     PopupFactory,
-    domainENT
+    domainENT,
+    $cordovaLocalNotification
   ) {
     const listMenu = [
       {
@@ -451,7 +452,7 @@ angular
           NotificationService.setFcmToken(token);
         });
 
-        cordova.plugins.notification.local.on("click", notification => {
+        $rootScope.$on("$cordovaLocalNotification:click", (event, notification) => {
           NotificationService.pushNotificationHandler(notification.data);
         });
 
@@ -459,7 +460,7 @@ angular
           if (data.tap == "background") {
             NotificationService.pushNotificationHandler(data);
           } else {
-            cordova.plugins.notification.local.schedule({
+            $cordovaLocalNotification.schedule({
               text: data.body,
               title: data.title,
               data
