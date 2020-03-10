@@ -11,41 +11,52 @@ angular
       { idMessage, idActu, idPost, idBlog, uri }
     ) {
       switch (type) {
-        case "MESSAGERIE":
+        case "MESSAGERIE": {
           $state.go("app.message_detail", {
             nameFolder: "INBOX",
             idMessage
           });
           break;
-        case "NEWS":
+        }
+        case "NEWS": {
           $state.go("app.actualites", {
             idActu
           });
           break;
-        case "BLOG":
+        }
+        case "BLOG": {
           $state.go("app.blog", {
             idPost,
             idBlog
           });
           break;
-        case "WORKSPACE":
+        }
+        case "WORKSPACE": {
           $state.go("app.workspace_tree", {
             filter: "shared"
           });
           break;
-        default:
+        }
+        case "TIMELINE": {
+          $state.go("app.timeline_list", {}, { reload: true });
+          break;
+        }
+        default: {
           window.open(
             domainENT +
               "/auth/login?callBack=" +
               encodeURIComponent(domainENT + uri),
             "_system"
           );
+        }
       }
     };
 
     this.pushNotificationHandler = function(notif) {
-      let params = JSON.parse(notif.params);
-      let module = /\/([\w]+)\W?/g.exec(params.resourceUri)[1];
+      let { resourceUri, messageUri } = JSON.parse(notif.params);
+      let module = resourceUri
+        ? /\/([\w]+)\W?/g.exec(resourceUri)[1]
+        : "timeline";
 
       let serviceType = "";
       let serviceParams = {};
@@ -53,7 +64,7 @@ angular
       switch (module) {
         case "blog": {
           serviceType = "BLOG";
-          let ids = params.resourceUri.split("/");
+          let ids = resourceUri.split("/");
           serviceParams.idPost = ids.pop();
           serviceParams.idBlog = ids.pop();
           break;
@@ -64,16 +75,19 @@ angular
         }
         case "conversation": {
           serviceType = "MESSAGERIE";
-          serviceParams.idMessage = params.messageUri.split("/").pop();
+          serviceParams.idMessage = messageUri.split("/").pop();
           break;
         }
         case "actualites": {
           serviceType = "NEWS";
-          serviceParams.idActu = params.resourceUri.split("/").pop();
+          serviceParams.idActu = resourceUri.split("/").pop();
           break;
         }
+        case "timeline": {
+          serviceType = "TIMELINE";
+        }
         default: {
-          serviceParams.uri = params.resourceUri;
+          serviceParams.uri = resourceUri;
         }
       }
 
