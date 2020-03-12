@@ -6,13 +6,13 @@ angular
     $ionicPlatform,
     $rootScope,
     domainENT,
+    FileService,
     WorkspaceService,
     $ionicLoading,
     $stateParams,
     $ionicHistory,
     $ionicPopover,
     $state,
-    WorkspaceHelper,
     PopupFactory
   ) {
     $ionicPlatform.ready(function() {
@@ -37,7 +37,7 @@ angular
 
       $scope.downloadDoc = function() {
         var docUrl = domainENT + "/workspace/document/" + $scope.doc._id;
-        $rootScope.downloadFile($scope.doc.metadata.filename, docUrl);
+        FileService.getFile($scope.doc.metadata.filename, docUrl);
       };
 
       $scope.goShare = function() {

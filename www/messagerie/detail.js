@@ -4,6 +4,7 @@ angular
   .controller("MessagesDetailCtrl", function(
     $scope,
     $rootScope,
+    FileService,
     $ionicPlatform,
     $ionicPopover,
     $state,
@@ -112,7 +113,7 @@ angular
           "/attachment/" +
           id;
         var attachment = $scope.mail.attachments.find(att => att.id == id);
-        $rootScope.downloadFile(attachment.filename, attachmentUrl);
+        FileService.getFile(attachment.filename, attachmentUrl);
       };
 
       $scope.getRealName = (id, displayNames) => {

@@ -44,6 +44,7 @@
   "image/tiff": ".tiff",
   "application/typescript": ".ts",
   "font/ttf": ".ttf",
+  "text/plain": ".txt",
   "application/vnd.visio": ".vsd",
   "audio/x-wav": ".wav",
   "audio/webm": ".weba",
