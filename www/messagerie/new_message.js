@@ -13,7 +13,8 @@ angular
     PopupFactory,
     domainENT,
     $filter,
-    $ionicPlatform
+    $ionicPlatform,
+    FileService
   ) {
     $ionicPlatform.ready(function() {
       $scope.$on("$ionicView.beforeEnter", function() {
@@ -165,7 +166,7 @@ angular
         "/attachment/" +
         id;
       var attachment = $scope.email.attachments.find(att => att.id == id);
-      $rootScope.downloadFile(attachment.filename, attachmentUrl);
+      FileService.getFile(attachment.filename, attachmentUrl);
     };
 
     function prefillNewMessage(action) {

@@ -238,7 +238,7 @@ angular
     $state,
     AuthenticationService,
     $timeout,
-    WorkspaceHelper,
+    FileService,
     UserFactory,
     NotificationService,
     TraductionService,
@@ -300,10 +300,10 @@ angular
 
       const isFileTooBig = function(file) {
         return new Promise((resolve, reject) => {
-          if (WorkspaceHelper.isFileTooBig(file)) {
+          if (FileService.isFileTooBig(file)) {
             reject(
               $rootScope.translationWorkspace["file.too.large.limit"] +
-                WorkspaceHelper.getFileSize(
+                FileService.getFileSize(
                   parseInt($rootScope.translationWorkspace["max.file.size"])
                 )
             );
@@ -402,10 +402,6 @@ angular
         // });
       }
 
-      window.requestFileSystem =
-        window.requestFileSystem || window.webkitRequestFileSystem;
-      window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFS, fail);
-
       $rootScope.$on("$cordovaNetwork:offline", function() {
         console.log("offline");
         $rootScope.status = "offline";
@@ -452,9 +448,12 @@ angular
           NotificationService.setFcmToken(token);
         });
 
-        $rootScope.$on("$cordovaLocalNotification:click", (event, notification) => {
-          NotificationService.pushNotificationHandler(notification.data);
-        });
+        $rootScope.$on(
+          "$cordovaLocalNotification:click",
+          (event, notification) => {
+            NotificationService.pushNotificationHandler(notification.data);
+          }
+        );
 
         window.FirebasePlugin.onMessageReceived(data => {
           if (data.tap == "background") {
@@ -504,20 +503,18 @@ angular
     $sce,
     $state,
     $ionicPlatform,
-    $cordovaFile,
-    $cordovaFileOpener2,
     domainENT,
     $ionicHistory,
-    WorkspaceHelper,
-    $ionicLoading,
-    PopupFactory,
-    RequestService,
+    FileService,
     NotificationService
   ) {
     $scope.showGridMenu = false;
 
     $rootScope.filterThreads = [];
     $rootScope.translationWorkspace = {};
+
+    $rootScope.downloadFile = FileService.getFile;
+    $rootScope.getFileSize = FileService.getFileSize;
 
     $scope.hasBackView = () => {
       return !!$ionicHistory.backView();
@@ -597,108 +594,6 @@ angular
       return result;
     };
 
-    $rootScope.downloadFile = function(originalFileName, urlFile) {
-      $ionicLoading.show({
-        template: '<ion-spinner icon="android"/>'
-      });
-
-      const filePath = ionic.Platform.isIOS()
-        ? cordova.file.dataDirectory
-        : cordova.file.externalRootDirectory + "Download/";
-
-      let fileName = originalFileName;
-
-      var failure = function(err) {
-        PopupFactory.getCommonAlertPopup(err);
-        $ionicLoading.hide();
-      };
-
-      var checkFile = function(errorCallback) {
-        $cordovaFile.checkFile(filePath, fileName).then(openFile, err => {
-          if (errorCallback != undefined) {
-            errorCallback();
-          } else if (err.code === 1) {
-            downloadFile();
-          } else {
-            failure(err);
-          }
-        });
-      };
-
-      var openFile = function(fileEntry) {
-        fileEntry.file(file => {
-          $scope.openLocalFile(file.localURL, file.type);
-          $ionicLoading.hide();
-        });
-      };
-
-      var getMimeType = response => {
-        return response.headers("content-type");
-      };
-
-      var formatFile = fileRequestResult => {
-        RequestService.get("mimeTypes.json").then(mimeTypeMap => {
-          const extension = mimeTypeMap.data[getMimeType(fileRequestResult)];
-          if (!fileName.endsWith(extension)) {
-            fileName = fileName + extension;
-          }
-          const fileData = new Blob([new Uint8Array(fileRequestResult.data)], {
-            type: getMimeType(fileRequestResult)
-          });
-          const file = {
-            filePath,
-            fileName,
-            fileData
-          };
-          checkFile(() => writeFile(file));
-        }, failure);
-      };
-
-      var writeFile = ({ filePath, fileName, fileData }) => {
-        $cordovaFile
-          .writeFile(filePath, fileName, fileData, true)
-          .then(checkFile, failure);
-      };
-
-      var downloadFile = function() {
-        let config = {
-          responseType: "arraybuffer",
-          cache: true
-        };
-        let url = $sce.getTrustedResourceUrl($sce.trustAsResourceUrl(urlFile));
-
-        RequestService.get(url, config).then(result => {
-          if (result.status % 200 < 100 && !!result.data) {
-            formatFile(result);
-          } else {
-            failure();
-          }
-        }, failure);
-      };
-
-      if (!ionic.Platform.isIOS()) {
-        cordova.plugins.diagnostic.isExternalStorageAuthorized(bool => {
-          if (bool) {
-            checkFile();
-          } else {
-            cordova.plugins.diagnostic.requestExternalStorageAuthorization(
-              result => {
-                if (
-                  result == cordova.plugins.diagnostic.permissionStatus.GRANTED
-                ) {
-                  checkFile();
-                } else {
-                  console.log("Permission Denied");
-                }
-              }
-            );
-          }
-        }, console.log);
-      } else {
-        checkFile();
-      }
-    };
-
     $scope.openUrl = function(url) {
       var target = "_system";
       var ref = cordova.InAppBrowser.open($sce.trustAsUrl(url), target);
@@ -723,17 +618,6 @@ angular
       function exitCallback() {
         console.log("Browser is closed...");
       }
-    };
-
-    $scope.openLocalFile = function(targetPath, fileMIMEType) {
-      $cordovaFileOpener2.open(targetPath, fileMIMEType, {
-        error: function(error) {
-          PopupFactory.getCommonAlertPopup(error);
-        },
-        success: function() {
-          console.log("File displayed");
-        }
-      });
     };
 
     $scope.getImageUrl = function(path) {
@@ -821,8 +705,6 @@ angular
       });
     };
 
-    $scope.getSizeFile = WorkspaceHelper.getFileSize;
-
     $ionicPlatform.ready(function() {
       $rootScope.$on("$stateChangeStart", function(event, toState) {
         $scope.showGridMenu = false;
@@ -907,6 +789,180 @@ angular
         getTraductionBlogs(),
         getTraductionWorkspace()
       ]);
+    };
+  })
+
+  .service("FileService", function(
+    RequestService,
+    PopupFactory,
+    $q,
+    $sce,
+    $cordovaFile,
+    $cordovaFileOpener2,
+    $ionicLoading,
+    $ionicPlatform
+  ) {
+    var filePath = "";
+
+    $ionicPlatform.ready(function() {
+      filePath = ionic.Platform.isIOS()
+        ? cordova.file.dataDirectory
+        : cordova.file.externalRootDirectory + "Download/";
+    });
+
+    this.isFileTooBig = file => {
+      const maxFileSize = 104857600;
+      return $rootScope.translationWorkspace
+        ? file.size > $rootScope.translationWorkspace["max.file.size"]
+        : file.size > maxFileSize;
+    };
+
+    this.getFileSize = function(bytes) {
+      if (isNaN(parseFloat(bytes)) || !isFinite(bytes)) return "-";
+      var units = ["bytes", "kB", "MB", "GB", "TB", "PB"],
+        number = Math.floor(Math.log(bytes) / Math.log(1024));
+      return (
+        (bytes / Math.pow(1024, Math.floor(number))).toFixed(1) +
+        " " +
+        units[number]
+      );
+    };
+
+    const checkPermission = () => {
+      return $q((resolve, reject) => {
+        if (ionic.Platform.isIOS()) {
+          resolve();
+        } else if (ionic.Platform.isAndroid()) {
+          cordova.plugins.diagnostic.isExternalStorageAuthorized(bool => {
+            if (bool) {
+              resolve();
+            } else {
+              cordova.plugins.diagnostic.requestExternalStorageAuthorization(
+                result => {
+                  if (
+                    result ==
+                    cordova.plugins.diagnostic.permissionStatus.GRANTED
+                  ) {
+                    resolve();
+                  } else {
+                    reject();
+                  }
+                }
+              );
+            }
+          });
+        } else {
+          reject();
+        }
+      });
+    };
+
+    const checkFile = function(fileName) {
+      return $cordovaFile.checkFile(filePath, fileName).catch(err => {
+        if (err.code === 1) {
+          return Promise.resolve(null);
+        } else {
+          return Promise.reject(err);
+        }
+      });
+    };
+
+    const downloadFile = fileUrl => {
+      let config = {
+        responseType: "arraybuffer",
+        cache: true
+      };
+      let url = $sce.getTrustedResourceUrl($sce.trustAsResourceUrl(fileUrl));
+
+      return RequestService.get(url, config).then(result => {
+        if (result.status % 200 < 100 && !!result.data) {
+          return Promise.resolve(result);
+        } else {
+          return Promise.reject(result.data);
+        }
+      });
+    };
+
+    const formatFile = (fileName, fileRequestResult) => {
+      const fileNameRegexp = RegExp('filename="(.*)"', "g");
+      const fileExtensionRegexp = RegExp("(\..*)$", "g");
+      const headerHasFileName = fileNameRegexp.test(
+        fileRequestResult.headers("content-disposition")
+      );
+      const headerHasMimeType = !!fileRequestResult.headers("content-type");
+      const fileNameHasExtension = fileExtensionRegexp.test(fileName);
+
+      let finalFileName = "";
+      let finalMimeType = "";
+
+      return RequestService.get("mimeTypes.json").then(mimeTypeMap => {
+        const getExtension = mimeType => mimeTypeMap.data[mimeType];
+        const getMimeType = extension =>
+          Object.keys(mimeTypeMap)[
+            Object.values.findIndex(item => item == extension)
+          ];
+
+        if (headerHasMimeType) {
+          finalMimeType = fileRequestResult.headers("content-type");
+          const extension = getExtension(finalMimeType);
+          finalFileName =
+            !fileName.endsWith(extension) && !!extension
+              ? fileName + extension
+              : fileName;
+        } else if (headerHasFileName || fileNameHasExtension) {
+          finalFileName = fileNameRegexp.exec(
+            fileRequestResult.headers("content-disposition")
+          )[1] || fileName;
+          const fileExtension = fileExtensionRegexp.exec(finalFileName)[1];
+          finalMimeType = getMimeType(fileExtension)
+        } else {
+          finalFileName = fileName;
+          finalMimeType = "application/octet-stream";
+        }
+
+        const fileData = new Blob([new Uint8Array(fileRequestResult.data)], {
+          type: finalMimeType
+        });
+        return { fileName: finalFileName, fileData };
+      });
+    };
+
+    const downloadAndWriteFile = (fileName, fileUrl) => {
+      return downloadFile(fileUrl)
+        .then(fileByteArray => formatFile(fileName, fileByteArray))
+        .then(({ fileName, fileData }) =>
+          $cordovaFile
+            .writeFile(filePath, fileName, fileData, true)
+            .then(() => fileName)
+        )
+        .then(checkFile);
+    };
+
+    const openFile = fileEntry => {
+      return $cordovaFileOpener2
+        .open(fileEntry.toURL(), fileEntry.type)
+        .catch(err => {
+          console.log("Fail to open file", err);
+          PopupFactory.getAlertPopupNoTitle("Fichier téléchargé avec succès !");
+        });
+    };
+
+    this.getFile = function(fileName, fileUrl) {
+      $ionicLoading.show({
+        template: '<ion-spinner icon="android"/>'
+      });
+      checkPermission()
+        .then(() => checkFile(fileName))
+        .then(fileEntry => {
+          if (!!fileEntry) {
+            return fileEntry;
+          } else {
+            return downloadAndWriteFile(fileName, fileUrl);
+          }
+        })
+        .then(openFile)
+        .catch(PopupFactory.getCommonAlertPopup)
+        .finally($ionicLoading.hide);
     };
   })
 
@@ -1374,53 +1430,4 @@ function setProfileImage(regularPath, userId) {
     regularPath != "no-avatar.jpg"
     ? regularPath
     : "/userbook/avatar/" + userId;
-}
-
-function fail() {
-  console.log("failed to get filesystem");
-}
-
-function gotFS(fileSystem) {
-  window.FS = fileSystem;
-
-  var printDirPath = function(entry) {
-    console.log("Dir path - " + entry.fullPath);
-  };
-
-  createDirectory("ENT/conversation", printDirPath);
-  createDirectory("ENT/workspace", printDirPath);
-}
-
-function createDirectory(path, success) {
-  var dirs = path.split("/").reverse();
-  var root = window.FS.root;
-
-  var createDir = function(dir) {
-    root.getDirectory(
-      dir,
-      {
-        create: true,
-        exclusive: false
-      },
-      successCB,
-      failCB
-    );
-  };
-
-  var successCB = function(entry) {
-    console.log("dir created " + entry.fullPath);
-    root = entry;
-    if (dirs.length > 0) {
-      createDir(dirs.pop());
-    } else {
-      console.log("all dir created");
-      success(entry);
-    }
-  };
-
-  var failCB = function() {
-    console.log("failed to create dir " + dir);
-  };
-
-  createDir(dirs.pop());
 }

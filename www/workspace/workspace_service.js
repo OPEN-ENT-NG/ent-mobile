@@ -108,7 +108,7 @@ angular
       );
     };
 
-    this.uploadAttachment = function (doc) {
+    this.uploadAttachment = function(doc) {
       return RequestService.post(
         `${domainENT}/workspace/document?protected=true&application=media-library`,
         doc,
@@ -117,7 +117,7 @@ angular
           headers: { "Content-Type": undefined }
         }
       );
-    }
+    };
 
     this.moveDocuments = function(ids, targetId) {
       return RequestService.put(
@@ -134,7 +134,9 @@ angular
     };
 
     this.createFolder = function(name, parentFolderId) {
-      let data = `name=${name}${parentFolderId ? "&parentFolderId=" + parentFolderId : ""}`;
+      let data = `name=${name}${
+        parentFolderId ? "&parentFolderId=" + parentFolderId : ""
+      }`;
       return RequestService.post(`${domainENT}/workspace/folder`, data);
     };
 
@@ -143,18 +145,8 @@ angular
     };
   })
 
-  .service("WorkspaceHelper", function($filter, $rootScope) {
-    this.isFileTooBig = function(file) {
-      const maxFileSize = 104857600;
-      return $rootScope.translationWorkspace
-        ? file.size > $rootScope.translationWorkspace["max.file.size"]
-        : file.size > maxFileSize;
-    };
-
-    this.getFileSize = function(file) {
-      return $filter("bytes")(file);
-    };
-
+  .service("WorkspaceHelper", function() {
+  
     this.getCheckedItems = function() {
       return getChecked(getCollection(arguments));
     };
@@ -228,20 +220,6 @@ angular
   //     }
   //   };
   // })
-
-  .filter("bytes", function() {
-    return function(bytes, precision) {
-      if (isNaN(parseFloat(bytes)) || !isFinite(bytes)) return "-";
-      if (typeof precision === "undefined") precision = 1;
-      var units = ["bytes", "kB", "MB", "GB", "TB", "PB"],
-        number = Math.floor(Math.log(bytes) / Math.log(1024));
-      return (
-        (bytes / Math.pow(1024, Math.floor(number))).toFixed(precision) +
-        " " +
-        units[number]
-      );
-    };
-  })
 
   .factory("MimeTypeFactory", function($rootScope) {
     var mimeTypesArray = [

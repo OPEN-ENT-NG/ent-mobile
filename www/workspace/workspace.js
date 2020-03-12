@@ -17,7 +17,8 @@ angular
     $ionicLoading,
     MimeTypeFactory,
     $ionicPopover,
-    PopupFactory
+    PopupFactory,
+    FileService
   ) {
     $ionicPlatform.ready(function() {
       $scope.$on("$ionicView.beforeEnter", function() {
@@ -183,7 +184,7 @@ angular
         if (newDoc.size > $rootScope.translationWorkspace["max.file.size"]) {
           PopupFactory.getAlertPopupNoTitle(
             $rootScope.translationWorkspace["file.too.large.limit"] +
-              $scope.getSizeFile(
+              FileService.getFileSize(
                 parseInt($rootScope.translationWorkspace["max.file.size"])
               )
           );
