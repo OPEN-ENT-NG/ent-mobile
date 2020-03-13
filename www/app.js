@@ -245,7 +245,8 @@ angular
     WorkspaceService,
     PopupFactory,
     domainENT,
-    $cordovaLocalNotification
+    $cordovaLocalNotification,
+    $cordovaKeyboard
   ) {
     const listMenu = [
       {
@@ -381,6 +382,10 @@ angular
       if (window.StatusBar) {
         StatusBar.styleLightContent();
         StatusBar.overlaysWebView(false);
+      }
+
+      if (ionic.Platform.isIOS()) {
+        $cordovaKeyboard.hideAccessoryBar(false)
       }
 
       cordova.getAppVersion.getVersionNumber(function(version) {
