@@ -107,7 +107,8 @@ angular
               item.shared,
               $rootScope.myUser.groupsIds,
               rightKey
-            ) || checkIdInShares(
+            ) ||
+            checkIdInShares(
               item.inheritedShares,
               [$rootScope.myUser.userId],
               rightKey
@@ -120,16 +121,16 @@ angular
           ) {
             return true;
           } else {
-            return false
+            return false;
           }
-        }
+        };
 
         var itemsChecked = WorkspaceHelper.getCheckedItems(
           $scope.documents,
           $scope.folders
         );
         if (itemsChecked && itemsChecked.length > 0) {
-          return itemsChecked.every(hasRight)
+          return itemsChecked.every(hasRight);
         }
       };
 
@@ -341,14 +342,20 @@ angular
         filter = $stateParams["filter"];
         parentId = $stateParams["folderId"];
 
-        let params= { filter, parentId, directShared: (filter == "shared" && parentId == null) ? true : null }
+        let params = {
+          filter,
+          parentId,
+          directShared: filter == "shared" && parentId == null ? true : null
+        };
 
         const promises = [];
 
         promises.push(
           WorkspaceService.getFolders(params).then(res => {
             for (var i = 0; i < res.data.length; i++) {
-              $scope.folders.push({ ...res.data[i], checked: false });
+              $scope.folders.push(
+                spreadObject(res.data[i], { checked: false })
+              );
             }
           })
         );
@@ -356,10 +363,12 @@ angular
         promises.push(
           WorkspaceService.getFiles(params).then(result => {
             for (var i = 0; i < result.data.length; i++) {
-              $scope.documents.push({
-                ...MimeTypeFactory.setIcons(result.data[i]),
-                checked: false
-              });
+              $scope.documents.push(
+                spreadObject(
+                  MimeTypeFactory.setIcons(result.data[i]),
+                  { checked: false }
+                )
+              );
             }
           })
         );

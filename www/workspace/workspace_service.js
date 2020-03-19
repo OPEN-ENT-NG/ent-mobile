@@ -146,7 +146,6 @@ angular
   })
 
   .service("WorkspaceHelper", function() {
-  
     this.getCheckedItems = function() {
       return getChecked(getCollection(arguments));
     };
@@ -159,7 +158,7 @@ angular
       let finalCollection = [];
       for (let collection of collections) {
         if (collection) {
-          finalCollection = [...collection, ...finalCollection];
+          finalCollection = spreadArray(collection, finalCollection);
         }
       }
       return finalCollection;

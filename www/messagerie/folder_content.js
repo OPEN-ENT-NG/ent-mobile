@@ -50,8 +50,8 @@ angular
       if (
         $stateParams.idFolder !== "OUTBOX" &&
         (includesUser(mail.to) ||
-        includesUser(mail.cc)||
-        includesUser(mail.cci)) &&
+          includesUser(mail.cc) ||
+          includesUser(mail.cci)) &&
         mail.state === "SENT"
       ) {
         return [mail.from];
@@ -68,8 +68,13 @@ angular
     };
 
     const includesUser = collection => {
-      return collection.includes($rootScope.myUser.userId) || $rootScope.myUser.groupsIds.some(groupId => collection.includes(groupId))
-    }
+      return (
+        collection.includes($rootScope.myUser.userId) ||
+        $rootScope.myUser.groupsIds.some(groupId =>
+          collection.includes(groupId)
+        )
+      );
+    };
 
     $scope.getUnreadMessage = mail => {
       return (
@@ -185,7 +190,7 @@ angular
         $scope.page + 1
       ).then(
         ({ data }) => {
-          $scope.messages = [...$scope.messages, ...data];
+          $scope.messages = spreadArray($scope.messages, data);
           $scope.page++;
           if (data.length < 25) {
             $scope.endReached = true;

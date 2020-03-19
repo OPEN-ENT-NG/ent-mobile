@@ -1,7 +1,13 @@
 angular
   .module("ent.request", ["ent.workspace_service", "ent"])
 
-  .service("RequestService", function($http, $q, $state, $ionicLoading) {
+  .service("RequestService", function(
+    $rootScope,
+    $http,
+    $q,
+    $state,
+    $ionicLoading
+  ) {
     var timeout = 30000;
     var headers = {
       Authorization: "",
@@ -9,11 +15,10 @@ angular
     };
 
     function getConfig(config = {}) {
-      return {
-        timeout,
-        ...config,
-        headers: { ...headers, ...(config.headers ? config.headers : {}) }
-      };
+      const newHeaders = spreadObject(headers, config.headers || {});
+      return spreadObject({ timeout }, config, {
+        headers: newHeaders
+      });
     }
 
     function onError(reject, error) {
@@ -33,7 +38,7 @@ angular
       }
     }
 
-    this.setDefaultAuth = (tokens) => {
+    this.setDefaultAuth = tokens => {
       headers["Authorization"] = "Bearer " + tokens.access;
       return tokens;
     };
@@ -57,7 +62,7 @@ angular
 
       return $q(function(resolve, reject) {
         $http
-          .delete(url, { ...config, data })
+          .delete(url, spreadObject(config, { data }))
           .then(response => {
             onResolve(resolve, response);
           })

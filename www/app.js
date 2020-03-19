@@ -385,7 +385,7 @@ angular
       }
 
       if (ionic.Platform.isIOS()) {
-        $cordovaKeyboard.hideAccessoryBar(false)
+        $cordovaKeyboard.hideAccessoryBar(false);
       }
 
       cordova.getAppVersion.getVersionNumber(function(version) {
@@ -420,7 +420,7 @@ angular
       });
 
       $rootScope.$on("LoggedIn", () => {
-        $rootScope.listMenu = [...listMenu];
+        $rootScope.listMenu = spreadArray(listMenu);
         UserFactory.getUser().then(user => {
           $rootScope.myUser = user;
 
@@ -890,7 +890,7 @@ angular
 
     const formatFile = (fileName, fileRequestResult) => {
       const fileNameRegexp = RegExp('filename="(.*)"', "g");
-      const fileExtensionRegexp = RegExp("(\..*)$", "g");
+      const fileExtensionRegexp = RegExp("(..*)$", "g");
       const headerHasFileName = fileNameRegexp.test(
         fileRequestResult.headers("content-disposition")
       );
@@ -915,11 +915,12 @@ angular
               ? fileName + extension
               : fileName;
         } else if (headerHasFileName || fileNameHasExtension) {
-          finalFileName = fileNameRegexp.exec(
-            fileRequestResult.headers("content-disposition")
-          )[1] || fileName;
+          finalFileName =
+            fileNameRegexp.exec(
+              fileRequestResult.headers("content-disposition")
+            )[1] || fileName;
           const fileExtension = fileExtensionRegexp.exec(finalFileName)[1];
-          finalMimeType = getMimeType(fileExtension)
+          finalMimeType = getMimeType(fileExtension);
         } else {
           finalFileName = fileName;
           finalMimeType = "application/octet-stream";
@@ -1202,7 +1203,6 @@ angular
     RequestService,
     $rootScope,
     domainENT,
-    $rootScope,
     xitiIndex,
     UserFactory
   ) {
@@ -1435,4 +1435,43 @@ function setProfileImage(regularPath, userId) {
     regularPath != "no-avatar.jpg"
     ? regularPath
     : "/userbook/avatar/" + userId;
+}
+
+function spreadArray() {
+  const result = [];
+  const collections = Array.prototype.slice.call(arguments);
+  for (let i = 0; i < collections.length; i++) {
+    if (Array.isArray(collections[i])) {
+      Array.prototype.push.apply(result, collections[i]);
+    } else {
+      continue;
+    }
+  }
+  return result;
+}
+
+function spreadObject() {
+  const result = {};
+  const collections = Array.prototype.slice.call(arguments);
+  for (let i = 0; i < collections.length; i++) {
+    const currentCollection = collections[i];
+    const isObject =
+      !!currentCollection && typeof currentCollection === "object";
+
+    if (isObject) {
+      const currentCollectionKeys = Object.keys(currentCollection);
+      for (let j = 0; j < currentCollectionKeys.length; j++) {
+        result[currentCollectionKeys[j]] =
+          currentCollection[currentCollectionKeys[j]];
+      }
+    } else {
+      console.log(
+        "spreadObject call with wrong argument type : " +
+          typeof currentCollection,
+        currentCollection
+      );
+      continue;
+    }
+  }
+  return result;
 }
