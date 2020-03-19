@@ -200,7 +200,11 @@ angular
         ).then(arrayResp => {
           let result = [];
           for (let i = 0; i < subfolders.length; i++) {
-            result = [...result, subfolders[i], ...arrayResp[i]];
+            result = spreadObject(
+              result,
+              [subfolders[i]],
+              arrayResp[i]
+            );
           }
           return result;
         });

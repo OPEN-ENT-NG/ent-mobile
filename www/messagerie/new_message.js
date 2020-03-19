@@ -263,54 +263,51 @@ angular
         const getAdapter = function(action) {
           switch (action) {
             case "REPLY_ONE": {
-              return {
-                ...defaultMessage,
+              return spreadObject(defaultMessage, {
                 replyTo: prevMessage.id,
                 to: getDisplayNamesForArray([prevMessage.from]),
                 subject:
                   $rootScope.translationConversation["reply.re"] +
                   prevMessage.subject,
                 prevMessage: headerReponse(prevMessage) + prevMessage.body
-              };
+              });
             }
             case "REPLY_ALL": {
-              return {
-                ...defaultMessage,
+              return spreadObject(defaultMessage, {
                 replyTo: prevMessage.id,
                 to: getDisplayNamesForArray(
-                  [
-                    prevMessage.from,
-                    ...prevMessage.to.filter(
-                      user => user != $rootScope.myUser.userId
-                    )
-                  ].filter(distinct)
+                  spreadArray(
+                    [prevMessage.from],
+                    prevMessage.to
+                      .filter(user => user != $rootScope.myUser.userId)
+                      .filter(distinct)
+                  )
                 ),
-                cc: getDisplayNamesForArray(prevMessage.cc.filter(id => id !== prevMessage.from)),
+                cc: getDisplayNamesForArray(
+                  prevMessage.cc.filter(id => id !== prevMessage.from)
+                ),
                 subject:
                   $rootScope.translationConversation["reply.re"] +
                   prevMessage.subject,
                 prevMessage: headerReponse(prevMessage) + prevMessage.body
-              };
+              });
             }
             case "FORWARD": {
-              return {
-                ...defaultMessage,
+              return spreadObject(defaultMessage, {
                 replyTo: prevMessage.id,
                 subject:
                   $rootScope.translationConversation["reply.fw"] +
                   prevMessage.subject,
                 prevMessage: headerReponse(prevMessage) + prevMessage.body
-              };
+              });
             }
             case "DRAFT": {
-              return {
-                ...defaultMessage,
-                ...prevMessage,
+              return spreadObject(defaultMessage, prevMessage, {
                 to: getDisplayNamesForArray(prevMessage.to),
                 cc: getDisplayNamesForArray(prevMessage.cc),
                 cci: getDisplayNamesForArray(prevMessage.cci),
                 body: deleteHtmlContent(prevMessage.body)
-              };
+              });
             }
           }
         };

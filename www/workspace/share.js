@@ -40,20 +40,26 @@ angular
             if (shouldLoadShare) {
               for (let group of data.groups.visibles) {
                 $scope.addToShared(
-                  {
-                    ...group,
-                    ...reverseRights(data.groups.checked[group.id] || data.groups.checkedInherited[group.id])
-                  },
+                  spreadObject(
+                    group,
+                    reverseRights(
+                      data.groups.checked[group.id] ||
+                        data.groups.checkedInherited[group.id]
+                    )
+                  ),
                   true
                 );
               }
 
               for (let user of data.users.visibles) {
                 $scope.addToShared(
-                  {
-                    ...user,
-                    ...reverseRights(data.users.checked[user.id] || data.users.checkedInherited[user.id])
-                  },
+                  spreadObject(
+                    user,
+                    reverseRights(
+                      data.users.checked[user.id] ||
+                        data.users.checkedInherited[user.id]
+                    )
+                  ),
                   false
                 );
               }
@@ -66,13 +72,16 @@ angular
         let rightForShare = [];
         for (let action in $scope.actions) {
           if (contact.hasOwnProperty(action) && contact[action]) {
-            rightForShare = [...rightForShare, ...$scope.actions[action]];
+            rightForShare = spreadArray(
+              rightForShare,
+              $scope.actions[action]
+            );
           }
         }
         return rightForShare || null;
       };
 
-      var reverseRights = (userRights) => {
+      var reverseRights = userRights => {
         let checkByAction = (rights, userRights) => {
           for (let right of rights) {
             if (!userRights.includes(right)) {
@@ -85,7 +94,10 @@ angular
         let result = {};
 
         for (let rightName in $scope.actions) {
-          result[rightName] = checkByAction($scope.actions[rightName], userRights);
+          result[rightName] = checkByAction(
+            $scope.actions[rightName],
+            userRights
+          );
         }
 
         return result;
@@ -98,12 +110,14 @@ angular
         }
 
         let isGroup = isGroupParam || contact.isGroup;
-        let data = {
-          read: true,
-          comment: true,
-          ...contact,
-          isGroup
-        };
+        let data = spreadObject(
+          {
+            read: true,
+            comment: true
+          },
+          contact,
+          { isGroup }
+        );
 
         if (!isGroup) {
           data.profile = $rootScope.translationUser[contact.profile];
@@ -124,21 +138,23 @@ angular
           ).then(({ data }) => {
             for (let group of data.groups.visibles) {
               if (group.name.includes($scope.search)) {
-                $scope.contacts.push({
-                  ...group,
-                  isGroup: true,
-                  displayName: group.name
-                });
+                $scope.contacts.push(
+                  spreadObject(group, {
+                    isGroup: true,
+                    displayName: group.name
+                  })
+                );
               }
             }
             for (let user of data.users.visibles) {
               if (user.username.includes($scope.search)) {
-                $scope.contacts.push({
-                  ...user,
-                  isGroup: false,
-                  profile: $rootScope.translationWorkspace[user.profile],
-                  displayName: user.username
-                });
+                $scope.contacts.push(
+                  spreadObject(user, {
+                    isGroup: false,
+                    profile: $rootScope.translationWorkspace[user.profile],
+                    displayName: user.username
+                  })
+                );
               }
             }
           });
@@ -180,7 +196,7 @@ angular
 
       $scope.saveSharing = function() {
         $scope.loader.share = true;
-        const promises = []
+        const promises = [];
 
         for (const file of $scope.items) {
           let data = { users: {}, groups: {} };
@@ -202,17 +218,18 @@ angular
             });
           }
 
-          promises.push(WorkspaceService.updateSharingActions(file._id, data))
+          promises.push(WorkspaceService.updateSharingActions(file._id, data));
         }
 
-        Promise.all(promises).then(() => {
-          $scope.loader.share = false;
-          PopupFactory.getAlertPopupNoTitle(
-            "Droits de partage mis à jour avec succès !"
-          );
-        })
-        .catch(PopupFactory.getCommonAlertPopup)
-        .finally(() => ($scope.loader.share = false));
+        Promise.all(promises)
+          .then(() => {
+            $scope.loader.share = false;
+            PopupFactory.getAlertPopupNoTitle(
+              "Droits de partage mis à jour avec succès !"
+            );
+          })
+          .catch(PopupFactory.getCommonAlertPopup)
+          .finally(() => ($scope.loader.share = false));
       };
     });
   });

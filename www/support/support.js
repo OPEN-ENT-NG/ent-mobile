@@ -61,7 +61,7 @@ angular
       formData.append("file", attachment);
 
       WorkspaceService.uploadAttachment(formData)
-        .then(({data}) => {
+        .then(({ data }) => {
           $scope.ticket.attachments.push({
             name: data.metadata.filename,
             size: data.metadata.size,
@@ -77,8 +77,10 @@ angular
     };
 
     $scope.deleteAttachment = function(attachmentId) {
-      const newAttachments = $scope.ticket.attachments.filter(att => att.id != attachmentId)
-      $scope.ticket.attachments = newAttachments
+      const newAttachments = $scope.ticket.attachments.filter(
+        att => att.id != attachmentId
+      );
+      $scope.ticket.attachments = newAttachments;
     };
 
     $scope.saveTicket = function() {
@@ -99,17 +101,16 @@ angular
 
         var category = `mobile;${$scope.ticket.category}`;
 
-        SupportService.createTicket({
-          ...$scope.ticket,
-          category: category,
-          subject: subject
-        }).then(
+        SupportService.createTicket(
+          spreadObject($scope.ticket, {
+            category: category,
+            subject: subject
+          })
+        ).then(
           res => {
             $ionicLoading.hide();
             PopupFactory.getAlertPopupNoTitle(
-              `Demande N°${
-                res.data.id
-              } créée avec succès. Retrouvez le suivi sur la version web du module Aide et support.`
+              `Demande N°${res.data.id} créée avec succès. Retrouvez le suivi sur la version web du module Aide et support.`
             ).then(() => {
               $state.go("app.timeline_list");
             });

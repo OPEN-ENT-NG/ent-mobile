@@ -51,7 +51,7 @@ angular
       });
       MessagerieServices.getFolders().then(
         ({ data }) => {
-          $scope.folders = [...$scope.folders, ...data];
+          $scope.folders = spreadArray($scope.folders, data);
           Promise.all(
             $scope.folders.filter(folder => folder.id != "DRAFT" && folder.id != "OUTBOX").map(folder => {
               return MessagerieServices.getCount(
