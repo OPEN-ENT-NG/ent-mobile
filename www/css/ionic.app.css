@@ -11640,28 +11640,34 @@ a.button {
     right: calc(constant(safe-area-inset-right) + 5px);
     right: calc(env(safe-area-inset-right) + 5px); }
 
-.platform-ios.platform-cordova:not(.fullscreen) .has-tabs, .platform-ios.platform-cordova:not(.fullscreen) .bar-footer.has-tabs {
+.platform-ios.platform-cordova:not(.fullscreen) .has-tabs,
+.platform-ios.platform-cordova:not(.fullscreen) .bar-footer.has-tabs {
+  bottom: 49px;
   bottom: calc(constant(safe-area-inset-bottom) + 49px);
   bottom: calc(env(safe-area-inset-bottom) + 49px); }
 
-.platform-ios.platform-cordova:not(.fullscreen) .tabs-top > .tabs, .platform-ios.platform-cordova:not(.fullscreen) .tabs.tabs-top {
+.platform-ios.platform-cordova:not(.fullscreen) .tabs-top > .tabs,
+.platform-ios.platform-cordova:not(.fullscreen) .tabs.tabs-top {
   top: 64px; }
 
 .platform-ios.platform-cordova:not(.fullscreen) .tabs {
+  padding-bottom: 0px;
   padding-bottom: constant(safe-area-inset-bottom);
   padding-bottom: env(safe-area-inset-bottom);
+  height: 49px;
   height: calc(constant(safe-area-inset-bottom) + 49px);
   height: calc(env(safe-area-inset-bottom) + 49px); }
 
-.platform-ios.platform-cordova:not(.fullscreen) .has-header, .platform-ios.platform-cordova:not(.fullscreen) .bar-subheader {
+.platform-ios.platform-cordova:not(.fullscreen) .has-header,
+.platform-ios.platform-cordova:not(.fullscreen) .bar-subheader {
   top: 64px;
   top: calc(constant(safe-area-inset-top) + 44px);
   top: calc(env(safe-area-inset-top) + 44px); }
 
 .platform-ios.platform-cordova:not(.fullscreen) .has-subheader {
   top: 108px;
-  top: calc(constant(safe-area-inset-top) + 88px);
-  top: calc(env(safe-area-inset-top) + 88px); }
+  top: calc( constant(safe-area-inset-top) + 88px);
+  top: calc( env(safe-area-inset-top) + 88px); }
 
 .platform-ios.platform-cordova:not(.fullscreen) .has-header.has-tabs-top {
   top: 113px;
@@ -11670,8 +11676,8 @@ a.button {
 
 .platform-ios.platform-cordova:not(.fullscreen) .has-header.has-subheader.has-tabs-top {
   top: 157px;
-  top: calc(137px + constant(safe-area-inset-right));
-  top: calc(137px + env(safe-area-inset-right)); }
+  top: calc( 137px + constant(safe-area-inset-right));
+  top: calc( 137px + env(safe-area-inset-right)); }
 
 .platform-ios.platform-cordova .popover .bar-header:not(.bar-subheader) {
   height: 44px; }
@@ -11680,7 +11686,8 @@ a.button {
   .platform-ios.platform-cordova .popover .bar-header:not(.bar-subheader) > * {
     margin-top: 0; }
 
-.platform-ios.platform-cordova .popover .has-header, .platform-ios.platform-cordova .popover .bar-subheader {
+.platform-ios.platform-cordova .popover .has-header,
+.platform-ios.platform-cordova .popover .bar-subheader {
   top: 44px; }
 
 .platform-ios.platform-cordova .popover .has-subheader {
@@ -11706,8 +11713,10 @@ a.button {
   a.item.item-complex,
   button.item.item-complex {
     padding: 0; }
-    .item-complex .item-content, a.item.item-complex .item-content, button.item.item-complex .item-content {
-      padding: 16px calc(constant(safe-area-inset-right) + 49px) 16px calc(constant(safe-area-inset-left) + 16px); }
+    .item-complex .item-content,
+    a.item.item-complex .item-content,
+    button.item.item-complex .item-content {
+      padding: 16px calc( constant(safe-area-inset-right) + 49px) 16px calc(constant(safe-area-inset-left) + 16px); }
   .item-left-edit.visible.active {
     -webkit-transform: translate3d(calc(constant(safe-area-inset-left) + 8px), 0, 0);
     transform: translate3d(calc(constant(safe-area-inset-left) + 8px), 0, 0); }
