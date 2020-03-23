@@ -42,31 +42,42 @@
       }
     }
 
-    .has-tabs, .bar-footer.has-tabs {
-      bottom : calc(constant(safe-area-inset-bottom) + #{$tabs-height});
-      bottom : calc(env(safe-area-inset-bottom) + #{$tabs-height});
+    .has-tabs,
+    .bar-footer.has-tabs {
+      bottom: #{$tabs-height};
+      bottom: calc(constant(safe-area-inset-bottom) + #{$tabs-height});
+      bottom: calc(env(safe-area-inset-bottom) + #{$tabs-height});
     }
 
-    .tabs-top > .tabs, .tabs.tabs-top {
+    .tabs-top > .tabs,
+    .tabs.tabs-top {
       top: $bar-height + $ios-statusbar-height;
     }
 
     .tabs {
+      padding-bottom: 0px;
       padding-bottom: constant(safe-area-inset-bottom);
       padding-bottom: env(safe-area-inset-bottom);
+      height: 49px;
       height: calc(constant(safe-area-inset-bottom) + 49px);
       height: calc(env(safe-area-inset-bottom) + 49px);
     }
-    .has-header, .bar-subheader {
+    .has-header,
+    .bar-subheader {
       top: $bar-height + $ios-statusbar-height;
+
       top: calc(constant(safe-area-inset-top) + #{$bar-height});
       top: calc(env(safe-area-inset-top) + #{$bar-height});
     }
     .has-subheader {
       top: $bar-height + $bar-subheader-height + $ios-statusbar-height;
 
-      top: calc(constant(safe-area-inset-top) + #{$bar-height + $bar-subheader-height});
-      top: calc(env(safe-area-inset-top) + #{$bar-height + $bar-subheader-height});
+      top: calc(
+        constant(safe-area-inset-top) + #{$bar-height + $bar-subheader-height}
+      );
+      top: calc(
+        env(safe-area-inset-top) + #{$bar-height + $bar-subheader-height}
+      );
     }
     .has-header.has-tabs-top {
       top: $bar-height + $tabs-height + $ios-statusbar-height;
@@ -75,10 +86,15 @@
       top: calc(#{$bar-height + $tabs-height} + env(safe-area-inset-top));
     }
     .has-header.has-subheader.has-tabs-top {
-      top: $bar-height + $bar-subheader-height + $tabs-height + $ios-statusbar-height;
+      top: $bar-height + $bar-subheader-height + $tabs-height +
+        $ios-statusbar-height;
 
-      top: calc(#{$bar-height + $bar-subheader-height + $tabs-height} + constant(safe-area-inset-right);
-      top: calc(#{$bar-height + $bar-subheader-height + $tabs-height} + env(safe-area-inset-right);
+      top: calc(
+        #{$bar-height + $bar-subheader-height + $tabs-height} + constant(safe-area-inset-right)
+      );
+      top: calc(
+        #{$bar-height + $bar-subheader-height + $tabs-height} + env(safe-area-inset-right)
+      );
     }
   }
   .popover {
@@ -91,7 +107,8 @@
         margin-top: 0;
       }
     }
-    .has-header, .bar-subheader {
+    .has-header,
+    .bar-subheader {
       top: $bar-height;
     }
     .has-subheader {
@@ -99,17 +116,18 @@
     }
   }
   &.status-bar-hide {
-    // Cordova doesn't adjust the body height correctly, this makes up for it
+    // Cordova doesnt adjust the body height correctly, this makes up for it
     margin-bottom: 20px;
   }
 }
 
 @media (orientation: landscape) {
   .item {
-    padding: $item-padding calc(constant(safe-area-inset-right) + #{$item-padding});
+    padding: $item-padding
+      calc(constant(safe-area-inset-right) + #{$item-padding});
 
     .badge {
-      right: calc(constant(safe-area-inset-right) + 32px)
+      right: calc(constant(safe-area-inset-right) + 32px);
     }
   }
   .item-icon-left {
@@ -126,14 +144,19 @@
     }
   }
 
-  .item-complex, a.item.item-complex, button.item.item-complex {
+  .item-complex,
+  a.item.item-complex,
+  button.item.item-complex {
     padding: 0;
 
     .item-content {
       padding: $item-padding
-        calc(constant(safe-area-inset-right) + #{(ceil( ($item-padding * 3) + ($item-padding / 3)) - 5)})
-        $item-padding
-        calc(constant(safe-area-inset-left) + #{$item-padding});
+        calc(
+          constant(safe-area-inset-right) + #{(
+              ceil(($item-padding * 3) + ($item-padding / 3)) - 5
+            )}
+        )
+        $item-padding calc(constant(safe-area-inset-left) + #{$item-padding});
     }
   }
 
@@ -145,11 +168,10 @@
     @include translate3d(calc(constant(safe-area-inset-left) + 50px), 0, 0);
   }
 
-  .item-right-edit{
+  .item-right-edit {
     right: constant(safe-area-inset-right);
-    right: env(safe-area-inset-right)
+    right: env(safe-area-inset-right);
   }
-
 
   .platform-ios.platform-browser.platform-ipad {
     position: fixed; // required for iPad 7 Safari

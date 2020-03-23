@@ -6,7 +6,9 @@ ion-popover-view.fit ion-content {
   position: relative !important;
 }
 
+
 .has-footer {
+  bottom: 49px !important;
   bottom: calc(constant(safe-area-inset-bottom) + 49px) !important;
   bottom: calc(env(safe-area-inset-bottom) + 49px) !important;
 }
@@ -423,6 +425,8 @@ ion-popover-view.fit ion-content {
   background-color: #fff;
   width: 50%;
   left: 37%;
+  bottom: 60px !important;
+  
   bottom: calc(constant(safe-area-inset-bottom) + 60px) !important;
   bottom: calc(env(safe-area-inset-bottom) + 60px) !important;
   padding: 5px 15px;
@@ -662,6 +666,7 @@ ion-popover-view.fit ion-content {
 }
 
 .bar-footer {
+  height: 49px !important;
   height: calc(constant(safe-area-inset-bottom) + 49px) !important;
   height: calc(env(safe-area-inset-bottom) + 49px) !important;
 }

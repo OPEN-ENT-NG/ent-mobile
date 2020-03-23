@@ -37,6 +37,7 @@
   padding: 25px;
   font-size: 20px;
   position: fixed;
+  bottom: 70px !important;
   bottom: calc(constant(safe-area-inset-bottom) + 70px) !important;
   bottom: calc(env(safe-area-inset-bottom) + 70px) !important;
   right: 5%; /* Adjust position */
