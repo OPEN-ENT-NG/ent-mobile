@@ -1,6 +1,6 @@
 {
   "name": "OpenENT_Mobile",
-  "version": "2.1.9",
+  "version": "2.1.11",
   "description": "ENT mobile: An Ionic project",
   "scripts": {
     "preinstall": "npx npm-force-resolutions"

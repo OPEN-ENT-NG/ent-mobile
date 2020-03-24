@@ -14,6 +14,8 @@ jsconfig.json
 keyAndroidENT.jks
 keystorePCNPROD.jks
 build.json
+www/libSAVE
+www/cssSAVE
 .vscode/typings/ionic/ionic.d.ts
 .vscode/plugins.json
 .vscode/typings/angularjs/angular.d.ts
