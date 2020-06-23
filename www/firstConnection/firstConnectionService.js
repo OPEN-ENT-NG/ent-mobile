@@ -1,23 +1,20 @@
 angular
   .module("ent.firstConnectionService", [])
 
-  .service("FirstConnectionService", function(
-    domainENT,
-    RequestService,
-    $httpParamSerializer
-  ) {
-    this.getPasswordRegex = function() {
+  .service("FirstConnectionService", function (domainENT, RequestService) {
+    this.getPasswordRegex = function () {
       return RequestService.get(domainENT + "/auth/context");
     };
 
-    this.getAuthTranslation = function() {
+    this.getAuthTranslation = function () {
       return RequestService.get(`${domainENT}/auth/i18n`);
     };
 
-    this.activate = function(user) {
+    this.activate = function (user) {
       return RequestService.post(
         domainENT + "/auth/activation",
-        $httpParamSerializer({
+        null,
+        {
           theme: "",
           login: user.login,
           password: user.password,
@@ -25,8 +22,8 @@ angular
           acceptCGU: user.acceptCGU,
           activationCode: user.activationCode,
           mail: user.mail || "",
-          phone: user.phone || ""
-        }),
+          phone: user.phone || "",
+        },
         {},
         true
       );

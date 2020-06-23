@@ -1,7 +1,7 @@
 angular
   .module("ent.message_detail", ["ent.message_services", "ent.messagerie"])
 
-  .controller("MessagesDetailCtrl", function(
+  .controller("MessagesDetailCtrl", function (
     $scope,
     $rootScope,
     FileService,
@@ -16,57 +16,58 @@ angular
     MoveMessagesPopupFactory,
     PopupFactory
   ) {
-    $ionicPlatform.ready(function() {
-      $scope.$on("$ionicView.beforeEnter", function() {
+    $ionicPlatform.ready(function () {
+      $scope.mail = MessagerieServices.mailAdapter({});
+      $scope.$on("$ionicView.beforeEnter", function () {
         $ionicPopover
           .fromTemplateUrl("messagerie/popover_messagerie_detail.html", {
-            scope: $scope
+            scope: $scope,
           })
-          .then(function(popover) {
+          .then(function (popover) {
             $scope.popover = popover;
           });
 
         getMessage($stateParams.idMessage);
       });
 
-      $scope.isDraft = function() {
+      $scope.isDraft = function () {
         return "draft" === $stateParams.nameFolder;
       };
 
-      $scope.isInbox = function() {
+      $scope.isInbox = function () {
         return (
           ["outbox", "draft", "trash"].indexOf($stateParams.nameFolder) === -1
         );
       };
 
-      $scope.isTrash = function() {
+      $scope.isTrash = function () {
         return "trash" === $stateParams.nameFolder;
       };
 
-      $scope.trash = function() {
+      $scope.trash = function () {
         PopupFactory.getConfirmPopup(
           $rootScope.translationConversation["delete"],
           "Êtes-vous sûr(e) de vouloir supprimer ce(s) message(s) ?"
-        ).then(function(res) {
+        ).then(function (res) {
           if (res) {
             $ionicLoading.show({
-              template: '<ion-spinner icon="android"/>'
+              template: '<ion-spinner icon="android"/>',
             });
             MessagerieServices.deleteSelectedMessages(
               [$scope.mail],
               $stateParams.nameFolder
             ).then(
-              function() {
+              function () {
                 $ionicLoading.hide();
                 PopupFactory.getAlertPopup(
                   $rootScope.translationConversation["delete"],
                   "Message(s) supprimé(s)"
-                ).then(function() {
+                ).then(function () {
                   $ionicHistory.clearCache();
                   $ionicHistory.goBack();
                 });
               },
-              function() {
+              function () {
                 $ionicLoading.hide();
               }
             );
@@ -74,15 +75,15 @@ angular
         });
       };
 
-      $scope.moveMessage = function(message) {
+      $scope.moveMessage = function (message) {
         var popupMove = MoveMessagesPopupFactory.getPopup($scope);
-        popupMove.then(function(res) {
+        popupMove.then(function (res) {
           $ionicLoading.show({
-            template: '<ion-spinner icon="android"/>'
+            template: '<ion-spinner icon="android"/>',
           });
 
           if (res != null) {
-            MessagerieServices.moveMessages([message], res).then(function() {
+            MessagerieServices.moveMessages([message], res).then(function () {
               $ionicHistory.goBack();
             });
           }
@@ -90,43 +91,45 @@ angular
         });
       };
 
-      $scope.restoreMessage = function(message) {
+      $scope.restoreMessage = function (message) {
         $ionicLoading.show({
-          template: '<ion-spinner icon="android"/>'
+          template: '<ion-spinner icon="android"/>',
         });
-        MessagerieServices.restoreSelectedMessages([message]).then(function() {
+        MessagerieServices.restoreSelectedMessages([message]).then(function () {
           $ionicHistory.goBack();
         });
         $ionicLoading.hide();
       };
 
-      $scope.editMail = function(action) {
+      $scope.editMail = function (action) {
         $scope.popover.hide();
         $state.go("app.new_message", { prevMessage: $scope.mail, action });
       };
 
-      $scope.downloadAttachment = function(id) {
+      $scope.downloadAttachment = function (id) {
         var attachmentUrl =
           domainENT +
           "/conversation/message/" +
           $scope.mail.id +
           "/attachment/" +
           id;
-        var attachment = $scope.mail.attachments.find(att => att.id == id);
+        var attachment = $scope.mail.attachments.find((att) => att.id == id);
         FileService.getFile(attachment.filename, attachmentUrl);
       };
 
       $scope.getRealName = (id, displayNames) => {
-        const foundUser = displayNames.find(user => id == user[0]);
+        const foundUser = displayNames.find((user) => id == user[0]);
         return foundUser ? foundUser[1] : "Inconnu";
       };
 
       function getMessage(idMessage) {
         $ionicLoading.show({
-          template: '<ion-spinner icon="android"/>'
+          template: '<ion-spinner icon="android"/>',
         });
         MessagerieServices.getMessage(idMessage)
-          .then(({ data }) => ($scope.mail = data))
+          .then(function (result) {
+            $scope.mail = MessagerieServices.mailAdapter(result.data);
+          })
           .finally($ionicLoading.hide);
       }
     });

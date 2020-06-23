@@ -1,139 +1,141 @@
 angular
   .module("ent.profile_service", ["ent.profile"])
 
-  .service("ProfileService", function(domainENT, RequestService, $rootScope) {
-    this.saveProfile = function(profile) {
+  .service("ProfileService", function (domainENT, RequestService, $rootScope) {
+    this.saveProfile = function (profile) {
       return RequestService.put(
         `${domainENT}/directory/user/${$rootScope.myUser.userId}`,
+        null,
         profile
       );
     };
 
-    this.getTranslation = function() {
+    this.getTranslation = function () {
       return RequestService.get(domainENT + "/userbook/i18n");
     };
 
-    this.getUserbookProfile = function() {
+    this.getUserbookProfile = function () {
       return RequestService.get(domainENT + "/userbook/api/person");
     };
 
-    this.getOAuthUser = function() {
-      return RequestService.get(domainENT + "/auth/oauth2/userinfo", {
-        headers: { Accept: "version=2.1" }
+    this.getOAuthUser = function () {
+      return RequestService.get(domainENT + "/auth/oauth2/userinfo", null, {
+        headers: { Accept: "version=2.1" },
       });
     };
 
-    this.getDirectoryUser = function(userId) {
+    this.getDirectoryUser = function (userId) {
       return RequestService.get(`${domainENT}/directory/user/${userId}`);
     };
 
-    this.getApplications = function() {
+    this.getApplications = function () {
       return RequestService.get(domainENT + "/timeline/notifications-defaults");
     };
 
-    this.getI18nNotifications = function() {
+    this.getI18nNotifications = function () {
       return RequestService.get(domainENT + "/timeline/i18nNotifications");
     };
 
-    this.getAllApps = function() {
+    this.getAllApps = function () {
       return RequestService.get(`${domainENT}/applications-list`);
     };
   })
 
-  .factory("UserFactory", function($rootScope, ProfileService, domainENT) {
+  .factory("UserFactory", function ($rootScope, ProfileService, domainENT, $q) {
     var user = null;
     var apps = null;
 
-    var foundRightEditLogin = function(authorizedActions) {
+    var foundRightEditLogin = function (authorizedActions) {
       return !!authorizedActions.find(
-        right =>
+        (right) =>
           right.name ==
           "org.entcore.directory.controllers.UserController|allowLoginUpdate"
       );
     };
 
-    var getApplicationsList = function(reset) {
-      if (apps && !reset) {
-        return Promise.resolve(apps);
+    var getTypeApp = (app) => {
+      if (
+        app.name.toUpperCase().indexOf("PRONOTE") > -1 ||
+        app.displayName.toUpperCase().indexOf("PRONOTE") > -1
+      ) {
+        return "PRONOTE";
+      } else if (app.address.indexOf("viescolairefr") > -1) {
+        return "LVS";
       } else {
-        var getTypeApp = app => {
-          if (
-            app.name.toUpperCase().indexOf("PRONOTE") > -1 ||
-            app.displayName.toUpperCase().indexOf("PRONOTE") > -1
-          ) {
-            return "PRONOTE";
-          } else if (app.address.indexOf("viescolairefr") > -1) {
-            return "LVS";
-          } else {
-            return null;
-          }
-        };
+        return null;
+      }
+    };
 
-        var getApp = app => {
-          switch (getTypeApp(app)) {
-            case "PRONOTE": {
-              return {
-                name: app.displayName,
-                address:
-                  domainENT +
-                  "/cas/oauth/login?service=" +
-                  encodeURIComponent(app.address),
-                type: "PRONOTE"
-              };
-            }
-            case "LVS": {
-              return {
-                name: app.displayName,
-                address: domainENT + app.address + "&noRedirect=true",
-                type: "LVS"
-              };
-            }
-            default: {
-              return app;
-            }
-          }
-        };
+    var getApp = (app) => {
+      switch (getTypeApp(app)) {
+        case "PRONOTE": {
+          return {
+            name: app.displayName,
+            address:
+              domainENT +
+              "/cas/oauth/login?service=" +
+              encodeURIComponent(app.address),
+            type: "PRONOTE",
+          };
+        }
+        case "LVS": {
+          return {
+            name: app.displayName,
+            address: domainENT + app.address + "&noRedirect=true",
+            type: "LVS",
+          };
+        }
+        default: {
+          return app;
+        }
+      }
+    };
 
-        return ProfileService.getAllApps().then(function(resp) {
+    var getApplicationsList = function (reset) {
+      if (apps && !reset) {
+        return $q.resolve(apps);
+      } else {
+        return ProfileService.getAllApps().then(function (resp) {
           apps = resp.data.apps.map(getApp);
           return apps;
         });
       }
     };
 
-    var hasPronoteAccount = function() {
+    var hasPronoteAccount = function () {
       return getPronoteAccount().length > 0;
     };
 
-    var getPronoteAccount = function() {
+    var getPronoteAccount = function () {
       if (!!apps) {
-        return apps.filter(app => !!app.type && app.type == "PRONOTE");
+        return apps.filter((app) => !!app.type && app.type == "PRONOTE");
       } else {
         return [];
       }
     };
 
-    var hasLVSAccount = function() {
+    var hasLVSAccount = function () {
       return getLVSAccount().length > 0;
     };
 
-    var getLVSAccount = function() {
+    var getLVSAccount = function () {
       if (!!apps) {
-        return apps.filter(app => !!app.type && app.type == "LVS");
+        return apps.filter((app) => !!app.type && app.type == "LVS");
       } else {
         return [];
       }
     };
 
-    var getUser = function(reset) {
+    var getUser = function (reset) {
       if (user && !reset) {
-        return Promise.resolve(user);
+        return $q.resolve(user);
       } else {
-        return Promise.all([
-          ProfileService.getUserbookProfile(),
-          ProfileService.getOAuthUser()
-        ])
-          .then(results => {
+        return $q
+          .all([
+            ProfileService.getUserbookProfile(),
+            ProfileService.getOAuthUser(),
+          ])
+          .then((results) => {
             let userbookProfile = $rootScope.pick(results[0].data.result[0], [
               "userId",
               "login",
@@ -143,31 +145,34 @@ angular
               "schools",
               "address",
               "email",
-              "mobile"
+              "mobile",
             ]);
             let oauthProfile = $rootScope.pick(results[1].data, [
               "groupsIds",
               "birthDate",
               "firstName",
-              "lastName"
+              "lastName",
             ]);
 
             user = Object.assign({}, userbookProfile, oauthProfile);
-            user.photo = setProfileImage(user.photo, user.id);
+            user.photo =
+              user.photo && user.photo != "no-avatar.jpg"
+                ? user.photo
+                : "/userbook/avatar/" + user.id;
             user.type = user.type[0];
             user.allowedLoginUpdate = foundRightEditLogin(
               results[1].data.authorizedActions
             );
             return user;
           })
-          .then(user =>
-            Promise.all([
-              Promise.resolve(user),
+          .then((user) =>
+            $q.all([
+              $q.resolve(user),
               ProfileService.getDirectoryUser(user.userId),
-              getApplicationsList()
+              getApplicationsList(),
             ])
           )
-          .then(result => {
+          .then((result) => {
             let user = result[0];
             user.loginAlias = result[1].data.loginAlias;
             return user;
@@ -181,6 +186,6 @@ angular
       hasPronoteAccount,
       getLVSAccount,
       hasLVSAccount,
-      getApplicationsList
+      getApplicationsList,
     };
   });

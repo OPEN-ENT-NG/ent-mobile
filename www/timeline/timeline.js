@@ -1,13 +1,11 @@
 angular
   .module("ent.timeline", ["ent.timeline_service"])
-  .controller("TimelineCtrl", function(
+  .controller("TimelineCtrl", function (
     $scope,
     $ionicPlatform,
     TimelineService,
     $ionicLoading,
-    domainENT,
     $state,
-    $sce,
     PopupFactory,
     NotificationService
   ) {
@@ -15,8 +13,8 @@ angular
     $scope.timeline = [];
     $scope.flashMsg = [];
 
-    $ionicPlatform.ready(function() {
-      $scope.$on("$ionicView.enter", function() {
+    $ionicPlatform.ready(function () {
+      $scope.$on("$ionicView.enter", function () {
         if ($state.is("app.timeline_list")) {
           getTimeline();
           getFlashMsg();
@@ -28,27 +26,27 @@ angular
       });
     });
 
-    $scope.doRefreshTimeline = function() {
+    $scope.doRefreshTimeline = function () {
       getTimeline();
       getFlashMsg();
       $scope.$broadcast("scroll.refreshComplete");
       $scope.$apply();
     };
 
-    $scope.getThumbnail = function(user) {
-      return domainENT + "/userbook/avatar/" + user;
+    $scope.getThumbnail = function (user) {
+      return "/userbook/avatar/" + user;
     };
 
-    $scope.alterHTML = function(message) {
+    $scope.alterHTML = function (message) {
       var ret = message.replace(/href=['"]?[^'"\s>]*['"]/g, "");
       return ret;
     };
 
-    $scope.goPrefs = function() {
+    $scope.goPrefs = function () {
       $state.go("app.timeline_prefs");
     };
 
-    $scope.clickTimelineNotif = function(type, resource, params) {
+    $scope.clickTimelineNotif = function (type, resource, params) {
       let serviceParams = {};
 
       switch (type) {
@@ -80,20 +78,20 @@ angular
 
     function getPreferences() {
       $ionicLoading.show({
-        template: '<ion-spinner icon="android"/>'
+        template: '<ion-spinner icon="android"/>',
       });
       $scope.preferences = [];
       $scope.types = [];
 
-      TimelineService.getTranslation().then(translation => {
-        TimelineService.getTypes().then(allTypes => {
-          TimelineService.getPreferences().then(prefs => {
+      TimelineService.getTranslation().then((translation) => {
+        TimelineService.getTypes().then((allTypes) => {
+          TimelineService.getPreferences().then((prefs) => {
             $scope.preferences = JSON.parse(prefs.data.preference);
             $scope.types = $scope.preferences.types || [];
 
             types = JSON.parse(prefs.data.preference).type;
 
-            allTypes.data.forEach(type => {
+            allTypes.data.forEach((type) => {
               let name =
                 translation[0].data[type.toLowerCase()] ||
                 translation[1].data[type.toLowerCase()];
@@ -110,7 +108,7 @@ angular
                 $scope.types.push({
                   type: type,
                   name: name,
-                  checked: checked
+                  checked: checked,
                 });
               }
             });
@@ -123,48 +121,37 @@ angular
     function getTimeline() {
       $scope.totalDisplayed = 10;
       $ionicLoading.show({
-        template: '<ion-spinner icon="android"/>'
+        template: '<ion-spinner icon="android"/>',
       });
 
-      TimelineService.getPreferences().then(prefs => {
+      TimelineService.getPreferences().then((prefs) => {
         let filter = [];
         if (prefs.data.preference) {
           filter = JSON.parse(prefs.data.preference).type;
         }
-        TimelineService.getTimeline(formatFilter(filter)).then(resp => {
+        TimelineService.getTimeline(filter).then((resp) => {
           $scope.timeline = resp.data.results;
           $ionicLoading.hide();
         });
       });
     }
 
-    function formatFilter(filter) {
-      if (!filter instanceof Array) {
-        $ionicLoadng.hide();
-      }
-      let result = "";
-      filter.forEach(element => {
-        result += "&type=" + element;
-      });
-      return result;
-    }
-
-    $scope.loadMore = function() {
+    $scope.loadMore = function () {
       $scope.totalDisplayed += 3;
       $scope.$broadcast("scroll.infiniteScrollComplete");
     };
 
-    $scope.updatePreferences = function() {
+    $scope.updatePreferences = function () {
       $scope.preferences.type = $scope.types
-        .filter(elem => elem.checked)
-        .map(elem => elem.type);
+        .filter((elem) => elem.checked)
+        .map((elem) => elem.type);
 
       TimelineService.updatePreferences($scope.preferences);
     };
 
-    $scope.markAsRead = function(id) {
+    $scope.markAsRead = function (id) {
       $ionicLoading.show({
-        template: '<ion-spinner icon="android"/>'
+        template: '<ion-spinner icon="android"/>',
       });
       TimelineService.markAsRead(id)
         .then(getFlashMsg)
@@ -177,15 +164,15 @@ angular
         red: "#e13a3a",
         orange: "#FF9057",
         green: "#46bfaf",
-        blue: "#2A9CC8"
+        blue: "#2A9CC8",
       };
 
       $ionicLoading.show({
-        template: '<ion-spinner icon="android"/>'
+        template: '<ion-spinner icon="android"/>',
       });
       TimelineService.getFlashMsg()
         .then(({ data }) => {
-          $scope.flashMsg = data.map(msg => {
+          $scope.flashMsg = data.map((msg) => {
             msg.contents = msg.contents.fr;
             msg.customColor = msg.color
               ? scssVariables[msg.color]

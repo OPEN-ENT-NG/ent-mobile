@@ -14,7 +14,7 @@
             class="item item-thumbnail-left item-text-wrap"
             ng-click="goToBlog(blog)"
           >
-            <img http-src="{{ getImageUrl(blog.thumbnail) }}" />
+            <img http-src="{{ getBlogThumbnail(blog) }}" />
             <h2>{{ blog.title }}</h2>
             <h3>{{ blog.description }}</h3>
             <h4>{{ translationBlog["blog.by"] }} {{ blog.author.username }}</h4>

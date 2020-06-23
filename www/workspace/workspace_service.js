@@ -1,156 +1,155 @@
 angular
   .module("ent.workspace_service", ["ent.request"])
 
-  .service("WorkspaceService", function($http, domainENT, RequestService) {
-    this.getFolders = function(parameters) {
-      return getDocuments(parameters, true);
-    };
-
-    this.getFiles = function(parameters) {
-      return getDocuments(parameters, false);
-    };
-
-    var getDocuments = function(parameters, isFolder) {
-      let urlParameters = "";
-      for (let key in parameters) {
-        urlParameters += parameters[key] ? `${key}=${parameters[key]}&` : "";
-      }
-      urlParameters = urlParameters.substring(0, urlParameters.length - 1);
-
-      let foldersOrFiles = isFolder ? "/folders/list" : "/documents";
-
-      return RequestService.get(
-        `${domainENT}/workspace${foldersOrFiles}?${urlParameters}`
+  .service("WorkspaceService", function (
+    domainENT,
+    FileService,
+    RequestService,
+    $q
+  ) {
+    function cleanNullParameters(parameters) {
+      return Object.fromEntries(
+        Object.entries(parameters).filter((item) => item[1] != null)
       );
+    }
+
+    this.getFolders = function (parameters) {
+      return getDocuments(cleanNullParameters(parameters), true);
     };
 
-    this.updateSharingActions = function(id, data) {
+    this.getFiles = function (parameters) {
+      return getDocuments(cleanNullParameters(parameters), false);
+    };
+
+    var getDocuments = function (parameters, isFolder) {
+      const url = isFolder
+        ? `${domainENT}/workspace/folders/list`
+        : `${domainENT}/workspace/documents`;
+      return RequestService.get(url, parameters);
+    };
+
+    this.updateSharingActions = function (id, data) {
       return RequestService.put(
         `${domainENT}/workspace/share/resource/${id}`,
+        null,
         data
       );
     };
 
-    this.commentDocById = function(id, comment) {
+    this.commentDocById = function (id, comment) {
       return RequestService.post(
-        domainENT + "/workspace/document/" + id + "/comment",
-        "comment=" + comment
+        `${domainENT}/workspace/document/${id}/comment`,
+        null,
+        { comment, serializer: "urlencoded" }
       );
     };
 
-    this.renameDocument = function(item, newName) {
-      let folder = item.eType === "folder" ? "/folder" : "";
+    this.renameDocument = function (item, newName) {
+      const url =
+        item.eType === "folder"
+          ? `${domainENT}/workspace/folder/rename/${item._id}`
+          : `${domainENT}/workspace/rename/${item._id}`;
+      return RequestService.put(url, null, { name: newName });
+    };
+
+    this.trashDocuments = function (ids) {
       return RequestService.put(
-        `${domainENT}/workspace${folder}/rename/${item._id}`,
-        { name: newName }
+        `${domainENT}/workspace/documents/trash`,
+        null,
+        {
+          ids,
+        }
       );
     };
 
-    this.trashDocuments = function(ids) {
-      return RequestService.put(`${domainENT}/workspace/documents/trash`, {
-        ids
-      });
+    this.deleteDocuments = function (ids) {
+      return $q.all(
+        ids.map(function (id) {
+          return RequestService.delete(`${domainENT}/workspace/document/${id}`);
+        })
+      );
     };
 
-    this.deleteDocuments = function(ids) {
-      return RequestService.delete(`${domainENT}/workspace/documents`, {
-        ids
-      });
+    this.restoreDocuments = function (ids) {
+      return RequestService.put(
+        `${domainENT}/workspace/documents/restore`,
+        null,
+        {
+          ids,
+        }
+      );
     };
 
-    this.restoreDocuments = function(ids) {
-      return RequestService.put(`${domainENT}/workspace/documents/restore`, {
-        ids
-      });
-    };
-
-    this.getSharingItemDatas = function(idItem, search = "") {
+    this.getSharingItemDatas = function (idItem, search = "") {
+      const params = { search };
       return RequestService.get(
-        `${domainENT}/workspace/share/json/${idItem}?search=${search}`
+        `${domainENT}/workspace/share/json/${idItem}`,
+        params
       );
     };
 
-    // this.versionDoc = function(id) {
-    //   return RequestService.get(
-    //     domainENT + "/workspace/document/" + id + "/revisions"
-    //   );
-    // };
-
-    // this.putNewVersion = function(id, newVersion) {
-    //   return $http.put(
-    //     domainENT +
-    //       "/workspace/document/" +
-    //       id +
-    //       "?thumbnail=120x120&thumbnail=290x290",
-    //     newVersion,
-    //     {
-    //       transformRequest: angular.identity,
-    //       headers: { "Content-Type": undefined }
-    //     }
-    //   );
-    // };
-
-    // this.deleteVersion = function(idDoc, idVersion) {
-    //   return RequestService.delete(
-    //     domainENT + "/workspace/document/" + idDoc + "/revision/" + idVersion
-    //   );
-    // };
-
-    this.uploadDoc = function(doc, parentId) {
-      let parentIdParam = parentId ? `&parentId=${parentId}` : "";
-      return RequestService.post(
-        `${domainENT}/workspace/document?thumbnail=120x120&thumbnail=290x290&quality=0.8${parentIdParam}`,
-        doc,
-        {
-          transformRequest: angular.identity,
-          headers: { "Content-Type": undefined }
-        }
+    this.uploadDoc = function (doc, parentId) {
+      const params = {
+        thumbnail: ["100x100", "120x120", "290x290", "381x381", "1600x0"],
+        quality: "1",
+      };
+      if (!!parentId) {
+        params["parentId"] = parentId;
+      }
+      return FileService.uploadFile(
+        `${domainENT}/workspace/document`,
+        params,
+        doc
       );
     };
 
-    this.uploadAttachment = function(doc) {
-      return RequestService.post(
-        `${domainENT}/workspace/document?protected=true&application=media-library`,
-        doc,
-        {
-          transformRequest: angular.identity,
-          headers: { "Content-Type": undefined }
-        }
+    this.uploadAttachment = function (doc) {
+      const params = {
+        protected: "true",
+        application: "media-library",
+      };
+      return FileService.uploadFile(
+        `${domainENT}/workspace/document`,
+        params,
+        doc
       );
     };
 
-    this.moveDocuments = function(ids, targetId) {
+    this.moveDocuments = function (ids, targetId) {
       return RequestService.put(
         `${domainENT}/workspace/documents/move/${targetId}`,
+        null,
         { ids }
       );
     };
 
-    this.copyDocuments = function(ids, targetId) {
+    this.copyDocuments = function (ids, targetId) {
       return RequestService.post(
         `${domainENT}/workspace/documents/copy/${targetId}`,
+        null,
         { ids }
       );
     };
 
-    this.createFolder = function(name, parentFolderId) {
-      let data = `name=${name}${
-        parentFolderId ? "&parentFolderId=" + parentFolderId : ""
-      }`;
-      return RequestService.post(`${domainENT}/workspace/folder`, data);
+    this.createFolder = function (name, parentFolderId) {
+      const params = { name };
+      if (!!parentFolderId) {
+        params["parentFolderId"] = parentFolderId;
+      }
+      return RequestService.post(`${domainENT}/workspace/folder`, null, params);
     };
 
-    this.getTranslation = function() {
+    this.getTranslation = function () {
       return RequestService.get(domainENT + "/workspace/i18n");
     };
   })
 
-  .service("WorkspaceHelper", function() {
-    this.getCheckedItems = function() {
+  .service("WorkspaceHelper", function () {
+    this.getCheckedItems = function () {
       return getChecked(getCollection(arguments));
     };
 
-    this.getCheckedItemsId = function() {
+    this.getCheckedItemsId = function () {
       return getChecked(getCollection(arguments), "_id");
     };
 
@@ -177,76 +176,32 @@ angular
       }
       return checked;
     }
-
-    // function setUnchecked(array) {
-    //   for (var i = 0; i < array.length; i++) {
-    //     if (array[i].checked) {
-    //       array[i].checked = false;
-    //     }
-    //   }
-    //   return array;
-    // }
   })
 
-  // .factory("VersionsDocPopupFactory", function($ionicPopup, $rootScope) {
-  //   function getPopup() {
-  //     return $ionicPopup.confirm({
-  //       title: $rootScope.translationWorkspace["workspace.delete"],
-  //       template: "Êtes-vous sûr(e) de vouloir supprimer ce document ?"
-  //     });
-  //   }
-  //   return {
-  //     getPopup: getPopup
-  //   };
-  // })
-
-  // .factory("MovingItemsFactory", function() {
-  //   var foldersToMove = [];
-  //   var docsToMove = [];
-
-  //   return {
-  //     getMovingFolders: function() {
-  //       return foldersToMove;
-  //     },
-  //     getMovingDocs: function() {
-  //       return docsToMove;
-  //     },
-  //     setMovingFolders: function(movingFolders) {
-  //       foldersToMove = movingFolders;
-  //     },
-  //     setMovingDocs: function(movingDocs) {
-  //       docsToMove = movingDocs;
-  //     }
-  //   };
-  // })
-
-  .factory("MimeTypeFactory", function($rootScope) {
+  .factory("MimeTypeFactory", function () {
     var mimeTypesArray = [
       {
         thumbnail: "word.png",
-        // "thumbnail": "img/word.png",
         mimetypes: [
           "application/msword",
           "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
           "application/vnd.openxmlformats-officedocument.wordprocessingml.template",
           "application/vnd.ms-word.document.macroEnabled.12",
-          "application/vnd.ms-word.template.macroEnabled.12"
-        ]
+          "application/vnd.ms-word.template.macroEnabled.12",
+        ],
       },
       {
         thumbnail: "excel.png",
-        // "thumbnail": "img/excel.png",
         mimetypes: [
           "application/vnd.ms-excel",
           "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
           "application/vnd.openxmlformats-officedocument.spreadsheetml.template",
           "application/vnd.ms-excel.sheet.macroEnabled.12",
           "application/vnd.ms-excel.addin.macroEnabled.12",
-          "application/vnd.ms-excel.sheet.binary.macroEnabled.12"
-        ]
+          "application/vnd.ms-excel.sheet.binary.macroEnabled.12",
+        ],
       },
       {
-        // "thumbnail": "img/word.png",
         thumbnail: "powerpoint.png",
         mimetypes: [
           "application/vnd.ms-powerpoint",
@@ -259,29 +214,27 @@ angular
           "application/vnd.ms-powerpoint.addin.macroEnabled.12",
           "application/vnd.ms-powerpoint.presentation.macroEnabled.12",
           "application/vnd.ms-powerpoint.template.macroEnabled.12",
-          "application/vnd.ms-powerpoint.slideshow.macroEnabled.12"
-        ]
+          "application/vnd.ms-powerpoint.slideshow.macroEnabled.12",
+        ],
       },
       {
-        // "thumbnail": "img/pdf.png",
         thumbnail: "pdf.png",
-        mimetypes: ["application/pdf"]
+        mimetypes: ["application/pdf"],
       },
       {
         thumbnail: "audio.png",
-        // "thumbnail": "img/audio.png",
         mimetypes: [
           "audio/mpeg",
           "audio/x-ms-wma",
           "audio/vnd.rn-realaudio",
           "audio/x-wav",
-          "audio/mp3"
-        ]
-      }
+          "audio/mp3",
+        ],
+      },
     ];
 
     function getThumbnailByMimeType(mimeType) {
-      var thumbnail = "unknown-large.png";
+      var thumbnail = "defaultfile.png";
       for (var i = 0; i < mimeTypesArray.length; i++) {
         if (mimeTypesArray[i].mimetypes.indexOf(mimeType) != -1) {
           thumbnail = mimeTypesArray[i].thumbnail;
@@ -318,7 +271,7 @@ angular
     }
 
     return {
-      getThumbnailByMimeType: getThumbnailByMimeType,
-      setIcons: setIcons
+      getThumbnailByMimeType,
+      setIcons,
     };
   });

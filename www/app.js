@@ -19,12 +19,11 @@ angular
     "ent.forgotLoginPwd",
     "ent.forgotLoginPwdService",
     "ent.profile",
-    "ent.notificationService"
+    "ent.notificationService",
+    "ent.fileService",
   ])
 
-  .config(function($stateProvider, $ionicConfigProvider, $httpProvider) {
-    $httpProvider.defaults.withCredentials = true;
-
+  .config(function ($stateProvider, $ionicConfigProvider) {
     $ionicConfigProvider.views.swipeBackEnabled(false);
     $ionicConfigProvider.backButton.text("").previousTitleText(false);
 
@@ -36,111 +35,111 @@ angular
       .state("app", {
         abstract: true,
         templateUrl: "menu.html",
-        controller: "AppCtrl"
+        controller: "AppCtrl",
       })
 
       .state("app.messagerie", {
         xitiIndex: "messagerie",
         templateUrl: "messagerie/folder_view.html",
-        controller: "MessagerieFoldersCtrl"
+        controller: "MessagerieFoldersCtrl",
       })
 
       .state("app.message_folder", {
         params: {
           nameFolder: "",
-          idFolder: ""
+          idFolder: "",
         },
         cache: false,
         templateUrl: "messagerie/folder_content.html",
-        controller: "InboxCtrl"
+        controller: "InboxCtrl",
       })
 
       .state("app.message_detail", {
         params: {
           nameFolder: "",
-          idMessage: ""
+          idMessage: "",
         },
         templateUrl: "messagerie/detail.html",
-        controller: "MessagesDetailCtrl"
+        controller: "MessagesDetailCtrl",
       })
 
       .state("app.new_message", {
         cache: false,
         params: {
           prevMessage: null,
-          action: null
+          action: null,
         },
         templateUrl: "messagerie/new_message.html",
-        controller: "NewMessageCtrl"
+        controller: "NewMessageCtrl",
       })
 
       .state("app.blog-list", {
         xitiIndex: "blog",
         templateUrl: "blogs/blog-list.html",
-        controller: "BlogListCtrl"
+        controller: "BlogListCtrl",
       })
 
       .state("app.blog", {
         params: {
           idBlog: "",
-          idPost: ""
+          idPost: "",
         },
         templateUrl: "blogs/blog.html",
-        controller: "BlogCtrl"
+        controller: "BlogCtrl",
       })
 
       .state("app.timeline_list", {
         cache: false,
         templateUrl: "timeline/timeline.html",
-        controller: "TimelineCtrl"
+        controller: "TimelineCtrl",
       })
 
       .state("app.timeline_prefs", {
         templateUrl: "timeline/timeline_filter.html",
-        controller: "TimelineCtrl"
+        controller: "TimelineCtrl",
       })
 
       .state("app.actualites", {
         xitiIndex: "actualites",
         cache: false,
         params: {
-          idActu: null
+          idActu: null,
         },
         templateUrl: "actualites/actualites.html",
-        controller: "ActualitesCtrl"
+        controller: "ActualitesCtrl",
       })
 
       .state("app.threads", {
         templateUrl: "actualites/threads.html",
-        controller: "ActualitesCtrl"
+        controller: "ActualitesCtrl",
       })
 
       .state("app.listPronote", {
         templateUrl: "connecteur/listAccounts.html",
-        controller: "PronoteCtrl"
+        controller: "PronoteCtrl",
       })
 
       .state("app.pronote", {
         xitiIndex: "pronotes",
         params: { link: "", name: "" },
         templateUrl: "connecteur/connecteur.html",
-        controller: "PronoteCtrl"
+        controller: "PronoteCtrl",
       })
 
       .state("app.listLVS", {
         templateUrl: "connecteur/listAccounts.html",
-        controller: "lvsCtrl"
+        controller: "lvsCtrl",
       })
 
       .state("app.lvs", {
         params: { link: "", name: "" },
         templateUrl: "connecteur/connecteur.html",
-        controller: "lvsCtrl"
+        controller: "lvsCtrl",
       })
 
       .state("app.workspace", {
         xitiIndex: "workspace",
-        templateUrl: "workspace/workspace.html"
+        templateUrl: "workspace/workspace.html",
       })
 
       .state("app.workspace_tree", {
@@ -149,10 +148,10 @@ angular
           folderId: null,
           folderName: null,
           idDoc: null,
-          hasIntent: false
+          hasIntent: false,
         },
         controller: "WorkspaceFolderContentCtlr",
-        templateUrl: "workspace/tree.html"
+        templateUrl: "workspace/tree.html",
       })
 
       .state("app.workspace_file", {
@@ -160,10 +159,10 @@ angular
           file: null,
           parentId: null,
           parentName: null,
-          filter: null
+          filter: null,
         },
         controller: "WorkspaceFileCtlr",
-        templateUrl: "workspace/file.html"
+        templateUrl: "workspace/file.html",
       })
 
       // .state("app.workspace_file_versions", {
@@ -179,49 +178,49 @@ angular
       .state("app.workspace_movecopy", {
         params: {
           action: null,
-          items: null
+          items: null,
         },
         templateUrl: "workspace/move_copy.html",
-        controller: "MoveCopyCtrl"
+        controller: "MoveCopyCtrl",
       })
 
       .state("app.workspace_share", {
         params: {
-          files: []
+          files: [],
         },
         controller: "ShareItemController",
-        templateUrl: "workspace/share.html"
+        templateUrl: "workspace/share.html",
       })
 
       .state("app.profile", {
         xitiIndex: "profile",
         controller: "ProfileCtrl",
-        templateUrl: "profile/profile.html"
+        templateUrl: "profile/profile.html",
       })
 
       .state("app.support", {
         xitiIndex: "support",
         controller: "SupportCtrl",
-        templateUrl: "support/support.html"
+        templateUrl: "support/support.html",
       })
 
       .state("login", {
         params: {
-          prefill: false
+          prefill: false,
         },
         templateUrl: "authentification/login-credentials.html",
         controller: "LoginCtrl",
-        cache: false
+        cache: false,
       })
 
       .state("firstConnection", {
         templateUrl: "firstConnection/firstConnection.html",
-        controller: "FirstConnectionCtrl"
+        controller: "FirstConnectionCtrl",
       })
 
       .state("forgotLoginPwd", {
         templateUrl: "forgotLoginPwd/forgotLoginPwd.html",
-        controller: "ForgotLoginPwdCtrl"
+        controller: "ForgotLoginPwdCtrl",
       });
 
     // .state("authLoading", {
@@ -231,7 +230,7 @@ angular
     // });
   })
 
-  .run(function(
+  .run(function (
     $ionicPlatform,
     $rootScope,
     $ionicLoading,
@@ -246,37 +245,37 @@ angular
     PopupFactory,
     domainENT,
     $cordovaLocalNotification,
-    $cordovaKeyboard
+    $q
   ) {
     const listMenu = [
       {
         name: "Actualites",
         icon: "custom-newspaper newspapericon-",
-        state: "app.actualites"
+        state: "app.actualites",
         // href: "#/app/actualites"
       },
       {
         name: "Blog",
         icon: "custom-bullhorn bullhornicon-",
-        state: "app.blog-list"
+        state: "app.blog-list",
         // href: "#/app/blog-list"
       },
       {
         name: "Documents",
         icon: "custom-folder foldericon-",
-        state: "app.workspace"
+        state: "app.workspace",
         // href: "#/app/workspace"
       },
       {
         name: "Accès ENT Web",
         icon: "ent-link",
-        state: domainENT
+        state: domainENT,
       },
       {
         name: "Assistance ENT",
         icon: "custom-help-circled help-circledicon-",
-        state: "app.support"
-      }
+        state: "app.support",
+      },
     ];
 
     function intentHandler(intent, isColdStart) {
@@ -289,8 +288,8 @@ angular
         return;
       }
 
-      const getPath = function(intent) {
-        return new Promise((resolve, reject) => {
+      const getPath = function (intent) {
+        return $q((resolve, reject) => {
           window.plugins.intent.getRealPathFromContentUrl(
             intent,
             resolve,
@@ -299,8 +298,8 @@ angular
         });
       };
 
-      const isFileTooBig = function(file) {
-        return new Promise((resolve, reject) => {
+      const isFileTooBig = function (file) {
+        return $q((resolve, reject) => {
           if (FileService.isFileTooBig(file)) {
             reject(
               $rootScope.translationWorkspace["file.too.large.limit"] +
@@ -314,11 +313,11 @@ angular
         });
       };
 
-      const getFileEntry = function(filePath) {
-        return new Promise((resolve, reject) => {
+      const getFileEntry = function (filePath) {
+        return $q((resolve, reject) => {
           window.resolveLocalFileSystemURL(
             "file://" + filePath,
-            function(entry) {
+            function (entry) {
               entry.file(resolve);
             },
             reject
@@ -326,11 +325,11 @@ angular
         });
       };
 
-      const readFile = file => {
-        return new Promise((resolve, reject) => {
+      const readFile = (file) => {
+        return $q((resolve, reject) => {
           var reader = new FileReader();
 
-          reader.onloadend = function() {
+          reader.onloadend = function () {
             var formData = new FormData();
             formData.append(
               "file",
@@ -350,7 +349,7 @@ angular
 
       $state.go("app.workspace_tree", {
         filter: "owner",
-        hasIntent: true
+        hasIntent: true,
       });
 
       if (isColdStart) {
@@ -358,7 +357,7 @@ angular
       }
 
       $ionicLoading.show({
-        template: '<ion-spinner icon="android"/>'
+        template: '<ion-spinner icon="android"/>',
       });
 
       return getPath(intent.extras["android.intent.extra.STREAM"])
@@ -369,14 +368,14 @@ angular
         .then(() => {
           $rootScope.$emit("FileUploaded");
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           PopupFactory.getCommonAlertPopup(err);
         })
         .finally($ionicLoading.hide);
     }
 
-    $ionicPlatform.ready(function() {
+    $ionicPlatform.ready(function () {
       // RequestService.setDefaultHeaders();
 
       if (window.StatusBar) {
@@ -385,35 +384,35 @@ angular
       }
 
       if (ionic.Platform.isIOS()) {
-        $cordovaKeyboard.hideAccessoryBar(false);
+        Keyboard.hideFormAccessoryBar(false);
       }
 
-      cordova.getAppVersion.getVersionNumber(function(version) {
+      cordova.getAppVersion.getVersionNumber(function (version) {
         $rootScope.version = version;
       });
 
-      cordova.getAppVersion.getAppName(function(name) {
+      cordova.getAppVersion.getAppName(function (name) {
         $rootScope.appName = name;
       });
 
       if (ionic.Platform.isIOS()) {
         NotificationService.setPermission(() => true);
-        // console.log("IOS : Granted permission");
-        // window.FirebasePlugin.grantPermission(function() {
-        //   console.log("IOS: Permission granted");
-        //   window.FirebasePlugin.hasPermission(function(data) {
-        //     console.log("IOS: has firebase permission ? " + data.isEnabled);
-        //   });
-        // });
+        console.log("IOS : Granted permission");
+        window.FirebasePlugin.grantPermission(function() {
+          console.log("IOS: Permission granted");
+          window.FirebasePlugin.hasPermission(function(data) {
+            console.log("IOS: has firebase permission ? " + data.isEnabled);
+          });
+        });
       }
 
-      $rootScope.$on("$cordovaNetwork:offline", function() {
+      $rootScope.$on("$cordovaNetwork:offline", function () {
         console.log("offline");
         $rootScope.status = "offline";
         $rootScope.$apply();
       });
 
-      $rootScope.$on("$cordovaNetwork:online", function() {
+      $rootScope.$on("$cordovaNetwork:online", function () {
         console.log("online");
         $rootScope.status = $rootScope.status == undefined ? null : "online";
         $rootScope.$apply();
@@ -421,14 +420,14 @@ angular
 
       $rootScope.$on("LoggedIn", () => {
         $rootScope.listMenu = spreadArray(listMenu);
-        UserFactory.getUser().then(user => {
+        UserFactory.getUser().then((user) => {
           $rootScope.myUser = user;
 
           if (UserFactory.hasPronoteAccount()) {
             $rootScope.listMenu.unshift({
               name: "Version mobile",
               icon: "custom-pronote pronote-1icon-",
-              state: "app.listPronote"
+              state: "app.listPronote",
             });
           }
 
@@ -436,7 +435,7 @@ angular
             $rootScope.listMenu.unshift({
               name: "LVS",
               icon: "custom-lvs lvsicon-",
-              state: "app.listLVS"
+              state: "app.listLVS",
             });
           }
         });
@@ -449,7 +448,7 @@ angular
           PopupFactory.getCommonAlertPopup
         );
 
-        window.FirebasePlugin.onTokenRefresh(token => {
+        window.FirebasePlugin.onTokenRefresh((token) => {
           NotificationService.setFcmToken(token);
         });
 
@@ -460,14 +459,14 @@ angular
           }
         );
 
-        window.FirebasePlugin.onMessageReceived(data => {
+        window.FirebasePlugin.onMessageReceived((data) => {
           if (data.tap == "background") {
             NotificationService.pushNotificationHandler(data);
           } else {
             $cordovaLocalNotification.schedule({
               text: data.body,
               title: data.title,
-              data
+              data,
             });
           }
         });
@@ -476,7 +475,7 @@ angular
       AuthenticationService.relog(
         () => {
           if (!ionic.Platform.isIOS()) {
-            window.plugins.intent.getCordovaIntent(intent => {
+            window.plugins.intent.getCordovaIntent((intent) => {
               let isColdStartIntent =
                 intent &&
                 intent.hasOwnProperty("action") &&
@@ -502,13 +501,12 @@ angular
     });
   })
 
-  .controller("AppCtrl", function(
+  .controller("AppCtrl", function (
     $scope,
     $rootScope,
     $sce,
     $state,
     $ionicPlatform,
-    domainENT,
     $ionicHistory,
     FileService,
     NotificationService
@@ -533,16 +531,16 @@ angular
       }
     };
 
-    $scope.displayBar = function() {
+    $scope.displayBar = function () {
       let regexp = RegExp("^app.*$");
       return regexp.test($state.current.name);
     };
 
-    $scope.isHomeActive = function() {
+    $scope.isHomeActive = function () {
       return $state.is("app.timeline_list") || $state.is("app.timeline_prefs");
     };
 
-    $scope.isMessagerieActive = function() {
+    $scope.isMessagerieActive = function () {
       return (
         $state.is("app.messagerie") ||
         $state.is("app.message_folder") ||
@@ -551,7 +549,7 @@ angular
       );
     };
 
-    $scope.isGridActive = function() {
+    $scope.isGridActive = function () {
       return (
         $state.is("app.blog-list") ||
         $state.is("app.blog") ||
@@ -570,19 +568,19 @@ angular
       );
     };
 
-    $scope.isProfileActive = function() {
+    $scope.isProfileActive = function () {
       return $state.is("app.profile");
     };
 
-    $scope.triggerGrid = function() {
+    $scope.triggerGrid = function () {
       $scope.showGridMenu = !$scope.showGridMenu;
     };
 
-    $scope.isGridHidden = function() {
+    $scope.isGridHidden = function () {
       return !$scope.showGridMenu;
     };
 
-    $scope.gridButton = function(state) {
+    $scope.gridButton = function (state) {
       if (state.includes("http")) {
         $scope.openUrl(state);
       } else {
@@ -590,7 +588,7 @@ angular
       }
     };
 
-    $rootScope.pick = function(object, keys) {
+    $rootScope.pick = function (object, keys) {
       var result = {};
 
       for (key of keys) {
@@ -599,7 +597,7 @@ angular
       return result;
     };
 
-    $scope.openUrl = function(url) {
+    $scope.openUrl = function (url) {
       var target = "_system";
       var ref = cordova.InAppBrowser.open($sce.trustAsUrl(url), target);
 
@@ -625,97 +623,48 @@ angular
       }
     };
 
-    $scope.getImageUrl = function(path) {
-      if (path) {
-        return domainENT + (path.startsWith("/") ? path : "/" + path);
-      }
-    };
+    $scope.formatDateLocale = function (date) {
+      const momentDate = moment(date).isValid()
+        ? moment(date)
+        : moment(date, "YYYY-MM-DD hh:mm.ss.SSS");
 
-    $scope.getThumbnailUrl = function(path) {
-      if (path) {
-        return path;
-      }
-    };
+      const isSameDay = momentDate.isSame(moment(), "day");
+      const isWithinWeek = momentDate.isBetween(
+        moment(),
+        moment().add(7, "days"),
+        "days",
+        []
+      );
 
-    $scope.setCorrectImage = function(path, defaultImage) {
-      var result;
-      if (path != null && path.length > 0) {
-        result = path;
+      if(isSameDay) {
+        return momentDate.calendar();
+      } else if(isWithinWeek) {
+        return momentDate.fromNow(); //this week
       } else {
-        if (
-          !localStorage.getItem("skin") ||
-          localStorage.getItem("skin") == "undefined"
-        ) {
-          // SkinFactory.getSkin().then(function(res) {
-          localStorage.setItem("skin", "/assets/themes/paris/skins/default/");
-          //          localStorage.setItem('skin', res.data.skin)
-          console.log(localStorage.getItem("skin"));
-          result = localStorage.getItem("skin") + defaultImage;
-          // });
-        } else {
-          result = localStorage.getItem("skin") + defaultImage;
-        }
+        return momentDate.format("L");
       }
-      return result;
     };
 
-    $scope.formatDate = function(date) {
-      let momentDate;
-      if (date == null) {
-        return "";
-      } else if (moment.isMoment(date)) {
-        momentDate = date;
-      } else if (date.$date) {
-        momentDate = moment(date.$date);
-      } else if (typeof date === "number") {
-        momentDate = moment.unix(date);
-      } else {
-        momentDate = moment(date);
-      }
-
-      return moment(momentDate).calendar();
-    };
-
-    $scope.formatDateLocale = function(date) {
-      if (
-        moment(date) >
-          moment()
-            .add(-1, "days")
-            .startOf("day") &&
-        moment(date) < moment().endOf("day")
-      )
-        return moment(date).calendar();
-
-      if (
-        moment(date) >
-          moment()
-            .add(-7, "days")
-            .startOf("day") &&
-        moment(date) < moment().endOf("day")
-      )
-        return moment(date).fromNow(); //this week
-
-      return moment(date).format("L");
-    };
-
-    $scope.logout = function() {
-      window.FirebasePlugin.unregister(() => {
-        NotificationService.deleteFcmToken().then(() => {
-          localStorage.clear();
-          $ionicHistory.clearHistory();
-          $ionicHistory.clearCache();
-          $state.go("login");
-          location.reload();
+    $scope.logout = function () {
+      window.FirebasePlugin.setAutoInitEnabled(false, function () {
+        window.FirebasePlugin.unregister(() => {
+          NotificationService.deleteFcmToken().then(() => {
+            localStorage.clear();
+            $ionicHistory.clearHistory();
+            $ionicHistory.clearCache();
+            $state.go("login");
+            location.reload();
+          });
         });
       });
     };
 
-    $ionicPlatform.ready(function() {
-      $rootScope.$on("$stateChangeStart", function(event, toState) {
+    $ionicPlatform.ready(function () {
+      $rootScope.$on("$stateChangeStart", function (event, toState) {
         $scope.showGridMenu = false;
       });
 
-      document.addEventListener("click", function(event) {
+      document.addEventListener("click", function (event) {
         var regexp = /menu-grid|item-content/;
         if (
           !regexp.test(event.target.className) &&
@@ -735,7 +684,7 @@ angular
     });
   })
 
-  .service("TraductionService", function(
+  .service("TraductionService", function (
     $rootScope,
     $q,
     ActualitesService,
@@ -763,7 +712,7 @@ angular
     }
 
     function getTraductionBlogs() {
-      return BlogsService.getTranslation().then(function(resp) {
+      return BlogsService.getTranslation().then(function (resp) {
         $rootScope.translationBlog = resp.data;
         $rootScope.translationBlog[
           "filters.drafts"
@@ -786,226 +735,51 @@ angular
       );
     }
 
-    this.getAllTranslation = function() {
+    this.getAllTranslation = function () {
       return $q.all([
         getTranslationActualites(),
         getTranslationUser(),
         getTranslationConversation(),
         getTraductionBlogs(),
-        getTraductionWorkspace()
+        getTraductionWorkspace(),
       ]);
     };
   })
 
-  .service("FileService", function(
-    RequestService,
-    PopupFactory,
-    $q,
-    $sce,
-    $cordovaFile,
-    $cordovaFileOpener2,
-    $ionicLoading,
-    $ionicPlatform
-  ) {
-    var filePath = "";
-
-    $ionicPlatform.ready(function() {
-      filePath = ionic.Platform.isIOS()
-        ? cordova.file.dataDirectory
-        : cordova.file.externalRootDirectory + "Download/";
-    });
-
-    this.isFileTooBig = file => {
-      const maxFileSize = 104857600;
-      return $rootScope.translationWorkspace
-        ? file.size > $rootScope.translationWorkspace["max.file.size"]
-        : file.size > maxFileSize;
-    };
-
-    this.getFileSize = function(bytes) {
-      if (isNaN(parseFloat(bytes)) || !isFinite(bytes)) return "-";
-      var units = ["bytes", "kB", "MB", "GB", "TB", "PB"],
-        number = Math.floor(Math.log(bytes) / Math.log(1024));
-      return (
-        (bytes / Math.pow(1024, Math.floor(number))).toFixed(1) +
-        " " +
-        units[number]
-      );
-    };
-
-    const checkPermission = () => {
-      return $q((resolve, reject) => {
-        if (ionic.Platform.isIOS()) {
-          resolve();
-        } else if (ionic.Platform.isAndroid()) {
-          cordova.plugins.diagnostic.isExternalStorageAuthorized(bool => {
-            if (bool) {
-              resolve();
-            } else {
-              cordova.plugins.diagnostic.requestExternalStorageAuthorization(
-                result => {
-                  if (
-                    result ==
-                    cordova.plugins.diagnostic.permissionStatus.GRANTED
-                  ) {
-                    resolve();
-                  } else {
-                    reject();
-                  }
-                }
-              );
-            }
-          });
-        } else {
-          reject();
-        }
-      });
-    };
-
-    const checkFile = function(fileName) {
-      return $cordovaFile.checkFile(filePath, fileName).catch(err => {
-        if (err.code === 1) {
-          return Promise.resolve(null);
-        } else {
-          return Promise.reject(err);
-        }
-      });
-    };
-
-    const downloadFile = fileUrl => {
-      let config = {
-        responseType: "arraybuffer",
-        cache: true
-      };
-      let url = $sce.getTrustedResourceUrl($sce.trustAsResourceUrl(fileUrl));
-
-      return RequestService.get(url, config).then(result => {
-        if (result.status % 200 < 100 && !!result.data) {
-          return Promise.resolve(result);
-        } else {
-          return Promise.reject(result.data);
-        }
-      });
-    };
-
-    const formatFile = (fileName, fileRequestResult) => {
-      const fileNameRegexp = RegExp('filename="(.*)"', "g");
-      const fileExtensionRegexp = RegExp("(..*)$", "g");
-      const headerHasFileName = fileNameRegexp.test(
-        fileRequestResult.headers("content-disposition")
-      );
-      const headerHasMimeType = !!fileRequestResult.headers("content-type");
-      const fileNameHasExtension = fileExtensionRegexp.test(fileName);
-
-      let finalFileName = "";
-      let finalMimeType = "";
-
-      return RequestService.get("mimeTypes.json").then(mimeTypeMap => {
-        const getExtension = mimeType => mimeTypeMap.data[mimeType];
-        const getMimeType = extension =>
-          Object.keys(mimeTypeMap)[
-            Object.values.findIndex(item => item == extension)
-          ];
-
-        if (headerHasMimeType) {
-          finalMimeType = fileRequestResult.headers("content-type");
-          const extension = getExtension(finalMimeType);
-          finalFileName =
-            !fileName.endsWith(extension) && !!extension
-              ? fileName + extension
-              : fileName;
-        } else if (headerHasFileName || fileNameHasExtension) {
-          finalFileName =
-            fileNameRegexp.exec(
-              fileRequestResult.headers("content-disposition")
-            )[1] || fileName;
-          const fileExtension = fileExtensionRegexp.exec(finalFileName)[1];
-          finalMimeType = getMimeType(fileExtension);
-        } else {
-          finalFileName = fileName;
-          finalMimeType = "application/octet-stream";
-        }
-
-        const fileData = new Blob([new Uint8Array(fileRequestResult.data)], {
-          type: finalMimeType
-        });
-        return { fileName: finalFileName, fileData };
-      });
-    };
-
-    const downloadAndWriteFile = (fileName, fileUrl) => {
-      return downloadFile(fileUrl)
-        .then(fileByteArray => formatFile(fileName, fileByteArray))
-        .then(({ fileName, fileData }) =>
-          $cordovaFile
-            .writeFile(filePath, fileName, fileData, true)
-            .then(() => fileName)
-        )
-        .then(checkFile);
-    };
-
-    const openFile = fileEntry => {
-      return $cordovaFileOpener2
-        .open(fileEntry.toURL(), fileEntry.type)
-        .catch(err => {
-          console.log("Fail to open file", err);
-          PopupFactory.getAlertPopupNoTitle("Fichier téléchargé avec succès !");
-        });
-    };
-
-    this.getFile = function(fileName, fileUrl) {
-      $ionicLoading.show({
-        template: '<ion-spinner icon="android"/>'
-      });
-      checkPermission()
-        .then(() => checkFile(fileName))
-        .then(fileEntry => {
-          if (!!fileEntry) {
-            return fileEntry;
-          } else {
-            return downloadAndWriteFile(fileName, fileUrl);
-          }
-        })
-        .then(openFile)
-        .catch(PopupFactory.getCommonAlertPopup)
-        .finally($ionicLoading.hide);
-    };
-  })
-
-  .factory("PopupFactory", function($ionicHistory, $ionicPopup) {
-    this.getConfirmPopup = function(title, template, cancelText, okText) {
+  .factory("PopupFactory", function ($ionicHistory, $ionicPopup) {
+    this.getConfirmPopup = function (title, template, cancelText, okText) {
       return $ionicPopup.confirm({
         title: title,
         template: template,
         cancelText: cancelText,
-        okText: okText
+        okText: okText,
       });
     };
 
-    this.getAlertPopup = function(title, template) {
+    this.getAlertPopup = function (title, template) {
       return $ionicPopup.alert({
         title: title,
-        template: template
+        template: template,
       });
     };
 
-    this.getAlertPopupNoTitle = function(template) {
+    this.getAlertPopupNoTitle = function (template) {
       return $ionicPopup.alert({
         template: template,
-        cssClass: "dismiss-title" // Hide title
+        cssClass: "dismiss-title", // Hide title
       });
     };
 
-    this.getPromptPopup = function(title, subtitle, cancelText, okText) {
+    this.getPromptPopup = function (title, subtitle, cancelText, okText) {
       return $ionicPopup.prompt({
         title,
         subtitle,
         cancelText,
-        okText
+        okText,
       });
     };
 
-    this.getCommonAlertPopup = function(error) {
+    this.getCommonAlertPopup = function (error) {
       console.log(error);
       var isPermissions = false;
       var title = "Erreur de connexion";
@@ -1034,16 +808,16 @@ angular
 
         let alertPopup = $ionicPopup.alert({
           title: title,
-          template: template
+          template: template,
         });
 
-        alertPopup.then(function(res) {
+        alertPopup.then(function (res) {
           console.log(res);
           console.log(isPermissions);
           if (isPermissions) {
             console.log(cordova.plugins.diagnostic);
             cordova.plugins.diagnostic.requestRuntimePermissions(
-              function(status) {
+              function (status) {
                 console.log(status);
                 switch (status) {
                   case cordova.plugins.diagnostic.permissionStatus
@@ -1062,7 +836,7 @@ angular
                     break;
                 }
               },
-              function(error) {
+              function (error) {
                 console.error(error);
               },
               cordova.plugins.diagnostic.runtimePermissionGroups.STORAGE
@@ -1083,7 +857,7 @@ angular
     return this;
   })
 
-  .directive("spinnerButton", function() {
+  .directive("spinnerButton", function () {
     return {
       restrict: "E",
       transclude: true,
@@ -1093,52 +867,52 @@ angular
         click: "&",
         disabled: "=",
         cssClass: "=",
-        cssStyle: "="
+        cssStyle: "=",
       },
       template:
         '<button class="{{cssClass}}" style="{{cssStyle}}" ng-disabled="disabled || loading" ng-click="click()">' +
         '<div class="spinner-container" style="" ng-show="loading"><ion-spinner icon="android">&nbsp;</ion-spinner></div><ng-transclude></ng-transclude>' +
-        "</button>"
+        "</button>",
     };
   })
 
-  .directive("onLongPress", function($timeout) {
+  .directive("onLongPress", function ($timeout) {
     return {
       restrict: "A",
-      link: function($scope, $elm, $attrs) {
-        $elm.bind("touchstart", function(evt) {
+      link: function ($scope, $elm, $attrs) {
+        $elm.bind("touchstart", function (evt) {
           // Locally scoped variable that will keep track of the long press
           $scope.longPress = true;
 
           // We'll set a timeout for 600 ms for a long press
-          $timeout(function() {
+          $timeout(function () {
             if ($scope.longPress) {
               // If the touchend event hasn't fired,
               // apply the function given in on the element's on-long-press attribute
-              $scope.$apply(function() {
+              $scope.$apply(function () {
                 $scope.$eval($attrs.onLongPress);
               });
             }
           }, 800);
         });
-        $elm.bind("touchend", function(evt) {
+        $elm.bind("touchend", function (evt) {
           // Prevent the onLongPress event from firing
           $scope.longPress = false;
           // If there is an on-touch-end function attached to this element, apply it
           if ($attrs.onTouchEnd) {
-            $scope.$apply(function() {
+            $scope.$apply(function () {
               $scope.$eval($attrs.onTouchEnd);
             });
           }
         });
-      }
+      },
     };
   })
 
-  .directive("renderHtml", function($compile, $sce, domainENT) {
+  .directive("renderHtml", function ($compile, $sce, domainENT) {
     return {
       restrict: "A",
-      link: function(scope, element, attrs) {
+      link: function (scope, element, attrs) {
         let data = angular.copy(attrs.renderHtml);
         if (data != null) {
           data = data.replace(
@@ -1163,11 +937,11 @@ angular
           );
           $compile(element.html($sce.trustAsHtml(data)).contents())(scope);
         }
-      }
+      },
     };
   })
 
-  .directive("offline", function() {
+  .directive("offline", function () {
     return {
       restrict: "E",
       replace: true,
@@ -1180,38 +954,39 @@ angular
         "$scope",
         "$rootScope",
         "$timeout",
-        function($scope, $rootScope, $timeout) {
-          $rootScope.$watch("status", function(val) {
-            $timeout(function() {
+        function ($scope, $rootScope, $timeout) {
+          $rootScope.$watch("status", function (val) {
+            $timeout(function () {
               if (val === "offline") {
                 $scope.message = "Pas de connexion";
               } else if (val === "online") {
                 $scope.message = "Connecté";
               }
 
-              $timeout(function() {
+              $timeout(function () {
                 $scope.message = null;
               }, 5000);
             });
           });
-        }
-      ]
+        },
+      ],
     };
   })
 
-  .directive("xiti", function(
+  .directive("xiti", function (
     RequestService,
     $rootScope,
     domainENT,
     xitiIndex,
-    UserFactory
+    UserFactory,
+    $q
   ) {
     return {
       restrict: "E",
       replace: false,
       scope: false,
-      compile: function(element, attributes) {
-        return function(scope) {
+      compile: function (element, attributes) {
+        return function (scope) {
           scope.xitiConf = {
             //Springboard constants
             ID_COLLECTIVITE: "",
@@ -1227,7 +1002,7 @@ angular
 
             //User vars
             ID_PERSO: "",
-            ID_PROFIL: 6
+            ID_PROFIL: 6,
           };
 
           //Profile id map
@@ -1235,7 +1010,7 @@ angular
             Student: 1,
             Teacher: 2,
             Relative: 3,
-            Personnel: 4
+            Personnel: 4,
           };
 
           //Service map
@@ -1243,12 +1018,12 @@ angular
 
           /////////////
           /// Tools ///
-          var getOrElse = function(map, item, elseItem) {
+          var getOrElse = function (map, item, elseItem) {
             if (map && item && map[item]) return map[item];
             return elseItem;
           };
 
-          var convertStringId = function(stringId) {
+          var convertStringId = function (stringId) {
             var buffer = "";
             for (var i = 0; i < stringId.length; i++) {
               buffer += stringId.charCodeAt(i);
@@ -1259,13 +1034,13 @@ angular
           ///        ///
           //////////////
 
-          var loadScript = function(callback) {
+          var loadScript = function (callback) {
             if (scope.script) {
               callback(scope.script);
             } else {
               var request = new XMLHttpRequest();
               request.open("GET", "./xiti/xtfirst_ENT.js");
-              request.onload = function() {
+              request.onload = function () {
                 if (request.status === 200) {
                   try {
                     scope.script = new Function(request.responseText);
@@ -1280,7 +1055,7 @@ angular
           };
 
           //Final action - populates xiti vars & launches the script
-          var fillWindowData = function() {
+          var fillWindowData = function () {
             xt_multc =
               "&x1=" +
               scope.xitiConf.ID_SERVICE +
@@ -1305,22 +1080,22 @@ angular
             xtpage = scope.xitiConf.LIB_SERVICE;
             xtdi = "";
 
-            loadScript(script => script());
+            loadScript((script) => script());
           };
 
           //Retrieves application dependent vars
-          var getAppsInfos = function(state) {
+          var getAppsInfos = function (state) {
             var service = scope.serviceMap[state];
 
             scope.xitiConf.ID_SERVICE = service ? service.index : 0;
             scope.xitiConf.LIB_SERVICE = service ? service.label : "Page_ENT";
 
-            return Promise.resolve();
+            return $q.resolve();
           };
 
           //Retrieves structure mapping & platform dependant vars
-          var getXitiConfig = function() {
-            return new Promise((resolve, reject) => {
+          var getXitiConfig = function () {
+            return $q((resolve, reject) => {
               RequestService.get(`${domainENT}/xiti/config`).then(
                 ({ data }) => {
                   //If XiTi is disabled
@@ -1347,8 +1122,8 @@ angular
             });
           };
 
-          var getUserInfo = function() {
-            return UserFactory.getUser().then(me => {
+          var getUserInfo = function () {
+            return UserFactory.getUser().then((me) => {
               scope.user = me;
               scope.xitiConf.ID_PERSO = convertStringId(scope.user.userId);
               scope.xitiConf.ID_PROFIL = getOrElse(
@@ -1361,81 +1136,72 @@ angular
 
           $rootScope.$on("LoggedIn", () => {
             getUserInfo().then(() => {
-              Promise.all([getXitiConfig(), getAppsInfos("login")]).then(() => {
+              $q.all([getXitiConfig(), getAppsInfos("login")]).then(() => {
                 fillWindowData();
               }, console.log);
             }, console.log);
           });
 
-          $rootScope.$on("$stateChangeSuccess", function(evt, toState) {
+          $rootScope.$on("$stateChangeSuccess", function (evt, toState) {
             if (toState.xitiIndex) {
               getUserInfo().then(() => {
-                Promise.all([
-                  getXitiConfig(),
-                  getAppsInfos(toState.xitiIndex)
-                ]).then(() => {
-                  fillWindowData();
-                }, console.log);
+                $q.all([getXitiConfig(), getAppsInfos(toState.xitiIndex)]).then(
+                  () => {
+                    fillWindowData();
+                  },
+                  console.log
+                );
               }, console.log);
             }
           });
 
-          scope.$on("$destroy", function() {
+          scope.$on("$destroy", function () {
             element.off();
           });
         };
-      }
+      },
     };
   })
 
   .directive("httpSrc", [
     "RequestService",
-    function(RequestService) {
+    "domainENT",
+    function (RequestService, domainENT) {
       return {
         scope: {},
-        link: function($scope, elem, attrs) {
+        link: function ($scope, elem, attrs) {
           function revokeObjectURL() {
             if ($scope.objectURL) {
               URL.revokeObjectURL($scope.objectURL);
             }
           }
 
-          $scope.$watch("objectURL", function(objectURL) {
+          $scope.$watch("objectURL", function (objectURL) {
             elem.attr("src", objectURL);
           });
 
-          $scope.$on("$destroy", function() {
+          $scope.$on("$destroy", function () {
             revokeObjectURL();
           });
 
-          attrs.$observe("httpSrc", function(url) {
+          attrs.$observe("httpSrc", function (url) {
             revokeObjectURL();
 
             if (url && url.indexOf("data:") === 0) {
               $scope.objectURL = url;
             } else if (url) {
-              RequestService.get(url, { responseType: "arraybuffer" }).then(
-                function(response) {
-                  var blob = new Blob([response.data], {
-                    type: response.headers("Content-Type")
-                  });
-                  $scope.objectURL = URL.createObjectURL(blob);
+              url = url.startsWith("/") ? domainENT + url : url;
+              RequestService.get(url, null, { responseType: "blob" }).then(
+                (response) => {
+                  $scope.objectURL = URL.createObjectURL(response.data);
                 }
               );
             }
           });
-        }
+        },
       };
-    }
+    },
   ]);
-
-function setProfileImage(regularPath, userId) {
-  return regularPath != null &&
-    regularPath.length > 0 &&
-    regularPath != "no-avatar.jpg"
-    ? regularPath
-    : "/userbook/avatar/" + userId;
-}
 
 function spreadArray() {
   const result = [];
@@ -1454,22 +1220,13 @@ function spreadObject() {
   const result = {};
   const collections = Array.prototype.slice.call(arguments);
   for (let i = 0; i < collections.length; i++) {
-    const currentCollection = collections[i];
-    const isObject =
-      !!currentCollection && typeof currentCollection === "object";
-
-    if (isObject) {
-      const currentCollectionKeys = Object.keys(currentCollection);
+    if (typeof collections[i] === "object") {
+      const currentCollectionKeys = Object.keys(collections[i]);
       for (let j = 0; j < currentCollectionKeys.length; j++) {
         result[currentCollectionKeys[j]] =
-          currentCollection[currentCollectionKeys[j]];
+          collections[i][currentCollectionKeys[j]];
       }
     } else {
-      console.log(
-        "spreadObject call with wrong argument type : " +
-          typeof currentCollection,
-        currentCollection
-      );
       continue;
     }
   }

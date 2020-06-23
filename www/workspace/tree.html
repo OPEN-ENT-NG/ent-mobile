@@ -22,7 +22,7 @@
         class="item item-text-wrap"
       >
         <div style="display: flex;" class="center-image-item">
-          <div ng-click="gotInDepthFolder(folder)" style="width: 90%">
+          <div ng-click="gotInDepthFolder(folder)" style="width: 90%;">
             <i class="folder-open-2icon- icon-file"></i>
             <div class="info-file margin-text-item">
               <h2>{{ folder.name }}</h2>
@@ -31,7 +31,7 @@
           </div>
           <span
             class="share-1icon- icon-share-custom"
-            style="padding-top:2%"
+            style="padding-top: 2%;"
             ng-show="folder.shared != null && folder.shared.length > 0 && isMyDocuments()"
           ></span>
         </div>
@@ -53,7 +53,7 @@
           </div>
           <span
             class="share-1icon- icon-share-custom"
-            style="padding-top:2%"
+            style="padding-top: 2%;"
             ng-show="folder.shared != null && folder.shared.length > 0 && isMyDocuments()"
           ></span>
         </div>
@@ -68,23 +68,12 @@
     <ion-list>
       <ion-item
         ng-repeat="doc in documents track by $index "
-        class="item item-text-wrap item-thumbnail-left "
+        class="item item-text-wrap item-thumbnail-left"
         ng-click="goToFile(doc)"
         on-hold="enableCheck(doc)"
         ng-hide="checkable"
       >
-        <img
-          ng-if="doc.test == 'true' && isDocImage(doc.metadata) =='true'"
-          http-src="{{ getThumbnailUrl(doc.icon_image) }}"
-        />
-        <img
-          ng-if="doc.test == 'false' && isDocImage(doc.metadata) =='true'"
-          http-src="{{ getImageUrl(doc.icon_image) }}"
-        />
-        <img
-          ng-if="isDocImage(doc.metadata) == 'false'"
-          src="img/defaultfile.png"
-        />
+        <img http-src="{{ getThumbnail(doc) }}" />
         <h2>{{ doc.name }}</h2>
         <h3>{{ doc.ownerName }}</h3>
         <i
@@ -104,14 +93,7 @@
           ng-click="goToFile(doc)"
           class="item item-text-wrap item-thumbnail-left"
         >
-          <img
-            ng-if="isDocImage(doc.metadata) == 'true'"
-            http-src="{{ getImageUrl(doc.icon_image) }}"
-          />
-          <img
-            ng-if="isDocImage(doc.metadata) == 'false'"
-            src="img/defaultfile.png"
-          />
+          <img http-src="{{ getThumbnail(doc) }}" />
           <h2>{{ doc.name }}</h2>
           <h3>{{ doc.ownerName }}</h3>
           <i
@@ -130,8 +112,10 @@
   <nav
     id="actionMenu"
     mfb-menu
-    style="bottom: calc(constant(safe-area-inset-bottom) + 5%) !important;
-    bottom: calc(env(safe-area-inset-bottom) + 5%) !important;"
+    style="
+      bottom: calc(constant(safe-area-inset-bottom) + 5%) !important;
+      bottom: calc(env(safe-area-inset-bottom) + 5%) !important;
+    "
     position="br"
     effect="zoomin"
     active-icon="ion-plus-round"
@@ -146,7 +130,7 @@
       >
         <i class="mfb-component__child-icon fa fa-upload"> </i>
         <input
-          style="display:none;"
+          style="display: none;"
           type="file"
           onchange="angular.element(this).scope().addDocument(this)"
         />

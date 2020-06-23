@@ -15,10 +15,7 @@
           ng-model="filterThreads[thread.thread_id]"
         >
           <div class="item item-thumbnail-right item-text-wrap">
-            <img
-              http-src="{{ getImageUrl(thread.thread_icon) }}"
-              alt="icone {{ thread.title }}"
-            />
+            <img http-src="{{ getImage(thread) }}" />
             <h2 class="item-text-wrap">{{ thread.title }}</h2>
           </div>
         </ion-checkbox>

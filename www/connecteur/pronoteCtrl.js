@@ -56,7 +56,7 @@ angular
           ).then(
             function success(response) {
               $scope.link = $sce.trustAsResourceUrl(
-                response.headers()["location"]
+                response.headers["location"]
               );
               $scope.name = $stateParams.name;
 

@@ -1,6 +1,6 @@
 angular
   .module("ent.profile", ["ent.profile_service"])
-  .controller("ProfileCtrl", function(
+  .controller("ProfileCtrl", function (
     $scope,
     $rootScope,
     $ionicPlatform,
@@ -9,39 +9,40 @@ angular
     $ionicLoading,
     PopupFactory,
     UserFactory,
-    $timeout
+    $timeout,
+    domainENT
   ) {
-    $ionicPlatform.ready(function() {
-      $scope.$on("$ionicView.enter", function() {
+    $ionicPlatform.ready(function () {
+      $scope.$on("$ionicView.enter", function () {
         $scope.loader = {
-          preferences: false
+          preferences: false,
         };
 
         $scope.settings = {
-          app: undefined
+          app: undefined,
         };
       });
 
-      $scope.$on("$ionicView.beforeEnter", function() {
+      $scope.$on("$ionicView.beforeEnter", function () {
         $ionicLoading.show({
-          template: '<ion-spinner icon="android"/>'
+          template: '<ion-spinner icon="android"/>',
         });
         getUserApp().finally($ionicLoading.hide);
       });
     });
 
-    $scope.updatePreferences = function() {
+    $scope.updatePreferences = function () {
       $scope.loader.preferences = true;
-      TimelineService.updatePreferences($scope.preferences).then(function() {
+      TimelineService.updatePreferences($scope.preferences).then(function () {
         $scope.loader.preferences = false;
       });
     };
 
-    $scope.isFieldToggled = function(field) {
+    $scope.isFieldToggled = function (field) {
       return $scope.editting == field;
     };
 
-    $scope.toggleField = function(field) {
+    $scope.toggleField = function (field) {
       function initTempProfile() {
         $scope.tempProfile = Object.assign({}, $rootScope.myUser);
         $scope.tempProfile.loginAlias =
@@ -57,7 +58,7 @@ angular
       }
     };
 
-    $scope.saveField = function(field) {
+    $scope.saveField = function (field) {
       let mailRegexp = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/g;
       let phoneRegexp = /^(00|\+)?([0-9][ \-\.]*){6,15}$/g;
       let errorTitle = null;
@@ -103,31 +104,35 @@ angular
       $scope.toggleField();
     };
 
+    $scope.getUserImage = function (user) {
+      return user.photo;
+    };
+
     function saveProfile(profile) {
       $ionicLoading.show({
-        template: '<ion-spinner icon="android"/>'
+        template: '<ion-spinner icon="android"/>',
       });
       ProfileService.saveProfile(profile)
         .then(() => UserFactory.getUser(true))
-        .then(user => ($rootScope.myUser = user))
-        .catch(err => {
+        .then((user) => ($rootScope.myUser = user))
+        .catch((err) => {
           PopupFactory.getAlertPopupNoTitle(err.data.error);
         })
         .finally($ionicLoading.hide);
     }
 
     function getUserApp() {
-      return ProfileService.getApplications().then(function(applications) {
+      return ProfileService.getApplications().then(function (applications) {
         $scope.apps = applications.data.filter(
-          notif =>
+          (notif) =>
             notif.restriction !== "INTERNAL" && notif.restriction !== "HIDDEN"
         );
 
-        return ProfileService.getI18nNotifications().then(function(
+        return ProfileService.getI18nNotifications().then(function (
           translation
         ) {
           $scope.translations = translation.data;
-          TimelineService.getPreferences().then(function(userAppConf) {
+          TimelineService.getPreferences().then(function (userAppConf) {
             $scope.appsMapped = {};
             $scope.applis = {};
             for (var i = 0; i < $scope.apps.length; i++) {
@@ -144,7 +149,7 @@ angular
                         $scope.apps[i]["app-name"].toLowerCase()
                       ]
                     : $scope.apps[i]["app-name"],
-                  notifications: []
+                  notifications: [],
                 };
               }
               if ($scope.apps[i]["push-notif"]) {

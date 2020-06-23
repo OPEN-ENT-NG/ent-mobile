@@ -1,12 +1,12 @@
 angular
   .module("ent.notificationService", ["ent.request"])
-  .service("NotificationService", function(
+  .service("NotificationService", function (
     domainENT,
     $q,
     $state,
     RequestService
   ) {
-    this.notificationHandler = function(
+    this.notificationHandler = function (
       type,
       { idMessage, idActu, idPost, idBlog, uri }
     ) {
@@ -14,26 +14,26 @@ angular
         case "MESSAGERIE": {
           $state.go("app.message_detail", {
             nameFolder: "INBOX",
-            idMessage
+            idMessage,
           });
           break;
         }
         case "NEWS": {
           $state.go("app.actualites", {
-            idActu
+            idActu,
           });
           break;
         }
         case "BLOG": {
           $state.go("app.blog", {
             idPost,
-            idBlog
+            idBlog,
           });
           break;
         }
         case "WORKSPACE": {
           $state.go("app.workspace_tree", {
-            filter: "shared"
+            filter: "shared",
           });
           break;
         }
@@ -52,7 +52,7 @@ angular
       }
     };
 
-    this.pushNotificationHandler = function(notif) {
+    this.pushNotificationHandler = function (notif) {
       let { resourceUri, messageUri } = JSON.parse(notif.params);
       let module = resourceUri
         ? /\/([\w]+)\W?/g.exec(resourceUri)[1]
@@ -94,33 +94,32 @@ angular
       this.notificationHandler(serviceType, serviceParams);
     };
 
-    this.setFcmToken = token => {
-      var url = domainENT + "/timeline/pushNotif/fcmToken?fcmToken=" + token;
-      return RequestService.put(url).then(
-        function() {
-          localStorage.setItem("fcmToken", token);
-        },
-        function(error) {
-          throw error;
+    this.setFcmToken = (token) => {
+      return RequestService.put(
+        `${domainENT}/timeline/pushNotif/fcmToken`,
+        {
+          fcmToken: token,
         }
-      );
+      ).then(function () {
+        localStorage.setItem("fcmToken", token);
+      });
     };
 
-    this.deleteFcmToken = function() {
-      return $q(function(resolve, reject) {
+    this.deleteFcmToken = function () {
+      return $q(function (resolve, reject) {
         var fcmToken = localStorage.getItem("fcmToken");
         if (fcmToken != null) {
-          RequestService.delete(
-            `${domainENT}/timeline/pushNotif/fcmToken?fcmToken=${fcmToken}`
-          ).then(resolve, reject);
+          RequestService.delete(`${domainENT}/timeline/pushNotif/fcmToken`, {
+            fcmToken,
+          }).then(resolve, reject);
         } else {
           resolve();
         }
       });
     };
 
-    this.setPermission = callback => {
-      window.FirebasePlugin.hasPermission(isEnabled => {
+    this.setPermission = (callback) => {
+      window.FirebasePlugin.hasPermission((isEnabled) => {
         console.log("IOS: has firebase permission ? " + isEnabled);
         if (!isEnabled) {
           window.FirebasePlugin.grantPermission(() => {

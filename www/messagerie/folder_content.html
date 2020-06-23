@@ -29,8 +29,12 @@
     </ion-list>
 
     <div class="item item-divider" ng-show="extraFolders.length!=0"></div>
-    <ion-list class="messages" >
-      <ion-item ng-if="isCheckEnabled()" class="message-container" ng-click="checkAllMessages()">
+    <ion-list class="messages">
+      <ion-item
+        ng-if="isCheckEnabled()"
+        class="message-container"
+        ng-click="checkAllMessages()"
+      >
         <div class="message">
           <div class="checkbox checkbox-input-hidden checkbox-square">
             <input
@@ -111,7 +115,7 @@
   </ion-content>
   <div class="float-button" ng-click="newMail()">
     <span class="height-fix">
-      <a class="content ">
+      <a class="content">
         <i class="new-01icon-"> </i>
       </a>
     </span>

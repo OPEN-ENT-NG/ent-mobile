@@ -25,11 +25,7 @@
           ng-repeat="info in filtered=(infos | filter:filterByThread) | limitTo:totalDisplayed track by $index"
           class="card"
         >
-          <div class="item item-avatar item-text-wrap">
-            <img
-              http-src="{{ getImageUrl(info.thread_icon) }}"
-              alt="icone {{ info.thread_title }}"
-            />
+          <div class="item item-text-wrap">
             <h2>{{ info.title }}</h2>
 
             <h3>
@@ -39,7 +35,7 @@
             <p>
               {{
                 info.publication_date
-                  ? formatDate(info.publication_date)
+                  ? formatDateLocale(info.publication_date)
                   : formatDateLocale(info.modified)
               }}
             </p>

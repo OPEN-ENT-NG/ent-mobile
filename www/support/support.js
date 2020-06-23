@@ -1,6 +1,6 @@
 angular
   .module("ent.support", ["ionic", "ent.support_service"])
-  .controller("SupportCtrl", function(
+  .controller("SupportCtrl", function (
     $scope,
     $rootScope,
     $ionicPlatform,
@@ -9,17 +9,18 @@ angular
     SupportService,
     PopupFactory,
     UserFactory,
-    WorkspaceService
+    WorkspaceService,
+    $q
   ) {
-    $ionicPlatform.ready(function() {
-      $scope.$on("$ionicView.beforeEnter", function() {
+    $ionicPlatform.ready(function () {
+      $scope.$on("$ionicView.beforeEnter", function () {
         delete $scope.ticket;
 
         $ionicLoading.show({
-          template: '<ion-spinner icon="android"/>'
+          template: '<ion-spinner icon="android"/>',
         });
 
-        let applicationsPromise = getAllApps().then(apps => {
+        let applicationsPromise = getAllApps().then((apps) => {
           $scope.apps = sort(apps, "displayName");
           $scope.schools = sort($rootScope.myUser.schools, "name");
 
@@ -28,32 +29,32 @@ angular
             school_id: $scope.schools[0].id,
             subject: "",
             description: "",
-            attachments: []
+            attachments: [],
           };
         });
 
-        let translationPromise = SupportService.getTranslation().then(function(
+        let translationPromise = SupportService.getTranslation().then(function (
           translation
         ) {
           $scope.translation = translation.data;
         });
 
-        Promise.all([applicationsPromise, translationPromise]).finally(
+        $q.all([applicationsPromise, translationPromise]).finally(
           $ionicLoading.hide
         );
       });
     });
 
-    $scope.getTranslation = function(app) {
+    $scope.getTranslation = function (app) {
       return (
         (!!$scope.translation && $scope.translation[app.displayName]) ||
         app.name
       );
     };
 
-    $scope.addAttachment = function(ele) {
+    $scope.addAttachment = function (ele) {
       $ionicLoading.show({
-        template: '<ion-spinner icon="android"/>'
+        template: '<ion-spinner icon="android"/>',
       });
       var attachment = ele.files[0];
 
@@ -65,7 +66,7 @@ angular
           $scope.ticket.attachments.push({
             name: data.metadata.filename,
             size: data.metadata.size,
-            id: data._id
+            id: data._id,
           });
         })
         .catch(() =>
@@ -76,14 +77,14 @@ angular
         .finally($ionicLoading.hide);
     };
 
-    $scope.deleteAttachment = function(attachmentId) {
+    $scope.deleteAttachment = function (attachmentId) {
       const newAttachments = $scope.ticket.attachments.filter(
-        att => att.id != attachmentId
+        (att) => att.id != attachmentId
       );
       $scope.ticket.attachments = newAttachments;
     };
 
-    $scope.saveTicket = function() {
+    $scope.saveTicket = function () {
       let error = checkTicket($scope.ticket);
       if (error) {
         PopupFactory.getAlertPopup(
@@ -92,7 +93,7 @@ angular
         );
       } else {
         $ionicLoading.show({
-          template: '<ion-spinner icon="android"/>'
+          template: '<ion-spinner icon="android"/>',
         });
         var subject =
           `${ionic.Platform.platform()} ${ionic.Platform.version()} / App v${
@@ -104,10 +105,10 @@ angular
         SupportService.createTicket(
           spreadObject($scope.ticket, {
             category: category,
-            subject: subject
+            subject: subject,
           })
         ).then(
-          res => {
+          (res) => {
             $ionicLoading.hide();
             PopupFactory.getAlertPopupNoTitle(
               `Demande N°${res.data.id} créée avec succès. Retrouvez le suivi sur la version web du module Aide et support.`
@@ -127,7 +128,7 @@ angular
     };
 
     function getAllApps() {
-      var filterModules = appList => {
+      var filterModules = (appList) => {
         var appModules = [
           "timeline",
           "support",
@@ -136,11 +137,11 @@ angular
           "actualites",
           "blog",
           "pronote",
-          "lvs"
+          "lvs",
         ];
 
-        return appList.filter(app =>
-          appModules.some(appMod => {
+        return appList.filter((app) =>
+          appModules.some((appMod) => {
             if (appMod == "pronote" || appMod == "lvs") {
               return !!app.type && app.type.toLowerCase() == appMod;
             } else if (app.prefix) {
@@ -151,9 +152,9 @@ angular
       };
 
       return UserFactory.getApplicationsList()
-        .then(userApps => {
+        .then((userApps) => {
           let apps = filterModules(
-            userApps.filter(function(app) {
+            userApps.filter(function (app) {
               return (
                 app.address &&
                 app.name &&
@@ -165,18 +166,18 @@ angular
 
           apps.push({
             address: "support.category.other",
-            displayName: "support.category.other"
+            displayName: "support.category.other",
           });
           return apps;
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           return [];
         });
     }
 
     function sort(collection, key) {
-      return collection.sort(function(a, b) {
+      return collection.sort(function (a, b) {
         let valA = a[key];
         let valB = b[key];
         return valB < valA ? 1 : valB > valA ? -1 : 0;

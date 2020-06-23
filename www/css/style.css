@@ -6,7 +6,6 @@ ion-popover-view.fit ion-content {
   position: relative !important;
 }
 
-
 .has-footer {
   bottom: 49px !important;
   bottom: calc(constant(safe-area-inset-bottom) + 49px) !important;
@@ -426,7 +425,7 @@ ion-popover-view.fit ion-content {
   width: 50%;
   left: 37%;
   bottom: 60px !important;
-  
+
   bottom: calc(constant(safe-area-inset-bottom) + 60px) !important;
   bottom: calc(env(safe-area-inset-bottom) + 60px) !important;
   padding: 5px 15px;
@@ -508,6 +507,11 @@ ion-popover-view.fit ion-content {
   margin: 5px;
 }
 
+.file .tabs {
+  padding-bottom: 0 !important;
+  height: 49px !important;
+}
+
 .profile-title {
   color: #0084ca;
   display: table-cell;
@@ -549,7 +553,8 @@ ion-popover-view.fit ion-content {
   padding-left: 5px;
 }
 
-.platform-ios.platform-cordova:not(.fullscreen) .tabs-top>.tabs, .platform-ios.platform-cordova:not(.fullscreen) .tabs.tabs-top {
+.platform-ios.platform-cordova:not(.fullscreen) .tabs-top > .tabs,
+.platform-ios.platform-cordova:not(.fullscreen) .tabs.tabs-top {
   top: 0px !important;
 }
 

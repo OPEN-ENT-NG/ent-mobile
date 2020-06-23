@@ -3,10 +3,10 @@ angular
     "ent.workspace_service",
     "ent.share_items",
     "ent.workspace_move_file",
-    "ent.workspace_file"
+    "ent.workspace_file",
   ])
 
-  .controller("WorkspaceFolderContentCtlr", function(
+  .controller("WorkspaceFolderContentCtlr", function (
     $scope,
     $rootScope,
     $ionicPlatform,
@@ -18,17 +18,18 @@ angular
     MimeTypeFactory,
     $ionicPopover,
     PopupFactory,
-    FileService
+    FileService,
+    $q
   ) {
-    $ionicPlatform.ready(function() {
-      $scope.$on("$ionicView.beforeEnter", function() {
+    $ionicPlatform.ready(function () {
+      $scope.$on("$ionicView.beforeEnter", function () {
         $scope.checkable = false;
 
         $ionicPopover
           .fromTemplateUrl("workspace/popover_tree.html", {
-            scope: $scope
+            scope: $scope,
           })
-          .then(function(popover) {
+          .then(function (popover) {
             $scope.popover = popover;
           });
 
@@ -42,30 +43,30 @@ angular
         }
       });
 
-      $scope.isMyDocuments = function() {
+      $scope.isMyDocuments = function () {
         return $stateParams["filter"] === "owner";
       };
 
-      $scope.isShared = function() {
+      $scope.isShared = function () {
         return $stateParams["filter"] === "shared";
       };
 
-      $scope.isApplis = function() {
+      $scope.isApplis = function () {
         return $stateParams["filter"] === "protected";
       };
 
-      $scope.isTrash = function() {
+      $scope.isTrash = function () {
         return $stateParams["filter"] === "trash";
       };
 
-      $scope.hasOnlyOneItemSelected = function() {
+      $scope.hasOnlyOneItemSelected = function () {
         return (
           WorkspaceHelper.getCheckedItems($scope.documents, $scope.folders)
             .length == 1
         );
       };
 
-      $scope.hasRight = function(right) {
+      $scope.hasRight = function (right) {
         let rightKey = "";
         switch (right) {
           case "manage": {
@@ -94,7 +95,7 @@ angular
           return false;
         };
 
-        const hasRight = item => {
+        const hasRight = (item) => {
           if (item.owner === $rootScope.myUser.userId) {
             return true;
           } else if (
@@ -134,11 +135,11 @@ angular
         }
       };
 
-      $rootScope.areCommentsShown = function(folder) {
+      $rootScope.areCommentsShown = function (folder) {
         return $rootScope.shownComments === folder;
       };
 
-      $rootScope.getCopyExpression = function() {
+      $rootScope.getCopyExpression = function () {
         if ($scope.isMyDocuments()) {
           return $rootScope.translationWorkspace["workspace.copy"];
         } else {
@@ -146,7 +147,7 @@ angular
         }
       };
 
-      $scope.enableCheck = function(item) {
+      $scope.enableCheck = function (item) {
         if (!$scope.checkable) {
           navigator.vibrate(100); // Vibrate 100ms
           $scope.checkable = true;
@@ -154,7 +155,7 @@ angular
         }
       };
 
-      $scope.shouldDisableCheckable = function() {
+      $scope.shouldDisableCheckable = function () {
         if (
           WorkspaceHelper.getCheckedItems($scope.folders, $scope.documents)
             .length === 0
@@ -163,13 +164,13 @@ angular
         }
       };
 
-      $scope.newFolder = function() {
+      $scope.newFolder = function () {
         PopupFactory.getPromptPopup(
           $rootScope.translationWorkspace["folder.new.title"],
           null,
           $rootScope.translationWorkspace["cancel"],
           $rootScope.translationWorkspace["workspace.folder.create"]
-        ).then(name => {
+        ).then((name) => {
           if (name) {
             WorkspaceService.createFolder(name, $stateParams["folderId"])
               .then(getData)
@@ -179,7 +180,7 @@ angular
         });
       };
 
-      $scope.addDocument = function(ele) {
+      $scope.addDocument = function (ele) {
         var newDoc = ele.files[0];
 
         if (newDoc.size > $rootScope.translationWorkspace["max.file.size"]) {
@@ -191,7 +192,7 @@ angular
           );
         } else {
           $ionicLoading.show({
-            template: '<ion-spinner icon="android"/>'
+            template: '<ion-spinner icon="android"/>',
           });
 
           var formData = new FormData();
@@ -203,13 +204,13 @@ angular
         }
       };
 
-      $scope.doRefresh = function() {
+      $scope.doRefresh = function () {
         getData();
         $scope.$broadcast("scroll.refreshComplete");
         $scope.$apply();
       };
 
-      $scope.getTitle = function() {
+      $scope.getTitle = function () {
         if ($scope.checkable) {
           return WorkspaceHelper.getCheckedItems(
             $scope.folders,
@@ -226,25 +227,25 @@ angular
         }
       };
 
-      $scope.gotInDepthFolder = function(folder) {
+      $scope.gotInDepthFolder = function (folder) {
         $state.go("app.workspace_tree", {
           folderId: folder._id,
-          folderName: folder.name
+          folderName: folder.name,
         });
       };
 
-      $scope.goToFile = function(doc) {
+      $scope.goToFile = function (doc) {
         $state.go("app.workspace_file", {
           file: doc,
           parentId: $stateParams["folderId"],
           parentName: $scope.getTitle(),
-          filter: $stateParams["filter"]
+          filter: $stateParams["filter"],
         });
       };
 
-      $scope.deleteSelectedItems = function() {
+      $scope.deleteSelectedItems = function () {
         $ionicLoading.show({
-          template: '<ion-spinner icon="android"/>'
+          template: '<ion-spinner icon="android"/>',
         });
         $scope.popover.hide();
 
@@ -258,9 +259,9 @@ angular
           .finally($ionicLoading.hide);
       };
 
-      $scope.restoreSelectedItems = function() {
+      $scope.restoreSelectedItems = function () {
         $ionicLoading.show({
-          template: '<ion-spinner icon="android"/>'
+          template: '<ion-spinner icon="android"/>',
         });
         $scope.popover.hide();
         WorkspaceService.restoreDocuments(
@@ -271,7 +272,7 @@ angular
           .finally($ionicLoading.hide);
       };
 
-      $scope.renameItem = function() {
+      $scope.renameItem = function () {
         let item = WorkspaceHelper.getCheckedItems(
           $scope.folders,
           $scope.documents
@@ -284,7 +285,7 @@ angular
             null,
             $rootScope.translationWorkspace["cancel"],
             $rootScope.translationWorkspace["confirm"]
-          ).then(function(resp) {
+          ).then(function (resp) {
             if (resp) {
               WorkspaceService.renameDocument(item, resp)
                 .then(getData)
@@ -295,7 +296,7 @@ angular
         }
       };
 
-      $scope.copySelectedItems = function() {
+      $scope.copySelectedItems = function () {
         $scope.popover.hide();
         $scope.checkable = false;
         $state.go("app.workspace_movecopy", {
@@ -303,11 +304,11 @@ angular
             $scope.folders,
             $scope.documents
           ),
-          action: "copy"
+          action: "copy",
         });
       };
 
-      $scope.moveSelectedItems = function() {
+      $scope.moveSelectedItems = function () {
         $scope.popover.hide();
         $scope.checkable = false;
         $state.go("app.workspace_movecopy", {
@@ -315,72 +316,71 @@ angular
             $scope.folders,
             $scope.documents
           ),
-          action: "move"
+          action: "move",
         });
       };
 
-      $scope.shareSelectedItems = function() {
+      $scope.shareSelectedItems = function () {
         $scope.popover.hide();
         $scope.checkable = false;
         $state.go("app.workspace_share", {
           files: WorkspaceHelper.getCheckedItems(
             $scope.folders,
             $scope.documents
-          )
+          ),
         });
       };
 
       function getData(hasIntent) {
         $ionicLoading.show({
-          template: '<ion-spinner icon="android"/>'
+          template: '<ion-spinner icon="android"/>',
         });
 
         $scope.checkable = false;
         $scope.documents = [];
         $scope.folders = [];
 
-        filter = $stateParams["filter"];
-        parentId = $stateParams["folderId"];
-
-        let params = {
-          filter,
-          parentId,
-          directShared: filter == "shared" && parentId == null ? true : null
-        };
+        const filter = $stateParams["filter"];
+        const parentId = $stateParams["folderId"];
+        const directShared =
+          filter == "shared" && parentId == null ? true : null;
 
         const promises = [];
 
         promises.push(
-          WorkspaceService.getFolders(params).then(res => {
-            for (var i = 0; i < res.data.length; i++) {
-              $scope.folders.push(
-                spreadObject(res.data[i], { checked: false })
-              );
-            }
-          })
+          WorkspaceService.getFolders({
+            filter,
+            parentId,
+            directShared,
+          }).then((res) =>
+            res.data.map((item) =>
+              $scope.folders.push(spreadObject(item, { checked: false }))
+            )
+          )
         );
 
         promises.push(
-          WorkspaceService.getFiles(params).then(result => {
-            for (var i = 0; i < result.data.length; i++) {
-              $scope.documents.push(
-                spreadObject(
-                  MimeTypeFactory.setIcons(result.data[i]),
-                  { checked: false }
+          WorkspaceService.getFiles({ filter, parentId, directShared }).then(
+            (res) =>
+              res.data.map((item) =>
+                $scope.documents.push(
+                  spreadObject(MimeTypeFactory.setIcons(item), {
+                    checked: false,
+                  })
                 )
-              );
-            }
-          })
+              )
+          )
         );
 
-        return Promise.all(promises)
+        return $q
+          .all(promises)
           .catch(PopupFactory.getCommonAlertPopup)
           .finally(() => {
             if (!hasIntent) $ionicLoading.hide();
           });
       }
 
-      $scope.isDocImage = function(metadata) {
+      $scope.isDocImage = function (metadata) {
         if (metadata == 0 || metadata == undefined) {
           return "false";
         }
@@ -388,6 +388,10 @@ angular
           return "true";
         }
         return "false";
+      };
+
+      $scope.getThumbnail = function (doc) {
+        return `/workspace/document/${doc._id}?thumbnail=120x120`;
       };
 
       $rootScope.$on("FileUploaded", () => {

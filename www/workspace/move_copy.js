@@ -37,7 +37,7 @@ angular
 
       return WorkspaceService.getFolders({
         filter: "owner",
-        hierarchical: true
+        hierarchical: "true"
       }).then(res => {
         $scope.choosenFolder = null;
 

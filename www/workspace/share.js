@@ -1,23 +1,24 @@
 angular
   .module("ent.share_items", ["ent.workspace_service", "ent.message_services"])
 
-  .controller("ShareItemController", function(
+  .controller("ShareItemController", function (
     $scope,
     $stateParams,
     WorkspaceService,
     $rootScope,
     $ionicPlatform,
-    PopupFactory
+    PopupFactory,
+    $q
   ) {
-    $ionicPlatform.ready(function() {
-      $scope.$on("$ionicView.beforeEnter", function() {
+    $ionicPlatform.ready(function () {
+      $scope.$on("$ionicView.beforeEnter", function () {
         $scope.items = $stateParams["files"];
         $scope.actions = {};
         $scope.contactShared = [];
         $scope.search = "";
 
         $scope.loader = {
-          share: false
+          share: false,
         };
 
         if (Object.keys($scope.items).length > 1) {
@@ -68,20 +69,17 @@ angular
         );
       }
 
-      var getRights = contact => {
+      var getRights = (contact) => {
         let rightForShare = [];
         for (let action in $scope.actions) {
           if (contact.hasOwnProperty(action) && contact[action]) {
-            rightForShare = spreadArray(
-              rightForShare,
-              $scope.actions[action]
-            );
+            rightForShare = spreadArray(rightForShare, $scope.actions[action]);
           }
         }
         return rightForShare || null;
       };
 
-      var reverseRights = userRights => {
+      var reverseRights = (userRights) => {
         let checkByAction = (rights, userRights) => {
           for (let right of rights) {
             if (!userRights.includes(right)) {
@@ -104,7 +102,7 @@ angular
       };
 
       $scope.addToShared = (contact, isGroupParam) => {
-        if ($scope.contactShared.some(item => item.id == contact.id)) {
+        if ($scope.contactShared.some((item) => item.id == contact.id)) {
           $scope.search = "";
           return;
         }
@@ -113,7 +111,7 @@ angular
         let data = spreadObject(
           {
             read: true,
-            comment: true
+            comment: true,
           },
           contact,
           { isGroup }
@@ -127,7 +125,7 @@ angular
         $scope.search = "";
       };
 
-      $scope.updateSearch = search => {
+      $scope.updateSearch = (search) => {
         $scope.search = search;
         if ($scope.search.length) {
           $scope.contacts = [];
@@ -141,7 +139,7 @@ angular
                 $scope.contacts.push(
                   spreadObject(group, {
                     isGroup: true,
-                    displayName: group.name
+                    displayName: group.name,
                   })
                 );
               }
@@ -152,7 +150,7 @@ angular
                   spreadObject(user, {
                     isGroup: false,
                     profile: $rootScope.translationWorkspace[user.profile],
-                    displayName: user.username
+                    displayName: user.username,
                   })
                 );
               }
@@ -161,15 +159,15 @@ angular
         }
       };
 
-      $scope.openSharing = function(contactId) {
+      $scope.openSharing = function (contactId) {
         $scope.contactShared.forEach(
-          contact =>
+          (contact) =>
             (contact.isSharingOpen =
               contact.id == contactId ? !contact.isSharingOpen : false)
         );
       };
 
-      $scope.modifyCheckValues = function(contactShared, right) {
+      $scope.modifyCheckValues = function (contactShared, right) {
         if (right == "read") {
           if (!contactShared.read) {
             contactShared.contrib = false;
@@ -194,7 +192,7 @@ angular
         }
       };
 
-      $scope.saveSharing = function() {
+      $scope.saveSharing = function () {
         $scope.loader.share = true;
         const promises = [];
 
@@ -214,14 +212,14 @@ angular
               contrib: true,
               comment: true,
               manager: true,
-              read: true
+              read: true,
             });
           }
 
           promises.push(WorkspaceService.updateSharingActions(file._id, data));
         }
 
-        Promise.all(promises)
+        $q.all(promises)
           .then(() => {
             $scope.loader.share = false;
             PopupFactory.getAlertPopupNoTitle(

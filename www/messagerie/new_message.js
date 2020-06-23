@@ -124,7 +124,6 @@ angular
 
       var formData = new FormData();
       formData.append("file", attachment);
-
       MessagerieServices.postAttachment($scope.email.id, formData)
         .then(result => {
           $scope.email.attachments.push({

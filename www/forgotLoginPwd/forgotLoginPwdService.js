@@ -1,28 +1,32 @@
 angular
   .module("ent.forgotLoginPwdService", ["ent.request"])
-  .service("ForgotLoginPwdService", function(domainENT, RequestService) {
-    this.getAuthTranslation = function() {
+  .service("ForgotLoginPwdService", function (domainENT, RequestService) {
+    this.getAuthTranslation = function () {
       return RequestService.get(`${domainENT}/auth/i18n`);
     };
 
-    this.getChannels = function(login) {
-      return RequestService.get(
-        `${domainENT}/auth/password-channels?login=${login}`
-      );
+    this.getChannels = function (login) {
+      return RequestService.get(`${domainENT}/auth/password-channels`, {
+        login,
+      });
     };
 
-    this.recoverLogin = function(
+    this.recoverLogin = function (
       mail,
       firstName,
       structureId = null,
       service = "mail"
     ) {
       let data = { mail, firstName, structureId, service };
-      return RequestService.post(`${domainENT}/auth/forgot-id`, data);
+      return RequestService.post(`${domainENT}/auth/forgot-id`, null, data);
     };
 
-    this.recoverPwd = function(login, service) {
+    this.recoverPwd = function (login, service) {
       let data = { login, service };
-      return RequestService.post(`${domainENT}/auth/forgot-password`, data);
+      return RequestService.post(
+        `${domainENT}/auth/forgot-password`,
+        null,
+        data
+      );
     };
   });

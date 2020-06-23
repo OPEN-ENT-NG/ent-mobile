@@ -1,23 +1,73 @@
 angular
   .module("ent.request", ["ent.workspace_service", "ent"])
 
-  .service("RequestService", function(
-    $rootScope,
-    $http,
+  .service("RequestService", function (
+    $ionicPlatform,
     $q,
     $state,
     $ionicLoading
   ) {
-    var timeout = 30000;
-    var headers = {
-      Authorization: "",
-      "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+    $ionicPlatform.ready(() => {
+      cordova.plugin.http.setRequestTimeout(30);
+      cordova.plugin.http.setDataSerializer("json");
+    });
+
+    const usableMethod = {
+      GET: "get",
+      POST: "post",
+      PUT: "put",
+      UPLOAD: "upload",
+      DOWNLOAD: "download",
+      DELETE: "delete",
     };
 
-    function getConfig(config = {}) {
-      const newHeaders = spreadObject(headers, config.headers || {});
-      return spreadObject({ timeout }, config, {
-        headers: newHeaders
+    const methodWithData = [
+      usableMethod.POST,
+      usableMethod.PUT,
+      usableMethod.DOWNLOAD,
+      usableMethod.UPLOAD,
+      usableMethod.DELETE,
+    ];
+
+    const methodWithFile = [usableMethod.UPLOAD, usableMethod.DOWNLOAD];
+
+    function getOptions({ method, data, config, params, name, filePath }) {
+      return $q(function (resolve, reject) {
+        const result = { method };
+        const initConfig = config || {};
+
+        if (!Object.values(usableMethod).includes(method))
+          return reject("Unsupported method");
+
+        if (methodWithFile.includes(method)) {
+          if (filePath == null) {
+            return reject(
+              "Provide a filePath for the file in order to use the upload or download method"
+            );
+          } else {
+            result["filePath"] = filePath;
+          }
+
+          if (method == usableMethod.UPLOAD && name == null) {
+            return reject(
+              "Provide a filePath for the file in order to use the upload or download method"
+            );
+          } else {
+            result["name"] = name;
+          }
+        }
+
+        if (methodWithData.includes(method)) {
+          result["data"] = data || {};
+        }
+
+        if (params != null) result["params"] = params || {};
+
+        result["responseType"] = initConfig.hasOwnProperty("responseType")
+          ? initConfig.responseType
+          : "JSON";
+
+        return resolve(spreadObject(result, initConfig));
       });
     }
 
@@ -38,71 +88,79 @@ angular
       }
     }
 
-    this.setDefaultAuth = tokens => {
-      headers["Authorization"] = "Bearer " + tokens.access;
-      return tokens;
-    };
-
-    this.get = function(url, config) {
-      config = getConfig(config);
-      return $q(function(resolve, reject) {
-        $http
-          .get(url, config)
-          .then(response => {
-            onResolve(resolve, response);
-          })
-          .catch(err => {
-            onError(reject, err);
-          });
-      });
-    };
-
-    this.delete = function(url, data, config) {
-      config = getConfig(config);
-
-      return $q(function(resolve, reject) {
-        $http
-          .delete(url, spreadObject(config, { data }))
-          .then(response => {
-            onResolve(resolve, response);
-          })
-          .catch(err => {
-            onError(reject, err);
-          });
-      });
-    };
-
-    this.put = function(url, data, config) {
-      config = getConfig(config);
-
-      return $q(function(resolve, reject) {
-        $http
-          .put(url, data, config)
-          .then(response => {
-            onResolve(resolve, response);
-          })
-          .catch(err => {
-            onError(reject, err);
-          });
-      });
-    };
-
-    this.post = function(url, data, config, avoidRedirect) {
-      config = getConfig(config);
-
-      return $q(function(resolve, reject) {
-        $http
-          .post(url, data, config)
-          .then(response => {
+    function makeRequest(url, options, avoidRedirect) {
+      return $q(function (resolve, reject) {
+        cordova.plugin.http.sendRequest(
+          url,
+          options,
+          (response) => {
             if (avoidRedirect) {
               resolve(response);
             } else {
               onResolve(resolve, response);
             }
-          })
-          .catch(err => {
-            onError(reject, err);
-          });
+          },
+          (err) => onError(reject, err)
+        );
       });
+    }
+
+    this.setDefaultAuth = (tokens) => {
+      cordova.plugin.http.setHeader("Authorization", "Bearer " + tokens.access);
+      return tokens;
     };
+
+    this.get = function (url, params, config) {
+      return getOptions({ method: "get", params, config }).then((options) =>
+        makeRequest(url, options, false)
+      );
+    };
+
+    this.delete = function (url, params, data, config) {
+      return getOptions({
+        method: "delete",
+        params,
+        data,
+        config,
+      }).then((options) => makeRequest(url, options, false));
+    };
+
+    this.put = function (url, params, data, config) {
+      return getOptions({
+        method: "put",
+        params,
+        data,
+        config,
+      }).then((options) => makeRequest(url, options, false));
+    };
+
+    this.post = function (url, params, data, config, avoidRedirect) {
+      return getOptions({
+        method: "post",
+        params,
+        data,
+        config,
+      }).then((options) => makeRequest(url, options, avoidRedirect));
+    };
+
+    //TODO
+    // this.downloadFile = function (url, params, config, filePath) {
+    //   return getOptions({
+    //     method: "download",
+    //     params,
+    //     config,
+    //     filePath,
+    //   }).then((options) => makeRequest(url, options, false));
+    // };
+
+    //TODO Input tag doesn't provide the path
+    // this.uploadFile = function (url, params, config, filePath, name) {
+    //   return getOptions({
+    //     method: "upload",
+    //     params,
+    //     config,
+    //     filePath,
+    //     name,
+    //   }).then((options) => makeRequest(url, options, false));
+    // };
   });

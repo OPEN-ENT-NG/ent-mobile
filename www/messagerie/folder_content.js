@@ -1,7 +1,7 @@
 angular
   .module("ent.message_folder", ["ent.message_services"])
 
-  .controller("InboxCtrl", function(
+  .controller("InboxCtrl", function (
     $scope,
     $state,
     $stateParams,
@@ -13,40 +13,41 @@ angular
     $ionicScrollDelegate,
     MoveMessagesPopupFactory,
     PopupFactory,
-    $ionicListDelegate
+    $ionicListDelegate,
+    $q
   ) {
-    $ionicPlatform.ready(function() {
-      $scope.$on("$ionicView.enter", function() {
+    $ionicPlatform.ready(function () {
+      $scope.$on("$ionicView.enter", function () {
         $scope.page = 0;
         $scope.messages = [];
         $scope.extraFolders = [];
         $scope.endReached = false;
         $ionicLoading.show({
-          template: '<ion-spinner icon="android"/>'
+          template: '<ion-spinner icon="android"/>',
         });
-        getMessagesAndFolders().then($ionicLoading.hide, err => {
+        getMessagesAndFolders().then($ionicLoading.hide, (err) => {
           console.log(err);
           $ionicLoading.hide();
         });
       });
 
-      $scope.$on("$ionicView.beforeEnter", function() {
+      $scope.$on("$ionicView.beforeEnter", function () {
         $ionicPopover
           .fromTemplateUrl("messagerie/popover_messagerie_folder.html", {
-            scope: $scope
+            scope: $scope,
           })
-          .then(function(popover) {
+          .then(function (popover) {
             $scope.popover = popover;
           });
       });
     });
 
     $scope.getRealName = (id, displayNames) => {
-      const foundUser = displayNames.find(user => id == user[0]);
+      const foundUser = displayNames.find((user) => id == user[0]);
       return foundUser ? foundUser[1] : "Inconnu";
     };
 
-    $scope.getMailTitle = mail => {
+    $scope.getMailTitle = (mail) => {
       if (
         $stateParams.idFolder !== "OUTBOX" &&
         (includesUser(mail.to) ||
@@ -67,16 +68,16 @@ angular
       }
     };
 
-    const includesUser = collection => {
+    const includesUser = (collection) => {
       return (
         collection.includes($rootScope.myUser.userId) ||
-        $rootScope.myUser.groupsIds.some(groupId =>
+        $rootScope.myUser.groupsIds.some((groupId) =>
           collection.includes(groupId)
         )
       );
     };
 
-    $scope.getUnreadMessage = mail => {
+    $scope.getUnreadMessage = (mail) => {
       return (
         mail.unread &&
         (mail.from != $rootScope.myUser.userId ||
@@ -88,41 +89,41 @@ angular
       );
     };
 
-    $scope.restoreMessages = function() {
+    $scope.restoreMessages = function () {
       let finalFct = () => {
         $ionicListDelegate.closeOptionButtons();
         $ionicLoading.hide();
       };
       $ionicLoading.show({
-        template: '<ion-spinner icon="android"/>'
+        template: '<ion-spinner icon="android"/>',
       });
       MessagerieServices.restoreSelectedMessages(getSelectedMessages()).then(
         () => {
           getMessagesAndFolders();
           finalFct();
         },
-        err => {
+        (err) => {
           console.log(err);
           finalFct();
         }
       );
     };
 
-    $scope.canShowRestore = function() {
+    $scope.canShowRestore = function () {
       return (
         $stateParams.nameFolder.toUpperCase() == "TRASH" &&
         $scope.isCheckEnabled()
       );
     };
 
-    $scope.showPopupMove = function() {
+    $scope.showPopupMove = function () {
       let finalFct = () => {
         $ionicListDelegate.closeOptionButtons();
         $ionicLoading.hide();
       };
-      MoveMessagesPopupFactory.getPopup($scope).then(function(res) {
+      MoveMessagesPopupFactory.getPopup($scope).then(function (res) {
         $ionicLoading.show({
-          template: '<ion-spinner icon="android"/>'
+          template: '<ion-spinner icon="android"/>',
         });
         if (res != null) {
           MessagerieServices.moveMessages(getSelectedMessages(), res).then(
@@ -130,7 +131,7 @@ angular
               getMessagesAndFolders();
               finalFct();
             },
-            err => {
+            (err) => {
               console.log(err);
               finalFct();
             }
@@ -141,11 +142,11 @@ angular
       });
     };
 
-    $rootScope.newMail = function() {
+    $rootScope.newMail = function () {
       $state.go("app.new_message");
     };
 
-    $scope.deleteMessages = function(mails) {
+    $scope.deleteMessages = function (mails) {
       let finalFct = () => {
         $ionicListDelegate.closeOptionButtons();
         $ionicLoading.hide();
@@ -154,10 +155,10 @@ angular
       PopupFactory.getConfirmPopup(
         $rootScope.translationConversation["delete"],
         "Êtes-vous sûr(e) de vouloir supprimer ce(s) message(s) ?"
-      ).then(res => {
+      ).then((res) => {
         if (res) {
           $ionicLoading.show({
-            template: '<ion-spinner icon="android"/>'
+            template: '<ion-spinner icon="android"/>',
           });
           mails = Array.isArray(mails) ? mails : [mails];
           MessagerieServices.deleteSelectedMessages(
@@ -168,7 +169,7 @@ angular
               getMessages();
               finalFct();
             },
-            err => {
+            (err) => {
               console.log(err);
               finalFct();
             }
@@ -177,31 +178,30 @@ angular
       });
     };
 
-    $scope.deleteSelectedMessages = function() {
+    $scope.deleteSelectedMessages = function () {
       var messagesList = getSelectedMessages();
       if (messagesList.length > 0) {
         return $scope.deleteMessages(messagesList);
       }
     };
 
-    $scope.loadMore = function() {
-      MessagerieServices.getMessages(
-        $stateParams.idFolder,
-        $scope.page + 1
-      ).then(
-        ({ data }) => {
-          $scope.messages = spreadArray($scope.messages, data);
+    $scope.loadMore = function () {
+      MessagerieServices.getMessages($stateParams.idFolder, $scope.page + 1)
+        .then(function (result) {
+          $scope.messages = spreadArray(
+            $scope.messages,
+            result.data.map(MessagerieServices.mailAdapter)
+          );
           $scope.page++;
-          if (data.length < 25) {
+          if (result.data.length < 25) {
             $scope.endReached = true;
           }
           $scope.$broadcast("scroll.infiniteScrollComplete");
-        },
-        err => {
+        })
+        .catch((err) => {
           console.log(err);
           $scope.$broadcast("scroll.infiniteScrollComplete");
-        }
-      );
+        });
     };
 
     $scope.$watch(
@@ -213,47 +213,47 @@ angular
       }
     );
 
-    $rootScope.getCheckedNumber = function() {
+    $rootScope.getCheckedNumber = function () {
       return getSelectedMessages().length;
     };
 
-    $scope.checkAllMessages = function() {
+    $scope.checkAllMessages = function () {
       let allChecked = $scope.allChecked();
-      $scope.messages.forEach(msg => (msg.checked = !allChecked));
+      $scope.messages.forEach((msg) => (msg.checked = !allChecked));
     };
 
-    $scope.allChecked = function() {
-      return $scope.messages.every(msg => msg.checked == true);
+    $scope.allChecked = function () {
+      return $scope.messages.every((msg) => msg.checked == true);
     };
 
     function getSelectedMessages() {
       return $scope.messages
-        ? $scope.messages.filter(mess => mess.checked)
+        ? $scope.messages.filter((mess) => mess.checked)
         : [];
     }
 
-    $scope.isCheckEnabled = function() {
+    $scope.isCheckEnabled = function () {
       return $scope.messages
-        ? $scope.messages.some(mess => mess.checked)
+        ? $scope.messages.some((mess) => mess.checked)
         : false;
     };
 
-    $scope.getTitle = function() {
+    $scope.getTitle = function () {
       return $scope.isCheckEnabled()
         ? $stateParams.nameFolder
         : $rootScope.getCheckedNumber();
     };
 
-    $scope.doRefreshMessages = function() {
+    $scope.doRefreshMessages = function () {
       $ionicLoading.show({
-        template: '<ion-spinner icon="android"/>'
+        template: '<ion-spinner icon="android"/>',
       });
       getMessagesAndFolders().then(
         () => {
           $scope.$broadcast("scroll.refreshComplete");
           $ionicLoading.hide();
         },
-        err => {
+        (err) => {
           console.log(err);
           $ionicLoading.hide();
         }
@@ -262,18 +262,17 @@ angular
 
     function getMessagesAndFolders() {
       $scope.nameFolder = $stateParams.nameFolder;
-      return Promise.all([getMessages(), getExtraFolders()]);
+      return $q.all([getMessages(), getExtraFolders()]);
     }
 
     function getMessages() {
       return MessagerieServices.getMessages($stateParams.idFolder, 0).then(
-        ({ data }) => {
+        function (result) {
           $ionicScrollDelegate.scrollTop();
-          $scope.messages = data;
+          $scope.messages = result.data.map(MessagerieServices.mailAdapter);
           $scope.page = 0;
           $scope.endReached = false;
-        },
-        Promise.reject
+        }
       );
     }
 
@@ -283,24 +282,26 @@ angular
           $scope.extraFolders = data;
           return getCountFolders($scope.extraFolders);
         },
-        Promise.reject
+        $q.reject
       );
     }
 
     function getCountFolders(folders) {
-      return Promise.all(
-        folders.map(folder => {
+      return $q.all(
+        folders.map((folder) => {
           return MessagerieServices.getCount(folder.id, true).then(
-            ({ data }) => (folder.count = data.count)
+            ({ data }) => {
+              folder.count = data.count;
+            }
           );
         })
       );
     }
 
-    $scope.goToMessage = function(message) {
+    $scope.goToMessage = function (message) {
       $state.go("app.message_detail", {
         nameFolder: $stateParams.nameFolder,
-        idMessage: message.id
+        idMessage: message.id,
       });
     };
   });

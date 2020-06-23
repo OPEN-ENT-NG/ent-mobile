@@ -1,49 +1,45 @@
 angular
   .module("ent.blog-list", ["ent.blog_service"])
 
-  .controller("BlogListCtrl", function(
+  .controller("BlogListCtrl", function (
     $ionicPlatform,
     $scope,
-    $rootScope,
     $state,
     BlogsService,
-    $ionicLoading
+    $ionicLoading,
+    domainENT
   ) {
-    $ionicPlatform.ready(function() {
-      $scope.$on("$ionicView.enter", function() {
+    $ionicPlatform.ready(function () {
+      $scope.$on("$ionicView.enter", function () {
         getListBlogs();
       });
     });
 
-    $scope.goToBlog = function(blog) {
+    $scope.goToBlog = function (blog) {
       $state.go("app.blog", { idBlog: blog._id });
     };
 
-    $scope.doRefreshBlogs = function() {
+    $scope.doRefreshBlogs = function () {
       $scope.blogs.unshift(getListBlogs());
       $scope.$broadcast("scroll.refreshComplete");
       $scope.$apply();
     };
 
+    $scope.getBlogThumbnail = function (blog) {
+      return (
+        blog.thumbnail || "/assets/themes/paris/img/illustrations/blog.png"
+      );
+    };
+
     function getListBlogs() {
       $ionicLoading.show({
-        template: '<ion-spinner icon="android"/>'
+        template: '<ion-spinner icon="android"/>',
       });
       $scope.blogs = [];
-      BlogsService.getAllBlogs().then(
-        function(resp) {
+      BlogsService.getAllBlogs()
+        .then(function (resp) {
           $scope.blogs = resp.data;
-          for (var i = 0; i < $scope.blogs.length; i++) {
-            $scope.blogs[i].thumbnail = $scope.setCorrectImage(
-              $scope.blogs[i].thumbnail,
-              "/../../../img/illustrations/blog-default.png"
-            );
-          }
-          $ionicLoading.hide();
-        },
-        function() {
-          $ionicLoading.hide();
-        }
-      );
+        })
+        .finally($ionicLoading.hide);
     }
   });

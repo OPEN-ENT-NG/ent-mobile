@@ -3,7 +3,7 @@ angular
 
   .service("SupportService", function(domainENT, RequestService) {
     this.createTicket = function(ticket) {
-      return RequestService.post(`${domainENT}/support/ticket`, ticket);
+      return RequestService.post(`${domainENT}/support/ticket`, null, ticket);
     };
 
     this.getTranslation = function() {

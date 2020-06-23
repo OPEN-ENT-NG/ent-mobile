@@ -22,3 +22,6 @@ www/cssSAVE
 .vscode/typings/cordova/cordova.d.ts
 .vscode/typings/jquery/jquery.d.ts
 typings/cordova-typings.d.ts
+google-services.json
+GoogleService-Info.plist
+www/app.const.js
