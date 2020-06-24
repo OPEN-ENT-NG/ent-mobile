@@ -224,7 +224,6 @@ angular
     var mimeTypesArray = [
       {
         thumbnail: "word.png",
-        // "thumbnail": "img/word.png",
         mimetypes: [
           "application/msword",
           "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
@@ -235,7 +234,6 @@ angular
       },
       {
         thumbnail: "excel.png",
-        // "thumbnail": "img/excel.png",
         mimetypes: [
           "application/vnd.ms-excel",
           "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -246,7 +244,6 @@ angular
         ]
       },
       {
-        // "thumbnail": "img/word.png",
         thumbnail: "powerpoint.png",
         mimetypes: [
           "application/vnd.ms-powerpoint",
@@ -263,13 +260,11 @@ angular
         ]
       },
       {
-        // "thumbnail": "img/pdf.png",
         thumbnail: "pdf.png",
         mimetypes: ["application/pdf"]
       },
       {
         thumbnail: "audio.png",
-        // "thumbnail": "img/audio.png",
         mimetypes: [
           "audio/mpeg",
           "audio/x-ms-wma",
@@ -281,7 +276,7 @@ angular
     ];
 
     function getThumbnailByMimeType(mimeType) {
-      var thumbnail = "unknown-large.png";
+      var thumbnail = "defaultfile.png";
       for (var i = 0; i < mimeTypesArray.length; i++) {
         if (mimeTypesArray[i].mimetypes.indexOf(mimeType) != -1) {
           thumbnail = mimeTypesArray[i].thumbnail;
