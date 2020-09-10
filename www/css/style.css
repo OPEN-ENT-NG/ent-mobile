@@ -274,6 +274,8 @@ ion-popover-view.fit ion-content {
     text-align: center;
     color: lightgray;
     bottom: 5px;
+    bottom: constant(safe-area-inset-bottom);
+    bottom: env(safe-area-inset-bottom);
   }
 }
 
