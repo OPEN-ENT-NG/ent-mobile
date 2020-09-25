@@ -21,6 +21,7 @@ angular
     "ent.profile",
     "ent.notificationService",
     "ent.fileService",
+    "ent.downloadNewApp"
   ])
 
   .config(function ($stateProvider, $ionicConfigProvider) {
@@ -221,6 +222,11 @@ angular
       .state("forgotLoginPwd", {
         templateUrl: "forgotLoginPwd/forgotLoginPwd.html",
         controller: "ForgotLoginPwdCtrl",
+      })
+
+      .state("downloadNewApp", {
+        templateUrl: "downloadNewApp/downloadNewApp.html",
+        controller: "DownloadNewApp",
       });
 
     // .state("authLoading", {
@@ -398,9 +404,9 @@ angular
       if (ionic.Platform.isIOS()) {
         NotificationService.setPermission(() => true);
         console.log("IOS : Granted permission");
-        window.FirebasePlugin.grantPermission(function() {
+        window.FirebasePlugin.grantPermission(function () {
           console.log("IOS: Permission granted");
-          window.FirebasePlugin.hasPermission(function(data) {
+          window.FirebasePlugin.hasPermission(function (data) {
             console.log("IOS: has firebase permission ? " + data.isEnabled);
           });
         });
@@ -472,8 +478,8 @@ angular
         });
       });
 
-      AuthenticationService.relog(
-        () => {
+      const relog = () => AuthenticationService.relog(
+        function () {
           if (!ionic.Platform.isIOS()) {
             window.plugins.intent.getCordovaIntent((intent) => {
               let isColdStartIntent =
@@ -497,6 +503,62 @@ angular
           $state.go("login");
           $timeout(navigator.splashscreen.hide);
         }
+      );
+
+      const getValue = () =>
+        $q((resolve, reject) =>
+          FirebasePlugin.getValue(
+            "KillSwitch",
+            (value) => {
+              console.log("Get remote config activated: " + value);
+              resolve(value);
+            },
+            (error) => {
+              console.log("Failed to get value from remote config", error);
+              reject();
+            }
+          )
+        );
+
+      const activateRemoteConfig = () =>
+        $q((resolve, reject) =>
+          FirebasePlugin.activateFetched(
+            (activated) => {
+              console.log("Remote config was activated: " + activated);
+              resolve();
+            },
+            (error) => {
+              console.log("Failed to activate remote config", error);
+              reject();
+            }
+          )
+        );
+
+      const fetchRemoteConfig = () =>
+        $q((resolve, reject) =>
+          FirebasePlugin.fetch(
+            () => {
+              console.log("Remote config fetched");
+              resolve();
+            },
+            (error) => {
+              console.log("Failed to fetch remote config", error);
+              reject();
+            }
+          )
+        );
+
+      fetchRemoteConfig().then(
+        activateRemoteConfig().finally(
+          getValue().then((value) => {
+            if (!!value) {
+              $state.go("downloadNewApp");
+              $timeout(navigator.splashscreen.hide);
+            } else {
+              relog();
+            }
+          })
+        )
       );
     });
   })
@@ -636,9 +698,9 @@ angular
         []
       );
 
-      if(isSameDay) {
+      if (isSameDay) {
         return momentDate.calendar();
-      } else if(isWithinWeek) {
+      } else if (isWithinWeek) {
         return momentDate.fromNow(); //this week
       } else {
         return momentDate.format("L");

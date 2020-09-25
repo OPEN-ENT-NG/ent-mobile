@@ -1,0 +1,33 @@
+<ion-view hide-nav-bar="true">
+  <ion-content class="fondbleu">
+    <div><img src="%ENT_BANNER%" class="img-responsive" /></div>
+    <div
+      class="flex padding"
+      style="padding: 25px; justify-content: center; flex: 1"
+    >
+      <p style="color: white; font-size: 18px">
+        Votre application mobile n'est plus à jour.
+      </p>
+
+      <p style="color: white; font-size: 18px">
+        Vous pouvez télécharger la nouvelle application OPENENT en entrant le
+        mot clé "Paris Classe Numérique" sur PlayStore / Appstore ou vous rendre
+        sur la page suivante du site vitrine
+      </p>
+
+      <br />
+      <br />
+
+      <button
+        class="button button-block"
+        style="background-color: #ff8500; color: white"
+        ng-click="goToDownloadAddress()"
+      >
+        Cliquer ici
+      </button>
+    </div>
+    <div ng-if="!!appName && !!version" class="version">
+      <small>{{ appName }} v{{ version }}</small>
+    </div>
+  </ion-content>
+</ion-view>
