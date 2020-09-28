@@ -650,15 +650,6 @@ angular
       }
     };
 
-    $rootScope.pick = function (object, keys) {
-      var result = {};
-
-      for (key of keys) {
-        result[key] = object[key];
-      }
-      return result;
-    };
-
     $scope.openUrl = function (url) {
       var target = "_system";
       var ref = cordova.InAppBrowser.open($sce.trustAsUrl(url), target);
@@ -1294,3 +1285,12 @@ function spreadObject() {
   }
   return result;
 }
+
+function pick (object, keys) {
+  var result = {};
+
+  for (key of keys) {
+    result[key] = object[key];
+  }
+  return result;
+};

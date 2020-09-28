@@ -136,7 +136,7 @@ angular
             ProfileService.getOAuthUser(),
           ])
           .then((results) => {
-            let userbookProfile = $rootScope.pick(results[0].data.result[0], [
+            let userbookProfile = pick(results[0].data.result[0], [
               "userId",
               "login",
               "displayName",
@@ -147,7 +147,7 @@ angular
               "email",
               "mobile",
             ]);
-            let oauthProfile = $rootScope.pick(results[1].data, [
+            let oauthProfile = pick(results[1].data, [
               "groupsIds",
               "birthDate",
               "firstName",

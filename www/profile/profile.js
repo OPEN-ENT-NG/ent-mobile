@@ -99,7 +99,7 @@ angular
       if (errorTitle) {
         PopupFactory.getAlertPopup(errorTitle, "Format invalide");
       } else if (changeMade) {
-        saveProfile($rootScope.pick($scope.tempProfile, [field]));
+        saveProfile(pick($scope.tempProfile, [field]));
       }
       $scope.toggleField();
     };
