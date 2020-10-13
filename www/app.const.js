@@ -1,10 +1,10 @@
 angular
   .module("ent")
-  .value("domainENT", "%PLATFORM_ADDRESS%")
+  .value("domainENT", "https://ent.parisclassenumerique.fr")
   .value("OAuth2Params", {
-    clientId: "%CONNECTOR_ID%" /* champ identifiant */,
-    secret: "%CONNECTOR_SECRET%" /* champ code secret */,
-    scope: "%CONNECTOR_SCOPE%" /* champ scope */
+    clientId: "Application Mobile" /* champ identifiant */,
+    secret: "mdpconnecteursecret" /* champ code secret */,
+    scope: "userbook userinfo directory workspace conversation document blog actualites avatar timeline cas portal support xiti sso" /* champ scope */
   })
   .value("xitiIndex", {
     actualites: { index: 6, label: "Application Mobile - Actualités" },
