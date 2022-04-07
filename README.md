@@ -1,10 +1,10 @@
 # À propos de l'application ENT-MOBILE
 
-* Licence : [AGPL v3](http://www.gnu.org/licenses/agpl.txt) - Copyright Conseil Régional Nord Pas de Calais - Picardie
+* Licence : [AGPL v3](http://www.gnu.org/licenses/agpl.txt) - Copyright Région Hauts-de-France (ex Picardie)
 
 * Développeur(s) : ATOS
 
-* Financeur(s) : Région Nord Pas de Calais-Picardie
+* Financeur(s) : Région Hauts-de-France (ex Picardie)
 
 * Description : Application mobile multi-plateforme pour l'OPEN ENT NG
 
