@@ -9,13 +9,13 @@
     "graceful-fs": "4.2.3"
   },
   "devDependencies": {
-    "@ionic/v1-toolkit": "^1.0.0",
+    "@ionic/v1-toolkit": "^3.2.20",
     "bower": "^1.8.8",
     "cordova-plugin-device": "^2.0.2",
     "cordova-plugin-splashscreen": "^5.0.2",
     "cordova-plugin-vibration": "^3.1.1",
     "cordova-plugin-whitelist": "^1.3.3",
-    "gulp": "^3.9.1",
+    "gulp": "^4.0.2",
     "gulp-clean-css": "^3.7.0",
     "gulp-concat": "^2.6.1",
     "gulp-minify-css": "^1.2.4",
